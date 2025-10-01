@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Ficha do Equipamento</title>
+  <style>
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu;max-width:960px;margin:auto;padding:16px;background:#f8f9fb;}
+    .card{background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:16px;box-shadow:0 6px 16px rgba(0,0,0,.05);}
+    h1{font-size:1.25rem;margin:0 0 4px 0}
+    .muted{color:#6b7280}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px;}
+    @media (max-width:780px){ .grid{grid-template-columns:1fr} }
+    .chip{display:inline-block;border:1px solid #e5e7eb;border-radius:999px;padding:6px 10px;margin-right:6px;text-decoration:none;color:#111827;cursor:pointer}
+    .kv{display:grid;grid-template-columns:220px 1fr;gap:8px;align-items:start}
+    .kv div{padding:4px 0;border-bottom:1px dashed #eee}
+    input, textarea{width:100%;padding:12px;border:1px solid #e5e7eb;border-radius:10px;font:inherit}
+    button{padding:12px 16px;border:0;border-radius:10px;background:#111827;color:#fff;cursor:pointer}
+    .destinos label{display:block;margin-top:6px}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1 id="titulo">Carregando…</h1>
+    <div id="meta" class="muted"></div>
+    <div class="grid">
+      <div>
+        <h3>Características</h3>
+        <div id="carac" class="kv"></div>
+        <h3>Plano Preventivo</h3>
+        <div id="pp">Periodicidade • Próxima Manutenção</div>
+      </div>
+      <div>
+        <h3>Responsável / Prestador</h3>
+        <div id="resp">-</div>
+        <p style="margin-top:16px">
+          <a id="reportar" class="chip">Reportar anomalia</a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div id="modal" style="position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;">
+    <div style="background:#fff;width:min(680px,90vw);border-radius:14px;padding:16px;border:1px solid #e5e7eb;">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
+        <h3 style="margin:0">Reportar anomalia</h3>
+        <button type="button" id="fechar">Fechar</button>
+      </div>
+      <div style="display:grid;gap:12px;margin-top:10px">
+        <input id="nome" placeholder="Seu nome (obrigatório)">
+        <input id="contato" placeholder="Contato (e-mail ou telefone)">
+        <textarea id="descricao" rows="5" placeholder="Descreva o problema (obrigatório)"></textarea>
+
+        <div>
+          <strong>Escolha os destinatários:</strong><br>
+          <label><input type="checkbox" name="destinatario" value="email1@email.com"> email1@email.com</label>
+          <label><input type="checkbox" name="destinatario" value="email2@email.com"> email2@email.com</label>
+          <label><input type="checkbox" name="destinatario" value="email3@email.com"> email3@email.com</label>
+          <label><input type="checkbox" name="destinatario" value="email4@email.com"> email4@email.com</label>
+        </div>
+
+        <div style="display:flex;gap:10px;justify-content:flex-end">
+          <button type="button" id="cancelar">Cancelar</button>
+          <button type="button" id="enviar">Enviar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQcUipDyM7vbxoniWi-ABmHa_DQ1rbLbpEajXHu7DVxQ8ihSUQNDslPDXiIEgMLo3QU-H9AI0l2TVcn/pub?gid=326934867&single=true&output=csv';
+
+function qs(k){ return new URLSearchParams(location.search).get(k); }
+function el(s){ return document.querySelector(s); }
+
+let equipID="", equipNome="";
+function render(eq){
+  if(!eq){ el("#titulo").textContent="Ativo não encontrado"; return; }
+  equipID=eq["id"]; equipNome=eq["nome_do_equipamento"];
+  el("#titulo").textContent = equipID+" – "+equipNome;
+  el("#meta").textContent = eq["fabricante"]+" • "+eq["modelo"];
+  el("#carac").innerHTML = "<div><b>Capacidade:</b></div><div>"+eq["capacidade"]+"</div>";
+  el("#pp").textContent = eq["periodicidade"]+" • "+eq["proxima_manutencao"];
+  el("#resp").textContent = eq["prestador"];
+  el("#reportar").onclick = ()=> el("#modal").style.display="flex";
+}
+
+function buildMailto(){
+  const selected = Array.from(document.querySelectorAll("input[name='destinatario']:checked")).map(cb=>cb.value);
+  if(selected.length===0){ alert("Selecione pelo menos um e-mail"); return null; }
+  const to = selected.join(",");
+  const assunto = "Manutenção de Equipamento e outros – [Anomalia] "+equipID+" – "+equipNome;
+  const corpo = [
+    "ID: "+equipID,
+    "Equipamento: "+equipNome,
+    "Nome: "+el("#nome").value,
+    "Contato: "+el("#contato").value,
+    "Descrição: "+el("#descricao").value
+  ].join("\n");
+  return "mailto:"+to+"?subject="+encodeURIComponent(assunto)+"&body="+encodeURIComponent(corpo);
+}
+
+el("#fechar").onclick = el("#cancelar").onclick = ()=> el("#modal").style.display="none";
+el("#enviar").onclick = ()=>{ const url=buildMailto(); if(url) window.location.href=url; };
+
+(async()=>{
+  const res = await fetch(CSV_URL);
+  const txt = await res.text();
+  const rows = txt.split("\n").map(r=>r.split(","));
+  const headers = rows.shift().map(h=>h.trim().toLowerCase().replace(/\s+/g,"_"));
+  const objs = rows.map(r=>{let o={}; headers.forEach((h,i)=>o[h]=r[i]); return o;});
+  const id = qs("id");
+  const eq = objs.find(o=>o["id"]===id);
+  render(eq);
+})();
+</script>
+</body>
+</html>
