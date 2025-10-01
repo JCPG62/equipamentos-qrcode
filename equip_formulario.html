@@ -3,117 +3,273 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Ficha do Equipamento</title>
+  <title>Ficha do Equipamento (mailto UTF‑8)</title>
   <style>
-    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu;max-width:960px;margin:auto;padding:16px;background:#f8f9fb;}
-    .card{background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:16px;box-shadow:0 6px 16px rgba(0,0,0,.05);}
+    :root { --gap:16px; }
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu;max-width:960px;margin:auto;padding:var(--gap);background:#f8f9fb;}
+    .card{background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:var(--gap);box-shadow:0 6px 16px rgba(0,0,0,.05);}
     h1{font-size:1.25rem;margin:0 0 4px 0}
     .muted{color:#6b7280}
-    .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px;}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--gap);margin-top:var(--gap);}
     @media (max-width:780px){ .grid{grid-template-columns:1fr} }
     .chip{display:inline-block;border:1px solid #e5e7eb;border-radius:999px;padding:6px 10px;margin-right:6px;text-decoration:none;color:#111827;cursor:pointer}
+    .empty{color:#9ca3af}
     .kv{display:grid;grid-template-columns:220px 1fr;gap:8px;align-items:start}
     .kv div{padding:4px 0;border-bottom:1px dashed #eee}
-    input, textarea{width:100%;padding:12px;border:1px solid #e5e7eb;border-radius:10px;font:inherit}
+    .footer{margin-top:var(--gap);font-size:.9rem;color:#6b7280}
+    .search{margin-top:.5rem}
+    input[type="text"], input[type="email"], input[type="tel"], textarea{width:100%;padding:12px;border:1px solid #e5e7eb;border-radius:10px;font:inherit}
     button{padding:12px 16px;border:0;border-radius:10px;background:#111827;color:#fff;cursor:pointer}
-    .destinos label{display:block;margin-top:6px}
+    label{display:grid;gap:6px}
+    .row{display:grid;gap:12px}
   </style>
 </head>
 <body>
   <div class="card">
     <h1 id="titulo">Carregando…</h1>
     <div id="meta" class="muted"></div>
+    <div class="search" id="buscaWrap" hidden>
+      <p>Sem ID na URL. Pesquise pelo ID:</p>
+      <input id="busca" type="text" placeholder="Ex.: AC003_S01" />
+    </div>
     <div class="grid">
       <div>
         <h3>Características</h3>
         <div id="carac" class="kv"></div>
         <h3>Plano Preventivo</h3>
-        <div id="pp">Periodicidade • Próxima Manutenção</div>
+        <div id="pp" class="empty">Periodicidade • Próxima Manutenção</div>
       </div>
       <div>
         <h3>Responsável / Prestador</h3>
-        <div id="resp">-</div>
-        <p style="margin-top:16px">
-          <a id="reportar" class="chip">Reportar anomalia</a>
-        </p>
+        <div id="resp" class="empty">-</div>
       </div>
     </div>
+    <p style="margin-top:16px">
+      <a id="abrirOS" class="chip" href="#" target="_blank" rel="noopener">Abrir OS</a>
+      <a id="reportar" class="chip">Reportar anomalia</a>
+    </p>
+    <div class="footer" id="ft"></div>
   </div>
 
-  <!-- Modal -->
-  <div id="modal" style="position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;">
-    <div style="background:#fff;width:min(680px,90vw);border-radius:14px;padding:16px;border:1px solid #e5e7eb;">
-      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
-        <h3 style="margin:0">Reportar anomalia</h3>
-        <button type="button" id="fechar">Fechar</button>
+  <!-- Modal (mailto) -->
+  <div id="modal-anomalia" style="position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;z-index:9999;">
+    <div style="background:#fff;width:min(680px,90vw);border-radius:14px;padding:16px;border:1px solid #e5e7eb;box-shadow:0 10px 30px rgba(0,0,0,.15)">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+        <h2 style="margin:0;font-size:1.1rem">Reportar anomalia</h2>
+        <button type="button" id="fechar-modal">Fechar</button>
       </div>
-      <div style="display:grid;gap:12px;margin-top:10px">
-        <input id="nome" placeholder="Seu nome (obrigatório)">
-        <input id="contato" placeholder="Contato (e-mail ou telefone)">
-        <textarea id="descricao" rows="5" placeholder="Descreva o problema (obrigatório)"></textarea>
 
-        <div>
-          <strong>Escolha os destinatários:</strong><br>
-          <label><input type="checkbox" name="destinatario" value="email1@email.com"> email1@email.com</label>
-          <label><input type="checkbox" name="destinatario" value="email2@email.com"> email2@email.com</label>
-          <label><input type="checkbox" name="destinatario" value="email3@email.com"> email3@email.com</label>
-          <label><input type="checkbox" name="destinatario" value="email4@email.com"> email4@email.com</label>
+      <form id="form-mailto" class="row" style="margin-top:12px" onsubmit="return false;">
+        <input type="hidden" id="equip_id_input">
+        <label><span>Seu nome</span><input id="nome" type="text" required autocomplete="name"></label>
+        <label><span>Contato (e-mail ou telefone)</span><input id="contato" type="text" autocomplete="email tel"></label>
+        <label><span>Descrição do problema</span><textarea id="descricao" rows="5" required placeholder="Explique o ocorrido, sintomas, quando começou…"></textarea></label>
+        <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:4px">
+          <button type="button" id="cancelar-modal">Cancelar</button>
+          <button type="button" id="btn-enviar">Enviar</button>
         </div>
-
-        <div style="display:flex;gap:10px;justify-content:flex-end">
-          <button type="button" id="cancelar">Cancelar</button>
-          <button type="button" id="enviar">Enviar</button>
-        </div>
-      </div>
+      </form>
+      <p id="help-mail" style="margin-top:10px;color:#6b7280;font-size:.9rem">Ao clicar em Enviar, vamos abrir seu app de e‑mail já com os campos preenchidos. Você só confirma o envio no app.</p>
     </div>
   </div>
 
 <script>
-const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQcUipDyM7vbxoniWi-ABmHa_DQ1rbLbpEajXHu7DVxQ8ihSUQNDslPDXiIEgMLo3QU-H9AI0l2TVcn/pub?gid=326934867&single=true&output=csv';
+const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQcUipDyM7vbxoniWi-ABmHa_DQ1rbLbpEajXHu7DVxQ8ihSUQNDslPDXiIEgMLo3QU-H9AI0l2TVcn/pub?gid=326934867&single=true&output=csv";
 
+// Helpers
 function qs(k){ return new URLSearchParams(location.search).get(k); }
 function el(s){ return document.querySelector(s); }
+function esc(s){ return (s||"").toString().replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'})[c]); }
 
-let equipID="", equipNome="";
+// normaliza SÓ os cabeçalhos
+function normKey(s){
+  return (s||"")
+    .toString()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+    .toLowerCase()
+    .replace(/\s+/g,' ')
+    .trim()
+    .replace(/[^a-z0-9]+/g,'_')
+    .replace(/^_|_$/g,'');
+}
+
+// limpa valores mas PRESERVA acentos
+function clean(v){
+  if(v === null || v === undefined) return "";
+  let s = String(v).trim();
+  s = s.replace(/^"+|"+$/g, ""); // remove aspas iniciais/finais
+  if(s === "0" || s === "0,0" || s === "0.0" || s === '"0"' ) return "";
+  return s; // NÃO normaliza acentos
+}
+
+// parser CSV com aspas
+function parseCSV(text, sep = ","){
+  const rows = [];
+  let i=0, field="", row=[], inQ=false;
+  while(i < text.length){
+    const c = text[i];
+    if(inQ){
+      if(c === '"'){ if(text[i+1] === '"'){ field += '"'; i++; } else { inQ=false; } }
+      else field += c;
+    } else {
+      if(c === '"') inQ = true;
+      else if(c === sep){ row.push(field); field=""; }
+      else if(c === '\n'){ row.push(field); rows.push(row); field=""; row=[]; }
+      else if(c === '\r'){ }
+      else field += c;
+    }
+    i++;
+  }
+  if(field.length || row.length){ row.push(field); rows.push(row); }
+  const headersOrig = rows.shift();
+  const headers = headersOrig.map(normKey);
+  const objects = rows
+    .filter(r => r.some(x => String(x).trim().length))
+    .map(cols => {
+      const obj = {};
+      headers.forEach((nk, idx) => { obj[nk] = cols[idx] !== undefined ? cols[idx] : ""; });
+      return obj;
+    });
+  return { headers, rows: objects };
+}
+
+// pega campo por sinônimos
+function pick(obj, keys){
+  for(const k of keys){
+    if(obj[k] !== undefined && String(obj[k]).trim() !== "") return obj[k];
+  }
+  return "";
+}
+
+let equipID = "";
+let equipNome = "";
+
 function render(eq){
-  if(!eq){ el("#titulo").textContent="Ativo não encontrado"; return; }
-  equipID=eq["id"]; equipNome=eq["nome_do_equipamento"];
-  el("#titulo").textContent = equipID+" – "+equipNome;
-  el("#meta").textContent = eq["fabricante"]+" • "+eq["modelo"];
-  el("#carac").innerHTML = "<div><b>Capacidade:</b></div><div>"+eq["capacidade"]+"</div>";
-  el("#pp").textContent = eq["periodicidade"]+" • "+eq["proxima_manutencao"];
-  el("#resp").textContent = eq["prestador"];
-  el("#reportar").onclick = ()=> el("#modal").style.display="flex";
+  if(!eq){ el("#titulo").textContent = "Ativo não encontrado"; return; }
+
+  const id = clean(pick(eq, ["id","tag","codigo","codigo_do_equipamento"]));
+  const nome = clean(pick(eq, ["nome_do_equipamento","descricao","descricao_do_equipamento"]));
+  equipID = id; equipNome = nome;
+  el("#titulo").textContent = (id || "Equipamento") + (nome ? " – " + nome : "");
+  document.getElementById("equip_id_input").value = id;
+
+  const fabricante = clean(pick(eq, ["fabricante","marca"]));
+  const modelo = clean(pick(eq, ["modelo"]));
+  const capacidade = clean(pick(eq, ["capacidade"]));
+  const fla = clean(pick(eq, ["amperagem_nominal_fla","fla","amperagem_nominal"]));
+  const voltagem = clean(pick(eq, ["voltagem","tensao","tensao_v"]));
+  const prestador = clean(pick(eq, ["prestador","responsavel","responsavel_manutencao"]));
+  const periodicidade = clean(pick(eq, ["periodicidade"]));
+  const prox = clean(pick(eq, ["proxima_manutencao","proxima_manutacao","proxima_preventiva"]));
+
+  el("#meta").textContent = [fabricante, modelo].filter(Boolean).join(" • ");
+
+  const pares = [
+    ["Capacidade", capacidade],
+    ["Amperagem Nominal (FLA)", fla],
+    ["Voltagem", voltagem],
+    ["Fabricante", fabricante],
+    ["Modelo", modelo]
+  ];
+  const caracHTML = pares
+    .filter(([k,v]) => v && v.trim() !== "")
+    .map(([k,v]) => "<div><b>"+esc(k)+":</b></div><div>"+esc(v)+"</div>")
+    .join("");
+  el("#carac").innerHTML = caracHTML || "<div class='empty'>Sem dados</div>";
+
+  const pp = [];
+  if(periodicidade) pp.push("<b>Periodicidade:</b> "+esc(periodicidade));
+  if(prox) pp.push("<b>Próxima Manutenção:</b> "+esc(prox));
+  el("#pp").innerHTML = pp.length ? pp.join("<br>") : "<span class='empty'>-</span>";
+
+  el("#resp").textContent = prestador || "-";
+
+  el("#ft").textContent = "Última atualização: " + new Date().toLocaleString();
+
+  // Botão reportar abre modal
+  el("#reportar").onclick = function(){
+    document.getElementById("modal-anomalia").style.display = "flex";
+  };
 }
 
-function buildMailto(){
-  const selected = Array.from(document.querySelectorAll("input[name='destinatario']:checked")).map(cb=>cb.value);
-  if(selected.length===0){ alert("Selecione pelo menos um e-mail"); return null; }
-  const to = selected.join(",");
-  const assunto = "Manutenção de Equipamento e outros – [Anomalia] "+equipID+" – "+equipNome;
+function buildMailto() {
+  const to = "jotacpg@gmail.com";
+  const assunto = `[Manutenção de Equipamentos e Outros] ${equipID}${equipNome ? " – " + equipNome : ""}`;
+
+  const nome = document.getElementById("nome").value.trim();
+  const contato = document.getElementById("contato").value.trim();
+  const descricao = document.getElementById("descricao").value.trim();
+
   const corpo = [
-    "ID: "+equipID,
-    "Equipamento: "+equipNome,
-    "Nome: "+el("#nome").value,
-    "Contato: "+el("#contato").value,
-    "Descrição: "+el("#descricao").value
+    `ID: ${equipID}`,
+    `Equipamento: ${equipNome}`,
+    `Nome: ${nome}`,
+    `Contato: ${contato}`,
+    `Descrição: ${descricao}`,
   ].join("\n");
-  return "mailto:"+to+"?subject="+encodeURIComponent(assunto)+"&body="+encodeURIComponent(corpo);
+
+  const url = `mailto:${to}?subject=${encodeURIComponent(assunto)}&body=${encodeURIComponent(corpo)}`;
+  return url;
 }
 
-el("#fechar").onclick = el("#cancelar").onclick = ()=> el("#modal").style.display="none";
-el("#enviar").onclick = ()=>{ const url=buildMailto(); if(url) window.location.href=url; };
+function wireMailto(){
+  document.getElementById("btn-enviar").addEventListener("click", () => {
+    // Valida
+    if(!document.getElementById("nome").value.trim() || !document.getElementById("descricao").value.trim()){
+      alert("Preencha pelo menos Nome e Descrição.");
+      return;
+    }
+    const href = buildMailto();
+    window.location.href = href; // abre o app de e-mail padrão com UTF‑8
+    setTimeout(() => { document.getElementById("modal-anomalia").style.display = "none"; }, 800);
+  });
+}
 
-(async()=>{
-  const res = await fetch(CSV_URL);
-  const txt = await res.text();
-  const rows = txt.split("\n").map(r=>r.split(","));
-  const headers = rows.shift().map(h=>h.trim().toLowerCase().replace(/\s+/g,"_"));
-  const objs = rows.map(r=>{let o={}; headers.forEach((h,i)=>o[h]=r[i]); return o;});
-  const id = qs("id");
-  const eq = objs.find(o=>o["id"]===id);
-  render(eq);
-})();
+async function main(){
+  const idQ = qs("id");
+  if(!idQ) el("#buscaWrap").hidden = false;
+
+  const res = await fetch(CSV_URL, {cache:"no-store"});
+  const text = await res.text();
+  const data = parseCSV(text);
+  const rows = data.rows;
+
+  const findById = (term) => {
+    const t = clean(term);
+    return rows.find(r => {
+      const idc = clean(pick(r, ["id","tag","codigo","codigo_do_equipamento"]));
+      return idc === t;
+    });
+  };
+
+  let eq = idQ ? findById(idQ) : null;
+
+  if(!eq){
+    if(idQ) el("#titulo").textContent = "Ativo não encontrado";
+    const input = el("#busca");
+    if(input){
+      input.addEventListener("keyup", () => {
+        const found = findById(input.value.trim());
+        render(found);
+      });
+    }
+  } else {
+    render(eq);
+  }
+
+  wireMailto();
+}
+
+main().catch(err=>{
+  document.getElementById("titulo").textContent = "Erro ao carregar dados";
+  console.error(err);
+});
+
+// Fechar modal
+document.getElementById("fechar-modal").onclick =
+document.getElementById("cancelar-modal").onclick = function(){
+  document.getElementById("modal-anomalia").style.display = "none";
+};
 </script>
 </body>
 </html>
