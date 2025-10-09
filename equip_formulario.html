@@ -161,7 +161,8 @@ function render(eq){
   const periodicidade = clean(pick(eq, ["periodicidade"]));
   const prox = clean(pick(eq, ["proxima_manutencao","proxima_manutacao","proxima_preventiva"]));
 
-  el("#meta").textContent = [fabricante, modelo].filter(Boolean).join(" • ");
+  // el("#meta").textContent = [fabricante, modelo].filter(Boolean).join(" • ");
+  el("#meta").innerHTML = [fabricante, modelo].filter(Boolean).join("<br>");
 
   const pares = [
     ["Capacidade", capacidade],
