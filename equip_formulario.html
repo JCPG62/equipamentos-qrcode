@@ -163,7 +163,7 @@ function render(eq){
 
   // el("#meta").textContent = [fabricante, modelo].filter(Boolean).join(" • ");
   el("#meta").innerHTML = [fabricante, modelo].filter(Boolean).join("<br>");
-
+// Caracteristicas
   const pares = [
     ["Capacidade", capacidade],
     ["Amperagem Nominal (FLA)", fla],
@@ -178,18 +178,21 @@ function render(eq){
 //  el("#carac").innerHTML = caracHTML || "<div class='empty'>Sem dados</div>";
 
   const caracHTML = pares
-  .filter(([k,v]) => v && v.trim() !== "")
-  .map(([k,v]) => {
+    .filter(([k,v]) => v && v.trim() !== "")
+    .map(([k,v]) => {
     if (k === "Modelo") {
-      // Modelo: valor abaixo
-      return "<div><b>"+esc(k)+":</b></div><div style='white-space:normal;word-break:break-word;'>"+esc(v)+"</div>";
+      // coloca o valor do Modelo EMBAIXO e ocupando a largura toda
+      return "<div><b>"+esc(k)+":</b></div>"
+           + "<div style='grid-column:1 / -1;white-space:normal;word-break:break-word;overflow-wrap:anywhere;'>"
+           + esc(v) + "</div>";
     } else {
-      // Demais na mesma linha
+      // demais chaves continuam lado a lado
       return "<div><b>"+esc(k)+":</b></div><div>"+esc(v)+"</div>";
     }
   })
   .join("");
 
+  el("#carac").innerHTML = caracHTML || "<div class='empty'>Sem dados</div>";
 
   const pp = [];
   if(periodicidade) pp.push("<b>Periodicidade:</b> "+esc(periodicidade));
