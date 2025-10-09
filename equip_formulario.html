@@ -16,6 +16,11 @@
     .empty{color:#9ca3af}
     .kv{display:grid;grid-template-columns:220px 1fr;gap:8px;align-items:start}
     .kv div{padding:4px 0;border-bottom:1px dashed #eee}
+// linha de correção
+    .kv div:last-child {
+      word-break: break-word;
+      overflow-wrap: anywhere;
+      }
     .footer{margin-top:var(--gap);font-size:.9rem;color:#6b7280}
     .search{margin-top:.5rem}
     input[type="text"], input[type="email"], input[type="tel"], textarea{width:100%;padding:12px;border:1px solid #e5e7eb;border-radius:10px;font:inherit}
