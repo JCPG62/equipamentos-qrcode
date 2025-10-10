@@ -47,7 +47,6 @@
     <p style="margin-top:16px">
       <a id="reportar" class="chip">Reportar anomalia</a>
     </p>
-    <p style="font-size: 5px;">© 2025 jcpg</p>
     <div class="footer" id="ft"></div>
   </div>
 
@@ -203,7 +202,7 @@ function render(eq){
   el("#resp").textContent = prestador || "-";
 
   el("#ft").textContent = "Última atualização: " + new Date().toLocaleString();
-
+    <p style="font-size: 5px;">                     © 2025 jcpg</p>
   // Botão reportar abre modal
   el("#reportar").onclick = function(){
     document.getElementById("modal-anomalia").style.display = "flex";
