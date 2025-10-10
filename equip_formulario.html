@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Ficha do Equipamento (mailto UTF‑8)</title>
+  <title>Ficha do Equipamento (mailto UTF-8)</title>
   <style>
     :root { --gap:16px; }
     body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu;max-width:960px;margin:auto;padding:var(--gap);background:#f8f9fb;}
@@ -47,7 +47,7 @@
     <p style="margin-top:16px">
       <a id="reportar" class="chip">Reportar anomalia</a>
     </p>
-        <p style="font-size: 7px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2025 jcpg Ver.:1.0</p>
+    <p style="font-size: 7px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2025 jcpg Ver.:1.0</p>
     <div class="footer" id="ft"></div>
   </div>
 
@@ -69,7 +69,7 @@
           <button type="button" id="btn-enviar">Enviar</button>
         </div>
       </form>
-      <p id="help-mail" style="margin-top:10px;color:#6b7280;font-size:.9rem">Ao clicar em Enviar, vamos abrir seu app de e‑mail já com os campos preenchidos. Você só confirma o envio no app.</p>
+      <p id="help-mail" style="margin-top:10px;color:#6b7280;font-size:.9rem">Ao clicar em Enviar, vamos abrir seu app de e-mail já com os campos preenchidos.</p>
     </div>
   </div>
 
@@ -143,6 +143,17 @@ function pick(obj, keys){
 
 let equipID = "";
 let equipNome = "";
+let emailDestino = ""; // << novo: virá da coluna "email fonte"
+const DEFAULT_MAILTO = "jotacpg@gmail.com";
+
+// normaliza lista de e-mails (vírgula ou ponto-e-vírgula)
+function normalizeEmailList(s){
+  return (s||"")
+    .split(/[,;]+/)
+    .map(x => x.trim())
+    .filter(Boolean)
+    .join(",");
+}
 
 function render(eq){
   if(!eq){ el("#titulo").textContent = "Ativo não encontrado"; return; }
@@ -159,12 +170,21 @@ function render(eq){
   const fla = clean(pick(eq, ["amperagem_nominal_fla","fla","amperagem_nominal"]));
   const voltagem = clean(pick(eq, ["voltagem","tensao","tensao_v"]));
   const prestador = clean(pick(eq, ["prestador","responsavel","responsavel_manutencao"]));
+
+  // >>> novo: tenta achar o e-mail da fonte na planilha
+  const emailFonte = clean(pick(eq, [
+    "email_fonte",          // coluna "email fonte"
+    "email_da_fonte",
+    "email_responsavel",
+    "email"                 // fallback genérico
+  ]));
+  emailDestino = emailFonte; // guarda globalmente
+
   const periodicidade = clean(pick(eq, ["periodicidade"]));
   const prox = clean(pick(eq, ["proxima_manutencao","proxima_manutacao","proxima_preventiva"]));
 
-  // el("#meta").textContent = [fabricante, modelo].filter(Boolean).join(" • ");
   el("#meta").innerHTML = [fabricante, modelo].filter(Boolean).join("<br>");
-// Caracteristicas
+
   const pares = [
     ["Capacidade", capacidade],
     ["Amperagem Nominal (FLA)", fla],
@@ -172,25 +192,18 @@ function render(eq){
     ["Fabricante", fabricante],
     ["Modelo", modelo],
   ];
-//  const caracHTML = pares
-//    .filter(([k,v]) => v && v.trim() !== "")
-//    .map(([k,v]) => "<div><b>"+esc(k)+":</b></div><div>"+esc(v)+"</div>")
-//    .join("");
-//  el("#carac").innerHTML = caracHTML || "<div class='empty'>Sem dados</div>";
 
   const caracHTML = pares
     .filter(([k,v]) => v && v.trim() !== "")
     .map(([k,v]) => {
-    if (k === "Modelo") {
-      // coloca o valor do Modelo EMBAIXO e ocupando a largura toda
-      return "<div><b>"+esc(k)+":</b></div>"
-           + "<div style='grid-column:1 / -1;white-space:normal;word-break:break-word;overflow-wrap:anywhere;'>"
-           + esc(v) + "</div>";
-    } else {
-      // demais chaves continuam lado a lado
-      return "<div><b>"+esc(k)+":</b></div><div>"+esc(v)+"</div>";
-    }
-  })
+      if (k === "Modelo") {
+        return "<div><b>"+esc(k)+":</b></div>"
+             + "<div style='grid-column:1 / -1;white-space:normal;word-break:break-word;overflow-wrap:anywhere;'>"
+             + esc(v) + "</div>";
+      } else {
+        return "<div><b>"+esc(k)+":</b></div><div>"+esc(v)+"</div>";
+      }
+    })
   .join("");
 
   el("#carac").innerHTML = caracHTML || "<div class='empty'>Sem dados</div>";
@@ -202,7 +215,11 @@ function render(eq){
 
   el("#resp").textContent = prestador || "-";
 
-  el("#ft").textContent = "Última atualização: " + new Date().toLocaleString();
+  const destinatarioInfo = normalizeEmailList(emailDestino) || DEFAULT_MAILTO;
+  el("#ft").innerHTML = "Última atualização: " + new Date().toLocaleString()
+    + "<br><span class='muted'>Reportes serão enviados para: "
+    + esc(destinatarioInfo)
+    + "</span>";
 
   // Botão reportar abre modal
   el("#reportar").onclick = function(){
@@ -211,7 +228,7 @@ function render(eq){
 }
 
 function buildMailto() {
-  const to = "jotacpg@gmail.com";
+  const to = normalizeEmailList(emailDestino) || DEFAULT_MAILTO;
   const assunto = `[Manutenção de Equipamentos e Outros] ${equipID}${equipNome ? " – " + equipNome : ""}`;
 
   const nome = document.getElementById("nome").value.trim();
@@ -226,7 +243,7 @@ function buildMailto() {
     `Descrição: ${descricao}`,
   ].join("\n");
 
-  const url = `mailto:${to}?subject=${encodeURIComponent(assunto)}&body=${encodeURIComponent(corpo)}`;
+  const url = `mailto:${encodeURIComponent(to)}?subject=${encodeURIComponent(assunto)}&body=${encodeURIComponent(corpo)}`;
   return url;
 }
 
@@ -238,7 +255,7 @@ function wireMailto(){
       return;
     }
     const href = buildMailto();
-    window.location.href = href; // abre o app de e-mail padrão com UTF‑8
+    window.location.href = href; // abre o app de e-mail padrão com UTF-8
     setTimeout(() => { document.getElementById("modal-anomalia").style.display = "none"; }, 800);
   });
 }
