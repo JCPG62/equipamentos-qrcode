@@ -22,6 +22,11 @@
     button{padding:12px 16px;border:0;border-radius:10px;background:#111827;color:#fff;cursor:pointer}
     label{display:grid;gap:6px}
     .row{display:grid;gap:12px}
+    /* === Etiquetas de status === */
+    .badge{display:inline-block;padding:2px 8px;border-radius:8px;font-size:.85em;border:1px solid #e5e7eb;vertical-align:middle}
+    .badge.due{background:#fee2e2;color:#991b1b;border-color:#fecaca}
+    .badge.soon{background:#fff7ed;color:#9a3412;border-color:#fed7aa}
+    .badge.ok{background:#ecfdf5;color:#065f46;border-color:#a7f3d0}
   </style>
 </head>
 <body>
@@ -141,9 +146,45 @@ function pick(obj, keys){
   return "";
 }
 
+// ===== Datas: parse e formatação =====
+function parseDateFlexible(s){
+  const v = (s||"").trim();
+  if(!v) return null;
+  // ISO: YYYY-MM-DD
+  let m = v.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if(m) return new Date(`${m[1]}-${m[2]}-${m[3]}T00:00:00`);
+  // BR: DD/MM/AAAA
+  m = v.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+  if(m) return new Date(`${m[3]}-${m[2]}-${m[1]}T00:00:00`);
+  // Fallback: Date()
+  const d = new Date(v);
+  if(isNaN(d)) return null;
+  return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+}
+
+function formatDateBR(s){
+  const v = (s||"").trim();
+  if(!v) return "";
+  const iso = v.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if(iso){
+    const [_,Y,M,D] = iso;
+    return `${D}/${M}/${Y}`;
+  }
+  const br = v.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+  if(br) return v;
+  const d = new Date(v);
+  if(!isNaN(d.getTime())){
+    const dd = String(d.getDate()).padStart(2,"0");
+    const mm = String(d.getMonth()+1).padStart(2,"0");
+    const yy = String(d.getFullYear());
+    return `${dd}/${mm}/${yy}`;
+  }
+  return v;
+}
+
 let equipID = "";
 let equipNome = "";
-let emailDestino = ""; // << novo: virá da coluna "email fonte"
+let emailDestino = ""; // vem da planilha
 const DEFAULT_MAILTO = "jotacpg@gmail.com";
 
 // normaliza lista de e-mails (vírgula ou ponto-e-vírgula)
@@ -171,14 +212,11 @@ function render(eq){
   const voltagem = clean(pick(eq, ["voltagem","tensao","tensao_v"]));
   const prestador = clean(pick(eq, ["prestador","responsavel","responsavel_manutencao"]));
 
-  // >>> novo: tenta achar o e-mail da fonte na planilha
+  // e-mail fonte
   const emailFonte = clean(pick(eq, [
-    "email_fonte",          // coluna "email fonte"
-    "email_da_fonte",
-    "email_responsavel",
-    "email"                 // fallback genérico
+    "email_fonte","email_da_fonte","email_responsavel","email"
   ]));
-  emailDestino = emailFonte; // guarda globalmente
+  emailDestino = emailFonte;
 
   const periodicidade = clean(pick(eq, ["periodicidade"]));
   const prox = clean(pick(eq, ["proxima_manutencao","proxima_manutacao","proxima_preventiva"]));
@@ -208,9 +246,31 @@ function render(eq){
 
   el("#carac").innerHTML = caracHTML || "<div class='empty'>Sem dados</div>";
 
+  // ===== Plano Preventivo com destaque =====
   const pp = [];
   if(periodicidade) pp.push("<b>Periodicidade:</b> "+esc(periodicidade));
-  if(prox) pp.push("<b>Próxima Manutenção:</b> "+esc(prox));
+
+  if(prox){
+    const proxFmt = formatDateBR(prox);
+    const dTarget = parseDateFlexible(prox);
+    let badge = "";
+    if(dTarget){
+      const today = new Date();
+      const todayMid = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+      const msDay = 24*60*60*1000;
+      const daysUntil = Math.floor((dTarget - todayMid)/msDay);
+      if(daysUntil < 0){
+        badge = `<span class="badge due" title="Vencida há ${Math.abs(daysUntil)} dia(s)">Vencida</span>`;
+      } else if(daysUntil <= 30){
+        badge = `<span class="badge soon" title="Faltam ${daysUntil} dia(s)">Em ${daysUntil} dia(s)</span>`;
+      } else {
+        // badge = `<span class="badge ok" title="Faltam ${daysUntil} dia(s)">OK</span>`;
+        badge = ""; // mantém limpo se estiver longe
+      }
+    }
+    pp.push(`<b>Próxima Manutenção:</b> ${esc(proxFmt)} ${badge}`);
+  }
+
   el("#pp").innerHTML = pp.length ? pp.join("<br>") : "<span class='empty'>-</span>";
 
   el("#resp").textContent = prestador || "-";
@@ -249,13 +309,12 @@ function buildMailto() {
 
 function wireMailto(){
   document.getElementById("btn-enviar").addEventListener("click", () => {
-    // Valida
     if(!document.getElementById("nome").value.trim() || !document.getElementById("descricao").value.trim()){
       alert("Preencha pelo menos Nome e Descrição.");
       return;
     }
     const href = buildMailto();
-    window.location.href = href; // abre o app de e-mail padrão com UTF-8
+    window.location.href = href;
     setTimeout(() => { document.getElementById("modal-anomalia").style.display = "none"; }, 800);
   });
 }
