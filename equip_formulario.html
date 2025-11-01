@@ -17,11 +17,6 @@
     .kv{display:grid;grid-template-columns:220px 1fr;gap:8px;align-items:start}
     .kv div{padding:4px 0;border-bottom:1px dashed #eee}
     .footer{margin-top:var(--gap);font-size:.9rem;color:#6b7280}
-    .search{margin-top:.5rem}
-    input[type="text"], input[type="email"], input[type="tel"], textarea{width:100%;padding:12px;border:1px solid #e5e7eb;border-radius:10px;font:inherit}
-    button{padding:12px 16px;border:0;border-radius:10px;background:#111827;color:#fff;cursor:pointer}
-    label{display:grid;gap:6px}
-    .row{display:grid;gap:12px}
     .badge{display:inline-block;padding:2px 8px;border-radius:8px;font-size:.85em;border:1px solid #e5e7eb;vertical-align:middle}
     .badge.due{background:#fee2e2;color:#991b1b;border-color:#fecaca}
     .badge.soon{background:#fff7ed;color:#9a3412;border-color:#fed7aa}
@@ -30,7 +25,7 @@
 </head>
 <body>
 
-  <!-- ====== BLOCO DE LICENÇA / DOMAIN LOCK / EXPIRAÇÃO (QRManut) ====== -->
+  <!-- ====== BLOCO DE LICENÇA ====== -->
   <script id="qrmanut-license" type="application/json">
   {
     "clientId": "qrmanut_demo",
@@ -64,11 +59,6 @@
     <h1 id="titulo">Carregando…</h1>
     <div id="meta" class="muted"></div>
 
-    <div class="search" id="buscaWrap" hidden>
-      <p>Sem ID na URL. Pesquise pelo ID:</p>
-      <input id="busca" type="text" placeholder="Ex.: AC003_S01" />
-    </div>
-
     <div class="grid">
       <div>
         <h3>Características</h3>
@@ -87,169 +77,56 @@
     </div>
 
     <p style="margin-top:16px"><a id="reportar" class="chip">Reportar anomalia</a></p>
-    <p style="font-size: 7px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;JCPG-2025 - Ver.:1.1</p>
+    <p style="font-size: 7px;">JCPG-2025 - Ver.:1.1</p>
     <div class="footer" id="ft"></div>
   </div>
 
-  <!-- Modal de anomalia -->
-  <div id="modal-anomalia" style="position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;z-index:9999;">
-    <div style="background:#fff;width:min(680px,90vw);border-radius:14px;padding:16px;border:1px solid #e5e7eb;box-shadow:0 10px 30px rgba(0,0,0,.15)">
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
-        <h2 style="margin:0;font-size:1.1rem">Reportar anomalia</h2>
-        <button type="button" id="fechar-modal">Fechar</button>
-      </div>
-      <form id="form-mailto" class="row" style="margin-top:12px" onsubmit="return false;">
-        <input type="hidden" id="equip_id_input">
-        <label><span>Seu nome</span><input id="nome" type="text" required autocomplete="name"></label>
-        <label><span>Contato (e-mail ou telefone)</span><input id="contato" type="text" autocomplete="email tel"></label>
-        <label><span>Descrição do problema</span><textarea id="descricao" rows="5" required placeholder="Explique o ocorrido, sintomas, quando começou…"></textarea></label>
-        <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:4px">
-          <button type="button" id="cancelar-modal">Cancelar</button>
-          <button type="button" id="btn-enviar">Enviar</button>
-        </div>
-      </form>
-      <p id="help-mail" style="margin-top:10px;color:#6b7280;font-size:.9rem">Ao clicar em Enviar, vamos abrir seu app de e-mail já com os campos preenchidos.</p>
-    </div>
-  </div>
+  <!-- ====== CONFIG DA API (Apps Script) ====== -->
+  <script>
+  const API_URL   = "https://script.google.com/macros/s/AKfycbzalCvgIMgSkA0XdNnkO121RjsqrvMLxB_g5BF6otxdS8AhlLe5Duyy3vZ6U_rtR8xZ/exec";
+  const API_TOKEN = "pncol.alpha23"; // mesmo token do GAS
 
-<script>
-/* ====== CONFIG DA API (Apps Script) ====== */
-/const API_URL   = "https://script.google.com/macros/s/AKfycbzalCvgIMgSkA0XdNnkO121RjsqrvMLxB_g5BF6otxdS8AhlLe5Duyy3vZ6U_rtR8xZ/exec";
-const API_URL = "https://script.google.com/macros/s/AKfycbzalCvgIMgSkA0XdNnkO121RjsqrvMLxB_g5BF6otxdS8AhlLe5Duyy3vZ6U_rtR8xZ/exec";
-const API_TOKEN = "pncq_alpha123"; // mesmo token do GAS
+  function qs(k){ return new URLSearchParams(location.search).get(k); }
+  function el(s){ return document.querySelector(s); }
+  function esc(s){ return (s||"").toString().replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
+  function clean(v){ if(v===null||v===undefined)return"";let s=String(v).trim();s=s.replace(/^"+|"+$/g,"");if(s==="0"||s==="0,0"||s==="0.0"||s==='"0"')return"";return s; }
+  function pick(obj,keys){for(const k of keys){if(obj[k]!==undefined&&String(obj[k]).trim()!=='')return obj[k];}return"";}
+  function formatDateBR(s){const v=(s||"").trim();if(!v)return"";const iso=v.match(/^(\d{4})-(\d{2})-(\d{2})$/);if(iso){const [_,Y,M,D]=iso;return`${D}/${M}/${Y}`;}return v;}
 
-/* ====== Helpers ====== */
-function qs(k){ return new URLSearchParams(location.search).get(k); }
-function el(s){ return document.querySelector(s); }
-function esc(s){ return (s||"").toString().replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
-function clean(v){ if(v===null||v===undefined)return"";let s=String(v).trim();s=s.replace(/^"+|"+$/g,"");if(s==="0"||s==="0,0"||s==="0.0"||s==='"0"')return"";return s; }
-function pick(obj,keys){for(const k of keys){if(obj[k]!==undefined&&String(obj[k]).trim()!=='')return obj[k];}return"";}
-function parseDateFlexible(s){const v=(s||"").trim();if(!v)return null;let m=v.match(/^(\d{4})-(\d{2})-(\d{2})$/);if(m)return new Date(`${m[1]}-${m[2]}-${m[3]}T00:00:00`);m=v.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);if(m)return new Date(`${m[3]}-${m[2]}-${m[1]}T00:00:00`);const d=new Date(v);if(isNaN(d))return null;return new Date(d.getFullYear(),d.getMonth(),d.getDate());}
-function formatDateBR(s){const v=(s||"").trim();if(!v)return"";const iso=v.match(/^(\d{4})-(\d{2})-(\d{2})$/);if(iso){const [_,Y,M,D]=iso;return`${D}/${M}/${Y}`;}const br=v.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);if(br)return v;const d=new Date(v);if(!isNaN(d.getTime())){const dd=String(d.getDate()).padStart(2,"0");const mm=String(d.getMonth()+1).padStart(2,"0");const yy=String(d.getFullYear());return`${dd}/${mm}/${yy}`;}return v;}
-
-/* ====== Estado envio e-mail ====== */
-let equipID="",equipNome="",emailDestino="";const DEFAULT_MAILTO="jotacpg@gmail.com";
-function normalizeEmailList(s){return(s||"").split(/[,;]+/).map(x=>x.trim()).filter(Boolean).join(",");}
-
-/* ====== Renderização ====== */
-function render(eq){
-  if(!eq){ el("#titulo").textContent="Ativo não encontrado"; return; }
-  const id=clean(pick(eq,["id","tag","codigo","codigo_do_equipamento"]));
-  const nome=clean(pick(eq,["nome_do_equipamento","descricao","descricao_do_equipamento"]));
-  equipID=id; equipNome=nome;
-  el("#titulo").textContent=(id||"Equipamento")+(nome?" – "+nome:"");
-  document.getElementById("equip_id_input").value=id;
-
-  const fabricante=clean(pick(eq,["fabricante","marca"]));
-  const modelo=clean(pick(eq,["modelo"]));
-  const capacidade=clean(pick(eq,["capacidade"]));
-  const fla=clean(pick(eq,["amperagem_nominal_fla","fla","amperagem_nominal"]));
-  const voltagem=clean(pick(eq,["voltagem","tensao","tensao_v"]));
-  const prestador=clean(pick(eq,["prestador","responsavel","responsavel_manutencao"]));
-
-  const emailFonte=clean(pick(eq,["email_fonte","email_da_fonte","email_responsavel","email"]));
-  emailDestino=emailFonte;
-
-  const periodicidade=clean(pick(eq,["periodicidade"]));
-  const prox=clean(pick(eq,["proxima_manutencao","proxima_manutacao","proxima_preventiva"]));
-
-  el("#meta").innerHTML=[fabricante,modelo].filter(Boolean).join("<br>");
-
-  const pares=[["Capacidade",capacidade],["Amperagem Nominal (FLA)",fla],["Voltagem",voltagem],["Fabricante",fabricante],["Modelo",modelo]];
-  const caracHTML=pares.filter(([k,v])=>v&&v.trim()!=='').map(([k,v])=>{
-    if(k==="Modelo"){
-      return "<div><b>"+esc(k)+":</b></div>"+"<div style='grid-column:1 / -1;white-space:normal;word-break:break-word;overflow-wrap:anywhere;'>"+esc(v)+"</div>";
-    }else{
-      return "<div><b>"+esc(k)+":</b></div><div>"+esc(v)+"</div>";
-    }
-  }).join("");
-  el("#carac").innerHTML=caracHTML||"<div class='empty'>Sem dados</div>";
-
-  const pp=[];
-  if(periodicidade) pp.push("<b>Periodicidade:</b> "+esc(periodicidade));
-  if(prox){
-    const proxFmt=formatDateBR(prox);
-    const dTarget=parseDateFlexible(prox); let badge="";
-    if(dTarget){
-      const today=new Date(); const todayMid=new Date(today.getFullYear(),today.getMonth(),today.getDate());
-      const msDay=24*60*60*1000; const daysUntil=Math.floor((dTarget-todayMid)/msDay);
-      if(daysUntil<0){ badge=`<span class="badge due" title="Vencida há ${Math.abs(daysUntil)} dia(s)">Vencida</span>`; }
-      else if(daysUntil<=30){ badge=`<span class="badge soon" title="Faltam ${daysUntil} dia(s)">Em ${daysUntil} dia(s)</span>`; }
-    }
-    pp.push(`<b>Próxima Manutenção:</b> ${esc(proxFmt)} ${badge}`);
+  async function fetchEquipById(id){
+    const lic = window.__QRMANUT_LICENSE__ || {};
+    const url = `${API_URL}?id=${encodeURIComponent(id)}&token=${encodeURIComponent(API_TOKEN)}&licenseKey=${encodeURIComponent(lic.licenseKey||'')}`;
+    const res = await fetch(url, { method:'GET', cache:'no-store' });
+    const json = await res.json();
+    if(!json.ok) throw new Error(json.error||'api_error');
+    return json.data;
   }
-  el("#pp").innerHTML=pp.length?pp.join("<br>"):"<span class='empty'>-</span>";
 
-  const localizacao=clean(pick(eq,["localizacao","endereco","setor","area","unidade"]));
-  el("#localizacao").textContent=localizacao||"-";
-  el("#resp").textContent=prestador||"-";
+  function render(eq){
+    if(!eq){ el("#titulo").textContent="Ativo não encontrado"; return; }
+    const id=clean(pick(eq,["id","tag","codigo"]));
+    const nome=clean(pick(eq,["nome_do_equipamento","descricao"]));
+    el("#titulo").textContent=(id||"Equipamento")+(nome?" – "+nome:"");
+    el("#meta").innerHTML=[clean(eq.fabricante),clean(eq.modelo)].filter(Boolean).join("<br>");
+    el("#carac").innerHTML="<div><b>Capacidade:</b></div><div>"+(eq.capacidade||"-")+"</div>";
+    el("#pp").innerHTML=`<b>Periodicidade:</b> ${eq.periodicidade||"-"}<br><b>Próxima:</b> ${eq.proxima_manutencao||"-"}`;
+    el("#localizacao").textContent=eq.localizacao||"-";
+    el("#resp").textContent=eq.prestador||"-";
+  }
 
-  const destinatarioInfo=normalizeEmailList(emailDestino)||DEFAULT_MAILTO;
-  el("#ft").innerHTML="Última atualização: "+new Date().toLocaleString()+"<br><span class='muted'>Reportes serão enviados para: "+esc(destinatarioInfo)+"</span>";
-
-  el("#reportar").onclick=function(){ document.getElementById("modal-anomalia").style.display="flex"; };
-}
-
-/* ====== Mailto ====== */
-function buildMailto(){
-  const to=normalizeEmailList(emailDestino)||DEFAULT_MAILTO;
-  const assunto=`[Manutenção de Equipamentos e Outros] ${equipID}${equipNome?" – "+equipNome:""}`;
-  const nome=document.getElementById("nome").value.trim();
-  const contato=document.getElementById("contato").value.trim();
-  const descricao=document.getElementById("descricao").value.trim();
-  const corpo=[`ID: ${equipID}`,`Equipamento: ${equipNome}`,`Nome: ${nome}`,`Contato: ${contato}`,`Descrição: ${descricao}`].join("\n");
-  const url=`mailto:${encodeURIComponent(to)}?subject=${encodeURIComponent(assunto)}&body=${encodeURIComponent(corpo)}`;
-  return url;
-}
-function wireMailto(){
-  document.getElementById("btn-enviar").addEventListener("click",()=>{
-    if(!document.getElementById("nome").value.trim()||!document.getElementById("descricao").value.trim()){
-      alert("Preencha pelo menos Nome e Descrição."); return;
-    }
-    const href=buildMailto();
-    window.location.href=href;
-    setTimeout(()=>{ document.getElementById("modal-anomalia").style.display="none"; },800);
-  });
-}
-
-/* ====== Chamada à API (GAS) ====== */
-async function fetchEquipById(id){
-  const lic=window.__QRMANUT_LICENSE__||{};
-  const url = `${API_URL}?id=${encodeURIComponent(id)}&token=${encodeURIComponent(API_TOKEN)}&licenseKey=${encodeURIComponent(lic.licenseKey||'')}`;
-  const res = await fetch(url, { method:'GET', cache:'no-store' });
-  const json = await res.json();
-  if(!json.ok) throw new Error(json.error||'api_error');
-  return json.data;
-}
-
-/* ====== Boot ====== */
-async function main(){
-  const idQ=qs("id");
-  if(!idQ){ el("#buscaWrap").hidden=false; }
-  try{
-    if(idQ){
+  async function main(){
+    const idQ = qs("id");
+    if(!idQ){ el("#titulo").textContent="Sem ID na URL"; return; }
+    try{
       const eq = await fetchEquipById(idQ);
       render(eq);
-    }else{
-      const input=el("#busca");
-      if(input){
-        input.addEventListener("keyup", async ()=>{
-          const term=input.value.trim();
-          if(term.length<2){ render(null); return; }
-          try{ const eq=await fetchEquipById(term); render(eq); }
-          catch{ render(null); }
-        });
-      }
+    }catch(e){
+      el("#titulo").textContent="Erro ao carregar dados";
+      console.error(e);
     }
-  }catch(err){
-    document.getElementById("titulo").textContent="Erro ao carregar dados";
-    console.error(err);
   }
-  wireMailto();
-}
-document.getElementById("fechar-modal").onclick=document.getElementById("cancelar-modal").onclick=function(){document.getElementById("modal-anomalia").style.display="none";};
-document.addEventListener("DOMContentLoaded", main);
-</script>
+  document.addEventListener("DOMContentLoaded", main);
+  </script>
 
 </body>
 </html>
