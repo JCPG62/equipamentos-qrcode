@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Ficha do Equipamento (mailto UTF-8)</title>
+  <title>Ficha do Equipamento (QRManut + API)</title>
   <style>
     :root { --gap:16px; }
     body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu;max-width:960px;margin:auto;padding:var(--gap);background:#f8f9fb;}
@@ -29,19 +29,54 @@
   </style>
 </head>
 <body>
+
+  <!-- ====== BLOCO DE LICENÇA / DOMAIN LOCK / EXPIRAÇÃO (QRManut) ====== -->
+  <script id="qrmanut-license" type="application/json">
+  {
+    "clientId": "qrmanut_demo",
+    "licenseKey": "LIC-2025-0001",
+    "domains": ["jcpg62.github.io", "localhost"],
+    "features": ["basic","reports"],
+    "issuedAt": "2025-11-01T12:00:00Z",
+    "expiresAt": "2026-11-01T12:00:00Z",
+    "maxDevices": 500,
+    "nonce": "demo-nonce"
+  }
+  </script>
+  <script>
+    function readLicense(){const el=document.getElementById("qrmanut-license");try{return el?JSON.parse(el.textContent):null;}catch{return null}}
+    function hostnameOk(lic){const host=location.hostname||"file://";return (lic.domains||[]).includes(host)}
+    function notExpired(lic){return Date.now()<=new Date(lic.expiresAt).getTime()}
+    async function validateOnline(){return {ok:true,status:"offline"}}
+    async function enforceLicense(){
+      const lic=readLicense(); const card=document.querySelector(".card")||document.body;
+      if(!lic){card.innerHTML="<h1>Licença ausente</h1>"; throw new Error("no license")}
+      if(!hostnameOk(lic)){card.innerHTML="<h1>Domínio não autorizado</h1>"; throw new Error("host")}
+      if(!notExpired(lic)){card.innerHTML="<h1>Licença expirada</h1>"; throw new Error("expired")}
+      window.__QRMANUT_LICENSE__=lic;
+      validateOnline(lic.licenseKey).then(r=>{ if(r.status==='revoked'){ document.body.innerHTML="<h1>Licença revogada</h1>"; }});
+    }
+    enforceLicense().catch(console.error);
+  </script>
+  <!-- ====== FIM BLOCO DE LICENÇA ====== -->
+
   <div class="card">
     <h1 id="titulo">Carregando…</h1>
     <div id="meta" class="muted"></div>
+
     <div class="search" id="buscaWrap" hidden>
       <p>Sem ID na URL. Pesquise pelo ID:</p>
       <input id="busca" type="text" placeholder="Ex.: AC003_S01" />
     </div>
+
     <div class="grid">
       <div>
         <h3>Características</h3>
         <div id="carac" class="kv"></div>
+
         <h3>Plano Preventivo</h3>
         <div id="pp" class="empty">Periodicidade • Próxima Manutenção</div>
+
         <h3>Localização</h3>
         <div id="localizacao" class="empty">-</div>
       </div>
@@ -50,13 +85,13 @@
         <div id="resp" class="empty">-</div>
       </div>
     </div>
-    <p style="margin-top:16px">
-      <a id="reportar" class="chip">Reportar anomalia</a>
-    </p>
+
+    <p style="margin-top:16px"><a id="reportar" class="chip">Reportar anomalia</a></p>
     <p style="font-size: 7px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;JCPG-2025 - Ver.:1.1</p>
     <div class="footer" id="ft"></div>
   </div>
 
+  <!-- Modal de anomalia -->
   <div id="modal-anomalia" style="position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;z-index:9999;">
     <div style="background:#fff;width:min(680px,90vw);border-radius:14px;padding:16px;border:1px solid #e5e7eb;box-shadow:0 10px 30px rgba(0,0,0,.15)">
       <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
@@ -78,128 +113,142 @@
   </div>
 
 <script>
-const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQcUipDyM7vbxoniWi-ABmHa_DQ1rbLbpEajXHu7DVxQ8ihSUQNDslPDXiIEgMLo3QU-H9AI0l2TVcn/pub?gid=326934867&single=true&output=csv";
+/* ====== CONFIG DA API (Apps Script) ====== */
+const API_URL   = "https://script.google.com/macros/s/AKfycbzalCvgIMgSkA0XdNnkO121RjsqrvMLxB_g5BF6otxdS8AhlLe5Duyy3vZ6U_rtR8xZ/exec";
+const API_TOKEN = "Yb5m_9rZcQw!7L2o"; // mesmo token do GAS
 
+/* ====== Helpers ====== */
 function qs(k){ return new URLSearchParams(location.search).get(k); }
 function el(s){ return document.querySelector(s); }
 function esc(s){ return (s||"").toString().replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
-function normKey(s){ return (s||"").toString().normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/\s+/g,' ').trim().replace(/[^a-z0-9]+/g,'_').replace(/^_|_$/g,''); }
 function clean(v){ if(v===null||v===undefined)return"";let s=String(v).trim();s=s.replace(/^"+|"+$/g,"");if(s==="0"||s==="0,0"||s==="0.0"||s==='"0"')return"";return s; }
-function parseCSV(text,sep=","){const rows=[];let i=0,field="",row=[],inQ=false;while(i<text.length){const c=text[i];if(inQ){if(c==='"'){if(text[i+1]==='"'){field+='"';i++;}else{inQ=false;}}else field+=c;}else{if(c==='"')inQ=true;else if(c===sep){row.push(field);field="";}else if(c==='\n'){row.push(field);rows.push(row);field="";row=[];}else if(c==='\r'){}else field+=c;}i++;}if(field.length||row.length){row.push(field);rows.push(row);}const headersOrig=rows.shift();const headers=headersOrig.map(normKey);const objects=rows.filter(r=>r.some(x=>String(x).trim().length)).map(cols=>{const obj={};headers.forEach((nk,idx)=>{obj[nk]=cols[idx]!==undefined?cols[idx]:"";});return obj;});return{headers,rows:objects};}
 function pick(obj,keys){for(const k of keys){if(obj[k]!==undefined&&String(obj[k]).trim()!=='')return obj[k];}return"";}
 function parseDateFlexible(s){const v=(s||"").trim();if(!v)return null;let m=v.match(/^(\d{4})-(\d{2})-(\d{2})$/);if(m)return new Date(`${m[1]}-${m[2]}-${m[3]}T00:00:00`);m=v.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);if(m)return new Date(`${m[3]}-${m[2]}-${m[1]}T00:00:00`);const d=new Date(v);if(isNaN(d))return null;return new Date(d.getFullYear(),d.getMonth(),d.getDate());}
 function formatDateBR(s){const v=(s||"").trim();if(!v)return"";const iso=v.match(/^(\d{4})-(\d{2})-(\d{2})$/);if(iso){const [_,Y,M,D]=iso;return`${D}/${M}/${Y}`;}const br=v.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);if(br)return v;const d=new Date(v);if(!isNaN(d.getTime())){const dd=String(d.getDate()).padStart(2,"0");const mm=String(d.getMonth()+1).padStart(2,"0");const yy=String(d.getFullYear());return`${dd}/${mm}/${yy}`;}return v;}
 
+/* ====== Estado envio e-mail ====== */
 let equipID="",equipNome="",emailDestino="";const DEFAULT_MAILTO="jotacpg@gmail.com";
 function normalizeEmailList(s){return(s||"").split(/[,;]+/).map(x=>x.trim()).filter(Boolean).join(",");}
-function render(eq){if(!eq){el("#titulo").textContent="Ativo não encontrado";return;}
+
+/* ====== Renderização ====== */
+function render(eq){
+  if(!eq){ el("#titulo").textContent="Ativo não encontrado"; return; }
   const id=clean(pick(eq,["id","tag","codigo","codigo_do_equipamento"]));
   const nome=clean(pick(eq,["nome_do_equipamento","descricao","descricao_do_equipamento"]));
-  equipID=id;equipNome=nome;el("#titulo").textContent=(id||"Equipamento")+(nome?" – "+nome:"");document.getElementById("equip_id_input").value=id;
-  const fabricante=clean(pick(eq,["fabricante","marca"]));const modelo=clean(pick(eq,["modelo"]));const capacidade=clean(pick(eq,["capacidade"]));const fla=clean(pick(eq,["amperagem_nominal_fla","fla","amperagem_nominal"]));const voltagem=clean(pick(eq,["voltagem","tensao","tensao_v"]));const prestador=clean(pick(eq,["prestador","responsavel","responsavel_manutencao"]));
-  const emailFonte=clean(pick(eq,["email_fonte","email_da_fonte","email_responsavel","email"]));emailDestino=emailFonte;
-  const periodicidade=clean(pick(eq,["periodicidade"]));const prox=clean(pick(eq,["proxima_manutencao","proxima_manutacao","proxima_preventiva"]));
+  equipID=id; equipNome=nome;
+  el("#titulo").textContent=(id||"Equipamento")+(nome?" – "+nome:"");
+  document.getElementById("equip_id_input").value=id;
+
+  const fabricante=clean(pick(eq,["fabricante","marca"]));
+  const modelo=clean(pick(eq,["modelo"]));
+  const capacidade=clean(pick(eq,["capacidade"]));
+  const fla=clean(pick(eq,["amperagem_nominal_fla","fla","amperagem_nominal"]));
+  const voltagem=clean(pick(eq,["voltagem","tensao","tensao_v"]));
+  const prestador=clean(pick(eq,["prestador","responsavel","responsavel_manutencao"]));
+
+  const emailFonte=clean(pick(eq,["email_fonte","email_da_fonte","email_responsavel","email"]));
+  emailDestino=emailFonte;
+
+  const periodicidade=clean(pick(eq,["periodicidade"]));
+  const prox=clean(pick(eq,["proxima_manutencao","proxima_manutacao","proxima_preventiva"]));
+
   el("#meta").innerHTML=[fabricante,modelo].filter(Boolean).join("<br>");
+
   const pares=[["Capacidade",capacidade],["Amperagem Nominal (FLA)",fla],["Voltagem",voltagem],["Fabricante",fabricante],["Modelo",modelo]];
-  const caracHTML=pares.filter(([k,v])=>v&&v.trim()!=='').map(([k,v])=>{if(k==="Modelo"){return"<div><b>"+esc(k)+":</b></div>"+"<div style='grid-column:1 / -1;white-space:normal;word-break:break-word;overflow-wrap:anywhere;'>"+esc(v)+"</div>";}else{return"<div><b>"+esc(k)+":</b></div><div>"+esc(v)+"</div>";}}).join("");
+  const caracHTML=pares.filter(([k,v])=>v&&v.trim()!=='').map(([k,v])=>{
+    if(k==="Modelo"){
+      return "<div><b>"+esc(k)+":</b></div>"+"<div style='grid-column:1 / -1;white-space:normal;word-break:break-word;overflow-wrap:anywhere;'>"+esc(v)+"</div>";
+    }else{
+      return "<div><b>"+esc(k)+":</b></div><div>"+esc(v)+"</div>";
+    }
+  }).join("");
   el("#carac").innerHTML=caracHTML||"<div class='empty'>Sem dados</div>";
-  const pp=[];if(periodicidade)pp.push("<b>Periodicidade:</b> "+esc(periodicidade));
-  if(prox){const proxFmt=formatDateBR(prox);const dTarget=parseDateFlexible(prox);let badge="";if(dTarget){const today=new Date();const todayMid=new Date(today.getFullYear(),today.getMonth(),today.getDate());const msDay=24*60*60*1000;const daysUntil=Math.floor((dTarget-todayMid)/msDay);if(daysUntil<0){badge=`<span class="badge due" title="Vencida há ${Math.abs(daysUntil)} dia(s)">Vencida</span>`;}else if(daysUntil<=30){badge=`<span class="badge soon" title="Faltam ${daysUntil} dia(s)">Em ${daysUntil} dia(s)</span>`;}else{badge="";}}pp.push(`<b>Próxima Manutenção:</b> ${esc(proxFmt)} ${badge}`);}
+
+  const pp=[];
+  if(periodicidade) pp.push("<b>Periodicidade:</b> "+esc(periodicidade));
+  if(prox){
+    const proxFmt=formatDateBR(prox);
+    const dTarget=parseDateFlexible(prox); let badge="";
+    if(dTarget){
+      const today=new Date(); const todayMid=new Date(today.getFullYear(),today.getMonth(),today.getDate());
+      const msDay=24*60*60*1000; const daysUntil=Math.floor((dTarget-todayMid)/msDay);
+      if(daysUntil<0){ badge=`<span class="badge due" title="Vencida há ${Math.abs(daysUntil)} dia(s)">Vencida</span>`; }
+      else if(daysUntil<=30){ badge=`<span class="badge soon" title="Faltam ${daysUntil} dia(s)">Em ${daysUntil} dia(s)</span>`; }
+    }
+    pp.push(`<b>Próxima Manutenção:</b> ${esc(proxFmt)} ${badge}`);
+  }
   el("#pp").innerHTML=pp.length?pp.join("<br>"):"<span class='empty'>-</span>";
+
   const localizacao=clean(pick(eq,["localizacao","endereco","setor","area","unidade"]));
   el("#localizacao").textContent=localizacao||"-";
   el("#resp").textContent=prestador||"-";
+
   const destinatarioInfo=normalizeEmailList(emailDestino)||DEFAULT_MAILTO;
   el("#ft").innerHTML="Última atualização: "+new Date().toLocaleString()+"<br><span class='muted'>Reportes serão enviados para: "+esc(destinatarioInfo)+"</span>";
-  el("#reportar").onclick=function(){document.getElementById("modal-anomalia").style.display="flex";};}
-function buildMailto(){const to=normalizeEmailList(emailDestino)||DEFAULT_MAILTO;const assunto=`[Manutenção de Equipamentos e Outros] ${equipID}${equipNome?" – "+equipNome:""}`;const nome=document.getElementById("nome").value.trim();const contato=document.getElementById("contato").value.trim();const descricao=document.getElementById("descricao").value.trim();const corpo=[`ID: ${equipID}`,`Equipamento: ${equipNome}`,`Nome: ${nome}`,`Contato: ${contato}`,`Descrição: ${descricao}`].join("\n");const url=`mailto:${encodeURIComponent(to)}?subject=${encodeURIComponent(assunto)}&body=${encodeURIComponent(corpo)}`;return url;}
-function wireMailto(){document.getElementById("btn-enviar").addEventListener("click",()=>{if(!document.getElementById("nome").value.trim()||!document.getElementById("descricao").value.trim()){alert("Preencha pelo menos Nome e Descrição.");return;}const href=buildMailto();window.location.href=href;setTimeout(()=>{document.getElementById("modal-anomalia").style.display="none";},800);});}
-async function main(){const idQ=qs("id");if(!idQ)el("#buscaWrap").hidden=false;const res=await fetch(CSV_URL,{cache:"no-store"});const text=await res.text();const data=parseCSV(text);const rows=data.rows;const findById=(term)=>{const t=clean(term);return rows.find(r=>{const idc=clean(pick(r,["id","tag","codigo","codigo_do_equipamento"]));return idc===t;});};let eq=idQ?findById(idQ):null;if(!eq){if(idQ)el("#titulo").textContent="Ativo não encontrado";const input=el("#busca");if(input){input.addEventListener("keyup",()=>{const found=findById(input.value.trim());render(found);});}}else{render(eq);}wireMailto();}
-main().catch(err=>{document.getElementById("titulo").textContent="Erro ao carregar dados";console.error(err);});
-document.getElementById("fechar-modal").onclick=document.getElementById("cancelar-modal").onclick=function(){document.getElementById("modal-anomalia").style.display="none";};
-</script>
 
-  <!-- ====== BLOCO DE LICENÇA / DOMAIN LOCK / EXPIRAÇÃO (QRManut) ====== -->
-  <script id="qrmanut-license" type="application/json">
-  {
-    "clientId": "demo_client",
-    "licenseKey": "LIC-DEMO-0001",
-    "domains": ["localhost", "127.0.0.1", "file://", "qrmanut.local"],
-    "features": ["basic","reports"],
-    "issuedAt": "2025-11-01T12:00:00Z",
-    "expiresAt": "2026-11-01T12:00:00Z",
-    "maxDevices": 500,
-    "nonce": "demo-nonce"
-  }
-  </script>
+  el("#reportar").onclick=function(){ document.getElementById("modal-anomalia").style.display="flex"; };
+}
 
-  <script>
-  // ===== Helpers para verificação de licença (offline) =====
-  function readLicense() {
-    const el = document.getElementById("qrmanut-license");
-    if (!el) return null;
-    try { return JSON.parse(el.textContent); } catch(e){ return null; }
-  }
-
-  function hostnameOk(license) {
-    const host = location.hostname || "file://";
-    const domains = (license.domains || []).map(String);
-    return domains.includes(host) || (host === "" && domains.includes("file://"));
-  }
-
-  function notExpired(license) {
-    const exp = new Date(license.expiresAt).getTime();
-    return Date.now() <= exp;
-  }
-
-  // (Opcional) Validação online — placeholder (não bloqueia o offline)
-  async function validateOnline(licenseKey) {
-    const URL_VALIDATE = "https://api.seu-dominio.com/api/licenses/validate";
-    try {
-      const ctrl = new AbortController();
-      const t = setTimeout(()=>ctrl.abort(), 2500);
-      const resp = await fetch(URL_VALIDATE+"?license_key="+encodeURIComponent(licenseKey), {signal: ctrl.signal});
-      clearTimeout(t);
-      if (!resp.ok) return { ok:false, reason:"http_"+resp.status };
-      const data = await resp.json();
-      return data;
-    } catch(e){
-      return { ok:true, status:"offline" };
+/* ====== Mailto ====== */
+function buildMailto(){
+  const to=normalizeEmailList(emailDestino)||DEFAULT_MAILTO;
+  const assunto=`[Manutenção de Equipamentos e Outros] ${equipID}${equipNome?" – "+equipNome:""}`;
+  const nome=document.getElementById("nome").value.trim();
+  const contato=document.getElementById("contato").value.trim();
+  const descricao=document.getElementById("descricao").value.trim();
+  const corpo=[`ID: ${equipID}`,`Equipamento: ${equipNome}`,`Nome: ${nome}`,`Contato: ${contato}`,`Descrição: ${descricao}`].join("\n");
+  const url=`mailto:${encodeURIComponent(to)}?subject=${encodeURIComponent(assunto)}&body=${encodeURIComponent(corpo)}`;
+  return url;
+}
+function wireMailto(){
+  document.getElementById("btn-enviar").addEventListener("click",()=>{
+    if(!document.getElementById("nome").value.trim()||!document.getElementById("descricao").value.trim()){
+      alert("Preencha pelo menos Nome e Descrição."); return;
     }
-  }
+    const href=buildMailto();
+    window.location.href=href;
+    setTimeout(()=>{ document.getElementById("modal-anomalia").style.display="none"; },800);
+  });
+}
 
-  async function enforceLicenseOrBlock() {
-    const lic = readLicense();
-    const card = document.querySelector(".card") || document.body;
+/* ====== Chamada à API (GAS) ====== */
+async function fetchEquipById(id){
+  const lic=window.__QRMANUT_LICENSE__||{};
+  const url = `${API_URL}?id=${encodeURIComponent(id)}&token=${encodeURIComponent(API_TOKEN)}&licenseKey=${encodeURIComponent(lic.licenseKey||'')}`;
+  const res = await fetch(url, { method:'GET', cache:'no-store' });
+  const json = await res.json();
+  if(!json.ok) throw new Error(json.error||'api_error');
+  return json.data;
+}
 
-    if (!lic) {
-      card.innerHTML = "<h1>Licença ausente</h1><p>Arquivo de licença não encontrado.</p>";
-      throw new Error("Licença ausente");
-    }
-
-    if (!hostnameOk(lic)) {
-      card.innerHTML = "<h1>Domínio não autorizado</h1><p>Este domínio/ambiente não consta na licença.</p>";
-      throw new Error("Domínio não autorizado");
-    }
-    if (!notExpired(lic)) {
-      card.innerHTML = "<h1>Licença expirada</h1><p>Entre em contato com o suporte para renovar a licença.</p>";
-      throw new Error("Licença expirada");
-    }
-
-    validateOnline(lic.licenseKey).then(resp => {
-      if (resp && resp.status === "revoked") {
-        document.body.innerHTML = "<div style='max-width:720px;margin:40px auto;font-family:system-ui'><h1>Licença revogada</h1><p>O acesso foi bloqueado pelo servidor de licenças. Entre em contato com o suporte.</p></div>";
+/* ====== Boot ====== */
+async function main(){
+  const idQ=qs("id");
+  if(!idQ){ el("#buscaWrap").hidden=false; }
+  try{
+    if(idQ){
+      const eq = await fetchEquipById(idQ);
+      render(eq);
+    }else{
+      const input=el("#busca");
+      if(input){
+        input.addEventListener("keyup", async ()=>{
+          const term=input.value.trim();
+          if(term.length<2){ render(null); return; }
+          try{ const eq=await fetchEquipById(term); render(eq); }
+          catch{ render(null); }
+        });
       }
-    }).catch(()=>{});
-
-    window.__QRMANUT_LICENSE__ = lic;
+    }
+  }catch(err){
+    document.getElementById("titulo").textContent="Erro ao carregar dados";
+    console.error(err);
   }
-
-  (function(){
-    enforceLicenseOrBlock().catch(err => console.error(err));
-  })();
-  </script>
-  <!-- ====== FIM DO BLOCO DE LICENÇA (QRMANUT) ====== -->
+  wireMailto();
+}
+document.getElementById("fechar-modal").onclick=document.getElementById("cancelar-modal").onclick=function(){document.getElementById("modal-anomalia").style.display="none";};
+document.addEventListener("DOMContentLoaded", main);
+</script>
 
 </body>
 </html>
