@@ -118,5 +118,88 @@ async function main(){const idQ=qs("id");if(!idQ)el("#buscaWrap").hidden=false;c
 main().catch(err=>{document.getElementById("titulo").textContent="Erro ao carregar dados";console.error(err);});
 document.getElementById("fechar-modal").onclick=document.getElementById("cancelar-modal").onclick=function(){document.getElementById("modal-anomalia").style.display="none";};
 </script>
+
+  <!-- ====== BLOCO DE LICENÇA / DOMAIN LOCK / EXPIRAÇÃO (QRManut) ====== -->
+  <script id="qrmanut-license" type="application/json">
+  {
+    "clientId": "demo_client",
+    "licenseKey": "LIC-DEMO-0001",
+    "domains": ["localhost", "127.0.0.1", "file://", "qrmanut.local"],
+    "features": ["basic","reports"],
+    "issuedAt": "2025-11-01T12:00:00Z",
+    "expiresAt": "2026-11-01T12:00:00Z",
+    "maxDevices": 500,
+    "nonce": "demo-nonce"
+  }
+  </script>
+
+  <script>
+  // ===== Helpers para verificação de licença (offline) =====
+  function readLicense() {
+    const el = document.getElementById("qrmanut-license");
+    if (!el) return null;
+    try { return JSON.parse(el.textContent); } catch(e){ return null; }
+  }
+
+  function hostnameOk(license) {
+    const host = location.hostname || "file://";
+    const domains = (license.domains || []).map(String);
+    return domains.includes(host) || (host === "" && domains.includes("file://"));
+  }
+
+  function notExpired(license) {
+    const exp = new Date(license.expiresAt).getTime();
+    return Date.now() <= exp;
+  }
+
+  // (Opcional) Validação online — placeholder (não bloqueia o offline)
+  async function validateOnline(licenseKey) {
+    const URL_VALIDATE = "https://api.seu-dominio.com/api/licenses/validate";
+    try {
+      const ctrl = new AbortController();
+      const t = setTimeout(()=>ctrl.abort(), 2500);
+      const resp = await fetch(URL_VALIDATE+"?license_key="+encodeURIComponent(licenseKey), {signal: ctrl.signal});
+      clearTimeout(t);
+      if (!resp.ok) return { ok:false, reason:"http_"+resp.status };
+      const data = await resp.json();
+      return data;
+    } catch(e){
+      return { ok:true, status:"offline" };
+    }
+  }
+
+  async function enforceLicenseOrBlock() {
+    const lic = readLicense();
+    const card = document.querySelector(".card") || document.body;
+
+    if (!lic) {
+      card.innerHTML = "<h1>Licença ausente</h1><p>Arquivo de licença não encontrado.</p>";
+      throw new Error("Licença ausente");
+    }
+
+    if (!hostnameOk(lic)) {
+      card.innerHTML = "<h1>Domínio não autorizado</h1><p>Este domínio/ambiente não consta na licença.</p>";
+      throw new Error("Domínio não autorizado");
+    }
+    if (!notExpired(lic)) {
+      card.innerHTML = "<h1>Licença expirada</h1><p>Entre em contato com o suporte para renovar a licença.</p>";
+      throw new Error("Licença expirada");
+    }
+
+    validateOnline(lic.licenseKey).then(resp => {
+      if (resp && resp.status === "revoked") {
+        document.body.innerHTML = "<div style='max-width:720px;margin:40px auto;font-family:system-ui'><h1>Licença revogada</h1><p>O acesso foi bloqueado pelo servidor de licenças. Entre em contato com o suporte.</p></div>";
+      }
+    }).catch(()=>{});
+
+    window.__QRMANUT_LICENSE__ = lic;
+  }
+
+  (function(){
+    enforceLicenseOrBlock().catch(err => console.error(err));
+  })();
+  </script>
+  <!-- ====== FIM DO BLOCO DE LICENÇA (QRMANUT) ====== -->
+
 </body>
 </html>
