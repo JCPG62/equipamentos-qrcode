@@ -102,31 +102,60 @@
     return json.data;
   }
 
-  function render(eq){
-    if(!eq){ el("#titulo").textContent="Ativo não encontrado"; return; }
-    const id=clean(pick(eq,["id","tag","codigo"]));
-    const nome=clean(pick(eq,["nome_do_equipamento","descricao"]));
-    el("#titulo").textContent=(id||"Equipamento")+(nome?" – "+nome:"");
-    el("#meta").innerHTML=[clean(eq.fabricante),clean(eq.modelo)].filter(Boolean).join("<br>");
-    el("#carac").innerHTML="<div><b>Capacidade:</b></div><div>"+(eq.capacidade||"-")+"</div>";
-    el("#pp").innerHTML=`<b>Periodicidade:</b> ${eq.periodicidade||"-"}<br><b>Próxima:</b> ${eq.proxima_manutencao||"-"}`;
-    el("#localizacao").textContent=eq.localizacao||"-";
-    el("#resp").textContent=eq.prestador||"-";
+  <script>
+function formatDateBR(s){
+  const v=(s||"").toString().trim();
+  if(!v) return "";
+  // aceita 2025-11-15 ou 15/11/2025
+  const iso=v.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if(iso) return `${iso[3]}/${iso[2]}/${iso[1]}`;
+  return v;
+}
+
+function render(eq){
+  if(!eq){ 
+    el("#titulo").textContent="Ativo não encontrado"; 
+    el("#meta").textContent=""; 
+    el("#carac").innerHTML = "<div class='empty'>Sem dados</div>";
+    el("#pp").innerHTML = "<span class='empty'>-</span>";
+    el("#localizacao").textContent="-";
+    el("#resp").textContent="-";
+    return; 
   }
 
-  async function main(){
-    const idQ = qs("id");
-    if(!idQ){ el("#titulo").textContent="Sem ID na URL"; return; }
-    try{
-      const eq = await fetchEquipById(idQ);
-      render(eq);
-    }catch(e){
-      el("#titulo").textContent="Erro ao carregar dados";
-      console.error(e);
-    }
-  }
-  document.addEventListener("DOMContentLoaded", main);
-  </script>
+  const id   = clean(pick(eq,["id","tag","codigo","codigo_do_equipamento"]));
+  const nome = clean(pick(eq,["nome_do_equipamento","descricao","descricao_do_equipamento"]));
+  const fabric = clean(eq.fabricante);
+  const modelo = clean(eq.modelo);
 
-</body>
-</html>
+  el("#titulo").textContent = (id||"Equipamento") + (nome ? " – " + nome : "");
+  el("#meta").innerHTML = [fabric, modelo].filter(Boolean).join("<br>");
+
+  // ---------- Características ----------
+  const carac = [];
+  if (clean(eq.capacidade))            carac.push(["Capacidade",            eq.capacidade]);
+  if (clean(eq.amperagem_nominal_fla)) carac.push(["Amperagem nominal (FLA)",eq.amperagem_nominal_fla]);
+  if (clean(eq.voltagem))              carac.push(["Voltagem",              eq.voltagem]);
+  if (fabric)                          carac.push(["Fabricante",            fabric]);
+  if (modelo)                          carac.push(["Modelo",                modelo]);
+
+  el("#carac").innerHTML = carac.length
+    ? carac.map(([k,v]) => `<div><b>${esc(k)}:</b></div><div>${esc(v)}</div>`).join("")
+    : "<div class='empty'>Sem dados</div>";
+
+  // ---------- Plano Preventivo ----------
+  const pp = [];
+  if (clean(eq.periodicidade)) pp.push(`<b>Periodicidade:</b> ${esc(eq.periodicidade)}`);
+  if (clean(eq.proxima_manutencao)) pp.push(`<b>Próxima:</b> ${esc(formatDateBR(eq.proxima_manutencao))}`);
+  el("#pp").innerHTML = pp.length ? pp.join("<br>") : "<span class='empty'>-</span>";
+
+  // ---------- Localização ----------
+  const loc = clean(pick(eq,["localizacao","endereco","setor","area","unidade","cliente"]));
+  el("#localizacao").textContent = loc || "-";
+
+  // ---------- Responsável / Prestador ----------
+  const responsavel = clean(pick(eq,["prestador","responsavel"]));
+  const email = clean(pick(eq,["email_fonte","email_responsavel","email"]));
+  el("#resp").textContent = [responsavel, email].filter(Boolean).join(" • ") || "-";
+}
+</script>
