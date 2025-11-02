@@ -81,96 +81,113 @@
     <div class="footer" id="ft"></div>
   </div>
 
-  <!-- ====== CONFIG DA API (Apps Script) ====== -->
+  <!-- ====== CONFIG + LÓGICA (TUDO em UM ÚNICO <script>) ====== -->
   <script>
-  // === CONFIG API (Apps Script) ===
-  const API_URL   = "https://script.google.com/macros/s/AKfycb6zEIKP0cARK6G7zEv4TUBxjK48xET187kHZElNksch-WcxMHR0KTouwX_3NZs6X7KfKJQ/exec";
-  const API_TOKEN = "pncqalpha123";                   // igual ao do GAS
-  </script>
+    // === CONFIG API (Apps Script) ===
+    const API_URL   = "https://script.google.com/macros/s/AKfycb6zEIKP0cARK6G7zEv4TUBxjK48xET187kHZElNksch-WcxMHR0KTouwX_3NZs6X7KfKJQ/exec";
+    const API_TOKEN = "pncqalpha123"; // igual ao do GAS
 
-
-  function qs(k){ return new URLSearchParams(location.search).get(k); }
-  function el(s){ return document.querySelector(s); }
-  function esc(s){ return (s||"").toString().replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
-  function clean(v){ if(v===null||v===undefined)return"";let s=String(v).trim();s=s.replace(/^"+|"+$/g,"");if(s==="0"||s==="0,0"||s==="0.0"||s==='"0"')return"";return s; }
-  function pick(obj,keys){for(const k of keys){if(obj[k]!==undefined&&String(obj[k]).trim()!=='')return obj[k];}return"";}
-  function formatDateBR(s){const v=(s||"").trim();if(!v)return"";const iso=v.match(/^(\d{4})-(\d{2})-(\d{2})$/);if(iso){const [_,Y,M,D]=iso;return`${D}/${M}/${Y}`;}return v;}
-
- async function fetchEquipById(id){
-  const lic = window.__QRMANUT_LICENSE__ || {};
-  const url = `${API_URL}?id=${encodeURIComponent(id)}&token=${encodeURIComponent(API_TOKEN)}&licenseKey=${encodeURIComponent(lic.licenseKey||'LIC-2025-0001')}`;
-  console.log("🔗 Chamando API:", url);
-  const res = await fetch(url, { method:'GET', cache:'no-store' });
-  const json = await res.json();
-  console.log("📦 Resposta API:", json);
-  if(!json.ok) throw new Error(json.error||'api_error');
-  return json.data;
-}
-
-
-  <script>
-function formatDateBR(s){
-  const v=(s||"").toString().trim();
-  if(!v) return "";
-  // aceita 2025-11-15 ou 15/11/2025
-  const iso=v.match(/^(\d{4})-(\d{2})-(\d{2})$/);
-  if(iso) return `${iso[3]}/${iso[2]}/${iso[1]}`;
-  return v;
-}
-
-<script>
-  function render(eq){
-    if(!eq){
-      document.querySelector("#titulo").textContent = "Ativo não encontrado";
-      return;
+    // ===== Helpers =====
+    function qs(k){ return new URLSearchParams(location.search).get(k); }
+    function el(s){ return document.querySelector(s); }
+    function esc(s){ return (s||"").toString().replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
+    function clean(v){ if(v===null||v===undefined)return"";let s=String(v).trim();s=s.replace(/^"+|"+$/g,"");if(s==="0"||s==="0,0"||s==="0.0"||s==='"0"')return"";return s; }
+    function pick(obj,keys){for(const k of keys){if(obj[k]!==undefined&&String(obj[k]).trim()!=='')return obj[k];}return"";}
+    function formatDateBR(s){
+      const v=(s||"").toString().trim();
+      if(!v) return "";
+      const iso=v.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+      if(iso) return `${iso[3]}/${iso[2]}/${iso[1]}`;
+      return v;
     }
 
-    // Título
-    const id   = (eq.id || "").toString().trim();
-    const nome = (eq.nome_do_equipamento || "").toString().trim();
-    document.querySelector("#titulo").textContent = (id || "Equipamento") + (nome ? " – " + nome : "");
+    // ===== Chamada API =====
+    async function fetchEquipById(id){
+      const lic = window.__QRMANUT_LICENSE__ || {};
+      const url = `${API_URL}?id=${encodeURIComponent(id)}&token=${encodeURIComponent(API_TOKEN)}&licenseKey=${encodeURIComponent(lic.licenseKey||'LIC-2025-0001')}`;
+      console.log("🔗 Chamando API:", url);
+      const res = await fetch(url, { method:'GET', cache:'no-store' });
+      const json = await res.json();
+      console.log("📦 Resposta API:", json);
+      if(!json.ok) throw new Error(json.error||'api_error');
+      return json.data;
+    }
 
-    // Subtítulo (meta)
-    const fabricante = (eq.fabricante || "").toString().trim();
-    const modelo     = (eq.modelo     || "").toString().trim();
-    document.querySelector("#meta").innerHTML = [fabricante, modelo].filter(Boolean).join("<br>");
+    // ===== Render =====
+    function render(eq){
+      if(!eq){
+        el("#titulo").textContent = "Ativo não encontrado";
+        return;
+      }
 
-    // Características
-    const capacidade = (eq.capacidade || "").toString().trim();
-    const fla        = (eq.amperagem_nominal_fla || "").toString().trim();
-    const voltagem   = (eq.voltagem || "").toString().trim();
+      // Título
+      const id   = (eq.id || "").toString().trim();
+      const nome = (eq.nome_do_equipamento || "").toString().trim();
+      el("#titulo").textContent = (id || "Equipamento") + (nome ? " – " + nome : "");
 
-    const pares = [
-      ["Fabricante", fabricante],
-      ["Modelo", modelo],
-      ["Capacidade", capacidade],
-      ["Amperagem Nominal (FLA)", fla],
-      ["Voltagem", voltagem],
-    ];
+      // Meta
+      const fabricante = (eq.fabricante || "").toString().trim();
+      const modelo     = (eq.modelo     || "").toString().trim();
+      el("#meta").innerHTML = [fabricante, modelo].filter(Boolean).join("<br>");
 
-    const caracHTML = pares
-      .filter(([k,v]) => v && v !== "-")
-      .map(([k,v]) =>
-        k === "Modelo"
-          ? `<div><b>${k}:</b></div><div style="grid-column:1 / -1;word-break:break-word;overflow-wrap:anywhere;">${v}</div>`
-          : `<div><b>${k}:</b></div><div>${v}</div>`
-      )
-      .join("") || "<div class='empty'>Sem dados</div>";
+      // Características
+      const capacidade = (eq.capacidade || "").toString().trim();
+      const fla        = (eq.amperagem_nominal_fla || "").toString().trim();
+      const voltagem   = (eq.voltagem || "").toString().trim();
 
-    document.querySelector("#carac").innerHTML = caracHTML;
+      const pares = [
+        ["Fabricante", fabricante],
+        ["Modelo", modelo],
+        ["Capacidade", capacidade],
+        ["Amperagem Nominal (FLA)", fla],
+        ["Voltagem", voltagem],
+      ];
 
-    // Plano preventivo
-    const periodicidade = (eq.periodicidade || "").toString().trim();
-    const prox = (eq.proxima_manutencao || "").toString().trim();
-    const proxFmt = prox.replace(/^(\d{4})-(\d{2})-(\d{2})$/, (_,Y,M,D)=>`${D}/${M}/${Y}`);
+      const caracHTML = pares
+        .filter(([k,v]) => v && v !== "-")
+        .map(([k,v]) =>
+          k === "Modelo"
+            ? `<div><b>${esc(k)}:</b></div><div style="grid-column:1 / -1;word-break:break-word;overflow-wrap:anywhere;">${esc(v)}</div>`
+            : `<div><b>${esc(k)}:</b></div><div>${esc(v)}</div>`
+        )
+        .join("") || "<div class='empty'>Sem dados</div>";
 
-    const pp = [];
-    if (periodicidade) pp.push(`<b>Periodicidade:</b> ${periodicidade}`);
-    if (prox)          pp.push(`<b>Próxima:</b> ${proxFmt}`);
-    document.querySelector("#pp").innerHTML = pp.length ? pp.join("<br>") : "<span class='empty'>-</span>";
+      el("#carac").innerHTML = caracHTML;
 
-    // Localização e prestador
-    document.querySelector("#localizacao").textContent = (eq.localizacao || "-");
-    document.querySelector("#resp").textContent        = (eq.prestador   || "-");
-  }
-</script>
+      // Plano
+      const periodicidade = (eq.periodicidade || "").toString().trim();
+      const prox          = formatDateBR(eq.proxima_manutencao);
+
+      const pp = [];
+      if (periodicidade) pp.push(`<b>Periodicidade:</b> ${esc(periodicidade)}`);
+      if (prox)          pp.push(`<b>Próxima:</b> ${esc(prox)}`);
+      el("#pp").innerHTML = pp.length ? pp.join("<br>") : "<span class='empty'>-</span>";
+
+      // Localização & Responsável
+      el("#localizacao").textContent = (eq.localizacao || "-");
+      el("#resp").textContent        = (eq.prestador   || "-");
+
+      // Rodapé (timestamp)
+      el("#ft").innerHTML = "Última atualização: " + new Date().toLocaleString();
+    }
+
+    // ===== Boot =====
+    async function main(){
+      const idQ = qs("id");
+      if(!idQ){
+        el("#titulo").textContent = "Sem ID na URL";
+        return;
+      }
+      try{
+        const eq = await fetchEquipById(idQ);
+        render(eq);
+      }catch(e){
+        console.error(e);
+        el("#titulo").textContent = "Erro ao carregar dados";
+      }
+    }
+    document.addEventListener("DOMContentLoaded", main);
+  </script>
+
+</body>
+</html>
