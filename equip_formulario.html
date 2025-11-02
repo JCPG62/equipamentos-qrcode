@@ -76,9 +76,57 @@
       </div>
     </div>
 
-    <p style="margin-top:16px"><a id="reportar" class="chip">Reportar anomalia</a></p>
-    <p style="font-size: 7px;">JCPG-2025 - Ver.:1.1</p>
-    <div class="footer" id="ft"></div>
+    <p style="margin-top:16px">
+  <a id="reportar" class="chip">Reportar anomalia</a>
+</p>
+
+<script>
+  // ... (seu código já existente) ...
+
+  // URL da API já definida: API_URL
+  // Token já definido: API_TOKEN
+
+  async function enviarAnomalia(idEquipamento, descricao, reportadoPor) {
+    const lic = window.__QRMANUT_LICENSE__ || {};
+    const payload = {
+      token: API_TOKEN,
+      licenseKey: lic.licenseKey || "LIC-2025-0001",
+      id: idEquipamento,
+      descricao: descricao,
+      reportadoPor: reportadoPor || ""
+    };
+
+    const res = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+    const json = await res.json();
+    if (!json.ok) throw new Error(json.error || "post_error");
+    return true;
+  }
+
+  // Liga o botão "Reportar anomalia"
+  document.getElementById("reportar").addEventListener("click", async () => {
+    try {
+      const idEquip = (qs("id") || "").trim();
+      if (!idEquip) { alert("ID ausente na URL."); return; }
+
+      const descr = prompt("Descreva a anomalia:");
+      if (!descr || !descr.trim()) return;
+
+      const quem = prompt("Seu nome (opcional):") || "";
+
+      await enviarAnomalia(idEquip, descr.trim(), quem.trim());
+      alert("Anomalia registrada com sucesso!");
+
+    } catch (e) {
+      console.error(e);
+      alert("Falha ao registrar anomalia.");
+    }
+  });
+</script>
+
   </div>
 
   <!-- ====== CONFIG + LÓGICA (TUDO em UM ÚNICO <script>) ====== -->
