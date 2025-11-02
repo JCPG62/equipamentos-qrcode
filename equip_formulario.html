@@ -93,14 +93,17 @@
   function pick(obj,keys){for(const k of keys){if(obj[k]!==undefined&&String(obj[k]).trim()!=='')return obj[k];}return"";}
   function formatDateBR(s){const v=(s||"").trim();if(!v)return"";const iso=v.match(/^(\d{4})-(\d{2})-(\d{2})$/);if(iso){const [_,Y,M,D]=iso;return`${D}/${M}/${Y}`;}return v;}
 
-  async function fetchEquipById(id){
-    const lic = window.__QRMANUT_LICENSE__ || {};
-    const url = `${API_URL}?id=${encodeURIComponent(id)}&token=${encodeURIComponent(API_TOKEN)}&licenseKey=${encodeURIComponent(lic.licenseKey||'')}`;
-    const res = await fetch(url, { method:'GET', cache:'no-store' });
-    const json = await res.json();
-    if(!json.ok) throw new Error(json.error||'api_error');
-    return json.data;
-  }
+ async function fetchEquipById(id){
+  const lic = window.__QRMANUT_LICENSE__ || {};
+  const url = `${API_URL}?id=${encodeURIComponent(id)}&token=${encodeURIComponent(API_TOKEN)}&licenseKey=${encodeURIComponent(lic.licenseKey||'LIC-2025-0001')}`;
+  console.log("🔗 Chamando API:", url);
+  const res = await fetch(url, { method:'GET', cache:'no-store' });
+  const json = await res.json();
+  console.log("📦 Resposta API:", json);
+  if(!json.ok) throw new Error(json.error||'api_error');
+  return json.data;
+}
+
 
   <script>
 function formatDateBR(s){
