@@ -83,8 +83,11 @@
 
   <!-- ====== CONFIG DA API (Apps Script) ====== -->
   <script>
-  const API_URL   = "https://script.google.com/macros/s/AKfycbzElkPCQxRK6C7zEvaTuBnKj48xET87kH2EENksch-WcxlVHROKTouwX_3NZsj6X7f_kQ/exec";
-  const API_TOKEN = "pncqalpha123"; // mesmo token do GAS
+  // === CONFIG API (Apps Script) ===
+  const API_URL   = "https://script.google.com/macros/s/AKfycb6zEIKP0cARK6G7zEv4TUBxjK48xET187kHZElNksch-WcxMHR0KTouwX_3NZs6X7KfKJQ/exec";
+  const API_TOKEN = "pncqalpha123";                   // igual ao do GAS
+  </script>
+
 
   function qs(k){ return new URLSearchParams(location.search).get(k); }
   function el(s){ return document.querySelector(s); }
@@ -115,50 +118,59 @@ function formatDateBR(s){
   return v;
 }
 
-function render(eq){
-  if(!eq){ 
-    el("#titulo").textContent="Ativo não encontrado"; 
-    el("#meta").textContent=""; 
-    el("#carac").innerHTML = "<div class='empty'>Sem dados</div>";
-    el("#pp").innerHTML = "<span class='empty'>-</span>";
-    el("#localizacao").textContent="-";
-    el("#resp").textContent="-";
-    return; 
+<script>
+  function render(eq){
+    if(!eq){
+      document.querySelector("#titulo").textContent = "Ativo não encontrado";
+      return;
+    }
+
+    // Título
+    const id   = (eq.id || "").toString().trim();
+    const nome = (eq.nome_do_equipamento || "").toString().trim();
+    document.querySelector("#titulo").textContent = (id || "Equipamento") + (nome ? " – " + nome : "");
+
+    // Subtítulo (meta)
+    const fabricante = (eq.fabricante || "").toString().trim();
+    const modelo     = (eq.modelo     || "").toString().trim();
+    document.querySelector("#meta").innerHTML = [fabricante, modelo].filter(Boolean).join("<br>");
+
+    // Características
+    const capacidade = (eq.capacidade || "").toString().trim();
+    const fla        = (eq.amperagem_nominal_fla || "").toString().trim();
+    const voltagem   = (eq.voltagem || "").toString().trim();
+
+    const pares = [
+      ["Fabricante", fabricante],
+      ["Modelo", modelo],
+      ["Capacidade", capacidade],
+      ["Amperagem Nominal (FLA)", fla],
+      ["Voltagem", voltagem],
+    ];
+
+    const caracHTML = pares
+      .filter(([k,v]) => v && v !== "-")
+      .map(([k,v]) =>
+        k === "Modelo"
+          ? `<div><b>${k}:</b></div><div style="grid-column:1 / -1;word-break:break-word;overflow-wrap:anywhere;">${v}</div>`
+          : `<div><b>${k}:</b></div><div>${v}</div>`
+      )
+      .join("") || "<div class='empty'>Sem dados</div>";
+
+    document.querySelector("#carac").innerHTML = caracHTML;
+
+    // Plano preventivo
+    const periodicidade = (eq.periodicidade || "").toString().trim();
+    const prox = (eq.proxima_manutencao || "").toString().trim();
+    const proxFmt = prox.replace(/^(\d{4})-(\d{2})-(\d{2})$/, (_,Y,M,D)=>`${D}/${M}/${Y}`);
+
+    const pp = [];
+    if (periodicidade) pp.push(`<b>Periodicidade:</b> ${periodicidade}`);
+    if (prox)          pp.push(`<b>Próxima:</b> ${proxFmt}`);
+    document.querySelector("#pp").innerHTML = pp.length ? pp.join("<br>") : "<span class='empty'>-</span>";
+
+    // Localização e prestador
+    document.querySelector("#localizacao").textContent = (eq.localizacao || "-");
+    document.querySelector("#resp").textContent        = (eq.prestador   || "-");
   }
-
-  const id   = clean(pick(eq,["id","tag","codigo","codigo_do_equipamento"]));
-  const nome = clean(pick(eq,["nome_do_equipamento","descricao","descricao_do_equipamento"]));
-  const fabric = clean(eq.fabricante);
-  const modelo = clean(eq.modelo);
-
-  el("#titulo").textContent = (id||"Equipamento") + (nome ? " – " + nome : "");
-  el("#meta").innerHTML = [fabric, modelo].filter(Boolean).join("<br>");
-
-  // ---------- Características ----------
-  const carac = [];
-  if (clean(eq.capacidade))            carac.push(["Capacidade",            eq.capacidade]);
-  if (clean(eq.amperagem_nominal_fla)) carac.push(["Amperagem nominal (FLA)",eq.amperagem_nominal_fla]);
-  if (clean(eq.voltagem))              carac.push(["Voltagem",              eq.voltagem]);
-  if (fabric)                          carac.push(["Fabricante",            fabric]);
-  if (modelo)                          carac.push(["Modelo",                modelo]);
-
-  el("#carac").innerHTML = carac.length
-    ? carac.map(([k,v]) => `<div><b>${esc(k)}:</b></div><div>${esc(v)}</div>`).join("")
-    : "<div class='empty'>Sem dados</div>";
-
-  // ---------- Plano Preventivo ----------
-  const pp = [];
-  if (clean(eq.periodicidade)) pp.push(`<b>Periodicidade:</b> ${esc(eq.periodicidade)}`);
-  if (clean(eq.proxima_manutencao)) pp.push(`<b>Próxima:</b> ${esc(formatDateBR(eq.proxima_manutencao))}`);
-  el("#pp").innerHTML = pp.length ? pp.join("<br>") : "<span class='empty'>-</span>";
-
-  // ---------- Localização ----------
-  const loc = clean(pick(eq,["localizacao","endereco","setor","area","unidade","cliente"]));
-  el("#localizacao").textContent = loc || "-";
-
-  // ---------- Responsável / Prestador ----------
-  const responsavel = clean(pick(eq,["prestador","responsavel"]));
-  const email = clean(pick(eq,["email_fonte","email_responsavel","email"]));
-  el("#resp").textContent = [responsavel, email].filter(Boolean).join(" • ") || "-";
-}
 </script>
