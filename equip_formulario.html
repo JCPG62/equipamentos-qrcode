@@ -1,124 +1,164 @@
-<script>
-  // === CONFIG API (Apps Script) ===
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Ficha do Equipamento (QRManut + API)</title>
+  <style>
+    :root { --gap:16px; }
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu;max-width:960px;margin:auto;padding:var(--gap);background:#f8f9fb;}
+    .card{background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:var(--gap);box-shadow:0 6px 16px rgba(0,0,0,.05);}
+    h1{font-size:1.25rem;margin:0 0 4px 0}
+    .muted{color:#6b7280}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--gap);margin-top:var(--gap);}
+    @media (max-width:780px){ .grid{grid-template-columns:1fr} }
+    .chip{display:inline-block;border:1px solid #e5e7eb;border-radius:999px;padding:6px 10px;margin-right:6px;text-decoration:none;color:#111827;cursor:pointer}
+    .empty{color:#9ca3af}
+    .kv{display:grid;grid-template-columns:220px 1fr;gap:8px;align-items:start}
+    .kv div{padding:4px 0;border-bottom:1px dashed #eee}
+    .footer{margin-top:var(--gap);font-size:.9rem;color:#6b7280}
+    /* Modal */
+    #modal-anomalia{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;z-index:9999;}
+    #modal-anomalia .box{background:#fff;width:min(680px,90vw);border-radius:14px;padding:16px;border:1px solid #e5e7eb;box-shadow:0 10px 30px rgba(0,0,0,.15)}
+    .row{display:grid;gap:12px}
+    label{display:grid;gap:6px}
+    input[type="text"], textarea{width:100%;padding:12px;border:1px solid #e5e7eb;border-radius:10px;font:inherit}
+    button{padding:12px 16px;border:0;border-radius:10px;background:#111827;color:#fff;cursor:pointer}
+    .btn-secondary{background:#e5e7eb;color:#111827}
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <h1 id="titulo">Carregando…</h1>
+    <div id="meta" class="muted"></div>
+
+    <div class="grid">
+      <div>
+        <h3>Características</h3>
+        <div id="carac" class="kv"></div>
+
+        <h3>Plano Preventivo</h3>
+        <div id="pp" class="empty">Periodicidade • Próxima Manutenção</div>
+
+        <h3>Localização</h3>
+        <div id="localizacao" class="empty">-</div>
+      </div>
+      <div>
+        <h3>Responsável / Prestador</h3>
+        <div id="resp" class="empty">-</div>
+      </div>
+    </div>
+
+    <p style="margin-top:16px">
+      <a id="reportar" class="chip">Reportar anomalia</a>
+    </p>
+    <p style="font-size: 7px;">JCPG-2025 - Ver.:1.1</p>
+    <div class="footer" id="ft"></div>
+  </div>
+
+  <!-- Modal de Reporte -->
+  <div id="modal-anomalia">
+    <div class="box">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+        <h2 style="margin:0;font-size:1.1rem">Reportar anomalia</h2>
+        <button type="button" class="btn-secondary" id="fechar-modal">Fechar</button>
+      </div>
+      <form id="form-mailto" class="row" style="margin-top:12px" onsubmit="return false;">
+        <input type="hidden" id="equip_id_input">
+        <label><span>Seu nome</span><input id="nome" type="text" required autocomplete="name"></label>
+        <label><span>Contato (e-mail ou telefone)</span><input id="contato" type="text" autocomplete="email tel"></label>
+        <label><span>Descrição do problema</span><textarea id="descricao" rows="5" required placeholder="Explique o ocorrido, sintomas, quando começou…"></textarea></label>
+        <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:4px">
+          <button type="button" class="btn-secondary" id="cancelar-modal">Cancelar</button>
+          <button type="button" id="btn-enviar">Enviar</button>
+        </div>
+      </form>
+      <p id="help-mail" style="margin-top:10px;color:#6b7280;font-size:.9rem">Ao clicar em Enviar, vamos abrir seu app de e-mail já com os campos preenchidos.</p>
+    </div>
+  </div>
+
+  <script>
+  // === CONFIG ===
   const API_URL   = "https://script.google.com/macros/s/AKfycbx7K_63QoHC_F8kR3X8NczNlkLNxebsmivoxDq1LEpgBRsvTqGnPGYxqUB2JqiiW2mkZg/exec";
   const API_TOKEN = "pncqalpha123";
+  const DEFAULT_MAIL = "jotacpg@gmail.com";
 
-  // ===== Helpers =====
+  // === HELPERS ===
   function qs(k){ return new URLSearchParams(location.search).get(k); }
   function el(s){ return document.querySelector(s); }
-  function esc(s){ return (s||"").toString().replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
-  function formatDateBR(s){
-    const v=(s||"").toString().trim();
-    if(!v) return "";
-    const iso=v.match(/^(\d{4})-(\d{2})-(\d{2})$/);
-    if(iso) return `${iso[3]}/${iso[2]}/${iso[1]}`;
-    return v;
-  }
+  function esc(s){ return (s||"").toString().replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
+  function formatDateBR(s){const v=(s||"").trim();if(!v)return"";const iso=v.match(/^(\d{4})-(\d{2})-(\d{2})$/);return iso?`${iso[3]}/${iso[2]}/${iso[1]}`:v;}
 
-  // ===== Chamada API =====
+  // === FETCH API ===
   async function fetchEquipById(id){
-    const lic = window.__QRMANUT_LICENSE__ || {};
-    const url = `${API_URL}?id=${encodeURIComponent(id)}&token=${encodeURIComponent(API_TOKEN)}&licenseKey=${encodeURIComponent(lic.licenseKey||'LIC-2025-0001')}`;
-    console.log("🔗 GET:", url);
-    const res  = await fetch(url, { method:'GET', cache:'no-store' });
+    const url = `${API_URL}?id=${encodeURIComponent(id)}&token=${API_TOKEN}`;
+    const res = await fetch(url);
     const json = await res.json();
-    if(!json.ok){
-      console.error("GET falhou:", json);
-      throw new Error(json.error||'api_error');
-    }
+    if(!json.ok) throw new Error(json.error||"Erro API");
     return json.data;
   }
 
-  async function enviarAnomalia(idEquipamento, descricao, reportadoPor) {
-    const lic = window.__QRMANUT_LICENSE__ || {};
-    const payload = {
-      token: API_TOKEN,
-      licenseKey: lic.licenseKey || "LIC-2025-0001",
-      id: idEquipamento,
-      descricao: descricao,
-      reportadoPor: reportadoPor || ""
-    };
-    console.log("📤 POST payload:", payload);
-    const res  = await fetch(API_URL, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
-    const json = await res.json();
-    if (!json.ok) {
-      console.error("POST falhou:", json);
-      throw new Error(json.error || "post_error");
-    }
-    return true;
-  }
-
-  // ===== Render =====
+  // === RENDERIZAÇÃO ===
   function render(eq){
-    if(!eq){ el("#titulo").textContent = "Ativo não encontrado"; return; }
+    if(!eq){ el("#titulo").textContent="Ativo não encontrado"; return; }
 
-    const id   = (eq.id || "").toString().trim();
-    const nome = (eq.nome_do_equipamento || "").toString().trim();
-    el("#titulo").textContent = (id || "Equipamento") + (nome ? " – " + nome : "");
+    const id=eq.id||"", nome=eq.nome_do_equipamento||"";
+    el("#titulo").textContent=(id||"Equipamento")+(nome?" – "+nome:"");
+    el("#equip_id_input").value=id;
 
-    const fabricante=(eq.fabricante||"").toString().trim();
-    const modelo    =(eq.modelo||"").toString().trim();
-    el("#meta").innerHTML=[fabricante,modelo].filter(Boolean).join("<br>");
+    el("#meta").innerHTML=[eq.fabricante,eq.modelo].filter(Boolean).join("<br>");
 
-    const pares = [
-      ["Fabricante", fabricante],
-      ["Modelo", modelo],
-      ["Capacidade", (eq.capacidade||"").toString().trim()],
-      ["Amperagem Nominal (FLA)", (eq.amperagem_nominal_fla||"").toString().trim()],
-      ["Voltagem", (eq.voltagem||"").toString().trim()],
+    const pares=[
+      ["Fabricante",eq.fabricante],
+      ["Modelo",eq.modelo],
+      ["Capacidade",eq.capacidade],
+      ["Amperagem Nominal (FLA)",eq.amperagem_nominal_fla],
+      ["Voltagem",eq.voltagem]
     ];
+    el("#carac").innerHTML=pares.filter(([k,v])=>v).map(([k,v])=>`<div><b>${k}:</b></div><div>${esc(v)}</div>`).join("") || "<div class='empty'>Sem dados</div>";
 
-    el("#carac").innerHTML =
-      pares.filter(([k,v]) => v && v!=="-")
-           .map(([k,v]) => k==="Modelo"
-             ? `<div><b>${esc(k)}:</b></div><div style="grid-column:1 / -1;word-break:break-word;overflow-wrap:anywhere;">${esc(v)}</div>`
-             : `<div><b>${esc(k)}:</b></div><div>${esc(v)}</div>`).join("")
-      || "<div class='empty'>Sem dados</div>";
+    const pp=[];
+    if(eq.periodicidade) pp.push(`<b>Periodicidade:</b> ${eq.periodicidade}`);
+    if(eq.proxima_manutencao) pp.push(`<b>Próxima:</b> ${formatDateBR(eq.proxima_manutencao)}`);
+    el("#pp").innerHTML=pp.join("<br>") || "<span class='empty'>-</span>";
 
-    const periodicidade = (eq.periodicidade||"").toString().trim();
-    const prox          = formatDateBR(eq.proxima_manutencao);
-    const pp = [];
-    if (periodicidade) pp.push(`<b>Periodicidade:</b> ${esc(periodicidade)}`);
-    if (prox)          pp.push(`<b>Próxima:</b> ${esc(prox)}`);
-    el("#pp").innerHTML = pp.length ? pp.join("<br>") : "<span class='empty'>-</span>";
+    el("#localizacao").textContent=eq.localizacao||"-";
+    el("#resp").textContent=eq.prestador||"-";
 
-    el("#localizacao").textContent = (eq.localizacao || "-");
-    el("#resp").textContent        = (eq.prestador   || "-");
-    el("#ft").innerHTML            = "Última atualização: " + new Date().toLocaleString();
+    el("#ft").innerHTML=`Última atualização: ${new Date().toLocaleString()}<br><span class='muted'>Reportes serão enviados para: ${eq.email_fonte||DEFAULT_MAIL}</span>`;
+
+    // guarda email para o modal
+    window.__MAILTO_DEST__ = eq.email_fonte || DEFAULT_MAIL;
+    window.__EQUIP_ID__ = id;
+    window.__EQUIP_NOME__ = nome;
   }
 
-  // ===== Boot =====
-  async function main(){
-    const idQ = qs("id");
-    if(!idQ){ el("#titulo").textContent = "Sem ID na URL"; return; }
-    try{
-      const eq = await fetchEquipById(idQ);
-      render(eq);
-    }catch(e){
-      console.error(e);
-      el("#titulo").textContent = "Erro ao carregar dados";
-    }
-  }
-
-  // Liga o botão "Reportar anomalia"
-  document.getElementById("reportar").addEventListener("click", async () => {
-    const btn = document.getElementById("reportar");
-    try {
-      const idEquip = (qs("id") || "").trim();
-      if (!idEquip) { alert("ID ausente na URL."); return; }
-      const descr = prompt("Descreva a anomalia:");
-      if (!descr || !descr.trim()) return;
-      const quem = prompt("Seu nome (opcional):") || "";
-      btn.classList.add("disabled"); btn.style.pointerEvents="none"; btn.style.opacity="0.6";
-      await enviarAnomalia(idEquip, descr.trim(), quem.trim());
-      alert("Anomalia registrada com sucesso!");
-    } catch (e) {
-      console.error(e);
-      alert("Falha ao registrar anomalia.");
-    } finally {
-      btn.classList.remove("disabled"); btn.style.pointerEvents="auto"; btn.style.opacity="1";
-    }
+  // === MODAL ===
+  document.addEventListener("DOMContentLoaded", ()=>{
+    el("#reportar").onclick = ()=> el("#modal-anomalia").style.display="flex";
+    const close=()=> el("#modal-anomalia").style.display="none";
+    el("#fechar-modal").onclick=close;
+    el("#cancelar-modal").onclick=close;
+    el("#btn-enviar").onclick=()=>{
+      const nome=el("#nome").value.trim();
+      const contato=el("#contato").value.trim();
+      const desc=el("#descricao").value.trim();
+      if(!nome || !desc){ alert("Preencha nome e descrição."); return; }
+      const mailto=`mailto:${encodeURIComponent(window.__MAILTO_DEST__)}?subject=${encodeURIComponent("[Anomalia] "+window.__EQUIP_ID__+" – "+window.__EQUIP_NOME__)}&body=${encodeURIComponent("Nome: "+nome+"\nContato: "+contato+"\nDescrição: "+desc)}`;
+      window.location.href=mailto;
+      close();
+    };
   });
 
-  document.addEventListener("DOMContentLoaded", main);
-</script>
+  // === INICIALIZA ===
+  async function main(){
+    const id=qs("id");
+    if(!id){ el("#titulo").textContent="Sem ID na URL"; return; }
+    try{ render(await fetchEquipById(id)); }
+    catch(e){ el("#titulo").textContent="Erro ao carregar dados"; console.error(e); }
+  }
+  main();
+  </script>
+</body>
+</html>
