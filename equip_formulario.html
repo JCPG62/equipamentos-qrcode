@@ -14,8 +14,15 @@
     @media (max-width:780px){ .grid{grid-template-columns:1fr} }
     .chip{display:inline-block;border:1px solid #e5e7eb;border-radius:999px;padding:6px 10px;margin-right:6px;text-decoration:none;color:#111827;cursor:pointer}
     .empty{color:#9ca3af}
-    .kv{display:grid;grid-template-columns:220px 1fr;gap:8px;align-items:start}
-    .kv div{padding:4px 0;border-bottom:1px dashed #eee}
+    /* --- Características em linha --- */
+	.kv{display:block;margin-top:6px}
+	.kv .pair{padding:8px 0;border-bottom:1px dashed #eee;line-height:1.35}
+	.kv .pair:last-child{border-bottom:0}
+	.kv .pair b{font-weight:600;margin-right:6px;white-space:nowrap}
+	.kv .pair span{word-break:break-word;overflow-wrap:anywhere}
+	/* Modelo: valor em linha abaixo do rótulo */
+	.kv .pair.modelo b{display:block;margin:0 0 4px 0}
+	.kv .pair.modelo span{display:block}
     .footer{margin-top:var(--gap);font-size:.9rem;color:#6b7280}
     /* Modal */
     #modal-anomalia{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;z-index:9999;}
@@ -109,14 +116,32 @@
 
     el("#meta").innerHTML=[eq.fabricante,eq.modelo].filter(Boolean).join("<br>");
 
-    const pares=[
-      ["Fabricante",eq.fabricante],
-      ["Modelo",eq.modelo],
-      ["Capacidade",eq.capacidade],
-      ["Amperagem Nominal (FLA)",eq.amperagem_nominal_fla],
-      ["Voltagem",eq.voltagem]
-    ];
-    el("#carac").innerHTML=pares.filter(([k,v])=>v).map(([k,v])=>`<div><b>${k}:</b></div><div>${esc(v)}</div>`).join("") || "<div class='empty'>Sem dados</div>";
+    // --- Características (valor após os dois-pontos; "Modelo" vai para a linha de baixo)
+	const capacidade = (eq.capacidade || "").toString().trim();
+	const fla        = (eq.amperagem_nominal_fla || "").toString().trim();
+	const voltagem   = (eq.voltagem || "").toString().trim();
+	const fabricante = (eq.fabricante || "").toString().trim();
+	const modelo     = (eq.modelo || "").toString().trim();
+
+	const pares = [
+		{ rotulo: "Fabricante", valor: fabricante, classe: "" },
+		{ rotulo: "Modelo",     valor: modelo,     classe: "modelo" }, // força quebra na linha de baixo
+		{ rotulo: "Capacidade", valor: capacidade, classe: "" },
+		{ rotulo: "Amperagem Nominal (FLA)", valor: fla, classe: "" },
+		{ rotulo: "Voltagem",   valor: voltagem,   classe: "" },
+	];
+
+	const caracHTML = pares
+	.filter(p => p.valor && p.valor !== "-")
+	.map(p => `
+    <div class="pair ${p.classe}">
+      <b>${p.rotulo}:</b>${p.classe === "modelo" ? "<br>" : " "}
+      <span>${p.valor}</span>
+	</div>
+	`)
+	.join("") || "<div class='empty'>Sem dados</div>";
+
+	document.querySelector("#carac").innerHTML = caracHTML;
 
     const pp=[];
     if(eq.periodicidade) pp.push(`<b>Periodicidade:</b> ${eq.periodicidade}`);
