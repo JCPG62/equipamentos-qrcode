@@ -165,15 +165,55 @@
     const close=()=> el("#modal-anomalia").style.display="none";
     el("#fechar-modal").onclick=close;
     el("#cancelar-modal").onclick=close;
-    el("#btn-enviar").onclick=()=>{
-      const nome=el("#nome").value.trim();
-      const contato=el("#contato").value.trim();
-      const desc=el("#descricao").value.trim();
-      if(!nome || !desc){ alert("Preencha nome e descrição."); return; }
-      const mailto=`mailto:${encodeURIComponent(window.__MAILTO_DEST__)}?subject=${encodeURIComponent("[Anomalia] "+window.__EQUIP_ID__+" – "+window.__EQUIP_NOME__)}&body=${encodeURIComponent("Nome: "+nome+"\nContato: "+contato+"\nDescrição: "+desc)}`;
-      window.location.href=mailto;
-      close();
-    };
+    el("#btn-enviar").onclick = async () => {
+  const nome = el("#nome").value.trim();
+  const contato = el("#contato").value.trim();
+  const desc = el("#descricao").value.trim();
+
+  if (!nome || !desc) {
+    alert("Preencha nome e descrição.");
+    return;
+  }
+
+  const btn = el("#btn-enviar");
+  btn.disabled = true;
+  btn.textContent = "Enviando...";
+
+  try {
+    const response = await fetch(API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "text/plain;charset=utf-8"
+      },
+      body: JSON.stringify({
+        token: API_TOKEN,
+        id: window.__EQUIP_ID__,
+        reportadoPor: nome,
+        contato: contato,
+        descricao: desc
+      })
+    });
+
+    const result = await response.json();
+
+    if (!result.ok) {
+      throw new Error(result.detail || result.error || "Erro ao enviar");
+    }
+
+    alert("Reporte enviado com sucesso!");
+
+    document.getElementById("form-mailto").reset();
+    close();
+
+  } catch (err) {
+    alert("Erro ao enviar: " + err.message);
+    console.error(err);
+
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Enviar";
+  }
+};
   });
 
   // === INICIALIZA ===
