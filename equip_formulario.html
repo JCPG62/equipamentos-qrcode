@@ -1,354 +1,976 @@
 <!doctype html>
 <html lang="pt-br">
+
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Ficha do Equipamento (QRManut + API)</title>
+  <meta charset="utf-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width,initial-scale=1"
+  >
+
+  <title>
+    Ficha do Equipamento - QRManut
+  </title>
+
 
   <style>
-    :root { --gap:16px; }
 
-    body{
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu;
+    :root {
+      --gap:16px;
+    }
+
+
+    body {
+
+      font-family:
+        system-ui,
+        -apple-system,
+        Segoe UI,
+        Roboto,
+        Ubuntu;
+
       max-width:960px;
+
       margin:auto;
+
       padding:var(--gap);
+
       background:#f8f9fb;
     }
 
-    .card{
+
+    .card {
+
       background:#fff;
-      border:1px solid #e5e7eb;
+
+      border:
+        1px solid #e5e7eb;
+
       border-radius:16px;
+
       padding:var(--gap);
-      box-shadow:0 6px 16px rgba(0,0,0,.05);
+
+      box-shadow:
+        0 6px 16px
+        rgba(0,0,0,.05);
     }
 
-    h1{
+
+    h1 {
+
       font-size:1.25rem;
-      margin:0 0 4px 0;
+
+      margin:
+        0 0 4px 0;
     }
 
-    .muted{
+
+    .muted {
+
       color:#6b7280;
     }
 
-    .grid{
+
+    .grid {
+
       display:grid;
-      grid-template-columns:1fr 1fr;
+
+      grid-template-columns:
+        1fr 1fr;
+
       gap:var(--gap);
+
       margin-top:var(--gap);
     }
 
-    @media (max-width:780px){
-      .grid{
-        grid-template-columns:1fr;
+
+    @media (max-width:780px) {
+
+      .grid {
+
+        grid-template-columns:
+          1fr;
       }
     }
 
-    .chip{
+
+    .chip {
+
       display:inline-block;
-      border:1px solid #e5e7eb;
+
+      border:
+        1px solid #e5e7eb;
+
       border-radius:999px;
-      padding:6px 10px;
+
+      padding:
+        6px 10px;
+
       margin-right:6px;
+
       text-decoration:none;
+
       color:#111827;
+
       cursor:pointer;
+
       background:#fff;
     }
 
-    .empty{
+
+    .empty {
+
       color:#9ca3af;
     }
 
-    .kv{
+
+    .kv {
+
       display:block;
+
       margin-top:6px;
     }
 
-    .kv .pair{
-      padding:8px 0;
-      border-bottom:1px dashed #eee;
+
+    .kv .pair {
+
+      padding:
+        8px 0;
+
+      border-bottom:
+        1px dashed #eee;
+
       line-height:1.35;
     }
 
-    .kv .pair:last-child{
+
+    .kv .pair:last-child {
+
       border-bottom:0;
     }
 
-    .kv .pair b{
+
+    .kv .pair b {
+
       font-weight:600;
+
       margin-right:6px;
+
       white-space:nowrap;
     }
 
-    .kv .pair span{
+
+    .kv .pair span {
+
       word-break:break-word;
+
       overflow-wrap:anywhere;
     }
 
-    .kv .pair.modelo b{
+
+    .kv .pair.modelo b {
+
       display:block;
-      margin:0 0 4px 0;
+
+      margin:
+        0 0 4px 0;
     }
 
-    .kv .pair.modelo span{
+
+    .kv .pair.modelo span {
+
       display:block;
     }
 
-    .footer{
+
+    .footer {
+
       margin-top:var(--gap);
+
       font-size:.9rem;
+
       color:#6b7280;
     }
 
-    #modal-anomalia{
+
+
+    /* =====================================================
+       MODAL
+       ===================================================== */
+
+    #modal-anomalia {
+
       position:fixed;
+
       inset:0;
-      background:rgba(0,0,0,.45);
+
+      background:
+        rgba(0,0,0,.45);
+
       display:none;
+
       align-items:center;
+
       justify-content:center;
+
       z-index:9999;
-    }
 
-    #modal-anomalia .box{
-      background:#fff;
-      width:min(680px,90vw);
-      border-radius:14px;
-      padding:16px;
-      border:1px solid #e5e7eb;
-      box-shadow:0 10px 30px rgba(0,0,0,.15);
-    }
-
-    .row{
-      display:grid;
-      gap:12px;
-    }
-
-    label{
-      display:grid;
-      gap:6px;
-    }
-
-    input[type="text"],
-    textarea{
-      width:100%;
       padding:12px;
-      border:1px solid #e5e7eb;
-      border-radius:10px;
-      font:inherit;
+
       box-sizing:border-box;
     }
 
-    textarea{
+
+    #modal-anomalia .box {
+
+      background:#fff;
+
+      width:
+        min(680px,94vw);
+
+      max-height:90vh;
+
+      overflow-y:auto;
+
+      border-radius:14px;
+
+      padding:16px;
+
+      border:
+        1px solid #e5e7eb;
+
+      box-shadow:
+        0 10px 30px
+        rgba(0,0,0,.15);
+    }
+
+
+    .row {
+
+      display:grid;
+
+      gap:12px;
+    }
+
+
+    label {
+
+      display:grid;
+
+      gap:6px;
+
+      font-weight:500;
+    }
+
+
+    input[type="text"],
+    textarea {
+
+      width:100%;
+
+      padding:12px;
+
+      border:
+        1px solid #e5e7eb;
+
+      border-radius:10px;
+
+      font:inherit;
+
+      box-sizing:border-box;
+    }
+
+
+    textarea {
+
       resize:vertical;
     }
 
-    button{
-      padding:12px 16px;
+
+    button {
+
+      padding:
+        12px 16px;
+
       border:0;
+
       border-radius:10px;
+
       background:#111827;
+
       color:#fff;
+
       cursor:pointer;
+
+      font:inherit;
     }
 
-    button:disabled{
+
+    button:disabled {
+
       opacity:.55;
+
       cursor:not-allowed;
     }
 
-    .btn-secondary{
+
+    .btn-secondary {
+
       background:#e5e7eb;
+
       color:#111827;
     }
 
-    #status-reporte{
+
+
+    /* =====================================================
+       FOTO
+       ===================================================== */
+
+    .foto-area {
+
+      border:
+        1px solid #e5e7eb;
+
+      border-radius:12px;
+
+      padding:12px;
+
+      background:#f9fafb;
+    }
+
+
+    .foto-title {
+
+      font-weight:600;
+
+      margin-bottom:8px;
+    }
+
+
+    .foto-help {
+
+      font-size:.85rem;
+
+      color:#6b7280;
+
+      margin:
+        4px 0 10px 0;
+    }
+
+
+    #fotoInput {
+
+      width:100%;
+    }
+
+
+    #previewContainer {
+
       display:none;
+
+      margin-top:12px;
+
+      text-align:center;
+    }
+
+
+    #fotoPreview {
+
+      display:block;
+
+      max-width:100%;
+
+      max-height:320px;
+
+      margin:
+        0 auto;
+
+      border-radius:10px;
+
+      border:
+        1px solid #d1d5db;
+
+      object-fit:contain;
+
+      background:#fff;
+    }
+
+
+    .foto-info {
+
+      margin-top:7px;
+
+      font-size:.8rem;
+
+      color:#6b7280;
+
+      word-break:break-word;
+    }
+
+
+    .foto-actions {
+
       margin-top:10px;
+
+      display:flex;
+
+      justify-content:center;
+    }
+
+
+    .btn-remove-foto {
+
+      background:#ef4444;
+
+      padding:
+        8px 12px;
+
+      font-size:.85rem;
+    }
+
+
+
+    /* =====================================================
+       STATUS
+       ===================================================== */
+
+    #status-reporte {
+
+      display:none;
+
+      margin-top:10px;
+
       padding:10px;
+
       border-radius:8px;
+
       font-size:.9rem;
     }
 
-    .status-loading{
+
+    .status-loading {
+
       display:block !important;
+
       background:#fef3c7;
+
       color:#92400e;
     }
 
-    .status-success{
+
+    .status-success {
+
       display:block !important;
+
       background:#d1fae5;
+
       color:#065f46;
     }
 
-    .status-error{
+
+    .status-error {
+
       display:block !important;
+
       background:#fee2e2;
+
       color:#991b1b;
     }
 
-    #postFrame{
+
+    #postFrame {
+
       display:none;
+
       width:0;
+
       height:0;
+
       border:0;
     }
+
+
+
+    @media (max-width:600px) {
+
+      .modal-buttons {
+
+        flex-direction:column-reverse;
+      }
+
+
+      .modal-buttons button {
+
+        width:100%;
+      }
+    }
+
   </style>
+
 </head>
+
 
 <body>
 
+
+  <!-- =====================================================
+       FICHA DO EQUIPAMENTO
+       ===================================================== -->
+
   <div class="card">
 
-    <h1 id="titulo">Carregando…</h1>
 
-    <div id="meta" class="muted"></div>
+    <h1 id="titulo">
+      Carregando…
+    </h1>
+
+
+    <div
+      id="meta"
+      class="muted">
+    </div>
+
 
     <div class="grid">
 
+
       <div>
 
-        <h3>Características</h3>
-        <div id="carac" class="kv"></div>
 
-        <h3>Plano Preventivo</h3>
-        <div id="pp" class="empty">
-          Periodicidade • Próxima Manutenção
+        <h3>
+          Características
+        </h3>
+
+
+        <div
+          id="carac"
+          class="kv">
         </div>
 
-        <h3>Localização</h3>
-        <div id="localizacao" class="empty">-</div>
+
+        <h3>
+          Plano Preventivo
+        </h3>
+
+
+        <div
+          id="pp"
+          class="empty">
+
+          Periodicidade • Próxima Manutenção
+
+        </div>
+
+
+        <h3>
+          Localização
+        </h3>
+
+
+        <div
+          id="localizacao"
+          class="empty">
+
+          -
+
+        </div>
+
 
       </div>
+
 
       <div>
 
-        <h3>Responsável / Prestador</h3>
-        <div id="resp" class="empty">-</div>
+
+        <h3>
+          Responsável / Prestador
+        </h3>
+
+
+        <div
+          id="resp"
+          class="empty">
+
+          -
+
+        </div>
+
 
       </div>
+
 
     </div>
 
+
+
     <p style="margin-top:16px">
-      <a id="reportar" class="chip">
+
+
+      <a
+        id="reportar"
+        class="chip">
+
         Reportar Serviço/Anomalia/Reparo
+
       </a>
+
+
     </p>
+
 
     <p style="font-size:7px;">
-      JCPG-2026 - Ver.:1.5
+
+      JCPG-2026 - Ver.:1.6
+
     </p>
 
-    <div class="footer" id="ft"></div>
+
+    <div
+      class="footer"
+      id="ft">
+    </div>
+
 
   </div>
 
 
-  <!-- ======================================================
-       MODAL
-       ====================================================== -->
+
+  <!-- =====================================================
+       MODAL DO REPORTE
+       ===================================================== -->
 
   <div id="modal-anomalia">
 
+
     <div class="box">
 
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
 
-        <h2 style="margin:0;font-size:1.1rem">
+      <div
+        style="
+          display:flex;
+          align-items:center;
+          justify-content:space-between;
+          gap:12px;
+        "
+      >
+
+
+        <h2
+          style="
+            margin:0;
+            font-size:1.1rem;
+          "
+        >
+
           Reportar Serviço, Anomalia ou Reparo
+
         </h2>
+
 
         <button
           type="button"
           class="btn-secondary"
-          id="fechar-modal">
+          id="fechar-modal"
+        >
+
           Fechar
+
         </button>
+
 
       </div>
 
 
-      <div class="row" style="margin-top:12px">
+
+      <div
+        class="row"
+        style="margin-top:12px"
+      >
+
+
+
+        <!-- NOME -->
 
         <label>
-          <span>Seu nome *</span>
+
+          <span>
+            Seu nome *
+          </span>
+
+
           <input
             id="nome"
             type="text"
             required
-            autocomplete="name">
+            autocomplete="name"
+          >
+
         </label>
 
+
+
+        <!-- CONTATO -->
+
         <label>
-          <span>Contato (e-mail ou telefone)</span>
+
+          <span>
+            Contato (e-mail ou telefone)
+          </span>
+
+
           <input
             id="contato"
             type="text"
-            autocomplete="email tel">
+            autocomplete="email tel"
+          >
+
         </label>
 
+
+
+        <!-- DESCRIÇÃO -->
+
         <label>
-          <span>Descrição do Serviço, Anomalia ou Reparo *</span>
+
+          <span>
+            Descrição do Serviço, Anomalia ou Reparo *
+          </span>
+
+
           <textarea
             id="descricao"
             rows="5"
             required
-            placeholder="Explique o ocorrido, serviço realizado, sintomas, quando começou…"></textarea>
+            placeholder="Explique o ocorrido, serviço realizado, sintomas, quando começou…"
+          ></textarea>
+
         </label>
+
+
+
+        <!-- =================================================
+             FOTO
+             ================================================= -->
+
+        <div class="foto-area">
+
+
+          <div class="foto-title">
+
+            📷 Foto do Serviço / Anomalia
+
+          </div>
+
+
+          <div class="foto-help">
+
+            Opcional. Tire uma foto ou selecione uma imagem
+            do aparelho. A imagem será reduzida automaticamente
+            antes do envio.
+
+          </div>
+
+
+          <input
+            id="fotoInput"
+            type="file"
+            accept="image/*"
+            capture="environment"
+          >
+
+
+
+          <div id="previewContainer">
+
+
+            <img
+              id="fotoPreview"
+              alt="Pré-visualização da foto"
+            >
+
+
+            <div
+              id="fotoInfo"
+              class="foto-info">
+            </div>
+
+
+            <div class="foto-actions">
+
+
+              <button
+                type="button"
+                class="btn-remove-foto"
+                id="removerFoto"
+              >
+
+                Remover foto
+
+              </button>
+
+
+            </div>
+
+
+          </div>
+
+
+        </div>
+
+
+
+        <!-- STATUS -->
 
         <div id="status-reporte"></div>
 
-        <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:4px">
+
+
+        <!-- BOTÕES -->
+
+        <div
+          class="modal-buttons"
+          style="
+            display:flex;
+            gap:10px;
+            justify-content:flex-end;
+            margin-top:4px;
+          "
+        >
+
 
           <button
             type="button"
             class="btn-secondary"
-            id="cancelar-modal">
+            id="cancelar-modal"
+          >
+
             Cancelar
+
           </button>
+
 
           <button
             type="button"
-            id="btn-enviar">
+            id="btn-enviar"
+          >
+
             Enviar
+
           </button>
+
 
         </div>
 
+
       </div>
 
-      <p style="margin-top:10px;color:#6b7280;font-size:.9rem">
-        O reporte será enviado automaticamente ao responsável pela manutenção.
+
+
+      <p
+        style="
+          margin-top:10px;
+          color:#6b7280;
+          font-size:.9rem;
+        "
+      >
+
+        O reporte será enviado automaticamente ao responsável
+        pela manutenção.
+
       </p>
 
+
     </div>
+
 
   </div>
 
 
-  <!-- ======================================================
-       FORMULÁRIO POST NATIVO INVISÍVEL
-       ====================================================== -->
+
+  <!-- =====================================================
+       FORMULÁRIO POST INVISÍVEL
+       ===================================================== -->
 
   <form
     id="nativePostForm"
     method="POST"
     target="postFrame"
-    style="display:none;">
+    style="display:none"
+  >
 
-    <input type="hidden" name="token" id="post_token">
-    <input type="hidden" name="id" id="post_id">
-    <input type="hidden" name="nomeEquipamento" id="post_nomeEquipamento">
-    <input type="hidden" name="reportadoPor" id="post_reportadoPor">
-    <input type="hidden" name="contato" id="post_contato">
-    <input type="hidden" name="descricao" id="post_descricao">
+
+    <input
+      type="hidden"
+      name="token"
+      id="post_token"
+    >
+
+
+    <input
+      type="hidden"
+      name="id"
+      id="post_id"
+    >
+
+
+    <input
+      type="hidden"
+      name="nomeEquipamento"
+      id="post_nomeEquipamento"
+    >
+
+
+    <input
+      type="hidden"
+      name="reportadoPor"
+      id="post_reportadoPor"
+    >
+
+
+    <input
+      type="hidden"
+      name="contato"
+      id="post_contato"
+    >
+
+
+    <input
+      type="hidden"
+      name="descricao"
+      id="post_descricao"
+    >
+
+
+
+    <!-- FOTO -->
+
+
+    <input
+      type="hidden"
+      name="fotoBase64"
+      id="post_fotoBase64"
+    >
+
+
+    <input
+      type="hidden"
+      name="fotoNome"
+      id="post_fotoNome"
+    >
+
+
+    <input
+      type="hidden"
+      name="fotoMime"
+      id="post_fotoMime"
+    >
+
 
   </form>
+
+
 
   <iframe
     id="postFrame"
@@ -356,584 +978,1728 @@
   </iframe>
 
 
+
 <script>
+
 
 /* ============================================================
    CONFIGURAÇÃO
    ============================================================ */
 
+
+/*
+ * IMPORTANTE:
+ *
+ * COLOQUE AQUI EXATAMENTE A MESMA URL /exec
+ * QUE ESTÁ FUNCIONANDO ATUALMENTE.
+ *
+ * NÃO USE A URL ANTIGA.
+ */
+
 const API_URL =
 "https://script.google.com/macros/s/AKfycbx4tpC42Q6WdkNhTUTAGoZWvG5M24zwlNscnwbDP5B3Q5pWo8B32-Lf0rQ2Xtua1AFMAQ/exec";
-  
+
+
+
 const API_TOKEN =
 "pncqalpha123";
 
+
 const DEFAULT_MAIL =
 "manutencao@pncq.org.br";
+
+
+/*
+ * Configuração da compactação.
+ *
+ * A imagem será limitada a aproximadamente:
+ *
+ * 1280 px no maior lado.
+ */
+
+const PHOTO_MAX_DIMENSION =
+1280;
+
+
+const PHOTO_QUALITY =
+0.72;
+
 
 
 /* ============================================================
    ESTADO
    ============================================================ */
 
-let postEmAndamento = false;
-let postTimer = null;
+
+let postEmAndamento =
+false;
+
+
+let postTimer =
+null;
+
+
+let fotoProcessada =
+null;
+
 
 
 /* ============================================================
    HELPERS
    ============================================================ */
 
-function qs(k){
-  return new URLSearchParams(location.search).get(k);
+
+function qs(k) {
+
+  return new URLSearchParams(
+    location.search
+  ).get(k);
 }
 
-function el(s){
-  return document.querySelector(s);
+
+function el(s) {
+
+  return document.querySelector(
+    s
+  );
 }
 
-function esc(s){
-  return (s || "")
-    .toString()
-    .replace(/[&<>]/g, c => ({
+
+function esc(s) {
+
+  return (
+    s || ""
+  )
+  .toString()
+  .replace(
+    /[&<>]/g,
+
+    c => ({
+
       "&":"&amp;",
+
       "<":"&lt;",
+
       ">":"&gt;"
-    }[c]));
+
+    }[c])
+  );
 }
 
-function formatDateBR(s){
+
+function formatDateBR(s) {
 
   const v =
-    String(s || "").trim();
+    String(
+      s || ""
+    ).trim();
 
-  if(!v){
+
+  if (!v) {
+
     return "";
   }
 
-  const iso =
-    v.match(/^(\d{4})-(\d{2})-(\d{2})/);
 
-  if(iso){
-    return `${iso[3]}/${iso[2]}/${iso[1]}`;
+  const iso =
+    v.match(
+      /^(\d{4})-(\d{2})-(\d{2})/
+    );
+
+
+  if (iso) {
+
+    return (
+      iso[3] +
+      "/" +
+      iso[2] +
+      "/" +
+      iso[1]
+    );
   }
+
 
   return v;
 }
 
 
-/* ============================================================
-   CONSULTA EQUIPAMENTO
-   ============================================================ */
 
-async function fetchEquipById(id){
+function formatBytes(bytes) {
 
-  const url =
-    `${API_URL}?id=${encodeURIComponent(id)}&token=${encodeURIComponent(API_TOKEN)}`;
+  if (!bytes) {
 
-  const response =
-    await fetch(url);
+    return "0 KB";
+  }
 
-  if(!response.ok){
-    throw new Error(
-      "Erro HTTP " +
-      response.status
+
+  if (
+    bytes < 1024
+  ) {
+
+    return (
+      bytes +
+      " bytes"
     );
   }
+
+
+  if (
+    bytes <
+    1024 * 1024
+  ) {
+
+    return (
+      (
+        bytes /
+        1024
+      )
+      .toFixed(1) +
+      " KB"
+    );
+  }
+
+
+  return (
+    (
+      bytes /
+      (
+        1024 *
+        1024
+      )
+    )
+    .toFixed(2) +
+    " MB"
+  );
+}
+
+
+
+/* ============================================================
+   CONSULTA DO EQUIPAMENTO
+   ============================================================ */
+
+
+async function fetchEquipById(id) {
+
+
+  const url =
+
+    API_URL +
+
+    "?id=" +
+
+    encodeURIComponent(
+      id
+    ) +
+
+    "&token=" +
+
+    encodeURIComponent(
+      API_TOKEN
+    );
+
+
+  const response =
+    await fetch(
+      url
+    );
+
+
+  if (
+    !response.ok
+  ) {
+
+    throw new Error(
+
+      "Erro HTTP " +
+
+      response.status
+
+    );
+  }
+
 
   const json =
     await response.json();
 
-  if(!json.ok){
+
+  if (
+    !json.ok
+  ) {
+
     throw new Error(
+
       json.error ||
+
       "Erro na API"
+
     );
   }
+
 
   return json.data;
 }
 
 
+
 /* ============================================================
-   RENDERIZAÇÃO
+   RENDERIZAÇÃO DO EQUIPAMENTO
    ============================================================ */
 
-function render(eq){
 
-  if(!eq){
-    el("#titulo").textContent =
+function render(eq) {
+
+
+  if (!eq) {
+
+    el("#titulo")
+      .textContent =
       "Ativo não encontrado";
+
     return;
   }
 
+
   const id =
-    eq.id || "";
+    eq.id ||
+    "";
+
 
   const nome =
-    eq.nome_do_equipamento || "";
+    eq.nome_do_equipamento ||
+    "";
+
 
   window.__EQUIP_ID__ =
     id;
 
+
   window.__EQUIP_NOME__ =
     nome;
+
 
   window.__MAIL_DEST__ =
     eq.email_fonte ||
     DEFAULT_MAIL;
 
-  el("#titulo").textContent =
-    (id || "Equipamento") +
-    (nome ? " – " + nome : "");
 
-  el("#meta").innerHTML =
+
+  el("#titulo")
+    .textContent =
+
+    (
+      id ||
+      "Equipamento"
+    ) +
+
+    (
+      nome
+        ? " – " + nome
+        : ""
+    );
+
+
+
+  el("#meta")
+    .innerHTML =
+
     [
       eq.fabricante,
       eq.modelo
     ]
+
     .filter(Boolean)
+
     .map(esc)
+
     .join("<br>");
+
 
 
   const pares = [
 
-    {
-      rotulo:"Fabricante",
-      valor:eq.fabricante,
-      classe:""
-    },
 
     {
-      rotulo:"Modelo",
-      valor:eq.modelo,
-      classe:"modelo"
+
+      rotulo:
+        "Fabricante",
+
+      valor:
+        eq.fabricante,
+
+      classe:
+        ""
+
     },
 
-    {
-      rotulo:"Capacidade",
-      valor:eq.capacidade,
-      classe:""
-    },
 
     {
-      rotulo:"Amperagem Nominal (FLA)",
-      valor:eq.amperagem_nominal_fla,
-      classe:""
+
+      rotulo:
+        "Modelo",
+
+      valor:
+        eq.modelo,
+
+      classe:
+        "modelo"
+
     },
 
+
     {
-      rotulo:"Voltagem",
-      valor:eq.voltagem,
-      classe:""
+
+      rotulo:
+        "Capacidade",
+
+      valor:
+        eq.capacidade,
+
+      classe:
+        ""
+
+    },
+
+
+    {
+
+      rotulo:
+        "Amperagem Nominal (FLA)",
+
+      valor:
+        eq.amperagem_nominal_fla,
+
+      classe:
+        ""
+
+    },
+
+
+    {
+
+      rotulo:
+        "Voltagem",
+
+      valor:
+        eq.voltagem,
+
+      classe:
+        ""
+
     }
 
   ];
 
 
-  const caracHTML =
-    pares
-      .filter(
-        p =>
-          p.valor &&
-          p.valor !== "-"
-      )
-      .map(
-        p => `
-          <div class="pair ${p.classe || ""}">
-            <b>${esc(p.rotulo)}:</b>
-            ${p.classe === "modelo" ? "<br>" : " "}
-            <span>${esc(p.valor)}</span>
-          </div>
-        `
-      )
-      .join("")
-      ||
-      "<div class='empty'>Sem dados</div>";
 
-  el("#carac").innerHTML =
+  const caracHTML =
+
+    pares
+
+    .filter(
+
+      p =>
+        p.valor &&
+        p.valor !== "-"
+
+    )
+
+    .map(
+
+      p => `
+
+        <div class="pair ${p.classe || ""}">
+
+          <b>
+            ${esc(p.rotulo)}:
+          </b>
+
+          ${
+            p.classe === "modelo"
+              ? "<br>"
+              : " "
+          }
+
+          <span>
+            ${esc(p.valor)}
+          </span>
+
+        </div>
+
+      `
+
+    )
+
+    .join("")
+
+    ||
+
+    "<div class='empty'>Sem dados</div>";
+
+
+
+  el("#carac")
+    .innerHTML =
     caracHTML;
 
 
-  const pp = [];
 
-  if(eq.periodicidade){
+  const pp =
+    [];
+
+
+  if (
+    eq.periodicidade
+  ) {
 
     pp.push(
+
       "<b>Periodicidade:</b> " +
-      esc(eq.periodicidade)
+
+      esc(
+        eq.periodicidade
+      )
+
     );
   }
 
-  if(eq.proxima_manutencao){
+
+
+  if (
+    eq.proxima_manutencao
+  ) {
 
     pp.push(
+
       "<b>Próxima:</b> " +
+
       esc(
+
         formatDateBR(
           eq.proxima_manutencao
         )
+
       )
+
     );
   }
 
-  el("#pp").innerHTML =
+
+
+  el("#pp")
+    .innerHTML =
+
     pp.join("<br>")
+
     ||
+
     "<span class='empty'>-</span>";
 
-  el("#localizacao").textContent =
-    eq.localizacao || "-";
 
-  el("#resp").textContent =
-    eq.prestador || "-";
 
-  el("#ft").innerHTML =
+  el("#localizacao")
+    .textContent =
+
+    eq.localizacao ||
+    "-";
+
+
+
+  el("#resp")
+    .textContent =
+
+    eq.prestador ||
+    "-";
+
+
+
+  el("#ft")
+    .innerHTML =
+
     "Última atualização: " +
-    new Date().toLocaleString() +
+
+    new Date()
+      .toLocaleString() +
+
     "<br>" +
+
     "<span class='muted'>" +
+
     "Reportes serão enviados automaticamente ao responsável pela manutenção." +
+
     "</span>";
+
 }
+
+
+
+/* ============================================================
+   PROCESSAMENTO DA FOTO
+   ============================================================ */
+
+
+function processarFoto(file) {
+
+
+  return new Promise(
+
+    (
+      resolve,
+      reject
+    ) => {
+
+
+      if (!file) {
+
+        resolve(null);
+
+        return;
+      }
+
+
+
+      if (
+        !file.type.startsWith(
+          "image/"
+        )
+      ) {
+
+        reject(
+
+          new Error(
+            "O arquivo selecionado não é uma imagem."
+          )
+
+        );
+
+        return;
+      }
+
+
+
+      const reader =
+        new FileReader();
+
+
+
+      reader.onload =
+        function(event) {
+
+
+          const img =
+            new Image();
+
+
+
+          img.onload =
+            function() {
+
+
+              try {
+
+
+                let width =
+                  img.width;
+
+
+                let height =
+                  img.height;
+
+
+
+                /*
+                 * Redimensiona mantendo proporção
+                 */
+
+                if (
+
+                  width >
+                    PHOTO_MAX_DIMENSION ||
+
+                  height >
+                    PHOTO_MAX_DIMENSION
+
+                ) {
+
+
+                  if (
+                    width >
+                    height
+                  ) {
+
+
+                    height =
+                      Math.round(
+
+                        height *
+
+                        (
+                          PHOTO_MAX_DIMENSION /
+                          width
+                        )
+
+                      );
+
+
+                    width =
+                      PHOTO_MAX_DIMENSION;
+
+
+                  } else {
+
+
+                    width =
+                      Math.round(
+
+                        width *
+
+                        (
+                          PHOTO_MAX_DIMENSION /
+                          height
+                        )
+
+                      );
+
+
+                    height =
+                      PHOTO_MAX_DIMENSION;
+
+                  }
+
+                }
+
+
+
+                const canvas =
+                  document.createElement(
+                    "canvas"
+                  );
+
+
+                canvas.width =
+                  width;
+
+
+                canvas.height =
+                  height;
+
+
+
+                const ctx =
+                  canvas.getContext(
+                    "2d"
+                  );
+
+
+                ctx.drawImage(
+
+                  img,
+
+                  0,
+                  0,
+
+                  width,
+                  height
+
+                );
+
+
+
+                /*
+                 * Sempre transformamos para JPEG.
+                 *
+                 * Isso reduz bastante o tamanho.
+                 */
+
+                const dataUrl =
+                  canvas.toDataURL(
+
+                    "image/jpeg",
+
+                    PHOTO_QUALITY
+
+                  );
+
+
+
+                const base64 =
+
+                  dataUrl.split(
+                    ","
+                  )[1];
+
+
+
+                /*
+                 * Estimativa aproximada dos bytes
+                 * após Base64.
+                 */
+
+                const estimatedBytes =
+
+                  Math.round(
+
+                    base64.length *
+
+                    0.75
+
+                  );
+
+
+
+                /*
+                 * Mantemos margem abaixo dos 4 MB
+                 * permitidos pelo GS.
+                 */
+
+                if (
+
+                  estimatedBytes >
+
+                  3.5 *
+                  1024 *
+                  1024
+
+                ) {
+
+
+                  reject(
+
+                    new Error(
+
+                      "Mesmo após a redução, a foto ficou muito grande. Escolha outra imagem."
+
+                    )
+
+                  );
+
+
+                  return;
+                }
+
+
+
+                resolve({
+
+
+                  base64:
+                    base64,
+
+
+                  dataUrl:
+                    dataUrl,
+
+
+                  mime:
+                    "image/jpeg",
+
+
+                  nome:
+
+                    (
+                      file.name
+                        ?
+                        file.name.replace(
+                          /\.[^.]+$/,
+                          ""
+                        )
+                        :
+                        "foto"
+                    )
+
+                    +
+
+                    ".jpg",
+
+
+                  tamanhoOriginal:
+                    file.size,
+
+
+                  tamanhoFinal:
+                    estimatedBytes,
+
+
+                  width:
+                    width,
+
+
+                  height:
+                    height
+
+                });
+
+
+              }
+              catch(error) {
+
+
+                reject(
+                  error
+                );
+
+              }
+
+            };
+
+
+
+          img.onerror =
+            function() {
+
+
+              reject(
+
+                new Error(
+                  "Não foi possível carregar a imagem."
+                )
+
+              );
+
+            };
+
+
+
+          img.src =
+            event.target.result;
+
+        };
+
+
+
+      reader.onerror =
+        function() {
+
+
+          reject(
+
+            new Error(
+              "Erro ao ler a fotografia."
+            )
+
+          );
+
+        };
+
+
+
+      reader.readAsDataURL(
+        file
+      );
+
+    }
+
+  );
+}
+
+
+
+/* ============================================================
+   FOTO SELECIONADA
+   ============================================================ */
+
+
+async function onFotoSelecionada() {
+
+
+  const input =
+    el("#fotoInput");
+
+
+  const file =
+    input.files &&
+    input.files[0];
+
+
+  if (!file) {
+
+    removerFotoSelecionada();
+
+    return;
+  }
+
+
+
+  const status =
+    el("#status-reporte");
+
+
+  status.className =
+    "status-loading";
+
+
+  status.textContent =
+    "Preparando foto...";
+
+
+
+  try {
+
+
+    fotoProcessada =
+      await processarFoto(
+        file
+      );
+
+
+
+    el("#fotoPreview")
+      .src =
+      fotoProcessada.dataUrl;
+
+
+
+    el("#previewContainer")
+      .style.display =
+      "block";
+
+
+
+    el("#fotoInfo")
+      .textContent =
+
+      fotoProcessada.nome +
+
+      " • " +
+
+      fotoProcessada.width +
+
+      " × " +
+
+      fotoProcessada.height +
+
+      " • " +
+
+      formatBytes(
+        fotoProcessada.tamanhoFinal
+      );
+
+
+
+    status.className =
+      "";
+
+
+    status.textContent =
+      "";
+
+
+  }
+  catch(error) {
+
+
+    console.error(
+      error
+    );
+
+
+    fotoProcessada =
+      null;
+
+
+    input.value =
+      "";
+
+
+    el("#previewContainer")
+      .style.display =
+      "none";
+
+
+    status.className =
+      "status-error";
+
+
+    status.textContent =
+      error.message;
+
+  }
+
+}
+
+
+
+/* ============================================================
+   REMOVE FOTO
+   ============================================================ */
+
+
+function removerFotoSelecionada() {
+
+
+  fotoProcessada =
+    null;
+
+
+  el("#fotoInput")
+    .value =
+    "";
+
+
+  el("#fotoPreview")
+    .removeAttribute(
+      "src"
+    );
+
+
+  el("#previewContainer")
+    .style.display =
+    "none";
+
+
+  el("#fotoInfo")
+    .textContent =
+    "";
+
+}
+
 
 
 /* ============================================================
    MODAL
    ============================================================ */
 
-function abrirModal(){
+
+function abrirModal() {
+
 
   const status =
     el("#status-reporte");
 
-  status.className = "";
-  status.textContent = "";
 
-  el("#modal-anomalia").style.display =
+  status.className =
+    "";
+
+
+  status.textContent =
+    "";
+
+
+  el("#modal-anomalia")
+    .style.display =
     "flex";
+
 }
 
 
-function fecharModal(){
 
-  el("#modal-anomalia").style.display =
+function fecharModal() {
+
+
+  if (
+    postEmAndamento
+  ) {
+
+    return;
+  }
+
+
+  el("#modal-anomalia")
+    .style.display =
     "none";
+
 }
 
 
+
 /* ============================================================
-   LIMPA FORMULÁRIO VISÍVEL
+   LIMPA FORMULÁRIO
    ============================================================ */
 
-function limparFormularioReporte(){
 
-  el("#nome").value =
+function limparFormularioReporte() {
+
+
+  el("#nome")
+    .value =
     "";
 
-  el("#contato").value =
+
+  el("#contato")
+    .value =
     "";
 
-  el("#descricao").value =
+
+  el("#descricao")
+    .value =
     "";
+
+
+  removerFotoSelecionada();
+
 }
 
 
+
 /* ============================================================
-   CONFIRMAÇÃO DE ENVIO
+   FINALIZAÇÃO VISUAL
    ============================================================ */
 
-function finalizarEnvioVisual(){
+
+function finalizarEnvioVisual() {
+
+
+  if (
+    !postEmAndamento
+  ) {
+
+    return;
+  }
+
 
   const status =
     el("#status-reporte");
+
 
   const btn =
     el("#btn-enviar");
+
+
 
   status.className =
     "status-success";
 
+
   status.textContent =
-    "Reporte enviado para processamento.";
+
+    fotoProcessada
+
+      ? "Reporte e foto enviados para processamento."
+
+      : "Reporte enviado para processamento.";
+
+
+
+  /*
+   * Só depois capturamos o estado.
+   *
+   * limparFormularioReporte()
+   * apaga fotoProcessada.
+   */
 
   btn.disabled =
     false;
 
+
   btn.textContent =
     "Enviar";
 
-  limparFormularioReporte();
 
   postEmAndamento =
     false;
 
-  if(postTimer){
-    clearTimeout(postTimer);
-    postTimer = null;
+
+
+  if (
+    postTimer
+  ) {
+
+    clearTimeout(
+      postTimer
+    );
+
+    postTimer =
+      null;
   }
 
+
+
   setTimeout(
-    function(){
-      fecharModal();
+
+    function() {
+
+
+      limparFormularioReporte();
+
+
+      el("#modal-anomalia")
+        .style.display =
+        "none";
+
+
     },
+
     1800
+
   );
+
 }
 
 
+
 /* ============================================================
-   ENVIO NATIVO
+   ENVIO
    ============================================================ */
 
-function enviarReporte(){
+
+function enviarReporte() {
+
 
   const nome =
-    el("#nome").value.trim();
+    el("#nome")
+      .value
+      .trim();
+
 
   const contato =
-    el("#contato").value.trim();
+    el("#contato")
+      .value
+      .trim();
+
 
   const descricao =
-    el("#descricao").value.trim();
+    el("#descricao")
+      .value
+      .trim();
+
 
   const status =
     el("#status-reporte");
+
 
   const btn =
     el("#btn-enviar");
 
 
-  if(!nome){
+
+  /* ---------- VALIDAÇÕES ---------- */
+
+
+  if (!nome) {
+
 
     status.className =
       "status-error";
+
 
     status.textContent =
       "Informe seu nome.";
 
+
     return;
   }
 
 
-  if(!descricao){
+
+  if (!descricao) {
+
 
     status.className =
       "status-error";
+
 
     status.textContent =
       "Informe a descrição.";
 
+
     return;
   }
 
 
-  if(!window.__EQUIP_ID__){
+
+  if (
+    !window.__EQUIP_ID__
+  ) {
+
 
     status.className =
       "status-error";
 
+
     status.textContent =
       "Equipamento não identificado.";
+
 
     return;
   }
 
 
-  /* ==========================================
-     PREENCHE FORMULÁRIO INVISÍVEL
-     ========================================== */
 
-  el("#post_token").value =
+  /* =====================================================
+     DADOS DO POST
+     ===================================================== */
+
+
+  el("#post_token")
+    .value =
     API_TOKEN;
 
-  el("#post_id").value =
+
+
+  el("#post_id")
+    .value =
     window.__EQUIP_ID__;
 
-  el("#post_nomeEquipamento").value =
-    window.__EQUIP_NOME__ || "";
 
-  el("#post_reportadoPor").value =
+
+  el("#post_nomeEquipamento")
+    .value =
+    window.__EQUIP_NOME__ ||
+    "";
+
+
+
+  el("#post_reportadoPor")
+    .value =
     nome;
 
-  el("#post_contato").value =
+
+
+  el("#post_contato")
+    .value =
     contato;
 
-  el("#post_descricao").value =
+
+
+  el("#post_descricao")
+    .value =
     descricao;
 
 
-  /* URL DO APPS SCRIPT */
+
+  /* =====================================================
+     FOTO
+     ===================================================== */
+
+
+  if (
+    fotoProcessada
+  ) {
+
+
+    el("#post_fotoBase64")
+      .value =
+      fotoProcessada.base64;
+
+
+    el("#post_fotoNome")
+      .value =
+      fotoProcessada.nome;
+
+
+    el("#post_fotoMime")
+      .value =
+      fotoProcessada.mime;
+
+
+  } else {
+
+
+    el("#post_fotoBase64")
+      .value =
+      "";
+
+
+    el("#post_fotoNome")
+      .value =
+      "";
+
+
+    el("#post_fotoMime")
+      .value =
+      "";
+
+  }
+
+
+
+  /* =====================================================
+     FORMULÁRIO NATIVO
+     ===================================================== */
+
 
   const form =
     el("#nativePostForm");
+
 
   form.action =
     API_URL;
 
 
-  /* ==========================================
-     VISUAL
-     ========================================== */
+
+  /* =====================================================
+     TELA
+     ===================================================== */
+
 
   btn.disabled =
     true;
 
+
   btn.textContent =
-    "Enviando...";
+    fotoProcessada
+
+      ? "Enviando foto..."
+
+      : "Enviando...";
+
+
 
   status.className =
     "status-loading";
 
+
   status.textContent =
-    "Enviando reporte...";
+
+    fotoProcessada
+
+      ? "Enviando reporte e foto..."
+
+      : "Enviando reporte...";
+
+
 
   postEmAndamento =
     true;
 
 
-  /* ==========================================
-     ENVIA POST NATIVO
-     ========================================== */
+
+  /* =====================================================
+     POST
+     ===================================================== */
+
 
   form.submit();
 
 
+
   /*
-   * Como a resposta ocorre dentro do iframe,
-   * aguardamos o evento load.
+   * Segurança visual:
    *
-   * Existe também um fallback de 5 segundos.
+   * se o iframe não disparar load por alguma peculiaridade
+   * do Google, encerramos a tela após alguns segundos.
    */
 
   postTimer =
-    setTimeout(
-      function(){
 
-        if(postEmAndamento){
+    setTimeout(
+
+      function() {
+
+
+        if (
+          postEmAndamento
+        ) {
+
+
           finalizarEnvioVisual();
+
         }
 
+
       },
-      5000
+
+      fotoProcessada
+        ? 12000
+        : 6000
+
     );
+
 }
 
 
+
 /* ============================================================
-   EVENTO DO IFRAME
+   IFRAME
    ============================================================ */
+
 
 el("#postFrame")
   .addEventListener(
+
     "load",
-    function(){
+
+    function() {
+
+
+      if (
+        !postEmAndamento
+      ) {
+
+        return;
+      }
+
 
       /*
-       * O iframe também possui um carregamento inicial.
-       * Só tratamos como envio quando postEmAndamento=true.
+       * Com foto damos um pouco mais de tempo,
+       * pois Drive + MailApp demoram mais.
        */
 
-      if(postEmAndamento){
+      setTimeout(
 
-        /*
-         * Pequeno atraso para garantir que o Apps Script
-         * terminou a execução.
-         */
+        finalizarEnvioVisual,
 
-        setTimeout(
-          finalizarEnvioVisual,
-          500
-        );
-      }
+        fotoProcessada
+          ? 1800
+          : 600
+
+      );
+
     }
+
   );
 
 
+
 /* ============================================================
-   EVENTOS DA TELA
+   EVENTOS
    ============================================================ */
 
-document.addEventListener(
-  "DOMContentLoaded",
-  function(){
 
-    el("#reportar").onclick =
+document.addEventListener(
+
+  "DOMContentLoaded",
+
+  function() {
+
+
+    el("#reportar")
+      .onclick =
       abrirModal;
 
-    el("#fechar-modal").onclick =
+
+
+    el("#fechar-modal")
+      .onclick =
       fecharModal;
 
-    el("#cancelar-modal").onclick =
+
+
+    el("#cancelar-modal")
+      .onclick =
       fecharModal;
 
-    el("#btn-enviar").onclick =
+
+
+    el("#btn-enviar")
+      .onclick =
       enviarReporte;
+
+
+
+    el("#fotoInput")
+      .addEventListener(
+
+        "change",
+
+        onFotoSelecionada
+
+      );
+
+
+
+    el("#removerFoto")
+      .addEventListener(
+
+        "click",
+
+        removerFotoSelecionada
+
+      );
+
 
 
     el("#modal-anomalia")
       .addEventListener(
-        "click",
-        function(event){
 
-          if(
+        "click",
+
+        function(event) {
+
+
+          if (
+
             event.target.id ===
             "modal-anomalia"
-          ){
+
+          ) {
+
+
             fecharModal();
+
           }
+
         }
+
       );
+
   }
+
 );
+
 
 
 /* ============================================================
    INICIALIZAÇÃO
    ============================================================ */
 
-async function main(){
+
+async function main() {
+
 
   const id =
-    qs("id");
+    qs(
+      "id"
+    );
 
 
-  if(!id){
+  if (!id) {
 
-    el("#titulo").textContent =
+
+    el("#titulo")
+      .textContent =
       "Sem ID na URL";
+
 
     return;
   }
 
 
-  try{
+
+  try {
+
 
     const equipamento =
-      await fetchEquipById(id);
+      await fetchEquipById(
+        id
+      );
+
 
     render(
       equipamento
     );
 
+
   }
-  catch(error){
+  catch(error) {
 
-    console.error(error);
 
-    el("#titulo").textContent =
+    console.error(
+      error
+    );
+
+
+    el("#titulo")
+      .textContent =
       "Erro ao carregar dados";
 
-    el("#meta").textContent =
+
+    el("#meta")
+      .textContent =
       error.message;
+
   }
+
 }
+
 
 
 main();
 
+
 </script>
 
+
 </body>
+
 </html>
