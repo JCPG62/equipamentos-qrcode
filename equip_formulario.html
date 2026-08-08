@@ -13,16 +13,13 @@
     Ficha do Equipamento - QRManut
   </title>
 
-
   <style>
 
     :root {
       --gap:16px;
     }
 
-
     body {
-
       font-family:
         system-ui,
         -apple-system,
@@ -31,168 +28,193 @@
         Ubuntu;
 
       max-width:960px;
-
       margin:auto;
-
       padding:var(--gap);
-
       background:#f8f9fb;
+      color:#111827;
     }
-
 
     .card {
-
       background:#fff;
-
-      border:
-        1px solid #e5e7eb;
-
+      border:1px solid #e5e7eb;
       border-radius:16px;
-
       padding:var(--gap);
-
-      box-shadow:
-        0 6px 16px
-        rgba(0,0,0,.05);
+      box-shadow:0 6px 16px rgba(0,0,0,.05);
     }
-
 
     h1 {
-
       font-size:1.25rem;
-
-      margin:
-        0 0 4px 0;
+      margin:0 0 4px 0;
     }
 
-
     .muted {
-
       color:#6b7280;
     }
 
-
     .grid {
-
       display:grid;
-
-      grid-template-columns:
-        1fr 1fr;
-
+      grid-template-columns:1fr 1fr;
       gap:var(--gap);
-
       margin-top:var(--gap);
     }
 
-
     @media (max-width:780px) {
-
       .grid {
-
-        grid-template-columns:
-          1fr;
+        grid-template-columns:1fr;
       }
     }
 
-
     .chip {
-
       display:inline-block;
-
-      border:
-        1px solid #e5e7eb;
-
+      border:1px solid #e5e7eb;
       border-radius:999px;
-
-      padding:
-        6px 10px;
-
+      padding:6px 10px;
       margin-right:6px;
-
       text-decoration:none;
-
       color:#111827;
-
       cursor:pointer;
-
       background:#fff;
     }
 
-
     .empty {
-
       color:#9ca3af;
     }
 
-
     .kv {
-
       display:block;
-
       margin-top:6px;
     }
 
-
     .kv .pair {
-
-      padding:
-        8px 0;
-
-      border-bottom:
-        1px dashed #eee;
-
+      padding:8px 0;
+      border-bottom:1px dashed #eee;
       line-height:1.35;
     }
 
-
     .kv .pair:last-child {
-
       border-bottom:0;
     }
 
-
     .kv .pair b {
-
       font-weight:600;
-
       margin-right:6px;
-
       white-space:nowrap;
     }
 
-
     .kv .pair span {
-
       word-break:break-word;
-
       overflow-wrap:anywhere;
     }
 
-
     .kv .pair.modelo b {
-
       display:block;
-
-      margin:
-        0 0 4px 0;
+      margin:0 0 4px 0;
     }
-
 
     .kv .pair.modelo span {
-
       display:block;
     }
 
-
     .footer {
-
       margin-top:var(--gap);
-
       font-size:.9rem;
-
       color:#6b7280;
     }
 
+
+    /* =====================================================
+       HISTÓRICO
+       ===================================================== */
+
+    .history-section {
+      margin-top:22px;
+      border-top:1px solid #e5e7eb;
+      padding-top:18px;
+    }
+
+    .history-header {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:12px;
+    }
+
+    .history-title {
+      font-size:1.05rem;
+      font-weight:700;
+      margin:0;
+    }
+
+    .history-count {
+      font-size:.8rem;
+      color:#6b7280;
+    }
+
+    #historicoStatus {
+      font-size:.9rem;
+      color:#6b7280;
+      padding:8px 0;
+    }
+
+    .history-list {
+      display:grid;
+      gap:10px;
+    }
+
+    .history-item {
+      border:1px solid #e5e7eb;
+      border-radius:12px;
+      padding:12px;
+      background:#fafafa;
+    }
+
+    .history-item-top {
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      align-items:flex-start;
+    }
+
+    .history-date {
+      font-size:.9rem;
+      font-weight:700;
+      color:#1f2937;
+    }
+
+    .history-person {
+      font-size:.8rem;
+      color:#6b7280;
+      margin-top:4px;
+    }
+
+    .history-description {
+      margin-top:9px;
+      white-space:pre-wrap;
+      line-height:1.4;
+      font-size:.92rem;
+    }
+
+    .history-contact {
+      margin-top:6px;
+      font-size:.8rem;
+      color:#6b7280;
+    }
+
+    .history-photo {
+      margin-top:10px;
+    }
+
+    .history-photo a {
+      display:inline-block;
+      text-decoration:none;
+      border:1px solid #d1d5db;
+      padding:6px 10px;
+      border-radius:8px;
+      color:#111827;
+      background:#fff;
+      font-size:.85rem;
+    }
 
 
     /* =====================================================
@@ -200,128 +222,72 @@
        ===================================================== */
 
     #modal-anomalia {
-
       position:fixed;
-
       inset:0;
-
-      background:
-        rgba(0,0,0,.45);
-
+      background:rgba(0,0,0,.45);
       display:none;
-
       align-items:center;
-
       justify-content:center;
-
       z-index:9999;
-
       padding:12px;
-
       box-sizing:border-box;
     }
 
-
     #modal-anomalia .box {
-
       background:#fff;
-
-      width:
-        min(680px,94vw);
-
+      width:min(680px,94vw);
       max-height:90vh;
-
       overflow-y:auto;
-
       border-radius:14px;
-
       padding:16px;
-
-      border:
-        1px solid #e5e7eb;
-
-      box-shadow:
-        0 10px 30px
-        rgba(0,0,0,.15);
+      border:1px solid #e5e7eb;
+      box-shadow:0 10px 30px rgba(0,0,0,.15);
     }
 
-
     .row {
-
       display:grid;
-
       gap:12px;
     }
 
-
     label {
-
       display:grid;
-
       gap:6px;
-
       font-weight:500;
     }
 
-
     input[type="text"],
     textarea {
-
       width:100%;
-
       padding:12px;
-
-      border:
-        1px solid #e5e7eb;
-
+      border:1px solid #e5e7eb;
       border-radius:10px;
-
       font:inherit;
-
       box-sizing:border-box;
     }
 
-
     textarea {
-
       resize:vertical;
     }
 
-
     button {
-
-      padding:
-        12px 16px;
-
+      padding:12px 16px;
       border:0;
-
       border-radius:10px;
-
       background:#111827;
-
       color:#fff;
-
       cursor:pointer;
-
       font:inherit;
     }
 
-
     button:disabled {
-
       opacity:.55;
-
       cursor:not-allowed;
     }
 
-
     .btn-secondary {
-
       background:#e5e7eb;
-
       color:#111827;
     }
-
 
 
     /* =====================================================
@@ -329,107 +295,62 @@
        ===================================================== */
 
     .foto-area {
-
-      border:
-        1px solid #e5e7eb;
-
+      border:1px solid #e5e7eb;
       border-radius:12px;
-
       padding:12px;
-
       background:#f9fafb;
     }
 
-
     .foto-title {
-
       font-weight:600;
-
       margin-bottom:8px;
     }
 
-
     .foto-help {
-
       font-size:.85rem;
-
       color:#6b7280;
-
-      margin:
-        4px 0 10px 0;
+      margin:4px 0 10px 0;
     }
 
-
     #fotoInput {
-
       width:100%;
     }
 
-
     #previewContainer {
-
       display:none;
-
       margin-top:12px;
-
       text-align:center;
     }
 
-
     #fotoPreview {
-
       display:block;
-
       max-width:100%;
-
       max-height:320px;
-
-      margin:
-        0 auto;
-
+      margin:0 auto;
       border-radius:10px;
-
-      border:
-        1px solid #d1d5db;
-
+      border:1px solid #d1d5db;
       object-fit:contain;
-
       background:#fff;
     }
 
-
     .foto-info {
-
       margin-top:7px;
-
       font-size:.8rem;
-
       color:#6b7280;
-
       word-break:break-word;
     }
 
-
     .foto-actions {
-
       margin-top:10px;
-
       display:flex;
-
       justify-content:center;
     }
 
-
     .btn-remove-foto {
-
       background:#ef4444;
-
-      padding:
-        8px 12px;
-
+      padding:8px 12px;
       font-size:.85rem;
     }
-
 
 
     /* =====================================================
@@ -437,73 +358,51 @@
        ===================================================== */
 
     #status-reporte {
-
       display:none;
-
       margin-top:10px;
-
       padding:10px;
-
       border-radius:8px;
-
       font-size:.9rem;
     }
 
-
     .status-loading {
-
       display:block !important;
-
       background:#fef3c7;
-
       color:#92400e;
     }
 
-
     .status-success {
-
       display:block !important;
-
       background:#d1fae5;
-
       color:#065f46;
     }
 
-
     .status-error {
-
       display:block !important;
-
       background:#fee2e2;
-
       color:#991b1b;
     }
 
-
     #postFrame {
-
       display:none;
-
       width:0;
-
       height:0;
-
       border:0;
     }
-
-
 
     @media (max-width:600px) {
 
       .modal-buttons {
-
         flex-direction:column-reverse;
       }
 
-
       .modal-buttons button {
-
         width:100%;
+      }
+
+      .history-item-top {
+        flex-direction:column;
+        gap:2px;
       }
     }
 
@@ -515,17 +414,11 @@
 <body>
 
 
-  <!-- =====================================================
-       FICHA DO EQUIPAMENTO
-       ===================================================== -->
-
   <div class="card">
-
 
     <h1 id="titulo">
       Carregando…
     </h1>
-
 
     <div
       id="meta"
@@ -535,25 +428,20 @@
 
     <div class="grid">
 
-
       <div>
-
 
         <h3>
           Características
         </h3>
-
 
         <div
           id="carac"
           class="kv">
         </div>
 
-
         <h3>
           Plano Preventivo
         </h3>
-
 
         <div
           id="pp"
@@ -563,11 +451,9 @@
 
         </div>
 
-
         <h3>
           Localização
         </h3>
-
 
         <div
           id="localizacao"
@@ -577,17 +463,14 @@
 
         </div>
 
-
       </div>
 
 
       <div>
 
-
         <h3>
           Responsável / Prestador
         </h3>
-
 
         <div
           id="resp"
@@ -597,16 +480,12 @@
 
         </div>
 
-
       </div>
-
 
     </div>
 
 
-
     <p style="margin-top:16px">
-
 
       <a
         id="reportar"
@@ -616,36 +495,60 @@
 
       </a>
 
-
     </p>
+
+
+    <!-- =====================================================
+         HISTÓRICO
+         ===================================================== -->
+
+    <section class="history-section">
+
+      <div class="history-header">
+
+        <h2 class="history-title">
+          Histórico de Manutenção
+        </h2>
+
+        <span
+          id="historicoCount"
+          class="history-count">
+        </span>
+
+      </div>
+
+      <div id="historicoStatus">
+        Carregando histórico…
+      </div>
+
+      <div
+        id="historicoLista"
+        class="history-list">
+      </div>
+
+    </section>
 
 
     <p style="font-size:7px;">
-
-      JCPG-2026 - Ver.:1.6
-
+      JCPG-2026 - Ver.:1.7
     </p>
-
 
     <div
       class="footer"
       id="ft">
     </div>
 
-
   </div>
 
 
 
   <!-- =====================================================
-       MODAL DO REPORTE
+       MODAL
        ===================================================== -->
 
   <div id="modal-anomalia">
 
-
     <div class="box">
-
 
       <div
         style="
@@ -655,7 +558,6 @@
           gap:12px;
         "
       >
-
 
         <h2
           style="
@@ -668,7 +570,6 @@
 
         </h2>
 
-
         <button
           type="button"
           class="btn-secondary"
@@ -679,9 +580,7 @@
 
         </button>
 
-
       </div>
-
 
 
       <div
@@ -690,15 +589,11 @@
       >
 
 
-
-        <!-- NOME -->
-
         <label>
 
           <span>
             Seu nome *
           </span>
-
 
           <input
             id="nome"
@@ -710,15 +605,11 @@
         </label>
 
 
-
-        <!-- CONTATO -->
-
         <label>
 
           <span>
             Contato (e-mail ou telefone)
           </span>
-
 
           <input
             id="contato"
@@ -729,15 +620,11 @@
         </label>
 
 
-
-        <!-- DESCRIÇÃO -->
-
         <label>
 
           <span>
             Descrição do Serviço, Anomalia ou Reparo *
           </span>
-
 
           <textarea
             id="descricao"
@@ -749,29 +636,17 @@
         </label>
 
 
-
-        <!-- =================================================
-             FOTO
-             ================================================= -->
-
         <div class="foto-area">
 
-
           <div class="foto-title">
-
             📷 Foto do Serviço / Anomalia
-
           </div>
-
 
           <div class="foto-help">
 
-            Opcional. Tire uma foto ou selecione uma imagem
-            do aparelho. A imagem será reduzida automaticamente
-            antes do envio.
+            Opcional. Tire uma foto ou selecione uma imagem do aparelho.
 
           </div>
-
 
           <input
             id="fotoInput"
@@ -780,25 +655,19 @@
             capture="environment"
           >
 
-
-
           <div id="previewContainer">
-
 
             <img
               id="fotoPreview"
               alt="Pré-visualização da foto"
             >
 
-
             <div
               id="fotoInfo"
               class="foto-info">
             </div>
 
-
             <div class="foto-actions">
-
 
               <button
                 type="button"
@@ -810,24 +679,15 @@
 
               </button>
 
-
             </div>
 
-
           </div>
-
 
         </div>
 
 
-
-        <!-- STATUS -->
-
         <div id="status-reporte"></div>
 
-
-
-        <!-- BOTÕES -->
 
         <div
           class="modal-buttons"
@@ -839,7 +699,6 @@
           "
         >
 
-
           <button
             type="button"
             class="btn-secondary"
@@ -850,7 +709,6 @@
 
           </button>
 
-
           <button
             type="button"
             id="btn-enviar"
@@ -860,12 +718,9 @@
 
           </button>
 
-
         </div>
 
-
       </div>
-
 
 
       <p
@@ -876,21 +731,18 @@
         "
       >
 
-        O reporte será enviado automaticamente ao responsável
-        pela manutenção.
+        O reporte será enviado automaticamente ao responsável pela manutenção.
 
       </p>
 
-
     </div>
-
 
   </div>
 
 
 
   <!-- =====================================================
-       FORMULÁRIO POST INVISÍVEL
+       POST INVISÍVEL
        ===================================================== -->
 
   <form
@@ -900,13 +752,11 @@
     style="display:none"
   >
 
-
     <input
       type="hidden"
       name="token"
       id="post_token"
     >
-
 
     <input
       type="hidden"
@@ -914,13 +764,11 @@
       id="post_id"
     >
 
-
     <input
       type="hidden"
       name="nomeEquipamento"
       id="post_nomeEquipamento"
     >
-
 
     <input
       type="hidden"
@@ -928,13 +776,11 @@
       id="post_reportadoPor"
     >
 
-
     <input
       type="hidden"
       name="contato"
       id="post_contato"
     >
-
 
     <input
       type="hidden"
@@ -942,17 +788,11 @@
       id="post_descricao"
     >
 
-
-
-    <!-- FOTO -->
-
-
     <input
       type="hidden"
       name="fotoBase64"
       id="post_fotoBase64"
     >
-
 
     <input
       type="hidden"
@@ -960,23 +800,19 @@
       id="post_fotoNome"
     >
 
-
     <input
       type="hidden"
       name="fotoMime"
       id="post_fotoMime"
     >
 
-
   </form>
-
 
 
   <iframe
     id="postFrame"
     name="postFrame">
   </iframe>
-
 
 
 <script>
@@ -986,19 +822,8 @@
    CONFIGURAÇÃO
    ============================================================ */
 
-
-/*
- * IMPORTANTE:
- *
- * COLOQUE AQUI EXATAMENTE A MESMA URL /exec
- * QUE ESTÁ FUNCIONANDO ATUALMENTE.
- *
- * NÃO USE A URL ANTIGA.
- */
-
 const API_URL =
 "https://script.google.com/macros/s/AKfycbx4tpC42Q6WdkNhTUTAGoZWvG5M24zwlNscnwbDP5B3Q5pWo8B32-Lf0rQ2Xtua1AFMAQ/exec";
-
 
 
 const API_TOKEN =
@@ -1008,14 +833,6 @@ const API_TOKEN =
 const DEFAULT_MAIL =
 "manutencao@pncq.org.br";
 
-
-/*
- * Configuração da compactação.
- *
- * A imagem será limitada a aproximadamente:
- *
- * 1280 px no maior lado.
- */
 
 const PHOTO_MAX_DIMENSION =
 1280;
@@ -1029,7 +846,6 @@ const PHOTO_QUALITY =
 /* ============================================================
    ESTADO
    ============================================================ */
-
 
 let postEmAndamento =
 false;
@@ -1047,7 +863,6 @@ null;
 /* ============================================================
    HELPERS
    ============================================================ */
-
 
 function qs(k) {
 
@@ -1072,17 +887,17 @@ function esc(s) {
   )
   .toString()
   .replace(
-    /[&<>]/g,
+    /[&<>"]/g,
+    function(c) {
 
-    c => ({
+      return {
+        "&":"&amp;",
+        "<":"&lt;",
+        ">":"&gt;",
+        '"':"&quot;"
+      }[c];
 
-      "&":"&amp;",
-
-      "<":"&lt;",
-
-      ">":"&gt;"
-
-    }[c])
+    }
   );
 }
 
@@ -1101,27 +916,34 @@ function formatDateBR(s) {
   }
 
 
-  const iso =
-    v.match(
-      /^(\d{4})-(\d{2})-(\d{2})/
+  const date =
+    new Date(
+      v
     );
 
 
-  if (iso) {
+  if (
+    !isNaN(
+      date
+    )
+  ) {
 
-    return (
-      iso[3] +
-      "/" +
-      iso[2] +
-      "/" +
-      iso[1]
-    );
+    return date
+      .toLocaleString(
+        "pt-BR",
+        {
+          day:"2-digit",
+          month:"2-digit",
+          year:"numeric",
+          hour:"2-digit",
+          minute:"2-digit"
+        }
+      );
   }
 
 
   return v;
 }
-
 
 
 function formatBytes(bytes) {
@@ -1133,13 +955,12 @@ function formatBytes(bytes) {
 
 
   if (
-    bytes < 1024
+    bytes <
+    1024
   ) {
 
-    return (
-      bytes +
-      " bytes"
-    );
+    return bytes +
+      " bytes";
   }
 
 
@@ -1149,38 +970,32 @@ function formatBytes(bytes) {
   ) {
 
     return (
-      (
-        bytes /
-        1024
-      )
-      .toFixed(1) +
-      " KB"
-    );
+      bytes /
+      1024
+    )
+    .toFixed(1) +
+    " KB";
   }
 
 
   return (
+    bytes /
     (
-      bytes /
-      (
-        1024 *
-        1024
-      )
+      1024 *
+      1024
     )
-    .toFixed(2) +
-    " MB"
-  );
+  )
+  .toFixed(2) +
+  " MB";
 }
 
 
 
 /* ============================================================
-   CONSULTA DO EQUIPAMENTO
+   CONSULTA EQUIPAMENTO
    ============================================================ */
 
-
 async function fetchEquipById(id) {
-
 
   const url =
 
@@ -1205,18 +1020,53 @@ async function fetchEquipById(id) {
     );
 
 
+  const json =
+    await response.json();
+
+
   if (
-    !response.ok
+    !json.ok
   ) {
 
     throw new Error(
-
-      "Erro HTTP " +
-
-      response.status
-
+      json.error ||
+      "Erro na API"
     );
   }
+
+
+  return json.data;
+}
+
+
+
+/* ============================================================
+   CONSULTA HISTÓRICO
+   ============================================================ */
+
+async function fetchHistoryById(id) {
+
+  const url =
+
+    API_URL +
+
+    "?action=history&id=" +
+
+    encodeURIComponent(
+      id
+    ) +
+
+    "&token=" +
+
+    encodeURIComponent(
+      API_TOKEN
+    );
+
+
+  const response =
+    await fetch(
+      url
+    );
 
 
   const json =
@@ -1228,27 +1078,23 @@ async function fetchEquipById(id) {
   ) {
 
     throw new Error(
-
+      json.detail ||
       json.error ||
-
-      "Erro na API"
-
+      "Erro ao buscar histórico"
     );
   }
 
 
-  return json.data;
+  return json;
 }
 
 
 
 /* ============================================================
-   RENDERIZAÇÃO DO EQUIPAMENTO
+   RENDER EQUIPAMENTO
    ============================================================ */
 
-
 function render(eq) {
-
 
   if (!eq) {
 
@@ -1283,21 +1129,21 @@ function render(eq) {
     DEFAULT_MAIL;
 
 
-
   el("#titulo")
     .textContent =
 
     (
       id ||
       "Equipamento"
-    ) +
+    )
+
+    +
 
     (
       nome
         ? " – " + nome
         : ""
     );
-
 
 
   el("#meta")
@@ -1315,81 +1161,39 @@ function render(eq) {
     .join("<br>");
 
 
-
   const pares = [
 
-
     {
-
-      rotulo:
-        "Fabricante",
-
-      valor:
-        eq.fabricante,
-
-      classe:
-        ""
-
+      rotulo:"Fabricante",
+      valor:eq.fabricante,
+      classe:""
     },
 
-
     {
-
-      rotulo:
-        "Modelo",
-
-      valor:
-        eq.modelo,
-
-      classe:
-        "modelo"
-
+      rotulo:"Modelo",
+      valor:eq.modelo,
+      classe:"modelo"
     },
 
-
     {
-
-      rotulo:
-        "Capacidade",
-
-      valor:
-        eq.capacidade,
-
-      classe:
-        ""
-
+      rotulo:"Capacidade",
+      valor:eq.capacidade,
+      classe:""
     },
 
-
     {
-
-      rotulo:
-        "Amperagem Nominal (FLA)",
-
-      valor:
-        eq.amperagem_nominal_fla,
-
-      classe:
-        ""
-
+      rotulo:"Amperagem Nominal (FLA)",
+      valor:eq.amperagem_nominal_fla,
+      classe:""
     },
 
-
     {
-
-      rotulo:
-        "Voltagem",
-
-      valor:
-        eq.voltagem,
-
-      classe:
-        ""
-
+      rotulo:"Voltagem",
+      valor:eq.voltagem,
+      classe:""
     }
 
   ];
-
 
 
   const caracHTML =
@@ -1397,26 +1201,24 @@ function render(eq) {
     pares
 
     .filter(
-
       p =>
         p.valor &&
         p.valor !== "-"
-
     )
 
     .map(
-
       p => `
 
         <div class="pair ${p.classe || ""}">
 
-          <b>
-            ${esc(p.rotulo)}:
-          </b>
+          <b>${esc(p.rotulo)}:</b>
 
           ${
-            p.classe === "modelo"
+            p.classe ===
+            "modelo"
+
               ? "<br>"
+
               : " "
           }
 
@@ -1427,7 +1229,6 @@ function render(eq) {
         </div>
 
       `
-
     )
 
     .join("")
@@ -1437,11 +1238,9 @@ function render(eq) {
     "<div class='empty'>Sem dados</div>";
 
 
-
   el("#carac")
     .innerHTML =
     caracHTML;
-
 
 
   const pp =
@@ -1464,7 +1263,6 @@ function render(eq) {
   }
 
 
-
   if (
     eq.proxima_manutencao
   ) {
@@ -1474,16 +1272,13 @@ function render(eq) {
       "<b>Próxima:</b> " +
 
       esc(
-
         formatDateBR(
           eq.proxima_manutencao
         )
-
       )
 
     );
   }
-
 
 
   el("#pp")
@@ -1496,13 +1291,11 @@ function render(eq) {
     "<span class='empty'>-</span>";
 
 
-
   el("#localizacao")
     .textContent =
 
     eq.localizacao ||
     "-";
-
 
 
   el("#resp")
@@ -1512,34 +1305,206 @@ function render(eq) {
     "-";
 
 
-
   el("#ft")
     .innerHTML =
 
     "Última atualização: " +
 
     new Date()
-      .toLocaleString() +
-
-    "<br>" +
-
-    "<span class='muted'>" +
-
-    "Reportes serão enviados automaticamente ao responsável pela manutenção." +
-
-    "</span>";
+      .toLocaleString(
+        "pt-BR"
+      );
 
 }
 
 
 
 /* ============================================================
-   PROCESSAMENTO DA FOTO
+   RENDER HISTÓRICO
    ============================================================ */
 
+function renderHistory(result) {
+
+  const status =
+    el("#historicoStatus");
+
+
+  const list =
+    el("#historicoLista");
+
+
+  const count =
+    el("#historicoCount");
+
+
+  list.innerHTML =
+    "";
+
+
+  const history =
+
+    result &&
+    Array.isArray(
+      result.history
+    )
+
+      ? result.history
+
+      : [];
+
+
+  count.textContent =
+
+    history.length
+
+      ? history.length +
+        " registro(s)"
+
+      : "";
+
+
+  if (
+    history.length === 0
+  ) {
+
+    status.textContent =
+      "Nenhum histórico encontrado para este equipamento.";
+
+    return;
+  }
+
+
+  status.textContent =
+    "";
+
+
+  history.forEach(
+
+    item => {
+
+
+      const div =
+        document.createElement(
+          "div"
+        );
+
+
+      div.className =
+        "history-item";
+
+
+      const fotoHTML =
+
+        item.foto
+
+          ? `
+
+            <div class="history-photo">
+
+              <a
+                href="${esc(item.foto)}"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+
+                📷 Ver foto
+
+              </a>
+
+            </div>
+
+          `
+
+          : "";
+
+
+      const contatoHTML =
+
+        item.contato
+
+          ? `
+
+            <div class="history-contact">
+
+              Contato:
+              ${esc(item.contato)}
+
+            </div>
+
+          `
+
+          : "";
+
+
+      div.innerHTML = `
+
+        <div class="history-item-top">
+
+          <div>
+
+            <div class="history-date">
+
+              ${esc(
+                formatDateBR(
+                  item.data
+                )
+              )}
+
+            </div>
+
+            <div class="history-person">
+
+              Reportado por:
+              ${
+                esc(
+                  item.reportadoPor ||
+                  "Não informado"
+                )
+              }
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        ${contatoHTML}
+
+
+        <div class="history-description">
+
+          ${
+            esc(
+              item.descricao ||
+              ""
+            )
+          }
+
+        </div>
+
+
+        ${fotoHTML}
+
+      `;
+
+
+      list.appendChild(
+        div
+      );
+
+    }
+
+  );
+}
+
+
+
+/* ============================================================
+   PROCESSAMENTO FOTO
+   ============================================================ */
 
 function processarFoto(file) {
-
 
   return new Promise(
 
@@ -1557,7 +1522,6 @@ function processarFoto(file) {
       }
 
 
-
       if (
         !file.type.startsWith(
           "image/"
@@ -1565,21 +1529,17 @@ function processarFoto(file) {
       ) {
 
         reject(
-
           new Error(
             "O arquivo selecionado não é uma imagem."
           )
-
         );
 
         return;
       }
 
 
-
       const reader =
         new FileReader();
-
 
 
       reader.onload =
@@ -1588,7 +1548,6 @@ function processarFoto(file) {
 
           const img =
             new Image();
-
 
 
           img.onload =
@@ -1606,18 +1565,15 @@ function processarFoto(file) {
                   img.height;
 
 
-
-                /*
-                 * Redimensiona mantendo proporção
-                 */
-
                 if (
 
                   width >
-                    PHOTO_MAX_DIMENSION ||
+                  PHOTO_MAX_DIMENSION
+
+                  ||
 
                   height >
-                    PHOTO_MAX_DIMENSION
+                  PHOTO_MAX_DIMENSION
 
                 ) {
 
@@ -1669,7 +1625,6 @@ function processarFoto(file) {
                 }
 
 
-
                 const canvas =
                   document.createElement(
                     "canvas"
@@ -1682,7 +1637,6 @@ function processarFoto(file) {
 
                 canvas.height =
                   height;
-
 
 
                 const ctx =
@@ -1704,13 +1658,6 @@ function processarFoto(file) {
                 );
 
 
-
-                /*
-                 * Sempre transformamos para JPEG.
-                 *
-                 * Isso reduz bastante o tamanho.
-                 */
-
                 const dataUrl =
                   canvas.toDataURL(
 
@@ -1721,19 +1668,11 @@ function processarFoto(file) {
                   );
 
 
-
                 const base64 =
-
                   dataUrl.split(
                     ","
                   )[1];
 
-
-
-                /*
-                 * Estimativa aproximada dos bytes
-                 * após Base64.
-                 */
 
                 const estimatedBytes =
 
@@ -1746,12 +1685,6 @@ function processarFoto(file) {
                   );
 
 
-
-                /*
-                 * Mantemos margem abaixo dos 4 MB
-                 * permitidos pelo GS.
-                 */
-
                 if (
 
                   estimatedBytes >
@@ -1762,67 +1695,49 @@ function processarFoto(file) {
 
                 ) {
 
-
                   reject(
-
                     new Error(
-
-                      "Mesmo após a redução, a foto ficou muito grande. Escolha outra imagem."
-
+                      "A foto ficou muito grande após a compactação."
                     )
-
                   );
-
 
                   return;
                 }
 
 
-
                 resolve({
-
 
                   base64:
                     base64,
 
-
                   dataUrl:
                     dataUrl,
 
-
                   mime:
                     "image/jpeg",
-
 
                   nome:
 
                     (
                       file.name
-                        ?
-                        file.name.replace(
-                          /\.[^.]+$/,
-                          ""
-                        )
-                        :
-                        "foto"
+
+                        ? file.name.replace(
+                            /\.[^.]+$/,
+                            ""
+                          )
+
+                        : "foto"
                     )
 
                     +
 
                     ".jpg",
 
-
-                  tamanhoOriginal:
-                    file.size,
-
-
                   tamanhoFinal:
                     estimatedBytes,
 
-
                   width:
                     width,
-
 
                   height:
                     height
@@ -1833,31 +1748,23 @@ function processarFoto(file) {
               }
               catch(error) {
 
-
                 reject(
                   error
                 );
-
               }
 
             };
 
 
-
           img.onerror =
             function() {
 
-
               reject(
-
                 new Error(
                   "Não foi possível carregar a imagem."
                 )
-
               );
-
             };
-
 
 
           img.src =
@@ -1866,21 +1773,15 @@ function processarFoto(file) {
         };
 
 
-
       reader.onerror =
         function() {
 
-
           reject(
-
             new Error(
               "Erro ao ler a fotografia."
             )
-
           );
-
         };
-
 
 
       reader.readAsDataURL(
@@ -1898,9 +1799,7 @@ function processarFoto(file) {
    FOTO SELECIONADA
    ============================================================ */
 
-
 async function onFotoSelecionada() {
-
 
   const input =
     el("#fotoInput");
@@ -1919,7 +1818,6 @@ async function onFotoSelecionada() {
   }
 
 
-
   const status =
     el("#status-reporte");
 
@@ -1932,7 +1830,6 @@ async function onFotoSelecionada() {
     "Preparando foto...";
 
 
-
   try {
 
 
@@ -1942,17 +1839,14 @@ async function onFotoSelecionada() {
       );
 
 
-
     el("#fotoPreview")
       .src =
       fotoProcessada.dataUrl;
 
 
-
     el("#previewContainer")
       .style.display =
       "block";
-
 
 
     el("#fotoInfo")
@@ -1975,7 +1869,6 @@ async function onFotoSelecionada() {
       );
 
 
-
     status.className =
       "";
 
@@ -1986,11 +1879,6 @@ async function onFotoSelecionada() {
 
   }
   catch(error) {
-
-
-    console.error(
-      error
-    );
 
 
     fotoProcessada =
@@ -2023,9 +1911,7 @@ async function onFotoSelecionada() {
    REMOVE FOTO
    ============================================================ */
 
-
 function removerFotoSelecionada() {
-
 
   fotoProcessada =
     null;
@@ -2059,9 +1945,7 @@ function removerFotoSelecionada() {
    MODAL
    ============================================================ */
 
-
 function abrirModal() {
-
 
   const status =
     el("#status-reporte");
@@ -2082,9 +1966,7 @@ function abrirModal() {
 }
 
 
-
 function fecharModal() {
-
 
   if (
     postEmAndamento
@@ -2103,12 +1985,10 @@ function fecharModal() {
 
 
 /* ============================================================
-   LIMPA FORMULÁRIO
+   LIMPA REPORTE
    ============================================================ */
 
-
 function limparFormularioReporte() {
-
 
   el("#nome")
     .value =
@@ -2132,12 +2012,10 @@ function limparFormularioReporte() {
 
 
 /* ============================================================
-   FINALIZAÇÃO VISUAL
+   FINALIZA ENVIO
    ============================================================ */
 
-
 function finalizarEnvioVisual() {
-
 
   if (
     !postEmAndamento
@@ -2155,27 +2033,13 @@ function finalizarEnvioVisual() {
     el("#btn-enviar");
 
 
-
   status.className =
     "status-success";
 
 
   status.textContent =
+    "Reporte enviado para processamento.";
 
-    fotoProcessada
-
-      ? "Reporte e foto enviados para processamento."
-
-      : "Reporte enviado para processamento.";
-
-
-
-  /*
-   * Só depois capturamos o estado.
-   *
-   * limparFormularioReporte()
-   * apaga fotoProcessada.
-   */
 
   btn.disabled =
     false;
@@ -2189,7 +2053,6 @@ function finalizarEnvioVisual() {
     false;
 
 
-
   if (
     postTimer
   ) {
@@ -2198,10 +2061,10 @@ function finalizarEnvioVisual() {
       postTimer
     );
 
+
     postTimer =
       null;
   }
-
 
 
   setTimeout(
@@ -2228,12 +2091,10 @@ function finalizarEnvioVisual() {
 
 
 /* ============================================================
-   ENVIO
+   ENVIA REPORTE
    ============================================================ */
 
-
 function enviarReporte() {
-
 
   const nome =
     el("#nome")
@@ -2261,12 +2122,7 @@ function enviarReporte() {
     el("#btn-enviar");
 
 
-
-  /* ---------- VALIDAÇÕES ---------- */
-
-
   if (!nome) {
-
 
     status.className =
       "status-error";
@@ -2275,14 +2131,11 @@ function enviarReporte() {
     status.textContent =
       "Informe seu nome.";
 
-
     return;
   }
 
 
-
   if (!descricao) {
-
 
     status.className =
       "status-error";
@@ -2291,16 +2144,13 @@ function enviarReporte() {
     status.textContent =
       "Informe a descrição.";
 
-
     return;
   }
-
 
 
   if (
     !window.__EQUIP_ID__
   ) {
-
 
     status.className =
       "status-error";
@@ -2309,15 +2159,8 @@ function enviarReporte() {
     status.textContent =
       "Equipamento não identificado.";
 
-
     return;
   }
-
-
-
-  /* =====================================================
-     DADOS DO POST
-     ===================================================== */
 
 
   el("#post_token")
@@ -2325,11 +2168,9 @@ function enviarReporte() {
     API_TOKEN;
 
 
-
   el("#post_id")
     .value =
     window.__EQUIP_ID__;
-
 
 
   el("#post_nomeEquipamento")
@@ -2338,11 +2179,9 @@ function enviarReporte() {
     "";
 
 
-
   el("#post_reportadoPor")
     .value =
     nome;
-
 
 
   el("#post_contato")
@@ -2350,22 +2189,14 @@ function enviarReporte() {
     contato;
 
 
-
   el("#post_descricao")
     .value =
     descricao;
 
 
-
-  /* =====================================================
-     FOTO
-     ===================================================== */
-
-
   if (
     fotoProcessada
   ) {
-
 
     el("#post_fotoBase64")
       .value =
@@ -2381,9 +2212,7 @@ function enviarReporte() {
       .value =
       fotoProcessada.mime;
 
-
   } else {
-
 
     el("#post_fotoBase64")
       .value =
@@ -2398,14 +2227,7 @@ function enviarReporte() {
     el("#post_fotoMime")
       .value =
       "";
-
   }
-
-
-
-  /* =====================================================
-     FORMULÁRIO NATIVO
-     ===================================================== */
 
 
   const form =
@@ -2414,12 +2236,6 @@ function enviarReporte() {
 
   form.action =
     API_URL;
-
-
-
-  /* =====================================================
-     TELA
-     ===================================================== */
 
 
   btn.disabled =
@@ -2434,41 +2250,20 @@ function enviarReporte() {
       : "Enviando...";
 
 
-
   status.className =
     "status-loading";
 
 
   status.textContent =
-
-    fotoProcessada
-
-      ? "Enviando reporte e foto..."
-
-      : "Enviando reporte...";
-
+    "Enviando reporte...";
 
 
   postEmAndamento =
     true;
 
 
-
-  /* =====================================================
-     POST
-     ===================================================== */
-
-
   form.submit();
 
-
-
-  /*
-   * Segurança visual:
-   *
-   * se o iframe não disparar load por alguma peculiaridade
-   * do Google, encerramos a tela após alguns segundos.
-   */
 
   postTimer =
 
@@ -2476,16 +2271,13 @@ function enviarReporte() {
 
       function() {
 
-
         if (
           postEmAndamento
         ) {
 
-
           finalizarEnvioVisual();
 
         }
-
 
       },
 
@@ -2503,14 +2295,12 @@ function enviarReporte() {
    IFRAME
    ============================================================ */
 
-
 el("#postFrame")
   .addEventListener(
 
     "load",
 
     function() {
-
 
       if (
         !postEmAndamento
@@ -2519,11 +2309,6 @@ el("#postFrame")
         return;
       }
 
-
-      /*
-       * Com foto damos um pouco mais de tempo,
-       * pois Drive + MailApp demoram mais.
-       */
 
       setTimeout(
 
@@ -2545,7 +2330,6 @@ el("#postFrame")
    EVENTOS
    ============================================================ */
 
-
 document.addEventListener(
 
   "DOMContentLoaded",
@@ -2558,11 +2342,9 @@ document.addEventListener(
       abrirModal;
 
 
-
     el("#fechar-modal")
       .onclick =
       fecharModal;
-
 
 
     el("#cancelar-modal")
@@ -2570,11 +2352,9 @@ document.addEventListener(
       fecharModal;
 
 
-
     el("#btn-enviar")
       .onclick =
       enviarReporte;
-
 
 
     el("#fotoInput")
@@ -2587,7 +2367,6 @@ document.addEventListener(
       );
 
 
-
     el("#removerFoto")
       .addEventListener(
 
@@ -2598,7 +2377,6 @@ document.addEventListener(
       );
 
 
-
     el("#modal-anomalia")
       .addEventListener(
 
@@ -2606,14 +2384,12 @@ document.addEventListener(
 
         function(event) {
 
-
           if (
 
             event.target.id ===
             "modal-anomalia"
 
           ) {
-
 
             fecharModal();
 
@@ -2633,9 +2409,7 @@ document.addEventListener(
    INICIALIZAÇÃO
    ============================================================ */
 
-
 async function main() {
-
 
   const id =
     qs(
@@ -2645,19 +2419,20 @@ async function main() {
 
   if (!id) {
 
-
     el("#titulo")
       .textContent =
       "Sem ID na URL";
-
 
     return;
   }
 
 
-
   try {
 
+
+    /*
+     * Primeiro carrega equipamento.
+     */
 
     const equipamento =
       await fetchEquipById(
@@ -2668,6 +2443,41 @@ async function main() {
     render(
       equipamento
     );
+
+
+    /*
+     * Depois carrega histórico.
+     */
+
+    try {
+
+
+      const history =
+        await fetchHistoryById(
+          id
+        );
+
+
+      renderHistory(
+        history
+      );
+
+
+    }
+    catch(errorHistorico) {
+
+
+      console.error(
+        errorHistorico
+      );
+
+
+      el("#historicoStatus")
+        .textContent =
+
+        "Não foi possível carregar o histórico.";
+
+    }
 
 
   }
@@ -2688,17 +2498,20 @@ async function main() {
       .textContent =
       error.message;
 
+
+    el("#historicoStatus")
+      .textContent =
+      "";
+
   }
 
 }
-
 
 
 main();
 
 
 </script>
-
 
 </body>
 
