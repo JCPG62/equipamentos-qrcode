@@ -4,226 +4,780 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Ficha do Equipamento (QRManut + API)</title>
+
   <style>
     :root { --gap:16px; }
-    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu;max-width:960px;margin:auto;padding:var(--gap);background:#f8f9fb;}
-    .card{background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:var(--gap);box-shadow:0 6px 16px rgba(0,0,0,.05);}
-    h1{font-size:1.25rem;margin:0 0 4px 0}
-    .muted{color:#6b7280}
-    .grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--gap);margin-top:var(--gap);}
-    @media (max-width:780px){ .grid{grid-template-columns:1fr} }
-    .chip{display:inline-block;border:1px solid #e5e7eb;border-radius:999px;padding:6px 10px;margin-right:6px;text-decoration:none;color:#111827;cursor:pointer}
-    .empty{color:#9ca3af}
-    /* --- Características em linha --- */
-	.kv{display:block;margin-top:6px}
-	.kv .pair{padding:8px 0;border-bottom:1px dashed #eee;line-height:1.35}
-	.kv .pair:last-child{border-bottom:0}
-	.kv .pair b{font-weight:600;margin-right:6px;white-space:nowrap}
-	.kv .pair span{word-break:break-word;overflow-wrap:anywhere}
-	/* Modelo: valor em linha abaixo do rótulo */
-	.kv .pair.modelo b{display:block;margin:0 0 4px 0}
-	.kv .pair.modelo span{display:block}
-    .footer{margin-top:var(--gap);font-size:.9rem;color:#6b7280}
+
+    body{
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu;
+      max-width:960px;
+      margin:auto;
+      padding:var(--gap);
+      background:#f8f9fb;
+    }
+
+    .card{
+      background:#fff;
+      border:1px solid #e5e7eb;
+      border-radius:16px;
+      padding:var(--gap);
+      box-shadow:0 6px 16px rgba(0,0,0,.05);
+    }
+
+    h1{
+      font-size:1.25rem;
+      margin:0 0 4px 0;
+    }
+
+    .muted{
+      color:#6b7280;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:var(--gap);
+      margin-top:var(--gap);
+    }
+
+    @media (max-width:780px){
+      .grid{
+        grid-template-columns:1fr;
+      }
+    }
+
+    .chip{
+      display:inline-block;
+      border:1px solid #e5e7eb;
+      border-radius:999px;
+      padding:6px 10px;
+      margin-right:6px;
+      text-decoration:none;
+      color:#111827;
+      cursor:pointer;
+      background:#fff;
+    }
+
+    .empty{
+      color:#9ca3af;
+    }
+
+    /* Características */
+    .kv{
+      display:block;
+      margin-top:6px;
+    }
+
+    .kv .pair{
+      padding:8px 0;
+      border-bottom:1px dashed #eee;
+      line-height:1.35;
+    }
+
+    .kv .pair:last-child{
+      border-bottom:0;
+    }
+
+    .kv .pair b{
+      font-weight:600;
+      margin-right:6px;
+      white-space:nowrap;
+    }
+
+    .kv .pair span{
+      word-break:break-word;
+      overflow-wrap:anywhere;
+    }
+
+    .kv .pair.modelo b{
+      display:block;
+      margin:0 0 4px 0;
+    }
+
+    .kv .pair.modelo span{
+      display:block;
+    }
+
+    .footer{
+      margin-top:var(--gap);
+      font-size:.9rem;
+      color:#6b7280;
+    }
+
     /* Modal */
-    #modal-anomalia{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;z-index:9999;}
-    #modal-anomalia .box{background:#fff;width:min(680px,90vw);border-radius:14px;padding:16px;border:1px solid #e5e7eb;box-shadow:0 10px 30px rgba(0,0,0,.15)}
-    .row{display:grid;gap:12px}
-    label{display:grid;gap:6px}
-    input[type="text"], textarea{width:100%;padding:12px;border:1px solid #e5e7eb;border-radius:10px;font:inherit}
-    button{padding:12px 16px;border:0;border-radius:10px;background:#111827;color:#fff;cursor:pointer}
-    .btn-secondary{background:#e5e7eb;color:#111827}
+    #modal-anomalia{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.45);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index:9999;
+    }
+
+    #modal-anomalia .box{
+      background:#fff;
+      width:min(680px,90vw);
+      border-radius:14px;
+      padding:16px;
+      border:1px solid #e5e7eb;
+      box-shadow:0 10px 30px rgba(0,0,0,.15);
+    }
+
+    .row{
+      display:grid;
+      gap:12px;
+    }
+
+    label{
+      display:grid;
+      gap:6px;
+    }
+
+    input[type="text"],
+    textarea{
+      width:100%;
+      padding:12px;
+      border:1px solid #e5e7eb;
+      border-radius:10px;
+      font:inherit;
+      box-sizing:border-box;
+    }
+
+    textarea{
+      resize:vertical;
+    }
+
+    button{
+      padding:12px 16px;
+      border:0;
+      border-radius:10px;
+      background:#111827;
+      color:#fff;
+      cursor:pointer;
+    }
+
+    button:disabled{
+      opacity:.55;
+      cursor:not-allowed;
+    }
+
+    .btn-secondary{
+      background:#e5e7eb;
+      color:#111827;
+    }
+
+    #status-reporte{
+      display:none;
+      margin-top:10px;
+      padding:10px;
+      border-radius:8px;
+      font-size:.9rem;
+    }
+
+    .status-loading{
+      display:block !important;
+      background:#fef3c7;
+      color:#92400e;
+    }
+
+    .status-success{
+      display:block !important;
+      background:#d1fae5;
+      color:#065f46;
+    }
+
+    .status-error{
+      display:block !important;
+      background:#fee2e2;
+      color:#991b1b;
+    }
   </style>
 </head>
+
 <body>
 
   <div class="card">
+
     <h1 id="titulo">Carregando…</h1>
+
     <div id="meta" class="muted"></div>
 
     <div class="grid">
+
       <div>
+
         <h3>Características</h3>
         <div id="carac" class="kv"></div>
 
         <h3>Plano Preventivo</h3>
-        <div id="pp" class="empty">Periodicidade • Próxima Manutenção</div>
+        <div id="pp" class="empty">
+          Periodicidade • Próxima Manutenção
+        </div>
 
         <h3>Localização</h3>
         <div id="localizacao" class="empty">-</div>
+
       </div>
+
       <div>
+
         <h3>Responsável / Prestador</h3>
         <div id="resp" class="empty">-</div>
+
       </div>
+
     </div>
 
     <p style="margin-top:16px">
-      <a id="reportar" class="chip">Reportar Serviço/Anomalia/Reparo</a>
+      <a id="reportar" class="chip">
+        Reportar Serviço/Anomalia/Reparo
+      </a>
     </p>
-    <p style="font-size: 7px;">JCPG-2025 - Ver.:1.1</p>
+
+    <p style="font-size:7px;">
+      JCPG-2026 - Ver.:1.2
+    </p>
+
     <div class="footer" id="ft"></div>
+
   </div>
 
   <!-- Modal de Reporte -->
   <div id="modal-anomalia">
+
     <div class="box">
+
       <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
-        <h2 style="margin:0;font-size:1.1rem">Reportar Serviço, Anomalia ou Reparo</h2>
-        <button type="button" class="btn-secondary" id="fechar-modal">Fechar</button>
+
+        <h2 style="margin:0;font-size:1.1rem">
+          Reportar Serviço, Anomalia ou Reparo
+        </h2>
+
+        <button
+          type="button"
+          class="btn-secondary"
+          id="fechar-modal">
+          Fechar
+        </button>
+
       </div>
-      <form id="form-mailto" class="row" style="margin-top:12px" onsubmit="return false;">
-        <input type="hidden" id="equip_id_input">
-        <label><span>Seu nome</span><input id="nome" type="text" required autocomplete="name"></label>
-        <label><span>Contato (e-mail ou telefone)</span><input id="contato" type="text" autocomplete="email tel"></label>
-        <label><span>Descrição do Serviço, Anomalia ou Reparo</span><textarea id="descricao" rows="5" required placeholder="Explique o ocorrido, sintomas, quando começou…"></textarea></label>
+
+      <form
+        id="form-reporte"
+        class="row"
+        style="margin-top:12px"
+        onsubmit="return false;">
+
+        <input
+          type="hidden"
+          id="equip_id_input">
+
+        <label>
+          <span>Seu nome *</span>
+          <input
+            id="nome"
+            type="text"
+            required
+            autocomplete="name">
+        </label>
+
+        <label>
+          <span>Contato (e-mail ou telefone)</span>
+          <input
+            id="contato"
+            type="text"
+            autocomplete="email tel">
+        </label>
+
+        <label>
+          <span>Descrição do Serviço, Anomalia ou Reparo *</span>
+          <textarea
+            id="descricao"
+            rows="5"
+            required
+            placeholder="Explique o ocorrido, sintomas, quando começou…"></textarea>
+        </label>
+
+        <div id="status-reporte"></div>
+
         <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:4px">
-          <button type="button" class="btn-secondary" id="cancelar-modal">Cancelar</button>
-          <button type="button" id="btn-enviar">Enviar</button>
+
+          <button
+            type="button"
+            class="btn-secondary"
+            id="cancelar-modal">
+            Cancelar
+          </button>
+
+          <button
+            type="button"
+            id="btn-enviar">
+            Enviar
+          </button>
+
         </div>
+
       </form>
-      <p id="help-mail" style="margin-top:10px;color:#6b7280;font-size:.9rem">Ao clicar em Enviar, vamos abrir seu app de e-mail já com os campos preenchidos.</p>
+
+      <p style="margin-top:10px;color:#6b7280;font-size:.9rem">
+        O reporte será enviado automaticamente ao responsável pela manutenção.
+      </p>
+
     </div>
+
   </div>
 
   <script>
-  // === CONFIG ===
-  const API_URL   = "https://script.google.com/macros/s/AKfycbx7K_63QoHC_F8kR3X8NczNlkLNxebsmivoxDq1LEpgBRsvTqGnPGYxqUB2JqiiW2mkZg/exec";
-  const API_TOKEN = "pncqalpha123";
-  const DEFAULT_MAIL = "manutencao@pncq.org.br";
 
-  // === HELPERS ===
-  function qs(k){ return new URLSearchParams(location.search).get(k); }
-  function el(s){ return document.querySelector(s); }
-  function esc(s){ return (s||"").toString().replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
-  function formatDateBR(s){const v=(s||"").trim();if(!v)return"";const iso=v.match(/^(\d{4})-(\d{2})-(\d{2})$/);return iso?`${iso[3]}/${iso[2]}/${iso[1]}`:v;}
+    // =========================================================
+    // CONFIGURAÇÃO
+    // =========================================================
 
-  // === FETCH API ===
-  async function fetchEquipById(id){
-    const url = `${API_URL}?id=${encodeURIComponent(id)}&token=${API_TOKEN}`;
-    const res = await fetch(url);
-    const json = await res.json();
-    if(!json.ok) throw new Error(json.error||"Erro API");
-    return json.data;
-  }
+    const API_URL =
+      "https://script.google.com/macros/s/AKfycbx7K_63QoHC_F8kR3X8NczNlkLNxebsmivoxDq1LEpgBRsvTqGnPGYxqUB2JqiiW2mkZg/exec";
 
-  // === RENDERIZAÇÃO ===
-  function render(eq){
-    if(!eq){ el("#titulo").textContent="Ativo não encontrado"; return; }
+    const API_TOKEN =
+      "pncqalpha123";
 
-    const id=eq.id||"", nome=eq.nome_do_equipamento||"";
-    el("#titulo").textContent=(id||"Equipamento")+(nome?" – "+nome:"");
-    el("#equip_id_input").value=id;
+    const DEFAULT_MAIL =
+      "manutencao@pncq.org.br";
 
-    el("#meta").innerHTML=[eq.fabricante,eq.modelo].filter(Boolean).join("<br>");
 
-    // --- Características (valor após os dois-pontos; "Modelo" vai para a linha de baixo)
-	const capacidade = (eq.capacidade || "").toString().trim();
-	const fla        = (eq.amperagem_nominal_fla || "").toString().trim();
-	const voltagem   = (eq.voltagem || "").toString().trim();
-	const fabricante = (eq.fabricante || "").toString().trim();
-	const modelo     = (eq.modelo || "").toString().trim();
+    // =========================================================
+    // HELPERS
+    // =========================================================
 
-	const pares = [
-		{ rotulo: "Fabricante", valor: fabricante, classe: "" },
-		{ rotulo: "Modelo",     valor: modelo,     classe: "modelo" }, // força quebra na linha de baixo
-		{ rotulo: "Capacidade", valor: capacidade, classe: "" },
-		{ rotulo: "Amperagem Nominal (FLA)", valor: fla, classe: "" },
-		{ rotulo: "Voltagem",   valor: voltagem,   classe: "" },
-	];
-
-	const caracHTML = pares
-	.filter(p => p.valor && p.valor !== "-")
-	.map(p => `
-    <div class="pair ${p.classe}">
-      <b>${p.rotulo}:</b>${p.classe === "modelo" ? "<br>" : " "}
-      <span>${p.valor}</span>
-	</div>
-	`)
-	.join("") || "<div class='empty'>Sem dados</div>";
-
-	document.querySelector("#carac").innerHTML = caracHTML;
-
-    const pp=[];
-    if(eq.periodicidade) pp.push(`<b>Periodicidade:</b> ${eq.periodicidade}`);
-    if(eq.proxima_manutencao) pp.push(`<b>Próxima:</b> ${formatDateBR(eq.proxima_manutencao)}`);
-    el("#pp").innerHTML=pp.join("<br>") || "<span class='empty'>-</span>";
-
-    el("#localizacao").textContent=eq.localizacao||"-";
-    el("#resp").textContent=eq.prestador||"-";
-
-    el("#ft").innerHTML=`Última atualização: ${new Date().toLocaleString()}<br><span class='muted'>Reportes serão enviados para: ${eq.email_fonte||DEFAULT_MAIL}</span>`;
-
-    // guarda email para o modal
-    window.__MAILTO_DEST__ = eq.email_fonte || DEFAULT_MAIL;
-    window.__EQUIP_ID__ = id;
-    window.__EQUIP_NOME__ = nome;
-  }
-
-  // === MODAL ===
-  document.addEventListener("DOMContentLoaded", ()=>{
-    el("#reportar").onclick = ()=> el("#modal-anomalia").style.display="flex";
-    const close=()=> el("#modal-anomalia").style.display="none";
-    el("#fechar-modal").onclick=close;
-    el("#cancelar-modal").onclick=close;
-    el("#btn-enviar").onclick = async () => {
-  const nome = el("#nome").value.trim();
-  const contato = el("#contato").value.trim();
-  const desc = el("#descricao").value.trim();
-
-  if (!nome || !desc) {
-    alert("Preencha nome e descrição.");
-    return;
-  }
-
-  const btn = el("#btn-enviar");
-  btn.disabled = true;
-  btn.textContent = "Enviando...";
-
-  try {
-    const response = await fetch(API_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "text/plain;charset=utf-8"
-      },
-      body: JSON.stringify({
-        token: API_TOKEN,
-        id: window.__EQUIP_ID__,
-        reportadoPor: nome,
-        contato: contato,
-        descricao: desc
-      })
-    });
-
-    const result = await response.json();
-
-    if (!result.ok) {
-      throw new Error(result.detail || result.error || "Erro ao enviar");
+    function qs(k){
+      return new URLSearchParams(location.search).get(k);
     }
 
-    alert("Reporte enviado com sucesso!");
+    function el(s){
+      return document.querySelector(s);
+    }
 
-    document.getElementById("form-mailto").reset();
-    close();
+    function esc(s){
+      return (s || "")
+        .toString()
+        .replace(/[&<>]/g, c => ({
+          '&':'&amp;',
+          '<':'&lt;',
+          '>':'&gt;'
+        }[c]));
+    }
 
-  } catch (err) {
-    alert("Erro ao enviar: " + err.message);
-    console.error(err);
+    function formatDateBR(s){
 
-  } finally {
-    btn.disabled = false;
-    btn.textContent = "Enviar";
-  }
-};
-  });
+      const v = String(s || "").trim();
 
-  // === INICIALIZA ===
-  async function main(){
-    const id=qs("id");
-    if(!id){ el("#titulo").textContent="Sem ID na URL"; return; }
-    try{ render(await fetchEquipById(id)); }
-    catch(e){ el("#titulo").textContent="Erro ao carregar dados"; console.error(e); }
-  }
-  main();
+      if(!v) return "";
+
+      const iso =
+        v.match(/^(\d{4})-(\d{2})-(\d{2})/);
+
+      if(iso){
+        return `${iso[3]}/${iso[2]}/${iso[1]}`;
+      }
+
+      return v;
+    }
+
+
+    // =========================================================
+    // CONSULTA EQUIPAMENTO
+    // =========================================================
+
+    async function fetchEquipById(id){
+
+      const url =
+        `${API_URL}?id=${encodeURIComponent(id)}&token=${encodeURIComponent(API_TOKEN)}`;
+
+      const res = await fetch(url);
+
+      if(!res.ok){
+        throw new Error("HTTP " + res.status);
+      }
+
+      const json = await res.json();
+
+      if(!json.ok){
+        throw new Error(json.error || "Erro API");
+      }
+
+      return json.data;
+    }
+
+
+    // =========================================================
+    // RENDERIZA EQUIPAMENTO
+    // =========================================================
+
+    function render(eq){
+
+      if(!eq){
+        el("#titulo").textContent =
+          "Ativo não encontrado";
+        return;
+      }
+
+      const id =
+        eq.id || "";
+
+      const nome =
+        eq.nome_do_equipamento || "";
+
+      el("#titulo").textContent =
+        (id || "Equipamento") +
+        (nome ? " – " + nome : "");
+
+      el("#equip_id_input").value =
+        id;
+
+      el("#meta").innerHTML =
+        [
+          eq.fabricante,
+          eq.modelo
+        ]
+        .filter(Boolean)
+        .map(esc)
+        .join("<br>");
+
+
+      // CARACTERÍSTICAS
+      const pares = [
+
+        {
+          rotulo:"Fabricante",
+          valor:eq.fabricante,
+          classe:""
+        },
+
+        {
+          rotulo:"Modelo",
+          valor:eq.modelo,
+          classe:"modelo"
+        },
+
+        {
+          rotulo:"Capacidade",
+          valor:eq.capacidade,
+          classe:""
+        },
+
+        {
+          rotulo:"Amperagem Nominal (FLA)",
+          valor:eq.amperagem_nominal_fla,
+          classe:""
+        },
+
+        {
+          rotulo:"Voltagem",
+          valor:eq.voltagem,
+          classe:""
+        }
+
+      ];
+
+      const caracHTML = pares
+        .filter(p =>
+          p.valor &&
+          p.valor !== "-"
+        )
+        .map(p => `
+          <div class="pair ${p.classe || ''}">
+            <b>${esc(p.rotulo)}:</b>
+            ${p.classe === "modelo" ? "<br>" : " "}
+            <span>${esc(p.valor)}</span>
+          </div>
+        `)
+        .join("")
+        ||
+        "<div class='empty'>Sem dados</div>";
+
+      el("#carac").innerHTML =
+        caracHTML;
+
+
+      // PLANO PREVENTIVO
+      const pp = [];
+
+      if(eq.periodicidade){
+
+        pp.push(
+          `<b>Periodicidade:</b> ${esc(eq.periodicidade)}`
+        );
+      }
+
+      if(eq.proxima_manutencao){
+
+        pp.push(
+          `<b>Próxima:</b> ${esc(formatDateBR(eq.proxima_manutencao))}`
+        );
+      }
+
+      el("#pp").innerHTML =
+        pp.join("<br>")
+        ||
+        "<span class='empty'>-</span>";
+
+
+      // LOCALIZAÇÃO
+      el("#localizacao").textContent =
+        eq.localizacao || "-";
+
+
+      // RESPONSÁVEL
+      el("#resp").textContent =
+        eq.prestador || "-";
+
+
+      // DESTINO
+      const destino =
+        eq.email_fonte ||
+        DEFAULT_MAIL;
+
+      window.__MAIL_DEST__ =
+        destino;
+
+      window.__EQUIP_ID__ =
+        id;
+
+      window.__EQUIP_NOME__ =
+        nome;
+
+
+      // RODAPÉ
+      el("#ft").innerHTML =
+        `Última atualização: ${new Date().toLocaleString()}<br>` +
+        `<span class="muted">` +
+        `Reportes serão enviados automaticamente ao responsável pela manutenção.` +
+        `</span>`;
+    }
+
+
+    // =========================================================
+    // MODAL
+    // =========================================================
+
+    function abrirModal(){
+
+      const status =
+        el("#status-reporte");
+
+      status.className = "";
+      status.textContent = "";
+
+      el("#modal-anomalia").style.display =
+        "flex";
+    }
+
+    function fecharModal(){
+
+      el("#modal-anomalia").style.display =
+        "none";
+    }
+
+
+    // =========================================================
+    // ENVIA REPORTE PARA APPS SCRIPT
+    // =========================================================
+
+    async function enviarReporte(){
+
+      const nome =
+        el("#nome").value.trim();
+
+      const contato =
+        el("#contato").value.trim();
+
+      const descricao =
+        el("#descricao").value.trim();
+
+      const status =
+        el("#status-reporte");
+
+      const btn =
+        el("#btn-enviar");
+
+
+      if(!nome || !descricao){
+
+        status.className =
+          "status-error";
+
+        status.textContent =
+          "Preencha seu nome e a descrição.";
+
+        return;
+      }
+
+
+      btn.disabled = true;
+      btn.textContent = "Enviando...";
+
+      status.className =
+        "status-loading";
+
+      status.textContent =
+        "Enviando reporte...";
+
+
+      const payload = {
+
+        token:
+          API_TOKEN,
+
+        id:
+          window.__EQUIP_ID__,
+
+        reportadoPor:
+          nome,
+
+        contato:
+          contato,
+
+        descricao:
+          descricao
+      };
+
+
+      try{
+
+        const response =
+          await fetch(
+            API_URL,
+            {
+              method:"POST",
+
+              headers:{
+                "Content-Type":
+                  "text/plain;charset=utf-8"
+              },
+
+              body:
+                JSON.stringify(payload)
+            }
+          );
+
+
+        const result =
+          await response.json();
+
+
+        if(!result.ok){
+
+          throw new Error(
+            result.detail ||
+            result.error ||
+            "Erro desconhecido"
+          );
+        }
+
+
+        status.className =
+          "status-success";
+
+        status.textContent =
+          "Reporte enviado com sucesso!";
+
+
+        el("#form-reporte").reset();
+
+
+        setTimeout(
+          ()=>{
+            fecharModal();
+          },
+          1800
+        );
+
+
+      }catch(err){
+
+        console.error(
+          "Erro ao enviar reporte:",
+          err
+        );
+
+        status.className =
+          "status-error";
+
+        status.textContent =
+          "Não foi possível enviar o reporte: " +
+          err.message;
+
+      }finally{
+
+        btn.disabled = false;
+        btn.textContent = "Enviar";
+      }
+    }
+
+
+    // =========================================================
+    // EVENTOS
+    // =========================================================
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      ()=>{
+
+        el("#reportar").onclick =
+          abrirModal;
+
+        el("#fechar-modal").onclick =
+          fecharModal;
+
+        el("#cancelar-modal").onclick =
+          fecharModal;
+
+        el("#btn-enviar").onclick =
+          enviarReporte;
+
+      }
+    );
+
+
+    // =========================================================
+    // INICIALIZAÇÃO
+    // =========================================================
+
+    async function main(){
+
+      const id =
+        qs("id");
+
+      if(!id){
+
+        el("#titulo").textContent =
+          "Sem ID na URL";
+
+        return;
+      }
+
+      try{
+
+        const equipamento =
+          await fetchEquipById(id);
+
+        render(equipamento);
+
+      }catch(err){
+
+        console.error(err);
+
+        el("#titulo").textContent =
+          "Erro ao carregar dados";
+
+        el("#meta").textContent =
+          err.message;
+      }
+    }
+
+
+    main();
+
   </script>
+
 </body>
 </html>
