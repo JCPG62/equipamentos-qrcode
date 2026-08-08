@@ -103,10 +103,6 @@
       color:#6b7280;
     }
 
-    /* =========================
-       MODAL
-       ========================= */
-
     #modal-anomalia{
       position:fixed;
       inset:0;
@@ -171,7 +167,7 @@
 
     #status-reporte{
       display:none;
-      margin-top:2px;
+      margin-top:10px;
       padding:10px;
       border-radius:8px;
       font-size:.9rem;
@@ -210,45 +206,35 @@
       <div>
 
         <h3>Características</h3>
-
         <div id="carac" class="kv"></div>
 
         <h3>Plano Preventivo</h3>
-
         <div id="pp" class="empty">
           Periodicidade • Próxima Manutenção
         </div>
 
         <h3>Localização</h3>
-
-        <div id="localizacao" class="empty">
-          -
-        </div>
+        <div id="localizacao" class="empty">-</div>
 
       </div>
 
       <div>
 
         <h3>Responsável / Prestador</h3>
-
-        <div id="resp" class="empty">
-          -
-        </div>
+        <div id="resp" class="empty">-</div>
 
       </div>
 
     </div>
 
     <p style="margin-top:16px">
-
       <a id="reportar" class="chip">
         Reportar Serviço/Anomalia/Reparo
       </a>
-
     </p>
 
     <p style="font-size:7px;">
-      JCPG-2026 - Ver.:1.3
+      JCPG-2026 - Ver.:1.4
     </p>
 
     <div class="footer" id="ft"></div>
@@ -256,20 +242,11 @@
   </div>
 
 
-  <!-- ================================================
-       MODAL DE REPORTE
-       ================================================ -->
-
   <div id="modal-anomalia">
 
     <div class="box">
 
-      <div style="
-        display:flex;
-        align-items:center;
-        justify-content:space-between;
-        gap:12px;
-      ">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
 
         <h2 style="margin:0;font-size:1.1rem">
           Reportar Serviço, Anomalia ou Reparo
@@ -284,72 +261,45 @@
 
       </div>
 
-
       <form
         id="form-reporte"
         class="row"
         style="margin-top:12px"
-        onsubmit="return false;"
-      >
+        onsubmit="return false;">
 
         <input
           type="hidden"
-          id="equip_id_input"
-        >
-
+          id="equip_id_input">
 
         <label>
-
           <span>Seu nome *</span>
-
           <input
             id="nome"
             type="text"
             required
-            autocomplete="name"
-          >
-
+            autocomplete="name">
         </label>
 
-
         <label>
-
           <span>Contato (e-mail ou telefone)</span>
-
           <input
             id="contato"
             type="text"
-            autocomplete="email tel"
-          >
-
+            autocomplete="email tel">
         </label>
 
-
         <label>
-
-          <span>
-            Descrição do Serviço, Anomalia ou Reparo *
-          </span>
-
+          <span>Descrição do Serviço, Anomalia ou Reparo *</span>
           <textarea
             id="descricao"
             rows="5"
             required
-            placeholder="Explique o ocorrido, serviço realizado, sintomas, quando começou…"
-          ></textarea>
-
+            placeholder="Explique o ocorrido, serviço realizado, sintomas, quando começou…"></textarea>
         </label>
-
 
         <div id="status-reporte"></div>
 
-
-        <div style="
-          display:flex;
-          gap:10px;
-          justify-content:flex-end;
-          margin-top:4px;
-        ">
+        <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:4px">
 
           <button
             type="button"
@@ -368,21 +318,13 @@
 
       </form>
 
-
-      <p
-        style="
-          margin-top:10px;
-          color:#6b7280;
-          font-size:.9rem;
-        "
-      >
+      <p style="margin-top:10px;color:#6b7280;font-size:.9rem">
         O reporte será enviado automaticamente ao responsável pela manutenção.
       </p>
 
     </div>
 
   </div>
-
 
 
 <script>
@@ -409,47 +351,31 @@ function qs(k){
   return new URLSearchParams(location.search).get(k);
 }
 
-
 function el(s){
   return document.querySelector(s);
 }
 
-
 function esc(s){
-
   return (s || "")
     .toString()
-    .replace(
-      /[&<>]/g,
-      c => ({
-        "&":"&amp;",
-        "<":"&lt;",
-        ">":"&gt;"
-      }[c])
-    );
+    .replace(/[&<>]/g, c => ({
+      "&":"&amp;",
+      "<":"&lt;",
+      ">":"&gt;"
+    }[c]));
 }
-
 
 function formatDateBR(s){
 
-  const v =
-    String(s || "").trim();
+  const v = String(s || "").trim();
 
-  if(!v)
-    return "";
+  if(!v) return "";
 
   const iso =
     v.match(/^(\d{4})-(\d{2})-(\d{2})/);
 
   if(iso){
-
-    return (
-      iso[3] +
-      "/" +
-      iso[2] +
-      "/" +
-      iso[1]
-    );
+    return `${iso[3]}/${iso[2]}/${iso[1]}`;
   }
 
   return v;
@@ -463,38 +389,21 @@ function formatDateBR(s){
 async function fetchEquipById(id){
 
   const url =
-    API_URL +
-    "?id=" +
-    encodeURIComponent(id) +
-    "&token=" +
-    encodeURIComponent(API_TOKEN);
-
+    `${API_URL}?id=${encodeURIComponent(id)}&token=${encodeURIComponent(API_TOKEN)}`;
 
   const response =
     await fetch(url);
 
-
   if(!response.ok){
-
-    throw new Error(
-      "Erro HTTP " +
-      response.status
-    );
+    throw new Error("Erro HTTP " + response.status);
   }
-
 
   const json =
     await response.json();
 
-
   if(!json.ok){
-
-    throw new Error(
-      json.error ||
-      "Erro na API"
-    );
+    throw new Error(json.error || "Erro na API");
   }
-
 
   return json.data;
 }
@@ -507,20 +416,15 @@ async function fetchEquipById(id){
 function render(eq){
 
   if(!eq){
-
-    el("#titulo").textContent =
-      "Ativo não encontrado";
-
+    el("#titulo").textContent = "Ativo não encontrado";
     return;
   }
-
 
   const id =
     eq.id || "";
 
   const nome =
     eq.nome_do_equipamento || "";
-
 
   window.__EQUIP_ID__ =
     id;
@@ -532,15 +436,12 @@ function render(eq){
     eq.email_fonte ||
     DEFAULT_MAIL;
 
-
   el("#equip_id_input").value =
     id;
-
 
   el("#titulo").textContent =
     (id || "Equipamento") +
     (nome ? " – " + nome : "");
-
 
   el("#meta").innerHTML =
     [
@@ -551,11 +452,6 @@ function render(eq){
     .map(esc)
     .join("<br>");
 
-
-
-  /* ========================================================
-     CARACTERÍSTICAS
-     ======================================================== */
 
   const pares = [
 
@@ -594,56 +490,35 @@ function render(eq){
 
   const caracHTML =
     pares
-      .filter(
-        p =>
-          p.valor &&
-          p.valor !== "-"
+      .filter(p =>
+        p.valor &&
+        p.valor !== "-"
       )
-      .map(
-        p => `
-
-          <div class="pair ${p.classe || ""}">
-
-            <b>${esc(p.rotulo)}:</b>
-
-            ${p.classe === "modelo" ? "<br>" : " "}
-
-            <span>
-              ${esc(p.valor)}
-            </span>
-
-          </div>
-
-        `
-      )
+      .map(p => `
+        <div class="pair ${p.classe || ""}">
+          <b>${esc(p.rotulo)}:</b>
+          ${p.classe === "modelo" ? "<br>" : " "}
+          <span>${esc(p.valor)}</span>
+        </div>
+      `)
       .join("")
       ||
       "<div class='empty'>Sem dados</div>";
-
 
   el("#carac").innerHTML =
     caracHTML;
 
 
-
-  /* ========================================================
-     PLANO PREVENTIVO
-     ======================================================== */
-
   const pp = [];
 
-
   if(eq.periodicidade){
-
     pp.push(
       "<b>Periodicidade:</b> " +
       esc(eq.periodicidade)
     );
   }
 
-
   if(eq.proxima_manutencao){
-
     pp.push(
       "<b>Próxima:</b> " +
       esc(
@@ -654,47 +529,24 @@ function render(eq){
     );
   }
 
-
   el("#pp").innerHTML =
     pp.join("<br>")
     ||
     "<span class='empty'>-</span>";
 
-
-
-  /* ========================================================
-     LOCALIZAÇÃO
-     ======================================================== */
-
   el("#localizacao").textContent =
     eq.localizacao || "-";
-
-
-
-  /* ========================================================
-     PRESTADOR
-     ======================================================== */
 
   el("#resp").textContent =
     eq.prestador || "-";
 
-
-
-  /* ========================================================
-     RODAPÉ
-     ======================================================== */
-
   el("#ft").innerHTML =
-
     "Última atualização: " +
     new Date().toLocaleString() +
-
     "<br>" +
-
     "<span class='muted'>" +
     "Reportes serão enviados automaticamente ao responsável pela manutenção." +
     "</span>";
-
 }
 
 
@@ -707,40 +559,22 @@ function abrirModal(){
   const status =
     el("#status-reporte");
 
+  status.className = "";
+  status.textContent = "";
 
-  status.className =
-    "";
-
-  status.textContent =
-    "";
-
-
-  el("#modal-anomalia")
-    .style.display =
+  el("#modal-anomalia").style.display =
     "flex";
 }
 
-
 function fecharModal(){
 
-  el("#modal-anomalia")
-    .style.display =
+  el("#modal-anomalia").style.display =
     "none";
 }
 
 
 /* ============================================================
-   ENVIO DO REPORTE
-   ============================================================
-   
-   IMPORTANTE:
-   
-   mode:"no-cors"
-   
-   impede que o Chrome bloqueie o POST por causa da resposta
-   CORS do Google Apps Script.
-   
-   O Apps Script continuará recebendo o JSON normalmente.
+   ENVIO
    ============================================================ */
 
 async function enviarReporte(){
@@ -754,15 +588,12 @@ async function enviarReporte(){
   const descricao =
     el("#descricao").value.trim();
 
-
   const status =
     el("#status-reporte");
 
   const btn =
     el("#btn-enviar");
 
-
-  /* VALIDAÇÃO */
 
   if(!nome){
 
@@ -782,7 +613,7 @@ async function enviarReporte(){
       "status-error";
 
     status.textContent =
-      "Informe a descrição do serviço, anomalia ou reparo.";
+      "Informe a descrição.";
 
     return;
   }
@@ -794,31 +625,11 @@ async function enviarReporte(){
       "status-error";
 
     status.textContent =
-      "Não foi possível identificar o equipamento.";
+      "Equipamento não identificado.";
 
     return;
   }
 
-
-
-  /* PREPARA BOTÃO */
-
-  btn.disabled =
-    true;
-
-  btn.textContent =
-    "Enviando...";
-
-
-  status.className =
-    "status-loading";
-
-  status.textContent =
-    "Enviando reporte...";
-
-
-
-  /* PAYLOAD */
 
   const payload = {
 
@@ -838,29 +649,42 @@ async function enviarReporte(){
       contato,
 
     descricao:
-      descricao,
-
-    dataReporte:
-      new Date().toISOString()
+      descricao
 
   };
 
 
+  btn.disabled =
+    true;
+
+  btn.textContent =
+    "Enviando...";
+
+  status.className =
+    "status-loading";
+
+  status.textContent =
+    "Enviando reporte...";
+
+
   try {
 
-
-    /* ======================================================
-       POST SEM LEITURA DA RESPOSTA
-
-       Isso elimina o erro CORS que vimos no Chrome.
-       ====================================================== */
+    /*
+     * O testeDoPost() usa exatamente estas chaves:
+     *
+     * token
+     * id
+     * nomeEquipamento
+     * reportadoPor
+     * contato
+     * descricao
+     *
+     * Aqui enviamos exatamente o mesmo objeto.
+     */
 
     await fetch(
-
       API_URL,
-
       {
-
         method:
           "POST",
 
@@ -868,85 +692,55 @@ async function enviarReporte(){
           "no-cors",
 
         headers: {
-
           "Content-Type":
             "text/plain;charset=utf-8"
-
         },
 
         body:
           JSON.stringify(payload)
-
       }
-
     );
 
-
-
-    /* ======================================================
-       O navegador não lê a resposta porque ela é opaque.
-       Se o POST conseguiu ser disparado, mostramos confirmação.
-       ====================================================== */
 
     status.className =
       "status-success";
 
     status.textContent =
-      "Reporte enviado com sucesso!";
+      "Reporte enviado. Aguarde alguns segundos para o processamento.";
 
 
-    /* LIMPA O FORMULÁRIO */
+    el("#form-reporte").reset();
 
-    el("#form-reporte")
-      .reset();
-
-
-
-    /* FECHA DEPOIS DE 2 SEGUNDOS */
 
     setTimeout(
-
       function(){
-
         fecharModal();
-
       },
-
-      2000
-
+      2500
     );
 
 
-  }
-  catch(error){
-
+  } catch(error){
 
     console.error(
-      "Erro no envio:",
+      "Erro ao enviar:",
       error
     );
-
 
     status.className =
       "status-error";
 
-
     status.textContent =
-      "Não foi possível enviar o reporte. Tente novamente.";
+      "Não foi possível enviar o reporte.";
 
-  }
-  finally{
-
+  } finally {
 
     btn.disabled =
       false;
 
-
     btn.textContent =
       "Enviar";
-
   }
-
 }
 
 
@@ -955,52 +749,35 @@ async function enviarReporte(){
    ============================================================ */
 
 document.addEventListener(
-
   "DOMContentLoaded",
-
   function(){
-
 
     el("#reportar").onclick =
       abrirModal;
 
-
     el("#fechar-modal").onclick =
       fecharModal;
-
 
     el("#cancelar-modal").onclick =
       fecharModal;
 
-
     el("#btn-enviar").onclick =
       enviarReporte;
 
-
-    /* Fecha clicando fora da caixa */
-
     el("#modal-anomalia")
       .addEventListener(
-
         "click",
-
         function(event){
 
           if(
             event.target.id ===
             "modal-anomalia"
           ){
-
             fecharModal();
-
           }
-
         }
-
       );
-
   }
-
 );
 
 
@@ -1013,7 +790,6 @@ async function main(){
   const id =
     qs("id");
 
-
   if(!id){
 
     el("#titulo").textContent =
@@ -1023,36 +799,25 @@ async function main(){
   }
 
 
-  try{
-
+  try {
 
     const equipamento =
       await fetchEquipById(id);
-
 
     render(
       equipamento
     );
 
+  } catch(error){
 
-  }
-  catch(error){
-
-
-    console.error(
-      error
-    );
-
+    console.error(error);
 
     el("#titulo").textContent =
       "Erro ao carregar dados";
 
-
     el("#meta").textContent =
       error.message;
-
   }
-
 }
 
 
