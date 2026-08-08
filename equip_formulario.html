@@ -157,63 +157,57 @@
       padding:8px 0;
     }
 
-    .history-list {
-      display:grid;
-      gap:10px;
+    #historicoSelectorArea {
+      display:none;
     }
 
-    .history-item {
+    #historicoSelect {
+      width:100%;
+      padding:10px;
+      border:1px solid #d1d5db;
+      border-radius:9px;
+      background:#fff;
+      font:inherit;
+      margin-bottom:12px;
+    }
+
+    .history-detail {
       border:1px solid #e5e7eb;
       border-radius:12px;
       padding:12px;
       background:#fafafa;
     }
 
-    .history-item-top {
-      display:flex;
-      justify-content:space-between;
-      gap:12px;
-      align-items:flex-start;
-    }
-
     .history-date {
-      font-size:.9rem;
       font-weight:700;
-      color:#1f2937;
+      margin-bottom:5px;
     }
 
-    .history-person {
-      font-size:.8rem;
+    .history-meta {
+      font-size:.85rem;
       color:#6b7280;
       margin-top:4px;
     }
 
     .history-description {
-      margin-top:9px;
+      margin-top:10px;
+      line-height:1.45;
       white-space:pre-wrap;
-      line-height:1.4;
-      font-size:.92rem;
-    }
-
-    .history-contact {
-      margin-top:6px;
-      font-size:.8rem;
-      color:#6b7280;
     }
 
     .history-photo {
-      margin-top:10px;
+      margin-top:12px;
     }
 
     .history-photo a {
       display:inline-block;
       text-decoration:none;
+      padding:8px 12px;
       border:1px solid #d1d5db;
-      padding:6px 10px;
       border-radius:8px;
       color:#111827;
       background:#fff;
-      font-size:.85rem;
+      font-size:.9rem;
     }
 
 
@@ -400,9 +394,8 @@
         width:100%;
       }
 
-      .history-item-top {
-        flex-direction:column;
-        gap:2px;
+      .history-header {
+        align-items:flex-start;
       }
     }
 
@@ -499,7 +492,7 @@
 
 
     <!-- =====================================================
-         HISTÓRICO
+         HISTÓRICO COM DROPDOWN
          ===================================================== -->
 
     <section class="history-section">
@@ -521,16 +514,31 @@
         Carregando histórico…
       </div>
 
-      <div
-        id="historicoLista"
-        class="history-list">
+      <div id="historicoSelectorArea">
+
+        <label
+          for="historicoSelect"
+          style="
+            display:block;
+            font-size:.85rem;
+            font-weight:600;
+            margin-bottom:6px;
+          "
+        >
+          Selecione uma ocorrência
+        </label>
+
+        <select id="historicoSelect"></select>
+
+        <div id="historicoDetalhe"></div>
+
       </div>
 
     </section>
 
 
     <p style="font-size:7px;">
-      JCPG-2026 - Ver.:1.7
+      JCPG-2026 - Ver.:1.8
     </p>
 
     <div
@@ -822,8 +830,15 @@
    CONFIGURAÇÃO
    ============================================================ */
 
+/*
+ * IMPORTANTE:
+ *
+ * COLE AQUI EXATAMENTE A URL /exec
+ * DO APPS SCRIPT CORRETO.
+ */
+
 const API_URL =
-"https://script.google.com/macros/s/AKfycbx4tpC42Q6WdkNhTUTAGoZWvG5M24zwlNscnwbDP5B3Q5pWo8B32-Lf0rQ2Xtua1AFMAQ/exec";
+"COLE_AQUI_EXATAMENTE_A_URL_CORRETA_DO_APPS_SCRIPT";
 
 
 const API_TOKEN =
@@ -857,6 +872,10 @@ null;
 
 let fotoProcessada =
 null;
+
+
+let historicoAtual =
+[];
 
 
 
@@ -1329,19 +1348,23 @@ function renderHistory(result) {
     el("#historicoStatus");
 
 
-  const list =
-    el("#historicoLista");
-
-
   const count =
     el("#historicoCount");
 
 
-  list.innerHTML =
-    "";
+  const area =
+    el("#historicoSelectorArea");
 
 
-  const history =
+  const select =
+    el("#historicoSelect");
+
+
+  const detalhe =
+    el("#historicoDetalhe");
+
+
+  historicoAtual =
 
     result &&
     Array.isArray(
@@ -1355,20 +1378,33 @@ function renderHistory(result) {
 
   count.textContent =
 
-    history.length
+    historicoAtual.length
 
-      ? history.length +
+      ? historicoAtual.length +
         " registro(s)"
 
       : "";
 
 
+  select.innerHTML =
+    "";
+
+
+  detalhe.innerHTML =
+    "";
+
+
   if (
-    history.length === 0
+    historicoAtual.length === 0
   ) {
 
     status.textContent =
       "Nenhum histórico encontrado para este equipamento.";
+
+
+    area.style.display =
+      "none";
+
 
     return;
   }
@@ -1378,124 +1414,181 @@ function renderHistory(result) {
     "";
 
 
-  history.forEach(
+  area.style.display =
+    "block";
 
-    item => {
+
+  historicoAtual.forEach(
+
+    function(item, index) {
 
 
-      const div =
+      const option =
         document.createElement(
-          "div"
+          "option"
         );
 
 
-      div.className =
-        "history-item";
+      option.value =
+        String(index);
 
 
-      const fotoHTML =
+      let label =
 
-        item.foto
-
-          ? `
-
-            <div class="history-photo">
-
-              <a
-                href="${esc(item.foto)}"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-
-                📷 Ver foto
-
-              </a>
-
-            </div>
-
-          `
-
-          : "";
+        formatDateBR(
+          item.data
+        );
 
 
-      const contatoHTML =
+      if (
+        item.reportadoPor
+      ) {
 
-        item.contato
-
-          ? `
-
-            <div class="history-contact">
-
-              Contato:
-              ${esc(item.contato)}
-
-            </div>
-
-          `
-
-          : "";
+        label +=
+          " - " +
+          item.reportadoPor;
+      }
 
 
-      div.innerHTML = `
-
-        <div class="history-item-top">
-
-          <div>
-
-            <div class="history-date">
-
-              ${esc(
-                formatDateBR(
-                  item.data
-                )
-              )}
-
-            </div>
-
-            <div class="history-person">
-
-              Reportado por:
-              ${
-                esc(
-                  item.reportadoPor ||
-                  "Não informado"
-                )
-              }
-
-            </div>
-
-          </div>
-
-        </div>
+      option.textContent =
+        label;
 
 
-        ${contatoHTML}
-
-
-        <div class="history-description">
-
-          ${
-            esc(
-              item.descricao ||
-              ""
-            )
-          }
-
-        </div>
-
-
-        ${fotoHTML}
-
-      `;
-
-
-      list.appendChild(
-        div
+      select.appendChild(
+        option
       );
 
     }
 
   );
+
+
+  select.value =
+    "0";
+
+
+  mostrarHistoricoSelecionado(
+    0
+  );
+}
+
+
+
+/* ============================================================
+   MOSTRA HISTÓRICO SELECIONADO
+   ============================================================ */
+
+function mostrarHistoricoSelecionado(index) {
+
+  const detalhe =
+    el("#historicoDetalhe");
+
+
+  const item =
+    historicoAtual[index];
+
+
+  if (!item) {
+
+    detalhe.innerHTML =
+      "";
+
+    return;
+  }
+
+
+  const contatoHTML =
+
+    item.contato
+
+      ? `
+
+        <div class="history-meta">
+
+          <b>Contato:</b>
+          ${esc(item.contato)}
+
+        </div>
+
+      `
+
+      : "";
+
+
+  const fotoHTML =
+
+    item.foto
+
+      ? `
+
+        <div class="history-photo">
+
+          <a
+            href="${esc(item.foto)}"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+
+            📷 Ver foto
+
+          </a>
+
+        </div>
+
+      `
+
+      : "";
+
+
+  detalhe.innerHTML = `
+
+    <div class="history-detail">
+
+      <div class="history-date">
+
+        ${esc(
+          formatDateBR(
+            item.data
+          )
+        )}
+
+      </div>
+
+
+      <div class="history-meta">
+
+        <b>Reportado por:</b>
+
+        ${
+          esc(
+            item.reportadoPor ||
+            "Não informado"
+          )
+        }
+
+      </div>
+
+
+      ${contatoHTML}
+
+
+      <div class="history-description">
+
+        ${
+          esc(
+            item.descricao ||
+            ""
+          )
+        }
+
+      </div>
+
+
+      ${fotoHTML}
+
+    </div>
+
+  `;
 }
 
 
@@ -2377,6 +2470,26 @@ document.addEventListener(
       );
 
 
+    el("#historicoSelect")
+      .addEventListener(
+
+        "change",
+
+        function() {
+
+          mostrarHistoricoSelecionado(
+
+            Number(
+              this.value
+            )
+
+          );
+
+        }
+
+      );
+
+
     el("#modal-anomalia")
       .addEventListener(
 
@@ -2430,10 +2543,6 @@ async function main() {
   try {
 
 
-    /*
-     * Primeiro carrega equipamento.
-     */
-
     const equipamento =
       await fetchEquipById(
         id
@@ -2444,10 +2553,6 @@ async function main() {
       equipamento
     );
 
-
-    /*
-     * Depois carrega histórico.
-     */
 
     try {
 
