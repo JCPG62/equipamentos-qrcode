@@ -64,25 +64,25 @@
       }
     }
 
- .chip {
+    .chip {
       display:inline-block;
       border:1px solid #b91c1c;
       border-radius:999px;
-      padding:9px 14px;
+      padding:10px 15px;
       margin-right:6px;
       text-decoration:none;
       color:#fff;
       cursor:pointer;
       background:#dc2626;
-      font-weight:600;
+      font-weight:700;
       box-shadow:0 2px 5px rgba(0,0,0,.12);
       transition:.2s;
-}
+    }
 
-.chip:hover {
-  background:#b91c1c;
-  transform:translateY(-1px);
-}
+    .chip:hover {
+      background:#b91c1c;
+      transform:translateY(-1px);
+    }
 
     .empty {
       color:#9ca3af;
@@ -127,6 +127,93 @@
       margin-top:var(--gap);
       font-size:.9rem;
       color:#6b7280;
+    }
+
+
+    /* =====================================================
+       SITUAÇÃO DO EQUIPAMENTO
+       ===================================================== */
+
+    .status-section {
+      margin-top:16px;
+    }
+
+    .status-card {
+      border-radius:14px;
+      padding:14px;
+      border:1px solid #e5e7eb;
+      background:#f9fafb;
+      transition:.2s;
+    }
+
+    .status-card.ok {
+      background:#ecfdf5;
+      border-color:#a7f3d0;
+    }
+
+    .status-card.critico {
+      background:#fef2f2;
+      border-color:#fecaca;
+    }
+
+    .status-card.atendimento {
+      background:#fffbeb;
+      border-color:#fde68a;
+    }
+
+    .status-card.aguardando {
+      background:#fff7ed;
+      border-color:#fed7aa;
+    }
+
+    .status-main {
+      display:flex;
+      align-items:flex-start;
+      gap:10px;
+    }
+
+    .status-icon {
+      font-size:1.5rem;
+      line-height:1;
+    }
+
+    .status-title {
+      font-weight:800;
+      font-size:1rem;
+    }
+
+    .status-subtitle {
+      margin-top:3px;
+      font-size:.88rem;
+      color:#6b7280;
+    }
+
+    .status-last {
+      margin-top:11px;
+      padding-top:10px;
+      border-top:1px solid rgba(0,0,0,.08);
+      font-size:.88rem;
+      line-height:1.4;
+    }
+
+    .status-last b {
+      display:block;
+      margin-bottom:3px;
+    }
+
+    .status-counts {
+      display:flex;
+      flex-wrap:wrap;
+      gap:6px;
+      margin-top:10px;
+    }
+
+    .status-badge {
+      border:1px solid rgba(0,0,0,.1);
+      border-radius:999px;
+      padding:4px 8px;
+      font-size:.78rem;
+      background:rgba(255,255,255,.65);
     }
 
 
@@ -186,6 +273,13 @@
       background:#fafafa;
     }
 
+    .history-occurrence {
+      font-size:.82rem;
+      font-weight:700;
+      color:#374151;
+      margin-bottom:4px;
+    }
+
     .history-date {
       font-weight:700;
       margin-bottom:5px;
@@ -203,6 +297,14 @@
       white-space:pre-wrap;
     }
 
+    .history-solution {
+      margin-top:12px;
+      padding-top:10px;
+      border-top:1px dashed #d1d5db;
+      line-height:1.45;
+      white-space:pre-wrap;
+    }
+
     .history-photo {
       margin-top:12px;
     }
@@ -216,6 +318,17 @@
       color:#111827;
       background:#fff;
       font-size:.9rem;
+    }
+
+    .history-status-pill {
+      display:inline-block;
+      margin-top:8px;
+      padding:4px 8px;
+      border-radius:999px;
+      font-size:.78rem;
+      font-weight:700;
+      border:1px solid #d1d5db;
+      background:#fff;
     }
 
 
@@ -356,7 +469,7 @@
 
 
     /* =====================================================
-       STATUS
+       STATUS DO ENVIO
        ===================================================== */
 
     #status-reporte {
@@ -427,6 +540,63 @@
     </div>
 
 
+    <!-- =====================================================
+         SITUAÇÃO ATUAL
+         ===================================================== -->
+
+    <section class="status-section">
+
+      <div
+        id="equipStatusCard"
+        class="status-card"
+      >
+
+        <div class="status-main">
+
+          <div
+            id="equipStatusIcon"
+            class="status-icon"
+          >
+            ⚪
+          </div>
+
+          <div>
+
+            <div
+              id="equipStatusTitle"
+              class="status-title"
+            >
+              Carregando situação…
+            </div>
+
+            <div
+              id="equipStatusSubtitle"
+              class="status-subtitle"
+            >
+            </div>
+
+          </div>
+
+        </div>
+
+        <div
+          id="equipStatusCounts"
+          class="status-counts"
+        >
+        </div>
+
+        <div
+          id="equipStatusLast"
+          class="status-last"
+          style="display:none;"
+        >
+        </div>
+
+      </div>
+
+    </section>
+
+
     <div class="grid">
 
       <div>
@@ -446,10 +616,9 @@
 
         <div
           id="pp"
-          class="empty">
-
+          class="empty"
+        >
           Periodicidade • Próxima Manutenção
-
         </div>
 
         <h3>
@@ -458,10 +627,9 @@
 
         <div
           id="localizacao"
-          class="empty">
-
+          class="empty"
+        >
           -
-
         </div>
 
       </div>
@@ -475,10 +643,9 @@
 
         <div
           id="resp"
-          class="empty">
-
+          class="empty"
+        >
           -
-
         </div>
 
       </div>
@@ -490,17 +657,16 @@
 
       <a
         id="reportar"
-        class="chip">
-
+        class="chip"
+      >
         Reportar Serviço/Anomalia/Reparo
-
       </a>
 
     </p>
 
 
     <!-- =====================================================
-         HISTÓRICO COM DROPDOWN
+         HISTÓRICO
          ===================================================== -->
 
     <section class="history-section">
@@ -513,8 +679,8 @@
 
         <span
           id="historicoCount"
-          class="history-count">
-        </span>
+          class="history-count"
+        ></span>
 
       </div>
 
@@ -546,20 +712,20 @@
 
 
     <p style="font-size:7px;">
-      JCPG-2026 - Ver.:1.8
+      JCPG-2026 - Ver.:2.0
     </p>
 
     <div
       class="footer"
-      id="ft">
-    </div>
+      id="ft"
+    ></div>
 
   </div>
 
 
 
   <!-- =====================================================
-       MODAL
+       MODAL DE REPORTE
        ===================================================== -->
 
   <div id="modal-anomalia">
@@ -581,9 +747,7 @@
             font-size:1.1rem;
           "
         >
-
           Reportar Serviço, Anomalia ou Reparo
-
         </h2>
 
         <button
@@ -591,9 +755,7 @@
           class="btn-secondary"
           id="fechar-modal"
         >
-
           Fechar
-
         </button>
 
       </div>
@@ -603,7 +765,6 @@
         class="row"
         style="margin-top:12px"
       >
-
 
         <label>
 
@@ -659,9 +820,7 @@
           </div>
 
           <div class="foto-help">
-
             Opcional. Tire uma foto ou selecione uma imagem do aparelho.
-
           </div>
 
           <input
@@ -680,8 +839,8 @@
 
             <div
               id="fotoInfo"
-              class="foto-info">
-            </div>
+              class="foto-info"
+            ></div>
 
             <div class="foto-actions">
 
@@ -690,9 +849,7 @@
                 class="btn-remove-foto"
                 id="removerFoto"
               >
-
                 Remover foto
-
               </button>
 
             </div>
@@ -720,36 +877,19 @@
             class="btn-secondary"
             id="cancelar-modal"
           >
-
             Cancelar
-
           </button>
 
           <button
             type="button"
             id="btn-enviar"
           >
-
             Enviar
-
           </button>
 
         </div>
 
       </div>
-
-
-      <p
-        style="
-          margin-top:10px;
-          color:#6b7280;
-          font-size:.9rem;
-        "
-      >
-
-        O reporte será enviado automaticamente ao responsável pela manutenção.
-
-      </p>
 
     </div>
 
@@ -758,7 +898,7 @@
 
 
   <!-- =====================================================
-       POST INVISÍVEL
+       FORM POST INVISÍVEL
        ===================================================== -->
 
   <form
@@ -827,8 +967,8 @@
 
   <iframe
     id="postFrame"
-    name="postFrame">
-  </iframe>
+    name="postFrame"
+  ></iframe>
 
 
 <script>
@@ -838,23 +978,12 @@
    CONFIGURAÇÃO
    ============================================================ */
 
-/*
- * IMPORTANTE:
- *
- * COLE AQUI EXATAMENTE A URL /exec
- * DO APPS SCRIPT CORRETO.
- */
-
 const API_URL =
 "https://script.google.com/macros/s/AKfycbx4tpC42Q6WdkNhTUTAGoZWvG5M24zwlNscnwbDP5B3Q5pWo8B32-Lf0rQ2Xtua1AFMAQ/exec";
 
 
 const API_TOKEN =
 "pncqalpha123";
-
-
-const DEFAULT_MAIL =
-"manutencao@pncq.org.br";
 
 
 const PHOTO_MAX_DIMENSION =
@@ -955,17 +1084,16 @@ function formatDateBR(s) {
     )
   ) {
 
-    return date
-      .toLocaleString(
-        "pt-BR",
-        {
-          day:"2-digit",
-          month:"2-digit",
-          year:"numeric",
-          hour:"2-digit",
-          minute:"2-digit"
-        }
-      );
+    return date.toLocaleString(
+      "pt-BR",
+      {
+        day:"2-digit",
+        month:"2-digit",
+        year:"numeric",
+        hour:"2-digit",
+        minute:"2-digit"
+      }
+    );
   }
 
 
@@ -1019,7 +1147,7 @@ function formatBytes(bytes) {
 
 
 /* ============================================================
-   CONSULTA EQUIPAMENTO
+   EQUIPAMENTO
    ============================================================ */
 
 async function fetchEquipById(id) {
@@ -1068,7 +1196,57 @@ async function fetchEquipById(id) {
 
 
 /* ============================================================
-   CONSULTA HISTÓRICO
+   SITUAÇÃO
+   ============================================================ */
+
+async function fetchStatusById(id) {
+
+  const url =
+
+    API_URL +
+
+    "?action=status&id=" +
+
+    encodeURIComponent(
+      id
+    ) +
+
+    "&token=" +
+
+    encodeURIComponent(
+      API_TOKEN
+    );
+
+
+  const response =
+    await fetch(
+      url
+    );
+
+
+  const json =
+    await response.json();
+
+
+  if (
+    !json.ok
+  ) {
+
+    throw new Error(
+      json.detail ||
+      json.error ||
+      "Erro ao buscar situação"
+    );
+  }
+
+
+  return json.data;
+}
+
+
+
+/* ============================================================
+   HISTÓRICO
    ============================================================ */
 
 async function fetchHistoryById(id) {
@@ -1149,11 +1327,6 @@ function render(eq) {
 
   window.__EQUIP_NOME__ =
     nome;
-
-
-  window.__MAIL_DEST__ =
-    eq.email_fonte ||
-    DEFAULT_MAIL;
 
 
   el("#titulo")
@@ -1239,15 +1412,6 @@ function render(eq) {
         <div class="pair ${p.classe || ""}">
 
           <b>${esc(p.rotulo)}:</b>
-
-          ${
-            p.classe ===
-            "modelo"
-
-              ? "<br>"
-
-              : " "
-          }
 
           <span>
             ${esc(p.valor)}
@@ -1347,6 +1511,200 @@ function render(eq) {
 
 
 /* ============================================================
+   RENDER SITUAÇÃO
+   ============================================================ */
+
+function renderEquipmentStatus(data) {
+
+  const card =
+    el("#equipStatusCard");
+
+
+  const icon =
+    el("#equipStatusIcon");
+
+
+  const title =
+    el("#equipStatusTitle");
+
+
+  const subtitle =
+    el("#equipStatusSubtitle");
+
+
+  const counts =
+    el("#equipStatusCounts");
+
+
+  const last =
+    el("#equipStatusLast");
+
+
+  card.className =
+    "status-card " +
+    (
+      data.nivel ||
+      ""
+    );
+
+
+  icon.textContent =
+    data.icone ||
+    "⚪";
+
+
+  title.textContent =
+    data.situacao ||
+    "Situação indisponível";
+
+
+  subtitle.textContent =
+
+    data.totalAtivas === 0
+
+      ? "Nenhuma ocorrência ativa para este equipamento."
+
+      : data.totalAtivas +
+        " ocorrência(s) ativa(s)";
+
+
+  counts.innerHTML =
+    "";
+
+
+  const badges = [];
+
+
+  if (
+    data.abertas > 0
+  ) {
+
+    badges.push(
+      "🔴 " +
+      data.abertas +
+      " aberta(s)"
+    );
+  }
+
+
+  if (
+    data.emAtendimento > 0
+  ) {
+
+    badges.push(
+      "🟡 " +
+      data.emAtendimento +
+      " em atendimento"
+    );
+  }
+
+
+  if (
+    data.aguardandoPeca > 0
+  ) {
+
+    badges.push(
+      "🟠 " +
+      data.aguardandoPeca +
+      " aguardando peça"
+    );
+  }
+
+
+  badges.forEach(
+    function(texto) {
+
+      const span =
+        document.createElement(
+          "span"
+        );
+
+
+      span.className =
+        "status-badge";
+
+
+      span.textContent =
+        texto;
+
+
+      counts.appendChild(
+        span
+      );
+
+    }
+  );
+
+
+  const ultima =
+    data.ultimaOcorrenciaAtiva;
+
+
+  if (
+    ultima
+  ) {
+
+    last.style.display =
+      "block";
+
+
+    last.innerHTML = `
+
+      <b>
+        ${esc(
+          ultima.ocorrencia ||
+          ""
+        )}
+        •
+        ${esc(
+          ultima.status ||
+          ""
+        )}
+      </b>
+
+      <div>
+        ${
+          esc(
+            ultima.descricao ||
+            ""
+          )
+        }
+      </div>
+
+      ${
+        ultima.responsavel
+          ? `
+              <div
+                style="
+                  margin-top:4px;
+                  color:#6b7280;
+                "
+              >
+                Responsável:
+                ${esc(
+                  ultima.responsavel
+                )}
+              </div>
+            `
+          : ""
+      }
+
+    `;
+
+  } else {
+
+    last.style.display =
+      "none";
+
+
+    last.innerHTML =
+      "";
+  }
+}
+
+
+
+/* ============================================================
    RENDER HISTÓRICO
    ============================================================ */
 
@@ -1441,20 +1799,32 @@ function renderHistory(result) {
         String(index);
 
 
-      let label =
+      let label = "";
 
+
+      if (
+        item.ocorrencia
+      ) {
+
+        label +=
+          item.ocorrencia +
+          " | ";
+      }
+
+
+      label +=
         formatDateBR(
           item.data
         );
 
 
       if (
-        item.reportadoPor
+        item.status
       ) {
 
         label +=
-          " - " +
-          item.reportadoPor;
+          " | " +
+          item.status;
       }
 
 
@@ -1483,7 +1853,7 @@ function renderHistory(result) {
 
 
 /* ============================================================
-   MOSTRA HISTÓRICO SELECIONADO
+   DETALHE HISTÓRICO
    ============================================================ */
 
 function mostrarHistoricoSelecionado(index) {
@@ -1523,6 +1893,89 @@ function mostrarHistoricoSelecionado(index) {
       : "";
 
 
+  const responsavelHTML =
+
+    item.responsavel
+
+      ? `
+
+        <div class="history-meta">
+
+          <b>Responsável:</b>
+          ${esc(item.responsavel)}
+
+        </div>
+
+      `
+
+      : "";
+
+
+  const inicioHTML =
+
+    item.dataInicio
+
+      ? `
+
+        <div class="history-meta">
+
+          <b>Início:</b>
+          ${esc(
+            formatDateBR(
+              item.dataInicio
+            )
+          )}
+
+        </div>
+
+      `
+
+      : "";
+
+
+  const conclusaoHTML =
+
+    item.dataConclusao
+
+      ? `
+
+        <div class="history-meta">
+
+          <b>Conclusão:</b>
+          ${esc(
+            formatDateBR(
+              item.dataConclusao
+            )
+          )}
+
+        </div>
+
+      `
+
+      : "";
+
+
+  const solucaoHTML =
+
+    item.solucao
+
+      ? `
+
+        <div class="history-solution">
+
+          <b>Solução / serviço realizado:</b>
+
+          <div style="margin-top:5px">
+            ${esc(item.solucao)}
+          </div>
+
+        </div>
+
+      `
+
+      : "";
+
+
   const fotoHTML =
 
     item.foto
@@ -1536,9 +1989,7 @@ function mostrarHistoricoSelecionado(index) {
             target="_blank"
             rel="noopener noreferrer"
           >
-
             📷 Ver foto
-
           </a>
 
         </div>
@@ -1552,16 +2003,27 @@ function mostrarHistoricoSelecionado(index) {
 
     <div class="history-detail">
 
-      <div class="history-date">
+      <div class="history-occurrence">
+        ${esc(
+          item.ocorrencia ||
+          ""
+        )}
+      </div>
 
+      <div class="history-date">
         ${esc(
           formatDateBR(
             item.data
           )
         )}
-
       </div>
 
+      <div class="history-status-pill">
+        ${esc(
+          item.status ||
+          "Aberta"
+        )}
+      </div>
 
       <div class="history-meta">
 
@@ -1576,21 +2038,31 @@ function mostrarHistoricoSelecionado(index) {
 
       </div>
 
-
       ${contatoHTML}
+
+      ${responsavelHTML}
+
+      ${inicioHTML}
+
+      ${conclusaoHTML}
 
 
       <div class="history-description">
 
-        ${
-          esc(
-            item.descricao ||
-            ""
-          )
-        }
+        <b>Descrição:</b>
+
+        <div style="margin-top:5px">
+          ${
+            esc(
+              item.descricao ||
+              ""
+            )
+          }
+        </div>
 
       </div>
 
+      ${solucaoHTML}
 
       ${fotoHTML}
 
@@ -1602,7 +2074,7 @@ function mostrarHistoricoSelecionado(index) {
 
 
 /* ============================================================
-   PROCESSAMENTO FOTO
+   FOTO
    ============================================================ */
 
 function processarFoto(file) {
@@ -1722,7 +2194,6 @@ function processarFoto(file) {
                       PHOTO_MAX_DIMENSION;
 
                   }
-
                 }
 
 
@@ -1747,25 +2218,18 @@ function processarFoto(file) {
 
 
                 ctx.drawImage(
-
                   img,
-
                   0,
                   0,
-
                   width,
                   height
-
                 );
 
 
                 const dataUrl =
                   canvas.toDataURL(
-
                     "image/jpeg",
-
                     PHOTO_QUALITY
-
                   );
 
 
@@ -1773,37 +2237,6 @@ function processarFoto(file) {
                   dataUrl.split(
                     ","
                   )[1];
-
-
-                const estimatedBytes =
-
-                  Math.round(
-
-                    base64.length *
-
-                    0.75
-
-                  );
-
-
-                if (
-
-                  estimatedBytes >
-
-                  3.5 *
-                  1024 *
-                  1024
-
-                ) {
-
-                  reject(
-                    new Error(
-                      "A foto ficou muito grande após a compactação."
-                    )
-                  );
-
-                  return;
-                }
 
 
                 resolve({
@@ -1835,7 +2268,10 @@ function processarFoto(file) {
                     ".jpg",
 
                   tamanhoFinal:
-                    estimatedBytes,
+                    Math.round(
+                      base64.length *
+                      0.75
+                    ),
 
                   width:
                     width,
@@ -1846,42 +2282,17 @@ function processarFoto(file) {
                 });
 
 
-              }
-              catch(error) {
+              } catch(error) {
 
                 reject(
                   error
                 );
               }
-
-            };
-
-
-          img.onerror =
-            function() {
-
-              reject(
-                new Error(
-                  "Não foi possível carregar a imagem."
-                )
-              );
             };
 
 
           img.src =
             event.target.result;
-
-        };
-
-
-      reader.onerror =
-        function() {
-
-          reject(
-            new Error(
-              "Erro ao ler a fotografia."
-            )
-          );
         };
 
 
@@ -1890,15 +2301,10 @@ function processarFoto(file) {
       );
 
     }
-
   );
 }
 
 
-
-/* ============================================================
-   FOTO SELECIONADA
-   ============================================================ */
 
 async function onFotoSelecionada() {
 
@@ -1978,8 +2384,7 @@ async function onFotoSelecionada() {
       "";
 
 
-  }
-  catch(error) {
+  } catch(error) {
 
 
     fotoProcessada =
@@ -1990,27 +2395,16 @@ async function onFotoSelecionada() {
       "";
 
 
-    el("#previewContainer")
-      .style.display =
-      "none";
-
-
     status.className =
       "status-error";
 
 
     status.textContent =
       error.message;
-
   }
-
 }
 
 
-
-/* ============================================================
-   REMOVE FOTO
-   ============================================================ */
 
 function removerFotoSelecionada() {
 
@@ -2037,7 +2431,6 @@ function removerFotoSelecionada() {
   el("#fotoInfo")
     .textContent =
     "";
-
 }
 
 
@@ -2063,7 +2456,6 @@ function abrirModal() {
   el("#modal-anomalia")
     .style.display =
     "flex";
-
 }
 
 
@@ -2080,34 +2472,21 @@ function fecharModal() {
   el("#modal-anomalia")
     .style.display =
     "none";
-
 }
 
 
 
 /* ============================================================
-   LIMPA REPORTE
+   LIMPA FORM
    ============================================================ */
 
 function limparFormularioReporte() {
 
-  el("#nome")
-    .value =
-    "";
-
-
-  el("#contato")
-    .value =
-    "";
-
-
-  el("#descricao")
-    .value =
-    "";
-
+  el("#nome").value = "";
+  el("#contato").value = "";
+  el("#descricao").value = "";
 
   removerFotoSelecionada();
-
 }
 
 
@@ -2139,7 +2518,7 @@ function finalizarEnvioVisual() {
 
 
   status.textContent =
-    "Reporte enviado para processamento.";
+    "Ocorrência registrada com sucesso.";
 
 
   btn.disabled =
@@ -2170,7 +2549,7 @@ function finalizarEnvioVisual() {
 
   setTimeout(
 
-    function() {
+    async function() {
 
 
       limparFormularioReporte();
@@ -2181,18 +2560,56 @@ function finalizarEnvioVisual() {
         "none";
 
 
+      if (
+        window.__EQUIP_ID__
+      ) {
+
+        try {
+
+          const [
+            novoStatus,
+            novoHistorico
+          ] =
+            await Promise.all([
+              fetchStatusById(
+                window.__EQUIP_ID__
+              ),
+              fetchHistoryById(
+                window.__EQUIP_ID__
+              )
+            ]);
+
+
+          renderEquipmentStatus(
+            novoStatus
+          );
+
+
+          renderHistory(
+            novoHistorico
+          );
+
+
+        } catch(error) {
+
+          console.error(
+            error
+          );
+        }
+      }
+
+
     },
 
-    1800
+    1600
 
   );
-
 }
 
 
 
 /* ============================================================
-   ENVIA REPORTE
+   ENVIO
    ============================================================ */
 
 function enviarReporte() {
@@ -2249,21 +2666,6 @@ function enviarReporte() {
   }
 
 
-  if (
-    !window.__EQUIP_ID__
-  ) {
-
-    status.className =
-      "status-error";
-
-
-    status.textContent =
-      "Equipamento não identificado.";
-
-    return;
-  }
-
-
   el("#post_token")
     .value =
     API_TOKEN;
@@ -2315,19 +2717,9 @@ function enviarReporte() {
 
   } else {
 
-    el("#post_fotoBase64")
-      .value =
-      "";
-
-
-    el("#post_fotoNome")
-      .value =
-      "";
-
-
-    el("#post_fotoMime")
-      .value =
-      "";
+    el("#post_fotoBase64").value = "";
+    el("#post_fotoNome").value = "";
+    el("#post_fotoMime").value = "";
   }
 
 
@@ -2344,11 +2736,7 @@ function enviarReporte() {
 
 
   btn.textContent =
-    fotoProcessada
-
-      ? "Enviando foto..."
-
-      : "Enviando...";
+    "Enviando...";
 
 
   status.className =
@@ -2356,7 +2744,7 @@ function enviarReporte() {
 
 
   status.textContent =
-    "Enviando reporte...";
+    "Registrando ocorrência...";
 
 
   postEmAndamento =
@@ -2367,27 +2755,12 @@ function enviarReporte() {
 
 
   postTimer =
-
     setTimeout(
-
-      function() {
-
-        if (
-          postEmAndamento
-        ) {
-
-          finalizarEnvioVisual();
-
-        }
-
-      },
-
+      finalizarEnvioVisual,
       fotoProcessada
         ? 12000
         : 6000
-
     );
-
 }
 
 
@@ -2412,17 +2785,12 @@ el("#postFrame")
 
 
       setTimeout(
-
         finalizarEnvioVisual,
-
         fotoProcessada
           ? 1800
-          : 600
-
+          : 700
       );
-
     }
-
   );
 
 
@@ -2460,21 +2828,15 @@ document.addEventListener(
 
     el("#fotoInput")
       .addEventListener(
-
         "change",
-
         onFotoSelecionada
-
       );
 
 
     el("#removerFoto")
       .addEventListener(
-
         "click",
-
         removerFotoSelecionada
-
       );
 
 
@@ -2486,15 +2848,11 @@ document.addEventListener(
         function() {
 
           mostrarHistoricoSelecionado(
-
             Number(
               this.value
             )
-
           );
-
         }
-
       );
 
 
@@ -2506,22 +2864,16 @@ document.addEventListener(
         function(event) {
 
           if (
-
             event.target.id ===
             "modal-anomalia"
-
           ) {
 
             fecharModal();
-
           }
-
         }
-
       );
 
   }
-
 );
 
 
@@ -2551,10 +2903,26 @@ async function main() {
   try {
 
 
-    const equipamento =
-      await fetchEquipById(
-        id
-      );
+    const [
+      equipamento,
+      situacao,
+      historico
+    ] =
+      await Promise.all([
+
+        fetchEquipById(
+          id
+        ),
+
+        fetchStatusById(
+          id
+        ),
+
+        fetchHistoryById(
+          id
+        )
+
+      ]);
 
 
     render(
@@ -2562,39 +2930,17 @@ async function main() {
     );
 
 
-    try {
+    renderEquipmentStatus(
+      situacao
+    );
 
 
-      const history =
-        await fetchHistoryById(
-          id
-        );
+    renderHistory(
+      historico
+    );
 
 
-      renderHistory(
-        history
-      );
-
-
-    }
-    catch(errorHistorico) {
-
-
-      console.error(
-        errorHistorico
-      );
-
-
-      el("#historicoStatus")
-        .textContent =
-
-        "Não foi possível carregar o histórico.";
-
-    }
-
-
-  }
-  catch(error) {
+  } catch(error) {
 
 
     console.error(
@@ -2611,13 +2957,7 @@ async function main() {
       .textContent =
       error.message;
 
-
-    el("#historicoStatus")
-      .textContent =
-      "";
-
   }
-
 }
 
 
