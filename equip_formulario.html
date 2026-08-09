@@ -2,6 +2,7 @@
 <html lang="pt-br">
 
 <head>
+
   <meta charset="utf-8">
 
   <meta
@@ -13,207 +14,348 @@
     Ficha do Equipamento - QRManut
   </title>
 
+
   <style>
 
     :root {
       --gap:16px;
     }
 
+
+    * {
+      box-sizing:border-box;
+    }
+
+
     body {
+
       font-family:
         system-ui,
         -apple-system,
         Segoe UI,
         Roboto,
-        Ubuntu;
+        Ubuntu,
+        sans-serif;
 
       max-width:960px;
+
       margin:auto;
+
       padding:var(--gap);
+
       background:#f8f9fb;
+
       color:#111827;
     }
 
+
     .card {
+
       background:#fff;
+
       border:1px solid #e5e7eb;
+
       border-radius:16px;
+
       padding:var(--gap);
-      box-shadow:0 6px 16px rgba(0,0,0,.05);
+
+      box-shadow:
+        0 6px 16px
+        rgba(0,0,0,.05);
     }
 
+
     h1 {
+
       font-size:1.25rem;
-      margin:0 0 4px 0;
+
+      margin:
+        0
+        0
+        4px
+        0;
     }
+
+
+    h3 {
+
+      margin-top:20px;
+
+      margin-bottom:8px;
+    }
+
 
     .muted {
       color:#6b7280;
     }
 
+
     .grid {
+
       display:grid;
-      grid-template-columns:1fr 1fr;
+
+      grid-template-columns:
+        1fr
+        1fr;
+
       gap:var(--gap);
+
       margin-top:var(--gap);
     }
 
-    @media (max-width:780px) {
+
+    @media (
+      max-width:780px
+    ) {
+
       .grid {
         grid-template-columns:1fr;
       }
     }
 
+
+    /* =====================================================
+       BOTÃO PRINCIPAL
+       ===================================================== */
+
     .chip {
+
       display:inline-block;
-      border:1px solid #b91c1c;
+
+      border:
+        1px solid
+        #b91c1c;
+
       border-radius:999px;
-      padding:10px 15px;
-      margin-right:6px;
+
+      padding:
+        10px
+        15px;
+
       text-decoration:none;
+
       color:#fff;
+
       cursor:pointer;
+
       background:#dc2626;
+
       font-weight:700;
-      box-shadow:0 2px 5px rgba(0,0,0,.12);
+
+      box-shadow:
+        0 2px 5px
+        rgba(0,0,0,.12);
+
       transition:.2s;
     }
 
+
     .chip:hover {
+
       background:#b91c1c;
-      transform:translateY(-1px);
+
+      transform:
+        translateY(-1px);
     }
+
 
     .empty {
       color:#9ca3af;
     }
 
+
+    /* =====================================================
+       DADOS DO EQUIPAMENTO
+       ===================================================== */
+
     .kv {
+
       display:block;
+
       margin-top:6px;
     }
 
+
     .kv .pair {
-      padding:8px 0;
-      border-bottom:1px dashed #eee;
+
+      padding:
+        8px
+        0;
+
+      border-bottom:
+        1px dashed
+        #eee;
+
       line-height:1.35;
     }
+
 
     .kv .pair:last-child {
       border-bottom:0;
     }
 
+
     .kv .pair b {
+
       font-weight:600;
+
       margin-right:6px;
-      white-space:nowrap;
     }
 
+
     .kv .pair span {
+
       word-break:break-word;
+
       overflow-wrap:anywhere;
     }
 
-    .kv .pair.modelo b {
-      display:block;
-      margin:0 0 4px 0;
-    }
-
-    .kv .pair.modelo span {
-      display:block;
-    }
 
     .footer {
+
       margin-top:var(--gap);
+
       font-size:.9rem;
+
       color:#6b7280;
     }
 
 
     /* =====================================================
-       SITUAÇÃO DO EQUIPAMENTO
+       SITUAÇÃO ATUAL
        ===================================================== */
 
     .status-section {
       margin-top:16px;
     }
 
+
     .status-card {
+
       border-radius:14px;
+
       padding:14px;
-      border:1px solid #e5e7eb;
+
+      border:
+        1px solid
+        #e5e7eb;
+
       background:#f9fafb;
-      transition:.2s;
     }
 
+
     .status-card.ok {
+
       background:#ecfdf5;
+
       border-color:#a7f3d0;
     }
 
+
     .status-card.critico {
+
       background:#fef2f2;
+
       border-color:#fecaca;
     }
 
+
     .status-card.atendimento {
+
       background:#fffbeb;
+
       border-color:#fde68a;
     }
 
+
     .status-card.aguardando {
+
       background:#fff7ed;
+
       border-color:#fed7aa;
     }
 
+
     .status-main {
+
       display:flex;
+
       align-items:flex-start;
+
       gap:10px;
     }
 
+
     .status-icon {
+
       font-size:1.5rem;
+
       line-height:1;
     }
 
+
     .status-title {
+
       font-weight:800;
+
       font-size:1rem;
     }
 
+
     .status-subtitle {
+
       margin-top:3px;
+
       font-size:.88rem;
+
       color:#6b7280;
     }
 
-    .status-last {
-      margin-top:11px;
-      padding-top:10px;
-      border-top:1px solid rgba(0,0,0,.08);
-      font-size:.88rem;
-      line-height:1.4;
-    }
-
-    .status-last b {
-      display:block;
-      margin-bottom:3px;
-    }
 
     .status-counts {
+
       display:flex;
+
       flex-wrap:wrap;
+
       gap:6px;
+
       margin-top:10px;
     }
 
+
     .status-badge {
-      border:1px solid rgba(0,0,0,.1);
+
+      border:
+        1px solid
+        rgba(0,0,0,.1);
+
       border-radius:999px;
-      padding:4px 8px;
+
+      padding:
+        4px
+        8px;
+
       font-size:.78rem;
-      background:rgba(255,255,255,.65);
+
+      background:
+        rgba(255,255,255,.7);
+    }
+
+
+    .status-last {
+
+      margin-top:11px;
+
+      padding-top:10px;
+
+      border-top:
+        1px solid
+        rgba(0,0,0,.08);
+
+      font-size:.88rem;
+
+      line-height:1.4;
     }
 
 
@@ -222,186 +364,398 @@
        ===================================================== */
 
     .history-section {
+
       margin-top:22px;
-      border-top:1px solid #e5e7eb;
+
+      border-top:
+        1px solid
+        #e5e7eb;
+
       padding-top:18px;
     }
 
+
     .history-header {
+
       display:flex;
+
       align-items:center;
+
       justify-content:space-between;
+
       gap:12px;
+
       margin-bottom:12px;
     }
 
+
     .history-title {
+
       font-size:1.05rem;
+
       font-weight:700;
+
       margin:0;
     }
 
+
     .history-count {
+
       font-size:.8rem;
+
       color:#6b7280;
     }
 
+
     #historicoStatus {
+
       font-size:.9rem;
+
       color:#6b7280;
+
       padding:8px 0;
     }
+
 
     #historicoSelectorArea {
       display:none;
     }
 
+
     #historicoSelect {
+
       width:100%;
-      padding:10px;
-      border:1px solid #d1d5db;
+
+      padding:11px;
+
+      border:
+        1px solid
+        #d1d5db;
+
       border-radius:9px;
+
       background:#fff;
+
       font:inherit;
+
       margin-bottom:12px;
     }
 
+
     .history-detail {
-      border:1px solid #e5e7eb;
+
+      border:
+        1px solid
+        #e5e7eb;
+
       border-radius:12px;
-      padding:12px;
+
+      padding:14px;
+
       background:#fafafa;
     }
 
+
     .history-occurrence {
-      font-size:.82rem;
-      font-weight:700;
+
+      font-size:.88rem;
+
+      font-weight:800;
+
       color:#374151;
+
       margin-bottom:4px;
     }
 
+
     .history-date {
+
       font-weight:700;
+
       margin-bottom:5px;
     }
 
+
     .history-meta {
+
       font-size:.85rem;
+
       color:#6b7280;
-      margin-top:4px;
+
+      margin-top:5px;
     }
+
 
     .history-description {
-      margin-top:10px;
+
+      margin-top:12px;
+
       line-height:1.45;
+
       white-space:pre-wrap;
     }
 
+
     .history-solution {
+
       margin-top:12px;
+
       padding-top:10px;
-      border-top:1px dashed #d1d5db;
+
+      border-top:
+        1px dashed
+        #d1d5db;
+
       line-height:1.45;
+
       white-space:pre-wrap;
     }
+
 
     .history-photo {
       margin-top:12px;
     }
 
+
     .history-photo a {
+
       display:inline-block;
+
       text-decoration:none;
-      padding:8px 12px;
-      border:1px solid #d1d5db;
+
+      padding:
+        8px
+        12px;
+
+      border:
+        1px solid
+        #d1d5db;
+
       border-radius:8px;
+
       color:#111827;
+
       background:#fff;
+
       font-size:.9rem;
     }
 
+
     .history-status-pill {
+
       display:inline-block;
-      margin-top:8px;
-      padding:4px 8px;
+
+      margin:
+        6px
+        0;
+
+      padding:
+        5px
+        9px;
+
       border-radius:999px;
+
       font-size:.78rem;
+
       font-weight:700;
-      border:1px solid #d1d5db;
+
+      border:
+        1px solid
+        #d1d5db;
+
       background:#fff;
+    }
+
+
+    .manage-area {
+
+      margin-top:14px;
+
+      padding-top:12px;
+
+      border-top:
+        1px solid
+        #e5e7eb;
+    }
+
+
+    .btn-manage {
+
+      width:100%;
+
+      background:#1f4e78;
+
+      font-weight:700;
+    }
+
+
+    .btn-manage:hover {
+      background:#173b5d;
     }
 
 
     /* =====================================================
-       MODAL
+       MODAIS
        ===================================================== */
 
-    #modal-anomalia {
+    .modal {
+
       position:fixed;
+
       inset:0;
-      background:rgba(0,0,0,.45);
+
+      background:
+        rgba(0,0,0,.45);
+
       display:none;
+
       align-items:center;
+
       justify-content:center;
+
       z-index:9999;
+
       padding:12px;
-      box-sizing:border-box;
     }
 
-    #modal-anomalia .box {
+
+    .modal-box {
+
       background:#fff;
-      width:min(680px,94vw);
+
+      width:min(
+        680px,
+        94vw
+      );
+
       max-height:90vh;
+
       overflow-y:auto;
+
       border-radius:14px;
+
       padding:16px;
-      border:1px solid #e5e7eb;
-      box-shadow:0 10px 30px rgba(0,0,0,.15);
+
+      border:
+        1px solid
+        #e5e7eb;
+
+      box-shadow:
+        0 10px 30px
+        rgba(0,0,0,.15);
     }
+
+
+    .modal-header {
+
+      display:flex;
+
+      align-items:center;
+
+      justify-content:space-between;
+
+      gap:12px;
+
+      margin-bottom:14px;
+    }
+
+
+    .modal-header h2 {
+
+      margin:0;
+
+      font-size:1.1rem;
+    }
+
 
     .row {
+
       display:grid;
+
       gap:12px;
     }
 
+
     label {
+
       display:grid;
+
       gap:6px;
+
       font-weight:500;
     }
 
+
     input[type="text"],
-    textarea {
+    textarea,
+    select {
+
       width:100%;
+
       padding:12px;
-      border:1px solid #e5e7eb;
+
+      border:
+        1px solid
+        #d1d5db;
+
       border-radius:10px;
+
       font:inherit;
-      box-sizing:border-box;
+
+      background:#fff;
     }
+
 
     textarea {
       resize:vertical;
     }
 
+
     button {
-      padding:12px 16px;
+
+      padding:
+        12px
+        16px;
+
       border:0;
+
       border-radius:10px;
+
       background:#111827;
+
       color:#fff;
+
       cursor:pointer;
+
       font:inherit;
     }
 
+
     button:disabled {
+
       opacity:.55;
+
       cursor:not-allowed;
     }
 
+
     .btn-secondary {
+
       background:#e5e7eb;
+
       color:#111827;
+    }
+
+
+    .modal-buttons {
+
+      display:flex;
+
+      gap:10px;
+
+      justify-content:flex-end;
+
+      margin-top:8px;
     }
 
 
@@ -410,110 +764,187 @@
        ===================================================== */
 
     .foto-area {
-      border:1px solid #e5e7eb;
+
+      border:
+        1px solid
+        #e5e7eb;
+
       border-radius:12px;
+
       padding:12px;
+
       background:#f9fafb;
     }
 
+
     .foto-title {
+
       font-weight:600;
+
       margin-bottom:8px;
     }
 
+
     .foto-help {
+
       font-size:.85rem;
+
       color:#6b7280;
-      margin:4px 0 10px 0;
+
+      margin:
+        4px
+        0
+        10px
+        0;
     }
+
 
     #fotoInput {
       width:100%;
     }
 
+
     #previewContainer {
+
       display:none;
+
       margin-top:12px;
+
       text-align:center;
     }
 
+
     #fotoPreview {
+
       display:block;
+
       max-width:100%;
+
       max-height:320px;
-      margin:0 auto;
+
+      margin:
+        0
+        auto;
+
       border-radius:10px;
-      border:1px solid #d1d5db;
+
+      border:
+        1px solid
+        #d1d5db;
+
       object-fit:contain;
+
       background:#fff;
     }
 
+
     .foto-info {
+
       margin-top:7px;
+
       font-size:.8rem;
+
       color:#6b7280;
+
       word-break:break-word;
     }
 
+
     .foto-actions {
+
       margin-top:10px;
+
       display:flex;
+
       justify-content:center;
     }
 
+
     .btn-remove-foto {
+
       background:#ef4444;
-      padding:8px 12px;
+
+      padding:
+        8px
+        12px;
+
       font-size:.85rem;
     }
 
 
     /* =====================================================
-       STATUS DO ENVIO
+       MENSAGENS
        ===================================================== */
 
-    #status-reporte {
+    .form-status {
+
       display:none;
+
       margin-top:10px;
+
       padding:10px;
+
       border-radius:8px;
+
       font-size:.9rem;
     }
 
+
     .status-loading {
+
       display:block !important;
+
       background:#fef3c7;
+
       color:#92400e;
     }
 
+
     .status-success {
+
       display:block !important;
+
       background:#d1fae5;
+
       color:#065f46;
     }
 
+
     .status-error {
+
       display:block !important;
+
       background:#fee2e2;
+
       color:#991b1b;
     }
 
-    #postFrame {
+
+    iframe {
+
       display:none;
+
       width:0;
+
       height:0;
+
       border:0;
     }
 
-    @media (max-width:600px) {
+
+    @media (
+      max-width:600px
+    ) {
 
       .modal-buttons {
         flex-direction:column-reverse;
       }
 
+
       .modal-buttons button {
         width:100%;
       }
+
 
       .history-header {
         align-items:flex-start;
@@ -530,14 +961,17 @@
 
   <div class="card">
 
+
     <h1 id="titulo">
       Carregando…
     </h1>
 
+
     <div
       id="meta"
-      class="muted">
-    </div>
+      class="muted"
+    ></div>
+
 
 
     <!-- =====================================================
@@ -560,6 +994,7 @@
             ⚪
           </div>
 
+
           <div>
 
             <div
@@ -569,35 +1004,41 @@
               Carregando situação…
             </div>
 
+
             <div
               id="equipStatusSubtitle"
               class="status-subtitle"
-            >
-            </div>
+            ></div>
 
           </div>
 
         </div>
 
+
         <div
           id="equipStatusCounts"
           class="status-counts"
-        >
-        </div>
+        ></div>
+
 
         <div
           id="equipStatusLast"
           class="status-last"
-          style="display:none;"
-        >
-        </div>
+          style="display:none"
+        ></div>
 
       </div>
 
     </section>
 
 
+
+    <!-- =====================================================
+         DADOS EQUIPAMENTO
+         ===================================================== -->
+
     <div class="grid">
+
 
       <div>
 
@@ -607,8 +1048,9 @@
 
         <div
           id="carac"
-          class="kv">
-        </div>
+          class="kv"
+        ></div>
+
 
         <h3>
           Plano Preventivo
@@ -620,6 +1062,7 @@
         >
           Periodicidade • Próxima Manutenção
         </div>
+
 
         <h3>
           Localização
@@ -653,7 +1096,12 @@
     </div>
 
 
-    <p style="margin-top:16px">
+
+    <!-- =====================================================
+         REPORTAR
+         ===================================================== -->
+
+    <p style="margin-top:18px">
 
       <a
         id="reportar"
@@ -665,11 +1113,13 @@
     </p>
 
 
+
     <!-- =====================================================
          HISTÓRICO
          ===================================================== -->
 
     <section class="history-section">
+
 
       <div class="history-header">
 
@@ -684,11 +1134,14 @@
 
       </div>
 
+
       <div id="historicoStatus">
         Carregando histórico…
       </div>
 
+
       <div id="historicoSelectorArea">
+
 
         <label
           for="historicoSelect"
@@ -702,51 +1155,54 @@
           Selecione uma ocorrência
         </label>
 
-        <select id="historicoSelect"></select>
 
-        <div id="historicoDetalhe"></div>
+        <select
+          id="historicoSelect"
+        ></select>
+
+
+        <div
+          id="historicoDetalhe"
+        ></div>
+
 
       </div>
+
 
     </section>
 
 
+
     <p style="font-size:7px;">
-      JCPG-2026 - Ver.:2.0
+      JCPG-2026 - Ver.:2.1
     </p>
+
 
     <div
       class="footer"
       id="ft"
     ></div>
 
+
   </div>
 
 
 
   <!-- =====================================================
-       MODAL DE REPORTE
+       MODAL NOVO REPORTE
        ===================================================== -->
 
-  <div id="modal-anomalia">
+  <div
+    id="modal-anomalia"
+    class="modal"
+  >
 
-    <div class="box">
+    <div class="modal-box">
 
-      <div
-        style="
-          display:flex;
-          align-items:center;
-          justify-content:space-between;
-          gap:12px;
-        "
-      >
 
-        <h2
-          style="
-            margin:0;
-            font-size:1.1rem;
-          "
-        >
+      <div class="modal-header">
+
+        <h2>
           Reportar Serviço, Anomalia ou Reparo
         </h2>
 
@@ -761,10 +1217,8 @@
       </div>
 
 
-      <div
-        class="row"
-        style="margin-top:12px"
-      >
+      <div class="row">
+
 
         <label>
 
@@ -775,7 +1229,6 @@
           <input
             id="nome"
             type="text"
-            required
             autocomplete="name"
           >
 
@@ -791,7 +1244,6 @@
           <input
             id="contato"
             type="text"
-            autocomplete="email tel"
           >
 
         </label>
@@ -806,7 +1258,6 @@
           <textarea
             id="descricao"
             rows="5"
-            required
             placeholder="Explique o ocorrido, serviço realizado, sintomas, quando começou…"
           ></textarea>
 
@@ -820,7 +1271,7 @@
           </div>
 
           <div class="foto-help">
-            Opcional. Tire uma foto ou selecione uma imagem do aparelho.
+            Opcional. Tire uma foto ou selecione uma imagem.
           </div>
 
           <input
@@ -830,11 +1281,12 @@
             capture="environment"
           >
 
+
           <div id="previewContainer">
 
             <img
               id="fotoPreview"
-              alt="Pré-visualização da foto"
+              alt="Pré-visualização"
             >
 
             <div
@@ -859,18 +1311,13 @@
         </div>
 
 
-        <div id="status-reporte"></div>
-
-
         <div
-          class="modal-buttons"
-          style="
-            display:flex;
-            gap:10px;
-            justify-content:flex-end;
-            margin-top:4px;
-          "
-        >
+          id="status-reporte"
+          class="form-status"
+        ></div>
+
+
+        <div class="modal-buttons">
 
           <button
             type="button"
@@ -889,6 +1336,7 @@
 
         </div>
 
+
       </div>
 
     </div>
@@ -898,7 +1346,163 @@
 
 
   <!-- =====================================================
-       FORM POST INVISÍVEL
+       MODAL GERENCIAR OCORRÊNCIA
+       ===================================================== -->
+
+  <div
+    id="modal-gerenciar"
+    class="modal"
+  >
+
+    <div class="modal-box">
+
+
+      <div class="modal-header">
+
+        <div>
+
+          <h2>
+            Gerenciar ocorrência
+          </h2>
+
+          <div
+            id="manageOccurrenceTitle"
+            class="muted"
+            style="
+              margin-top:3px;
+              font-size:.88rem;
+            "
+          ></div>
+
+        </div>
+
+
+        <button
+          type="button"
+          class="btn-secondary"
+          id="fechar-gerenciar"
+        >
+          Fechar
+        </button>
+
+      </div>
+
+
+      <div class="row">
+
+
+        <label>
+
+          <span>
+            Status
+          </span>
+
+          <select id="manageStatus">
+
+            <option value="Aberta">
+              Aberta
+            </option>
+
+            <option value="Em atendimento">
+              Em atendimento
+            </option>
+
+            <option value="Aguardando peça">
+              Aguardando peça
+            </option>
+
+            <option value="Concluída">
+              Concluída
+            </option>
+
+            <option value="Cancelada">
+              Cancelada
+            </option>
+
+          </select>
+
+        </label>
+
+
+        <label>
+
+          <span>
+            Responsável
+          </span>
+
+          <input
+            id="manageResponsavel"
+            type="text"
+            placeholder="Nome do técnico ou responsável"
+          >
+
+        </label>
+
+
+        <label>
+
+          <span>
+            Solução / Serviço realizado
+          </span>
+
+          <textarea
+            id="manageSolucao"
+            rows="6"
+            placeholder="Descreva o serviço executado, peças substituídas, testes realizados, resultado..."
+          ></textarea>
+
+        </label>
+
+
+        <div
+          id="manageCurrentInfo"
+          style="
+            background:#f9fafb;
+            border:1px solid #e5e7eb;
+            border-radius:10px;
+            padding:10px;
+            font-size:.85rem;
+            color:#6b7280;
+          "
+        ></div>
+
+
+        <div
+          id="status-gerenciar"
+          class="form-status"
+        ></div>
+
+
+        <div class="modal-buttons">
+
+          <button
+            type="button"
+            class="btn-secondary"
+            id="cancelar-gerenciar"
+          >
+            Cancelar
+          </button>
+
+          <button
+            type="button"
+            id="btn-salvar-gerenciar"
+          >
+            Salvar alterações
+          </button>
+
+        </div>
+
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+
+  <!-- =====================================================
+       FORM NOVO REPORTE
        ===================================================== -->
 
   <form
@@ -965,10 +1569,69 @@
   </form>
 
 
+
+  <!-- =====================================================
+       FORM ATUALIZAÇÃO OCORRÊNCIA
+       ===================================================== -->
+
+  <form
+    id="managePostForm"
+    method="POST"
+    target="managePostFrame"
+    style="display:none"
+  >
+
+    <input
+      type="hidden"
+      name="action"
+      value="updateOccurrence"
+    >
+
+    <input
+      type="hidden"
+      name="token"
+      id="manage_post_token"
+    >
+
+    <input
+      type="hidden"
+      name="ocorrencia"
+      id="manage_post_ocorrencia"
+    >
+
+    <input
+      type="hidden"
+      name="status"
+      id="manage_post_status"
+    >
+
+    <input
+      type="hidden"
+      name="responsavel"
+      id="manage_post_responsavel"
+    >
+
+    <input
+      type="hidden"
+      name="solucao"
+      id="manage_post_solucao"
+    >
+
+  </form>
+
+
+
   <iframe
     id="postFrame"
     name="postFrame"
   ></iframe>
+
+
+  <iframe
+    id="managePostFrame"
+    name="managePostFrame"
+  ></iframe>
+
 
 
 <script>
@@ -1003,7 +1666,15 @@ let postEmAndamento =
 false;
 
 
+let gerenciaEmAndamento =
+false;
+
+
 let postTimer =
+null;
+
+
+let manageTimer =
 null;
 
 
@@ -1013,6 +1684,10 @@ null;
 
 let historicoAtual =
 [];
+
+
+let ocorrenciaSelecionada =
+null;
 
 
 
@@ -1067,7 +1742,6 @@ function formatDateBR(s) {
 
 
   if (!v) {
-
     return "";
   }
 
@@ -1104,7 +1778,6 @@ function formatDateBR(s) {
 function formatBytes(bytes) {
 
   if (!bytes) {
-
     return "0 KB";
   }
 
@@ -1147,31 +1820,28 @@ function formatBytes(bytes) {
 
 
 /* ============================================================
-   EQUIPAMENTO
+   API
    ============================================================ */
 
 async function fetchEquipById(id) {
 
-  const url =
-
-    API_URL +
-
-    "?id=" +
-
-    encodeURIComponent(
-      id
-    ) +
-
-    "&token=" +
-
-    encodeURIComponent(
-      API_TOKEN
-    );
-
-
   const response =
     await fetch(
-      url
+
+      API_URL +
+
+      "?id=" +
+
+      encodeURIComponent(
+        id
+      ) +
+
+      "&token=" +
+
+      encodeURIComponent(
+        API_TOKEN
+      )
+
     );
 
 
@@ -1179,9 +1849,7 @@ async function fetchEquipById(id) {
     await response.json();
 
 
-  if (
-    !json.ok
-  ) {
+  if (!json.ok) {
 
     throw new Error(
       json.error ||
@@ -1195,32 +1863,25 @@ async function fetchEquipById(id) {
 
 
 
-/* ============================================================
-   SITUAÇÃO
-   ============================================================ */
-
 async function fetchStatusById(id) {
-
-  const url =
-
-    API_URL +
-
-    "?action=status&id=" +
-
-    encodeURIComponent(
-      id
-    ) +
-
-    "&token=" +
-
-    encodeURIComponent(
-      API_TOKEN
-    );
-
 
   const response =
     await fetch(
-      url
+
+      API_URL +
+
+      "?action=status&id=" +
+
+      encodeURIComponent(
+        id
+      ) +
+
+      "&token=" +
+
+      encodeURIComponent(
+        API_TOKEN
+      )
+
     );
 
 
@@ -1228,9 +1889,7 @@ async function fetchStatusById(id) {
     await response.json();
 
 
-  if (
-    !json.ok
-  ) {
+  if (!json.ok) {
 
     throw new Error(
       json.detail ||
@@ -1245,32 +1904,25 @@ async function fetchStatusById(id) {
 
 
 
-/* ============================================================
-   HISTÓRICO
-   ============================================================ */
-
 async function fetchHistoryById(id) {
-
-  const url =
-
-    API_URL +
-
-    "?action=history&id=" +
-
-    encodeURIComponent(
-      id
-    ) +
-
-    "&token=" +
-
-    encodeURIComponent(
-      API_TOKEN
-    );
-
 
   const response =
     await fetch(
-      url
+
+      API_URL +
+
+      "?action=history&id=" +
+
+      encodeURIComponent(
+        id
+      ) +
+
+      "&token=" +
+
+      encodeURIComponent(
+        API_TOKEN
+      )
+
     );
 
 
@@ -1278,9 +1930,7 @@ async function fetchHistoryById(id) {
     await response.json();
 
 
-  if (
-    !json.ok
-  ) {
+  if (!json.ok) {
 
     throw new Error(
       json.detail ||
@@ -1296,7 +1946,50 @@ async function fetchHistoryById(id) {
 
 
 /* ============================================================
-   RENDER EQUIPAMENTO
+   RECARREGA STATUS + HISTÓRICO
+   ============================================================ */
+
+async function atualizarDadosOperacionais() {
+
+  if (
+    !window.__EQUIP_ID__
+  ) {
+
+    return;
+  }
+
+
+  const [
+    situacao,
+    historico
+  ] =
+    await Promise.all([
+
+      fetchStatusById(
+        window.__EQUIP_ID__
+      ),
+
+      fetchHistoryById(
+        window.__EQUIP_ID__
+      )
+
+    ]);
+
+
+  renderEquipmentStatus(
+    situacao
+  );
+
+
+  renderHistory(
+    historico
+  );
+}
+
+
+
+/* ============================================================
+   EQUIPAMENTO
    ============================================================ */
 
 function render(eq) {
@@ -1332,12 +2025,7 @@ function render(eq) {
   el("#titulo")
     .textContent =
 
-    (
-      id ||
-      "Equipamento"
-    )
-
-    +
+    id +
 
     (
       nome
@@ -1363,58 +2051,56 @@ function render(eq) {
 
   const pares = [
 
-    {
-      rotulo:"Fabricante",
-      valor:eq.fabricante,
-      classe:""
-    },
+    [
+      "Fabricante",
+      eq.fabricante
+    ],
 
-    {
-      rotulo:"Modelo",
-      valor:eq.modelo,
-      classe:"modelo"
-    },
+    [
+      "Modelo",
+      eq.modelo
+    ],
 
-    {
-      rotulo:"Capacidade",
-      valor:eq.capacidade,
-      classe:""
-    },
+    [
+      "Capacidade",
+      eq.capacidade
+    ],
 
-    {
-      rotulo:"Amperagem Nominal (FLA)",
-      valor:eq.amperagem_nominal_fla,
-      classe:""
-    },
+    [
+      "Amperagem Nominal (FLA)",
+      eq.amperagem_nominal_fla
+    ],
 
-    {
-      rotulo:"Voltagem",
-      valor:eq.voltagem,
-      classe:""
-    }
+    [
+      "Voltagem",
+      eq.voltagem
+    ]
 
   ];
 
 
-  const caracHTML =
+  el("#carac")
+    .innerHTML =
 
     pares
 
     .filter(
       p =>
-        p.valor &&
-        p.valor !== "-"
+        p[1] &&
+        p[1] !== "-"
     )
 
     .map(
       p => `
 
-        <div class="pair ${p.classe || ""}">
+        <div class="pair">
 
-          <b>${esc(p.rotulo)}:</b>
+          <b>
+            ${esc(p[0])}:
+          </b>
 
           <span>
-            ${esc(p.valor)}
+            ${esc(p[1])}
           </span>
 
         </div>
@@ -1429,13 +2115,7 @@ function render(eq) {
     "<div class='empty'>Sem dados</div>";
 
 
-  el("#carac")
-    .innerHTML =
-    caracHTML;
-
-
-  const pp =
-    [];
+  const pp = [];
 
 
   if (
@@ -1497,7 +2177,7 @@ function render(eq) {
 
 
   el("#ft")
-    .innerHTML =
+    .textContent =
 
     "Última atualização: " +
 
@@ -1505,39 +2185,18 @@ function render(eq) {
       .toLocaleString(
         "pt-BR"
       );
-
 }
 
 
 
 /* ============================================================
-   RENDER SITUAÇÃO
+   SITUAÇÃO
    ============================================================ */
 
 function renderEquipmentStatus(data) {
 
   const card =
     el("#equipStatusCard");
-
-
-  const icon =
-    el("#equipStatusIcon");
-
-
-  const title =
-    el("#equipStatusTitle");
-
-
-  const subtitle =
-    el("#equipStatusSubtitle");
-
-
-  const counts =
-    el("#equipStatusCounts");
-
-
-  const last =
-    el("#equipStatusLast");
 
 
   card.className =
@@ -1548,17 +2207,22 @@ function renderEquipmentStatus(data) {
     );
 
 
-  icon.textContent =
+  el("#equipStatusIcon")
+    .textContent =
+
     data.icone ||
     "⚪";
 
 
-  title.textContent =
+  el("#equipStatusTitle")
+    .textContent =
+
     data.situacao ||
     "Situação indisponível";
 
 
-  subtitle.textContent =
+  el("#equipStatusSubtitle")
+    .textContent =
 
     data.totalAtivas === 0
 
@@ -1566,6 +2230,10 @@ function renderEquipmentStatus(data) {
 
       : data.totalAtivas +
         " ocorrência(s) ativa(s)";
+
+
+  const counts =
+    el("#equipStatusCounts");
 
 
   counts.innerHTML =
@@ -1631,9 +2299,12 @@ function renderEquipmentStatus(data) {
       counts.appendChild(
         span
       );
-
     }
   );
+
+
+  const last =
+    el("#equipStatusLast");
 
 
   const ultima =
@@ -1652,40 +2323,42 @@ function renderEquipmentStatus(data) {
 
       <b>
         ${esc(
-          ultima.ocorrencia ||
-          ""
+          ultima.ocorrencia
         )}
         •
         ${esc(
-          ultima.status ||
-          ""
+          ultima.status
         )}
       </b>
 
       <div>
-        ${
-          esc(
-            ultima.descricao ||
-            ""
-          )
-        }
+        ${esc(
+          ultima.descricao ||
+          ""
+        )}
       </div>
 
       ${
         ultima.responsavel
+
           ? `
-              <div
-                style="
-                  margin-top:4px;
-                  color:#6b7280;
-                "
-              >
-                Responsável:
-                ${esc(
-                  ultima.responsavel
-                )}
-              </div>
-            `
+
+            <div
+              style="
+                margin-top:5px;
+                color:#6b7280;
+              "
+            >
+
+              Responsável:
+              ${esc(
+                ultima.responsavel
+              )}
+
+            </div>
+
+          `
+
           : ""
       }
 
@@ -1696,7 +2369,6 @@ function renderEquipmentStatus(data) {
     last.style.display =
       "none";
 
-
     last.innerHTML =
       "";
   }
@@ -1705,30 +2377,10 @@ function renderEquipmentStatus(data) {
 
 
 /* ============================================================
-   RENDER HISTÓRICO
+   HISTÓRICO
    ============================================================ */
 
 function renderHistory(result) {
-
-  const status =
-    el("#historicoStatus");
-
-
-  const count =
-    el("#historicoCount");
-
-
-  const area =
-    el("#historicoSelectorArea");
-
-
-  const select =
-    el("#historicoSelect");
-
-
-  const detalhe =
-    el("#historicoDetalhe");
-
 
   historicoAtual =
 
@@ -1742,7 +2394,8 @@ function renderHistory(result) {
       : [];
 
 
-  count.textContent =
+  el("#historicoCount")
+    .textContent =
 
     historicoAtual.length
 
@@ -1752,11 +2405,15 @@ function renderHistory(result) {
       : "";
 
 
+  const area =
+    el("#historicoSelectorArea");
+
+
+  const select =
+    el("#historicoSelect");
+
+
   select.innerHTML =
-    "";
-
-
-  detalhe.innerHTML =
     "";
 
 
@@ -1764,7 +2421,8 @@ function renderHistory(result) {
     historicoAtual.length === 0
   ) {
 
-    status.textContent =
+    el("#historicoStatus")
+      .textContent =
       "Nenhum histórico encontrado para este equipamento.";
 
 
@@ -1776,7 +2434,8 @@ function renderHistory(result) {
   }
 
 
-  status.textContent =
+  el("#historicoStatus")
+    .textContent =
     "";
 
 
@@ -1799,37 +2458,33 @@ function renderHistory(result) {
         String(index);
 
 
-      let label = "";
+      option.textContent =
 
+        (
+          item.ocorrencia ||
+          "Ocorrência"
+        )
 
-      if (
-        item.ocorrencia
-      ) {
+        +
 
-        label +=
-          item.ocorrencia +
-          " | ";
-      }
+        " | "
 
+        +
 
-      label +=
         formatDateBR(
           item.data
+        )
+
+        +
+
+        " | "
+
+        +
+
+        (
+          item.status ||
+          "Aberta"
         );
-
-
-      if (
-        item.status
-      ) {
-
-        label +=
-          " | " +
-          item.status;
-      }
-
-
-      option.textContent =
-        label;
 
 
       select.appendChild(
@@ -1853,17 +2508,17 @@ function renderHistory(result) {
 
 
 /* ============================================================
-   DETALHE HISTÓRICO
+   DETALHE DO HISTÓRICO
    ============================================================ */
 
 function mostrarHistoricoSelecionado(index) {
 
-  const detalhe =
-    el("#historicoDetalhe");
-
-
   const item =
     historicoAtual[index];
+
+
+  const detalhe =
+    el("#historicoDetalhe");
 
 
   if (!item) {
@@ -1875,176 +2530,144 @@ function mostrarHistoricoSelecionado(index) {
   }
 
 
-  const contatoHTML =
-
-    item.contato
-
-      ? `
-
-        <div class="history-meta">
-
-          <b>Contato:</b>
-          ${esc(item.contato)}
-
-        </div>
-
-      `
-
-      : "";
-
-
-  const responsavelHTML =
-
-    item.responsavel
-
-      ? `
-
-        <div class="history-meta">
-
-          <b>Responsável:</b>
-          ${esc(item.responsavel)}
-
-        </div>
-
-      `
-
-      : "";
-
-
-  const inicioHTML =
-
-    item.dataInicio
-
-      ? `
-
-        <div class="history-meta">
-
-          <b>Início:</b>
-          ${esc(
-            formatDateBR(
-              item.dataInicio
-            )
-          )}
-
-        </div>
-
-      `
-
-      : "";
-
-
-  const conclusaoHTML =
-
-    item.dataConclusao
-
-      ? `
-
-        <div class="history-meta">
-
-          <b>Conclusão:</b>
-          ${esc(
-            formatDateBR(
-              item.dataConclusao
-            )
-          )}
-
-        </div>
-
-      `
-
-      : "";
-
-
-  const solucaoHTML =
-
-    item.solucao
-
-      ? `
-
-        <div class="history-solution">
-
-          <b>Solução / serviço realizado:</b>
-
-          <div style="margin-top:5px">
-            ${esc(item.solucao)}
-          </div>
-
-        </div>
-
-      `
-
-      : "";
-
-
-  const fotoHTML =
-
-    item.foto
-
-      ? `
-
-        <div class="history-photo">
-
-          <a
-            href="${esc(item.foto)}"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            📷 Ver foto
-          </a>
-
-        </div>
-
-      `
-
-      : "";
+  ocorrenciaSelecionada =
+    item;
 
 
   detalhe.innerHTML = `
 
     <div class="history-detail">
 
+
       <div class="history-occurrence">
+
         ${esc(
           item.ocorrencia ||
           ""
         )}
+
       </div>
 
+
       <div class="history-date">
+
         ${esc(
           formatDateBR(
             item.data
           )
         )}
+
       </div>
 
+
       <div class="history-status-pill">
+
         ${esc(
           item.status ||
           "Aberta"
         )}
+
       </div>
+
 
       <div class="history-meta">
 
         <b>Reportado por:</b>
 
-        ${
-          esc(
-            item.reportadoPor ||
-            "Não informado"
-          )
-        }
+        ${esc(
+          item.reportadoPor ||
+          "Não informado"
+        )}
 
       </div>
 
-      ${contatoHTML}
 
-      ${responsavelHTML}
+      ${
+        item.contato
 
-      ${inicioHTML}
+          ? `
 
-      ${conclusaoHTML}
+            <div class="history-meta">
+
+              <b>Contato:</b>
+
+              ${esc(
+                item.contato
+              )}
+
+            </div>
+
+          `
+
+          : ""
+      }
+
+
+      ${
+        item.responsavel
+
+          ? `
+
+            <div class="history-meta">
+
+              <b>Responsável:</b>
+
+              ${esc(
+                item.responsavel
+              )}
+
+            </div>
+
+          `
+
+          : ""
+      }
+
+
+      ${
+        item.dataInicio
+
+          ? `
+
+            <div class="history-meta">
+
+              <b>Início:</b>
+
+              ${esc(
+                formatDateBR(
+                  item.dataInicio
+                )
+              )}
+
+            </div>
+
+          `
+
+          : ""
+      }
+
+
+      ${
+        item.dataConclusao
+
+          ? `
+
+            <div class="history-meta">
+
+              <b>Conclusão:</b>
+
+              ${esc(
+                formatDateBR(
+                  item.dataConclusao
+                )
+              )}
+
+            </div>
+
+          `
+
+          : ""
+      }
 
 
       <div class="history-description">
@@ -2052,19 +2675,83 @@ function mostrarHistoricoSelecionado(index) {
         <b>Descrição:</b>
 
         <div style="margin-top:5px">
-          ${
-            esc(
-              item.descricao ||
-              ""
-            )
-          }
+
+          ${esc(
+            item.descricao ||
+            ""
+          )}
+
         </div>
 
       </div>
 
-      ${solucaoHTML}
 
-      ${fotoHTML}
+      ${
+        item.solucao
+
+          ? `
+
+            <div class="history-solution">
+
+              <b>
+                Solução / Serviço realizado:
+              </b>
+
+              <div style="margin-top:5px">
+
+                ${esc(
+                  item.solucao
+                )}
+
+              </div>
+
+            </div>
+
+          `
+
+          : ""
+      }
+
+
+      ${
+        item.foto
+
+          ? `
+
+            <div class="history-photo">
+
+              <a
+                href="${esc(item.foto)}"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+
+                📷 Ver foto
+
+              </a>
+
+            </div>
+
+          `
+
+          : ""
+      }
+
+
+      <div class="manage-area">
+
+        <button
+          type="button"
+          class="btn-manage"
+          onclick="abrirGerenciamento(${index})"
+        >
+
+          ⚙️ Gerenciar ocorrência
+
+        </button>
+
+      </div>
+
 
     </div>
 
@@ -2074,7 +2761,337 @@ function mostrarHistoricoSelecionado(index) {
 
 
 /* ============================================================
-   FOTO
+   ABRE GERENCIAMENTO
+   ============================================================ */
+
+function abrirGerenciamento(index) {
+
+  const item =
+    historicoAtual[index];
+
+
+  if (!item) {
+    return;
+  }
+
+
+  ocorrenciaSelecionada =
+    item;
+
+
+  el("#manageOccurrenceTitle")
+    .textContent =
+
+    item.ocorrencia +
+
+    " • " +
+
+    window.__EQUIP_ID__;
+
+
+  el("#manageStatus")
+    .value =
+
+    item.status ||
+    "Aberta";
+
+
+  el("#manageResponsavel")
+    .value =
+
+    item.responsavel ||
+    "";
+
+
+  el("#manageSolucao")
+    .value =
+
+    item.solucao ||
+    "";
+
+
+  let info = "";
+
+
+  info +=
+
+    "<b>Aberta em:</b> " +
+
+    esc(
+      formatDateBR(
+        item.data
+      )
+    );
+
+
+  if (
+    item.dataInicio
+  ) {
+
+    info +=
+
+      "<br><b>Início:</b> " +
+
+      esc(
+        formatDateBR(
+          item.dataInicio
+        )
+      );
+  }
+
+
+  if (
+    item.dataConclusao
+  ) {
+
+    info +=
+
+      "<br><b>Conclusão:</b> " +
+
+      esc(
+        formatDateBR(
+          item.dataConclusao
+        )
+      );
+  }
+
+
+  el("#manageCurrentInfo")
+    .innerHTML =
+    info;
+
+
+  el("#status-gerenciar")
+    .className =
+    "form-status";
+
+
+  el("#status-gerenciar")
+    .textContent =
+    "";
+
+
+  el("#modal-gerenciar")
+    .style.display =
+    "flex";
+}
+
+
+
+/* ============================================================
+   FECHA GERENCIAMENTO
+   ============================================================ */
+
+function fecharGerenciamento() {
+
+  if (
+    gerenciaEmAndamento
+  ) {
+
+    return;
+  }
+
+
+  el("#modal-gerenciar")
+    .style.display =
+    "none";
+}
+
+
+
+/* ============================================================
+   SALVA GERENCIAMENTO
+   ============================================================ */
+
+function salvarGerenciamento() {
+
+  if (
+    !ocorrenciaSelecionada
+  ) {
+
+    return;
+  }
+
+
+  const status =
+    el("#manageStatus")
+      .value;
+
+
+  const responsavel =
+    el("#manageResponsavel")
+      .value
+      .trim();
+
+
+  const solucao =
+    el("#manageSolucao")
+      .value
+      .trim();
+
+
+  const msg =
+    el("#status-gerenciar");
+
+
+  const btn =
+    el("#btn-salvar-gerenciar");
+
+
+  el("#manage_post_token")
+    .value =
+    API_TOKEN;
+
+
+  el("#manage_post_ocorrencia")
+    .value =
+    ocorrenciaSelecionada.ocorrencia;
+
+
+  el("#manage_post_status")
+    .value =
+    status;
+
+
+  el("#manage_post_responsavel")
+    .value =
+    responsavel;
+
+
+  el("#manage_post_solucao")
+    .value =
+    solucao;
+
+
+  const form =
+    el("#managePostForm");
+
+
+  form.action =
+    API_URL;
+
+
+  btn.disabled =
+    true;
+
+
+  btn.textContent =
+    "Salvando...";
+
+
+  msg.className =
+    "form-status status-loading";
+
+
+  msg.textContent =
+    "Atualizando ocorrência...";
+
+
+  gerenciaEmAndamento =
+    true;
+
+
+  form.submit();
+
+
+  manageTimer =
+    setTimeout(
+
+      finalizarGerenciamento,
+
+      5000
+
+    );
+}
+
+
+
+/* ============================================================
+   FINALIZA GERENCIAMENTO
+   ============================================================ */
+
+async function finalizarGerenciamento() {
+
+  if (
+    !gerenciaEmAndamento
+  ) {
+
+    return;
+  }
+
+
+  gerenciaEmAndamento =
+    false;
+
+
+  if (
+    manageTimer
+  ) {
+
+    clearTimeout(
+      manageTimer
+    );
+
+    manageTimer =
+      null;
+  }
+
+
+  const btn =
+    el("#btn-salvar-gerenciar");
+
+
+  const msg =
+    el("#status-gerenciar");
+
+
+  btn.disabled =
+    false;
+
+
+  btn.textContent =
+    "Salvar alterações";
+
+
+  msg.className =
+    "form-status status-success";
+
+
+  msg.textContent =
+    "Ocorrência atualizada com sucesso.";
+
+
+  try {
+
+    await atualizarDadosOperacionais();
+
+  } catch(error) {
+
+    console.error(
+      error
+    );
+  }
+
+
+  setTimeout(
+
+    function() {
+
+      el("#modal-gerenciar")
+        .style.display =
+        "none";
+
+    },
+
+    1200
+
+  );
+}
+
+
+
+/* ============================================================
+   FOTO DO NOVO REPORTE
    ============================================================ */
 
 function processarFoto(file) {
@@ -2127,97 +3144,90 @@ function processarFoto(file) {
             function() {
 
 
-              try {
+              let width =
+                img.width;
 
 
-                let width =
-                  img.width;
+              let height =
+                img.height;
 
 
-                let height =
-                  img.height;
+              if (
+
+                width >
+                PHOTO_MAX_DIMENSION
+
+                ||
+
+                height >
+                PHOTO_MAX_DIMENSION
+
+              ) {
 
 
                 if (
-
                   width >
-                  PHOTO_MAX_DIMENSION
-
-                  ||
-
-                  height >
-                  PHOTO_MAX_DIMENSION
-
+                  height
                 ) {
 
+                  height =
+                    Math.round(
 
-                  if (
-                    width >
-                    height
-                  ) {
+                      height *
 
+                      (
+                        PHOTO_MAX_DIMENSION /
+                        width
+                      )
 
-                    height =
-                      Math.round(
-
-                        height *
-
-                        (
-                          PHOTO_MAX_DIMENSION /
-                          width
-                        )
-
-                      );
+                    );
 
 
-                    width =
-                      PHOTO_MAX_DIMENSION;
+                  width =
+                    PHOTO_MAX_DIMENSION;
 
 
-                  } else {
+                } else {
 
 
-                    width =
-                      Math.round(
+                  width =
+                    Math.round(
 
-                        width *
+                      width *
 
-                        (
-                          PHOTO_MAX_DIMENSION /
-                          height
-                        )
+                      (
+                        PHOTO_MAX_DIMENSION /
+                        height
+                      )
 
-                      );
+                    );
 
 
-                    height =
-                      PHOTO_MAX_DIMENSION;
-
-                  }
+                  height =
+                    PHOTO_MAX_DIMENSION;
                 }
+              }
 
 
-                const canvas =
-                  document.createElement(
-                    "canvas"
-                  );
+              const canvas =
+                document.createElement(
+                  "canvas"
+                );
 
 
-                canvas.width =
-                  width;
+              canvas.width =
+                width;
 
 
-                canvas.height =
-                  height;
+              canvas.height =
+                height;
 
 
-                const ctx =
-                  canvas.getContext(
-                    "2d"
-                  );
-
-
-                ctx.drawImage(
+              canvas
+                .getContext(
+                  "2d"
+                )
+                .drawImage(
                   img,
                   0,
                   0,
@@ -2226,74 +3236,69 @@ function processarFoto(file) {
                 );
 
 
-                const dataUrl =
-                  canvas.toDataURL(
-                    "image/jpeg",
-                    PHOTO_QUALITY
-                  );
-
-
-                const base64 =
-                  dataUrl.split(
-                    ","
-                  )[1];
-
-
-                resolve({
-
-                  base64:
-                    base64,
-
-                  dataUrl:
-                    dataUrl,
-
-                  mime:
-                    "image/jpeg",
-
-                  nome:
-
-                    (
-                      file.name
-
-                        ? file.name.replace(
-                            /\.[^.]+$/,
-                            ""
-                          )
-
-                        : "foto"
-                    )
-
-                    +
-
-                    ".jpg",
-
-                  tamanhoFinal:
-                    Math.round(
-                      base64.length *
-                      0.75
-                    ),
-
-                  width:
-                    width,
-
-                  height:
-                    height
-
-                });
-
-
-              } catch(error) {
-
-                reject(
-                  error
+              const dataUrl =
+                canvas.toDataURL(
+                  "image/jpeg",
+                  PHOTO_QUALITY
                 );
-              }
+
+
+              const base64 =
+                dataUrl.split(
+                  ","
+                )[1];
+
+
+              resolve({
+
+                base64:
+                  base64,
+
+                dataUrl:
+                  dataUrl,
+
+                mime:
+                  "image/jpeg",
+
+                nome:
+
+                  (
+                    file.name
+
+                      ? file.name.replace(
+                          /\.[^.]+$/,
+                          ""
+                        )
+
+                      : "foto"
+                  )
+
+                  +
+
+                  ".jpg",
+
+                tamanhoFinal:
+                  Math.round(
+                    base64.length *
+                    .75
+                  ),
+
+                width:
+                  width,
+
+                height:
+                  height
+              });
             };
 
 
           img.src =
             event.target.result;
         };
+
+
+      reader.onerror =
+        reject;
 
 
       reader.readAsDataURL(
@@ -2325,20 +3330,19 @@ async function onFotoSelecionada() {
   }
 
 
-  const status =
+  const msg =
     el("#status-reporte");
 
 
-  status.className =
-    "status-loading";
+  msg.className =
+    "form-status status-loading";
 
 
-  status.textContent =
+  msg.textContent =
     "Preparando foto...";
 
 
   try {
-
 
     fotoProcessada =
       await processarFoto(
@@ -2376,16 +3380,15 @@ async function onFotoSelecionada() {
       );
 
 
-    status.className =
-      "";
+    msg.className =
+      "form-status";
 
 
-    status.textContent =
+    msg.textContent =
       "";
 
 
   } catch(error) {
-
 
     fotoProcessada =
       null;
@@ -2395,12 +3398,12 @@ async function onFotoSelecionada() {
       "";
 
 
-    status.className =
-      "status-error";
+    msg.className =
+      "form-status status-error";
 
 
-    status.textContent =
-      error.message;
+    msg.textContent =
+      "Erro ao preparar a foto.";
   }
 }
 
@@ -2436,20 +3439,18 @@ function removerFotoSelecionada() {
 
 
 /* ============================================================
-   MODAL
+   MODAL REPORTE
    ============================================================ */
 
 function abrirModal() {
 
-  const status =
-    el("#status-reporte");
+  el("#status-reporte")
+    .className =
+    "form-status";
 
 
-  status.className =
-    "";
-
-
-  status.textContent =
+  el("#status-reporte")
+    .textContent =
     "";
 
 
@@ -2459,12 +3460,12 @@ function abrirModal() {
 }
 
 
+
 function fecharModal() {
 
   if (
     postEmAndamento
   ) {
-
     return;
   }
 
@@ -2477,14 +3478,17 @@ function fecharModal() {
 
 
 /* ============================================================
-   LIMPA FORM
+   LIMPA REPORTE
    ============================================================ */
 
 function limparFormularioReporte() {
 
   el("#nome").value = "";
+
   el("#contato").value = "";
+
   el("#descricao").value = "";
+
 
   removerFotoSelecionada();
 }
@@ -2492,124 +3496,7 @@ function limparFormularioReporte() {
 
 
 /* ============================================================
-   FINALIZA ENVIO
-   ============================================================ */
-
-function finalizarEnvioVisual() {
-
-  if (
-    !postEmAndamento
-  ) {
-
-    return;
-  }
-
-
-  const status =
-    el("#status-reporte");
-
-
-  const btn =
-    el("#btn-enviar");
-
-
-  status.className =
-    "status-success";
-
-
-  status.textContent =
-    "Ocorrência registrada com sucesso.";
-
-
-  btn.disabled =
-    false;
-
-
-  btn.textContent =
-    "Enviar";
-
-
-  postEmAndamento =
-    false;
-
-
-  if (
-    postTimer
-  ) {
-
-    clearTimeout(
-      postTimer
-    );
-
-
-    postTimer =
-      null;
-  }
-
-
-  setTimeout(
-
-    async function() {
-
-
-      limparFormularioReporte();
-
-
-      el("#modal-anomalia")
-        .style.display =
-        "none";
-
-
-      if (
-        window.__EQUIP_ID__
-      ) {
-
-        try {
-
-          const [
-            novoStatus,
-            novoHistorico
-          ] =
-            await Promise.all([
-              fetchStatusById(
-                window.__EQUIP_ID__
-              ),
-              fetchHistoryById(
-                window.__EQUIP_ID__
-              )
-            ]);
-
-
-          renderEquipmentStatus(
-            novoStatus
-          );
-
-
-          renderHistory(
-            novoHistorico
-          );
-
-
-        } catch(error) {
-
-          console.error(
-            error
-          );
-        }
-      }
-
-
-    },
-
-    1600
-
-  );
-}
-
-
-
-/* ============================================================
-   ENVIO
+   ENVIA NOVA OCORRÊNCIA
    ============================================================ */
 
 function enviarReporte() {
@@ -2632,7 +3519,7 @@ function enviarReporte() {
       .trim();
 
 
-  const status =
+  const msg =
     el("#status-reporte");
 
 
@@ -2642,11 +3529,11 @@ function enviarReporte() {
 
   if (!nome) {
 
-    status.className =
-      "status-error";
+    msg.className =
+      "form-status status-error";
 
 
-    status.textContent =
+    msg.textContent =
       "Informe seu nome.";
 
     return;
@@ -2655,11 +3542,11 @@ function enviarReporte() {
 
   if (!descricao) {
 
-    status.className =
-      "status-error";
+    msg.className =
+      "form-status status-error";
 
 
-    status.textContent =
+    msg.textContent =
       "Informe a descrição.";
 
     return;
@@ -2715,11 +3602,22 @@ function enviarReporte() {
       .value =
       fotoProcessada.mime;
 
+
   } else {
 
-    el("#post_fotoBase64").value = "";
-    el("#post_fotoNome").value = "";
-    el("#post_fotoMime").value = "";
+    el("#post_fotoBase64")
+      .value =
+      "";
+
+
+    el("#post_fotoNome")
+      .value =
+      "";
+
+
+    el("#post_fotoMime")
+      .value =
+      "";
   }
 
 
@@ -2739,11 +3637,11 @@ function enviarReporte() {
     "Enviando...";
 
 
-  status.className =
-    "status-loading";
+  msg.className =
+    "form-status status-loading";
 
 
-  status.textContent =
+  msg.textContent =
     "Registrando ocorrência...";
 
 
@@ -2756,17 +3654,107 @@ function enviarReporte() {
 
   postTimer =
     setTimeout(
+
       finalizarEnvioVisual,
+
       fotoProcessada
         ? 12000
         : 6000
+
     );
 }
 
 
 
 /* ============================================================
-   IFRAME
+   FINALIZA NOVO REPORTE
+   ============================================================ */
+
+async function finalizarEnvioVisual() {
+
+  if (
+    !postEmAndamento
+  ) {
+
+    return;
+  }
+
+
+  postEmAndamento =
+    false;
+
+
+  if (
+    postTimer
+  ) {
+
+    clearTimeout(
+      postTimer
+    );
+
+    postTimer =
+      null;
+  }
+
+
+  const msg =
+    el("#status-reporte");
+
+
+  const btn =
+    el("#btn-enviar");
+
+
+  btn.disabled =
+    false;
+
+
+  btn.textContent =
+    "Enviar";
+
+
+  msg.className =
+    "form-status status-success";
+
+
+  msg.textContent =
+    "Ocorrência registrada com sucesso.";
+
+
+  try {
+
+    await atualizarDadosOperacionais();
+
+  } catch(error) {
+
+    console.error(
+      error
+    );
+  }
+
+
+  setTimeout(
+
+    function() {
+
+      limparFormularioReporte();
+
+
+      el("#modal-anomalia")
+        .style.display =
+        "none";
+
+    },
+
+    1400
+
+  );
+}
+
+
+
+/* ============================================================
+   IFRAMES
    ============================================================ */
 
 el("#postFrame")
@@ -2777,19 +3765,37 @@ el("#postFrame")
     function() {
 
       if (
-        !postEmAndamento
+        postEmAndamento
       ) {
 
-        return;
+        setTimeout(
+          finalizarEnvioVisual,
+          700
+        );
       }
 
+    }
+  );
 
-      setTimeout(
-        finalizarEnvioVisual,
-        fotoProcessada
-          ? 1800
-          : 700
-      );
+
+
+el("#managePostFrame")
+  .addEventListener(
+
+    "load",
+
+    function() {
+
+      if (
+        gerenciaEmAndamento
+      ) {
+
+        setTimeout(
+          finalizarGerenciamento,
+          700
+        );
+      }
+
     }
   );
 
@@ -2848,12 +3854,29 @@ document.addEventListener(
         function() {
 
           mostrarHistoricoSelecionado(
+
             Number(
               this.value
             )
+
           );
         }
       );
+
+
+    el("#fechar-gerenciar")
+      .onclick =
+      fecharGerenciamento;
+
+
+    el("#cancelar-gerenciar")
+      .onclick =
+      fecharGerenciamento;
+
+
+    el("#btn-salvar-gerenciar")
+      .onclick =
+      salvarGerenciamento;
 
 
     el("#modal-anomalia")
@@ -2869,6 +3892,24 @@ document.addEventListener(
           ) {
 
             fecharModal();
+          }
+        }
+      );
+
+
+    el("#modal-gerenciar")
+      .addEventListener(
+
+        "click",
+
+        function(event) {
+
+          if (
+            event.target.id ===
+            "modal-gerenciar"
+          ) {
+
+            fecharGerenciamento();
           }
         }
       );
@@ -2956,7 +3997,6 @@ async function main() {
     el("#meta")
       .textContent =
       error.message;
-
   }
 }
 
