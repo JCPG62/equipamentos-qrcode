@@ -21,14 +21,11 @@
       --gap:16px;
     }
 
-
     * {
       box-sizing:border-box;
     }
 
-
     body {
-
       font-family:
         system-ui,
         -apple-system,
@@ -38,846 +35,499 @@
         sans-serif;
 
       max-width:960px;
-
       margin:auto;
-
       padding:var(--gap);
-
       background:#f8f9fb;
-
       color:#111827;
     }
 
-
     .card {
-
       background:#fff;
-
       border:1px solid #e5e7eb;
-
       border-radius:16px;
-
       padding:var(--gap);
-
-      box-shadow:
-        0 6px 16px
-        rgba(0,0,0,.05);
+      box-shadow:0 6px 16px rgba(0,0,0,.05);
     }
-
 
     h1 {
-
       font-size:1.25rem;
-
-      margin:
-        0
-        0
-        4px
-        0;
+      margin:0 0 4px 0;
     }
-
 
     h3 {
-
       margin-top:20px;
-
       margin-bottom:8px;
     }
-
 
     .muted {
       color:#6b7280;
     }
 
-
     .grid {
-
       display:grid;
-
-      grid-template-columns:
-        1fr
-        1fr;
-
+      grid-template-columns:1fr 1fr;
       gap:var(--gap);
-
       margin-top:var(--gap);
     }
 
-
     @media (max-width:780px) {
-
       .grid {
         grid-template-columns:1fr;
       }
     }
 
-
-    /* =====================================================
-       BOTÃO PRINCIPAL
-       ===================================================== */
-
     .chip {
-
       display:inline-block;
-
       border:1px solid #b91c1c;
-
       border-radius:999px;
-
       padding:10px 15px;
-
       text-decoration:none;
-
       color:#fff;
-
       cursor:pointer;
-
       background:#dc2626;
-
       font-weight:700;
-
-      box-shadow:
-        0 2px 5px
-        rgba(0,0,0,.12);
-
+      box-shadow:0 2px 5px rgba(0,0,0,.12);
       transition:.2s;
     }
 
-
     .chip:hover {
-
       background:#b91c1c;
-
       transform:translateY(-1px);
     }
-
 
     .empty {
       color:#9ca3af;
     }
 
-
-    /* =====================================================
-       DADOS DO EQUIPAMENTO
-       ===================================================== */
-
     .kv {
-
       display:block;
-
       margin-top:6px;
     }
 
-
     .kv .pair {
-
       padding:8px 0;
-
       border-bottom:1px dashed #eee;
-
       line-height:1.35;
     }
-
 
     .kv .pair:last-child {
       border-bottom:0;
     }
 
-
     .kv .pair b {
-
       font-weight:600;
-
       margin-right:6px;
     }
 
-
     .kv .pair span {
-
       word-break:break-word;
-
       overflow-wrap:anywhere;
     }
 
-
     .footer {
-
       margin-top:var(--gap);
-
       font-size:.9rem;
-
       color:#6b7280;
     }
 
-
-    /* =====================================================
-       SITUAÇÃO DO EQUIPAMENTO
-       ===================================================== */
+    /* SITUAÇÃO */
 
     .status-section {
       margin-top:16px;
     }
 
-
     .status-card {
-
       border-radius:14px;
-
       padding:14px;
-
       border:1px solid #e5e7eb;
-
       background:#f9fafb;
     }
 
-
     .status-card.ok {
-
       background:#ecfdf5;
-
       border-color:#a7f3d0;
     }
 
-
     .status-card.critico {
-
       background:#fef2f2;
-
       border-color:#fecaca;
     }
 
-
     .status-card.atendimento {
-
       background:#fffbeb;
-
       border-color:#fde68a;
     }
 
-
     .status-card.aguardando {
-
       background:#fff7ed;
-
       border-color:#fed7aa;
     }
 
-
     .status-main {
-
       display:flex;
-
       align-items:flex-start;
-
       gap:10px;
     }
 
-
     .status-icon {
-
       font-size:1.5rem;
-
       line-height:1;
     }
 
-
     .status-title {
-
       font-weight:800;
-
       font-size:1rem;
     }
 
-
     .status-subtitle {
-
       margin-top:3px;
-
       font-size:.88rem;
-
       color:#6b7280;
     }
 
-
     .status-counts {
-
       display:flex;
-
       flex-wrap:wrap;
-
       gap:6px;
-
       margin-top:10px;
     }
 
-
     .status-badge {
-
       border:1px solid rgba(0,0,0,.1);
-
       border-radius:999px;
-
       padding:4px 8px;
-
       font-size:.78rem;
-
       background:rgba(255,255,255,.7);
     }
 
-
     .status-last {
-
       margin-top:11px;
-
       padding-top:10px;
-
       border-top:1px solid rgba(0,0,0,.08);
-
       font-size:.88rem;
-
       line-height:1.4;
     }
 
-
-    /* =====================================================
-       HISTÓRICO
-       ===================================================== */
+    /* HISTÓRICO */
 
     .history-section {
-
       margin-top:22px;
-
       border-top:1px solid #e5e7eb;
-
       padding-top:18px;
     }
 
-
     .history-header {
-
       display:flex;
-
       align-items:center;
-
       justify-content:space-between;
-
       gap:12px;
-
       margin-bottom:12px;
     }
 
-
     .history-title {
-
       font-size:1.05rem;
-
       font-weight:700;
-
       margin:0;
     }
 
-
     .history-count {
-
       font-size:.8rem;
-
       color:#6b7280;
     }
-
 
     #historicoStatus {
-
       font-size:.9rem;
-
       color:#6b7280;
-
       padding:8px 0;
     }
-
 
     #historicoSelectorArea {
       display:none;
     }
 
-
     #historicoSelect {
-
       width:100%;
-
       padding:11px;
-
       border:1px solid #d1d5db;
-
       border-radius:9px;
-
       background:#fff;
-
       font:inherit;
-
       margin-bottom:12px;
     }
 
-
     .history-detail {
-
       border:1px solid #e5e7eb;
-
       border-radius:12px;
-
       padding:14px;
-
       background:#fafafa;
     }
 
-
     .history-occurrence {
-
       font-size:.88rem;
-
       font-weight:800;
-
       color:#374151;
-
       margin-bottom:4px;
     }
 
-
     .history-date {
-
       font-weight:700;
-
       margin-bottom:5px;
     }
 
-
     .history-meta {
-
       font-size:.85rem;
-
       color:#6b7280;
-
       margin-top:5px;
     }
 
-
     .history-description {
-
       margin-top:12px;
-
       line-height:1.45;
-
       white-space:pre-wrap;
     }
-
 
     .history-solution {
-
       margin-top:12px;
-
       padding-top:10px;
-
       border-top:1px dashed #d1d5db;
-
       line-height:1.45;
-
       white-space:pre-wrap;
     }
-
 
     .history-photo {
       margin-top:12px;
     }
 
-
     .history-photo a {
-
       display:inline-block;
-
       text-decoration:none;
-
       padding:8px 12px;
-
       border:1px solid #d1d5db;
-
       border-radius:8px;
-
       color:#111827;
-
       background:#fff;
-
       font-size:.9rem;
-
       margin-right:8px;
-
       margin-bottom:6px;
     }
 
-
     .history-photo-conclusion a {
-
       border-color:#86efac;
-
       background:#f0fdf4;
-
       color:#166534;
     }
 
-
     .history-status-pill {
-
       display:inline-block;
-
       margin:6px 0;
-
       padding:5px 9px;
-
       border-radius:999px;
-
       font-size:.78rem;
-
       font-weight:700;
-
       border:1px solid #d1d5db;
-
       background:#fff;
     }
 
-
     .manage-area {
-
       margin-top:14px;
-
       padding-top:12px;
-
       border-top:1px solid #e5e7eb;
     }
 
-
     .btn-manage {
-
       width:100%;
-
       background:#1f4e78;
-
       font-weight:700;
     }
-
 
     .btn-manage:hover {
       background:#173b5d;
     }
 
-
-    /* =====================================================
-       MODAIS
-       ===================================================== */
+    /* MODAIS */
 
     .modal {
-
       position:fixed;
-
       inset:0;
-
       background:rgba(0,0,0,.45);
-
       display:none;
-
       align-items:center;
-
       justify-content:center;
-
       z-index:9999;
-
       padding:12px;
     }
 
-
     .modal-box {
-
       background:#fff;
-
       width:min(680px,94vw);
-
       max-height:90vh;
-
       overflow-y:auto;
-
       border-radius:14px;
-
       padding:16px;
-
       border:1px solid #e5e7eb;
-
-      box-shadow:
-        0 10px 30px
-        rgba(0,0,0,.15);
+      box-shadow:0 10px 30px rgba(0,0,0,.15);
     }
 
-
     .modal-header {
-
       display:flex;
-
       align-items:center;
-
       justify-content:space-between;
-
       gap:12px;
-
       margin-bottom:14px;
     }
 
-
     .modal-header h2 {
-
       margin:0;
-
       font-size:1.1rem;
     }
 
-
     .row {
-
       display:grid;
-
       gap:12px;
     }
 
-
     label {
-
       display:grid;
-
       gap:6px;
-
       font-weight:500;
     }
-
 
     input[type="text"],
     textarea,
     select {
-
       width:100%;
-
       padding:12px;
-
       border:1px solid #d1d5db;
-
       border-radius:10px;
-
       font:inherit;
-
       background:#fff;
     }
-
 
     textarea {
       resize:vertical;
     }
 
-
     button {
-
       padding:12px 16px;
-
       border:0;
-
       border-radius:10px;
-
       background:#111827;
-
       color:#fff;
-
       cursor:pointer;
-
       font:inherit;
     }
 
-
     button:disabled {
-
       opacity:.55;
-
       cursor:not-allowed;
     }
 
-
     .btn-secondary {
-
       background:#e5e7eb;
-
       color:#111827;
     }
 
-
     .modal-buttons {
-
       display:flex;
-
       gap:10px;
-
       justify-content:flex-end;
-
       margin-top:8px;
     }
 
-
-    /* =====================================================
-       FOTO
-       ===================================================== */
+    /* FOTO */
 
     .foto-area {
-
       border:1px solid #e5e7eb;
-
       border-radius:12px;
-
       padding:12px;
-
       background:#f9fafb;
     }
 
-
     .foto-title {
-
       font-weight:600;
-
       margin-bottom:8px;
     }
 
-
     .foto-help {
-
       font-size:.85rem;
-
       color:#6b7280;
-
       margin:4px 0 10px 0;
     }
 
-
     .preview-container {
-
       display:none;
-
       margin-top:12px;
-
       text-align:center;
     }
 
-
     .foto-preview {
-
       display:block;
-
       max-width:100%;
-
       max-height:320px;
-
       margin:0 auto;
-
       border-radius:10px;
-
       border:1px solid #d1d5db;
-
       object-fit:contain;
-
       background:#fff;
     }
 
-
     .foto-info {
-
       margin-top:7px;
-
       font-size:.8rem;
-
       color:#6b7280;
-
       word-break:break-word;
     }
 
-
     .foto-actions {
-
       margin-top:10px;
-
       display:flex;
-
       justify-content:center;
     }
 
-
     .btn-remove-foto {
-
       background:#ef4444;
-
       padding:8px 12px;
-
       font-size:.85rem;
     }
 
+    #fotoConclusaoArea {
+      display:none;
+    }
 
-    /* =====================================================
-       MENSAGENS
-       ===================================================== */
+    /* MENSAGENS */
 
     .form-status {
-
       display:none;
-
       margin-top:10px;
-
       padding:10px;
-
       border-radius:8px;
-
       font-size:.9rem;
     }
 
-
     .status-loading {
-
       display:block !important;
-
       background:#fef3c7;
-
       color:#92400e;
     }
 
-
     .status-success {
-
       display:block !important;
-
       background:#d1fae5;
-
       color:#065f46;
     }
 
-
     .status-error {
-
       display:block !important;
-
       background:#fee2e2;
-
       color:#991b1b;
     }
 
-
     iframe {
-
       display:none;
-
       width:0;
-
       height:0;
-
       border:0;
     }
-
 
     @media (max-width:600px) {
 
@@ -885,11 +535,9 @@
         flex-direction:column-reverse;
       }
 
-
       .modal-buttons button {
         width:100%;
       }
-
 
       .history-header {
         align-items:flex-start;
@@ -906,20 +554,15 @@
 
   <div class="card">
 
-
     <h1 id="titulo">
       Carregando…
     </h1>
-
 
     <div
       id="meta"
       class="muted"
     ></div>
 
-
-
-    <!-- SITUAÇÃO -->
 
     <section class="status-section">
 
@@ -955,12 +598,10 @@
 
         </div>
 
-
         <div
           id="equipStatusCounts"
           class="status-counts"
         ></div>
-
 
         <div
           id="equipStatusLast"
@@ -972,9 +613,6 @@
 
     </section>
 
-
-
-    <!-- DADOS -->
 
     <div class="grid">
 
@@ -989,7 +627,6 @@
           class="kv"
         ></div>
 
-
         <h3>
           Plano Preventivo
         </h3>
@@ -1000,7 +637,6 @@
         >
           -
         </div>
-
 
         <h3>
           Localização
@@ -1034,9 +670,6 @@
     </div>
 
 
-
-    <!-- REPORTAR -->
-
     <p style="margin-top:18px">
 
       <a
@@ -1048,9 +681,6 @@
 
     </p>
 
-
-
-    <!-- HISTÓRICO -->
 
     <section class="history-section">
 
@@ -1067,11 +697,9 @@
 
       </div>
 
-
       <div id="historicoStatus">
         Carregando histórico…
       </div>
-
 
       <div id="historicoSelectorArea">
 
@@ -1087,15 +715,9 @@
           Selecione uma ocorrência
         </label>
 
+        <select id="historicoSelect"></select>
 
-        <select
-          id="historicoSelect"
-        ></select>
-
-
-        <div
-          id="historicoDetalhe"
-        ></div>
+        <div id="historicoDetalhe"></div>
 
       </div>
 
@@ -1103,23 +725,19 @@
 
 
     <p style="font-size:7px;">
-      JCPG-2026 - Ver.:2.2
+      JCPG-2026 - Ver.:2.3
     </p>
-
 
     <div
       class="footer"
       id="ft"
     ></div>
 
-
   </div>
 
 
 
-  <!-- =====================================================
-       MODAL NOVA OCORRÊNCIA
-       ===================================================== -->
+  <!-- NOVA OCORRÊNCIA -->
 
   <div
     id="modal-anomalia"
@@ -1127,7 +745,6 @@
   >
 
     <div class="modal-box">
-
 
       <div class="modal-header">
 
@@ -1145,9 +762,7 @@
 
       </div>
 
-
       <div class="row">
-
 
         <label>
 
@@ -1162,7 +777,6 @@
 
         </label>
 
-
         <label>
 
           <span>
@@ -1175,7 +789,6 @@
           >
 
         </label>
-
 
         <label>
 
@@ -1207,7 +820,6 @@
             accept="image/*"
             capture="environment"
           >
-
 
           <div
             id="previewContainer"
@@ -1266,7 +878,6 @@
 
         </div>
 
-
       </div>
 
     </div>
@@ -1275,9 +886,7 @@
 
 
 
-  <!-- =====================================================
-       MODAL GERENCIAR
-       ===================================================== -->
+  <!-- GERENCIAR OCORRÊNCIA -->
 
   <div
     id="modal-gerenciar"
@@ -1285,7 +894,6 @@
   >
 
     <div class="modal-box">
-
 
       <div class="modal-header">
 
@@ -1301,7 +909,6 @@
           ></div>
 
         </div>
-
 
         <button
           type="button"
@@ -1380,20 +987,20 @@
         </label>
 
 
+        <!-- FOTO SOMENTE AO CONCLUIR -->
 
-        <!-- FOTO FINAL -->
-
-        <div class="foto-area">
+        <div
+          id="fotoConclusaoArea"
+          class="foto-area"
+        >
 
           <div class="foto-title">
             📷 Foto após o serviço
           </div>
 
-
           <div class="foto-help">
-            Opcional. Registre o estado do equipamento após o reparo.
+            Opcional. Registre o estado do equipamento após a conclusão do serviço.
           </div>
-
 
           <input
             id="fotoConclusaoInput"
@@ -1401,7 +1008,6 @@
             accept="image/*"
             capture="environment"
           >
-
 
           <div
             id="previewConclusaoContainer"
@@ -1413,12 +1019,10 @@
               class="foto-preview"
             >
 
-
             <div
               id="fotoConclusaoInfo"
               class="foto-info"
             ></div>
-
 
             <div class="foto-actions">
 
@@ -1449,13 +1053,12 @@
               target="_blank"
               rel="noopener noreferrer"
             >
-              📷 Ver foto de conclusão atual
+              ✅ Ver foto de conclusão atual
             </a>
 
           </div>
 
         </div>
-
 
 
         <div
@@ -1487,7 +1090,6 @@
             Cancelar
           </button>
 
-
           <button
             type="button"
             id="btn-salvar-gerenciar"
@@ -1497,7 +1099,6 @@
 
         </div>
 
-
       </div>
 
     </div>
@@ -1506,9 +1107,7 @@
 
 
 
-  <!-- =====================================================
-       FORM NOVA OCORRÊNCIA
-       ===================================================== -->
+  <!-- FORM NOVA OCORRÊNCIA -->
 
   <form
     id="nativePostForm"
@@ -1575,9 +1174,7 @@
 
 
 
-  <!-- =====================================================
-       FORM GERENCIAMENTO
-       ===================================================== -->
+  <!-- FORM GERENCIAMENTO -->
 
   <form
     id="managePostForm"
@@ -1622,7 +1219,6 @@
       id="manage_post_solucao"
     >
 
-
     <input
       type="hidden"
       name="fotoConclusaoBase64"
@@ -1644,12 +1240,10 @@
   </form>
 
 
-
   <iframe
     id="postFrame"
     name="postFrame"
   ></iframe>
-
 
   <iframe
     id="managePostFrame"
@@ -2531,14 +2125,12 @@ function mostrarHistoricoSelecionado(index) {
 
     <div class="history-detail">
 
-
       <div class="history-occurrence">
         ${esc(
           item.ocorrencia ||
           ""
         )}
       </div>
-
 
       <div class="history-date">
         ${esc(
@@ -2548,14 +2140,12 @@ function mostrarHistoricoSelecionado(index) {
         )}
       </div>
 
-
       <div class="history-status-pill">
         ${esc(
           item.status ||
           "Aberta"
         )}
       </div>
-
 
       <div class="history-meta">
 
@@ -2737,7 +2327,6 @@ function mostrarHistoricoSelecionado(index) {
 
       </div>
 
-
     </div>
 
   `;
@@ -2746,7 +2335,7 @@ function mostrarHistoricoSelecionado(index) {
 
 
 /* ============================================================
-   FOTO - PROCESSAMENTO GENÉRICO
+   FOTO GENÉRICA
    ============================================================ */
 
 function processarFoto(file) {
@@ -3230,6 +2819,38 @@ function removerFotoConclusaoSelecionada() {
 
 
 /* ============================================================
+   MOSTRAR / ESCONDER FOTO CONCLUSÃO
+   ============================================================ */
+
+function atualizarVisibilidadeFotoConclusao() {
+
+  const status =
+    el("#manageStatus")
+      .value;
+
+
+  const area =
+    el("#fotoConclusaoArea");
+
+
+  if (
+    status ===
+    "Concluída"
+  ) {
+
+    area.style.display =
+      "block";
+
+  } else {
+
+    area.style.display =
+      "none";
+  }
+}
+
+
+
+/* ============================================================
    GERENCIAMENTO
    ============================================================ */
 
@@ -3362,6 +2983,9 @@ function abrirGerenciamento(index) {
     "";
 
 
+  atualizarVisibilidadeFotoConclusao();
+
+
   el("#modal-gerenciar")
     .style.display =
     "flex";
@@ -3421,6 +3045,25 @@ function salvarGerenciamento() {
     el("#btn-salvar-gerenciar");
 
 
+  /* REGRA AO CONCLUIR */
+
+  if (
+    status === "Concluída" &&
+    !solucao
+  ) {
+
+    msg.className =
+      "form-status status-error";
+
+
+    msg.textContent =
+      "Para concluir a ocorrência, informe a solução ou serviço realizado.";
+
+
+    return;
+  }
+
+
   el("#manage_post_token")
     .value =
     API_TOKEN;
@@ -3447,6 +3090,7 @@ function salvarGerenciamento() {
 
 
   if (
+    status === "Concluída" &&
     fotoConclusaoProcessada
   ) {
 
@@ -3605,7 +3249,7 @@ async function finalizarGerenciamento() {
 
 
 /* ============================================================
-   MODAL NOVO REPORTE
+   NOVA OCORRÊNCIA
    ============================================================ */
 
 function abrirModal() {
@@ -3641,10 +3285,6 @@ function fecharModal() {
 }
 
 
-
-/* ============================================================
-   NOVO REPORTE
-   ============================================================ */
 
 function limparFormularioReporte() {
 
@@ -3915,7 +3555,6 @@ el("#postFrame")
   );
 
 
-
 el("#managePostFrame")
   .addEventListener(
 
@@ -3995,6 +3634,13 @@ document.addEventListener(
           );
 
         }
+      );
+
+
+    el("#manageStatus")
+      .addEventListener(
+        "change",
+        atualizarVisibilidadeFotoConclusao
       );
 
 
