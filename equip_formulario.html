@@ -3,548 +3,874 @@
 
 <head>
 
-  <meta charset="utf-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width,initial-scale=1"
-  >
-
-  <title>
-    Ficha do Equipamento - QRManut
-  </title>
-
-
-  <style>
-
-    :root {
-      --gap:16px;
-    }
-
-    * {
-      box-sizing:border-box;
-    }
-
-    body {
-      font-family:
-        system-ui,
-        -apple-system,
-        Segoe UI,
-        Roboto,
-        Ubuntu,
-        sans-serif;
-
-      max-width:960px;
-      margin:auto;
-      padding:var(--gap);
-      background:#f8f9fb;
-      color:#111827;
-    }
-
-    .card {
-      background:#fff;
-      border:1px solid #e5e7eb;
-      border-radius:16px;
-      padding:var(--gap);
-      box-shadow:0 6px 16px rgba(0,0,0,.05);
-    }
-
-    h1 {
-      font-size:1.25rem;
-      margin:0 0 4px 0;
-    }
-
-    h3 {
-      margin-top:20px;
-      margin-bottom:8px;
-    }
-
-    .muted {
-      color:#6b7280;
-    }
-
-    .grid {
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:var(--gap);
-      margin-top:var(--gap);
-    }
-
-    @media (max-width:780px) {
-      .grid {
-        grid-template-columns:1fr;
-      }
-    }
-
-    .chip {
-      display:inline-block;
-      border:1px solid #b91c1c;
-      border-radius:999px;
-      padding:10px 15px;
-      text-decoration:none;
-      color:#fff;
-      cursor:pointer;
-      background:#dc2626;
-      font-weight:700;
-      box-shadow:0 2px 5px rgba(0,0,0,.12);
-      transition:.2s;
-    }
-
-    .chip:hover {
-      background:#b91c1c;
-      transform:translateY(-1px);
-    }
-
-    .empty {
-      color:#9ca3af;
-    }
-
-    .kv {
-      display:block;
-      margin-top:6px;
-    }
-
-    .kv .pair {
-      padding:8px 0;
-      border-bottom:1px dashed #eee;
-      line-height:1.35;
-    }
-
-    .kv .pair:last-child {
-      border-bottom:0;
-    }
-
-    .kv .pair b {
-      font-weight:600;
-      margin-right:6px;
-    }
-
-    .kv .pair span {
-      word-break:break-word;
-      overflow-wrap:anywhere;
-    }
-
-    .footer {
-      margin-top:var(--gap);
-      font-size:.9rem;
-      color:#6b7280;
-    }
-
-    /* SITUAÇÃO */
-
-    .status-section {
-      margin-top:16px;
-    }
-
-    .status-card {
-      border-radius:14px;
-      padding:14px;
-      border:1px solid #e5e7eb;
-      background:#f9fafb;
-    }
-
-    .status-card.ok {
-      background:#ecfdf5;
-      border-color:#a7f3d0;
-    }
-
-    .status-card.critico {
-      background:#fef2f2;
-      border-color:#fecaca;
-    }
-
-    .status-card.atendimento {
-      background:#fffbeb;
-      border-color:#fde68a;
-    }
-
-    .status-card.aguardando {
-      background:#fff7ed;
-      border-color:#fed7aa;
-    }
-
-    .status-main {
-      display:flex;
-      align-items:flex-start;
-      gap:10px;
-    }
-
-    .status-icon {
-      font-size:1.5rem;
-      line-height:1;
-    }
-
-    .status-title {
-      font-weight:800;
-      font-size:1rem;
-    }
-
-    .status-subtitle {
-      margin-top:3px;
-      font-size:.88rem;
-      color:#6b7280;
-    }
-
-    .status-counts {
-      display:flex;
-      flex-wrap:wrap;
-      gap:6px;
-      margin-top:10px;
-    }
-
-    .status-badge {
-      border:1px solid rgba(0,0,0,.1);
-      border-radius:999px;
-      padding:4px 8px;
-      font-size:.78rem;
-      background:rgba(255,255,255,.7);
-    }
-
-    .status-last {
-      margin-top:11px;
-      padding-top:10px;
-      border-top:1px solid rgba(0,0,0,.08);
-      font-size:.88rem;
-      line-height:1.4;
-    }
-
-    /* HISTÓRICO */
-
-    .history-section {
-      margin-top:22px;
-      border-top:1px solid #e5e7eb;
-      padding-top:18px;
-    }
-
-    .history-header {
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      margin-bottom:12px;
-    }
-
-    .history-title {
-      font-size:1.05rem;
-      font-weight:700;
-      margin:0;
-    }
-
-    .history-count {
-      font-size:.8rem;
-      color:#6b7280;
-    }
-
-    #historicoStatus {
-      font-size:.9rem;
-      color:#6b7280;
-      padding:8px 0;
-    }
-
-    #historicoSelectorArea {
-      display:none;
-    }
-
-    #historicoSelect {
-      width:100%;
-      padding:11px;
-      border:1px solid #d1d5db;
-      border-radius:9px;
-      background:#fff;
-      font:inherit;
-      margin-bottom:12px;
-    }
-
-    .history-detail {
-      border:1px solid #e5e7eb;
-      border-radius:12px;
-      padding:14px;
-      background:#fafafa;
-    }
-
-    .history-occurrence {
-      font-size:.88rem;
-      font-weight:800;
-      color:#374151;
-      margin-bottom:4px;
-    }
-
-    .history-date {
-      font-weight:700;
-      margin-bottom:5px;
-    }
-
-    .history-meta {
-      font-size:.85rem;
-      color:#6b7280;
-      margin-top:5px;
-    }
-
-    .history-description {
-      margin-top:12px;
-      line-height:1.45;
-      white-space:pre-wrap;
-    }
-
-    .history-solution {
-      margin-top:12px;
-      padding-top:10px;
-      border-top:1px dashed #d1d5db;
-      line-height:1.45;
-      white-space:pre-wrap;
-    }
-
-    .history-photo {
-      margin-top:12px;
-    }
-
-    .history-photo a {
-      display:inline-block;
-      text-decoration:none;
-      padding:8px 12px;
-      border:1px solid #d1d5db;
-      border-radius:8px;
-      color:#111827;
-      background:#fff;
-      font-size:.9rem;
-      margin-right:8px;
-      margin-bottom:6px;
-    }
-
-    .history-photo-conclusion a {
-      border-color:#86efac;
-      background:#f0fdf4;
-      color:#166534;
-    }
-
-    .history-status-pill {
-      display:inline-block;
-      margin:6px 0;
-      padding:5px 9px;
-      border-radius:999px;
-      font-size:.78rem;
-      font-weight:700;
-      border:1px solid #d1d5db;
-      background:#fff;
-    }
-
-    .manage-area {
-      margin-top:14px;
-      padding-top:12px;
-      border-top:1px solid #e5e7eb;
-    }
-
-    .btn-manage {
-      width:100%;
-      background:#1f4e78;
-      font-weight:700;
-    }
-
-    .btn-manage:hover {
-      background:#173b5d;
-    }
-
-    /* MODAIS */
-
-    .modal {
-      position:fixed;
-      inset:0;
-      background:rgba(0,0,0,.45);
-      display:none;
-      align-items:center;
-      justify-content:center;
-      z-index:9999;
-      padding:12px;
-    }
-
-    .modal-box {
-      background:#fff;
-      width:min(680px,94vw);
-      max-height:90vh;
-      overflow-y:auto;
-      border-radius:14px;
-      padding:16px;
-      border:1px solid #e5e7eb;
-      box-shadow:0 10px 30px rgba(0,0,0,.15);
-    }
-
-    .modal-header {
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      margin-bottom:14px;
-    }
-
-    .modal-header h2 {
-      margin:0;
-      font-size:1.1rem;
-    }
-
-    .row {
-      display:grid;
-      gap:12px;
-    }
-
-    label {
-      display:grid;
-      gap:6px;
-      font-weight:500;
-    }
-
-    input[type="text"],
-    textarea,
-    select {
-      width:100%;
-      padding:12px;
-      border:1px solid #d1d5db;
-      border-radius:10px;
-      font:inherit;
-      background:#fff;
-    }
-
-    textarea {
-      resize:vertical;
-    }
-
-    button {
-      padding:12px 16px;
-      border:0;
-      border-radius:10px;
-      background:#111827;
-      color:#fff;
-      cursor:pointer;
-      font:inherit;
-    }
-
-    button:disabled {
-      opacity:.55;
-      cursor:not-allowed;
-    }
-
-    .btn-secondary {
-      background:#e5e7eb;
-      color:#111827;
-    }
-
-    .modal-buttons {
-      display:flex;
-      gap:10px;
-      justify-content:flex-end;
-      margin-top:8px;
-    }
-
-    /* FOTO */
-
-    .foto-area {
-      border:1px solid #e5e7eb;
-      border-radius:12px;
-      padding:12px;
-      background:#f9fafb;
-    }
-
-    .foto-title {
-      font-weight:600;
-      margin-bottom:8px;
-    }
-
-    .foto-help {
-      font-size:.85rem;
-      color:#6b7280;
-      margin:4px 0 10px 0;
-    }
-
-    .preview-container {
-      display:none;
-      margin-top:12px;
-      text-align:center;
-    }
-
-    .foto-preview {
-      display:block;
-      max-width:100%;
-      max-height:320px;
-      margin:0 auto;
-      border-radius:10px;
-      border:1px solid #d1d5db;
-      object-fit:contain;
-      background:#fff;
-    }
-
-    .foto-info {
-      margin-top:7px;
-      font-size:.8rem;
-      color:#6b7280;
-      word-break:break-word;
-    }
-
-    .foto-actions {
-      margin-top:10px;
-      display:flex;
-      justify-content:center;
-    }
-
-    .btn-remove-foto {
-      background:#ef4444;
-      padding:8px 12px;
-      font-size:.85rem;
-    }
-
-    #fotoConclusaoArea {
-      display:none;
-    }
-
-    /* MENSAGENS */
-
-    .form-status {
-      display:none;
-      margin-top:10px;
-      padding:10px;
-      border-radius:8px;
-      font-size:.9rem;
-    }
-
-    .status-loading {
-      display:block !important;
-      background:#fef3c7;
-      color:#92400e;
-    }
-
-    .status-success {
-      display:block !important;
-      background:#d1fae5;
-      color:#065f46;
-    }
-
-    .status-error {
-      display:block !important;
-      background:#fee2e2;
-      color:#991b1b;
-    }
-
-    iframe {
-      display:none;
-      width:0;
-      height:0;
-      border:0;
-    }
-
-    @media (max-width:600px) {
-
-      .modal-buttons {
-        flex-direction:column-reverse;
-      }
-
-      .modal-buttons button {
-        width:100%;
-      }
-
-      .history-header {
-        align-items:flex-start;
-      }
-    }
-
-  </style>
+<meta charset="utf-8">
+
+<meta
+  name="viewport"
+  content="width=device-width,initial-scale=1"
+>
+
+<title>QRManut - Ficha do Ativo</title>
+
+
+<style>
+
+:root {
+  --gap:16px;
+}
+
+* {
+  box-sizing:border-box;
+}
+
+body {
+
+  font-family:
+    system-ui,
+    -apple-system,
+    Segoe UI,
+    Roboto,
+    Ubuntu,
+    sans-serif;
+
+  max-width:960px;
+
+  margin:auto;
+
+  padding:var(--gap);
+
+  background:#f8f9fb;
+
+  color:#111827;
+}
+
+
+.card {
+
+  background:#fff;
+
+  border:1px solid #e5e7eb;
+
+  border-radius:16px;
+
+  padding:var(--gap);
+
+  box-shadow:
+    0 6px 16px
+    rgba(0,0,0,.05);
+}
+
+
+h1 {
+
+  font-size:1.3rem;
+
+  margin:0 0 4px 0;
+}
+
+
+h3 {
+
+  margin-top:18px;
+
+  margin-bottom:8px;
+
+  font-size:1rem;
+}
+
+
+.muted {
+  color:#6b7280;
+}
+
+
+.section {
+
+  margin-top:18px;
+
+  padding-top:14px;
+
+  border-top:
+    1px solid
+    #e5e7eb;
+}
+
+
+.kv {
+
+  display:block;
+
+  margin-top:6px;
+}
+
+
+.kv .pair {
+
+  padding:7px 0;
+
+  border-bottom:
+    1px dashed
+    #eee;
+
+  line-height:1.35;
+}
+
+
+.kv .pair:last-child {
+  border-bottom:0;
+}
+
+
+.kv .pair b {
+
+  font-weight:600;
+
+  margin-right:6px;
+}
+
+
+.kv .pair span {
+
+  word-break:break-word;
+
+  overflow-wrap:anywhere;
+}
+
+
+.grid {
+
+  display:grid;
+
+  grid-template-columns:
+    1fr 1fr;
+
+  gap:18px;
+}
+
+
+@media(max-width:780px) {
+
+  .grid {
+    grid-template-columns:1fr;
+  }
+}
+
+
+.badge-asset {
+
+  display:inline-block;
+
+  margin-top:7px;
+
+  padding:5px 9px;
+
+  border-radius:999px;
+
+  background:#e8eef8;
+
+  color:#1f4e78;
+
+  font-size:.8rem;
+
+  font-weight:700;
+}
+
+
+.chip {
+
+  display:inline-block;
+
+  border:
+    1px solid
+    #b91c1c;
+
+  border-radius:999px;
+
+  padding:11px 16px;
+
+  text-decoration:none;
+
+  color:#fff;
+
+  cursor:pointer;
+
+  background:#dc2626;
+
+  font-weight:700;
+
+  box-shadow:
+    0 2px 5px
+    rgba(0,0,0,.12);
+}
+
+
+.status-section {
+  margin-top:16px;
+}
+
+
+.status-card {
+
+  border-radius:14px;
+
+  padding:14px;
+
+  border:
+    1px solid
+    #e5e7eb;
+
+  background:#f9fafb;
+}
+
+
+.status-card.ok {
+
+  background:#ecfdf5;
+
+  border-color:#a7f3d0;
+}
+
+
+.status-card.critico {
+
+  background:#fef2f2;
+
+  border-color:#fecaca;
+}
+
+
+.status-card.atendimento {
+
+  background:#fffbeb;
+
+  border-color:#fde68a;
+}
+
+
+.status-card.aguardando {
+
+  background:#fff7ed;
+
+  border-color:#fed7aa;
+}
+
+
+.status-main {
+
+  display:flex;
+
+  gap:10px;
+
+  align-items:flex-start;
+}
+
+
+.status-icon {
+
+  font-size:1.5rem;
+
+  line-height:1;
+}
+
+
+.status-title {
+
+  font-weight:800;
+}
+
+
+.status-subtitle {
+
+  font-size:.88rem;
+
+  color:#6b7280;
+
+  margin-top:3px;
+}
+
+
+.status-counts {
+
+  display:flex;
+
+  flex-wrap:wrap;
+
+  gap:6px;
+
+  margin-top:10px;
+}
+
+
+.status-badge {
+
+  border:
+    1px solid
+    rgba(0,0,0,.1);
+
+  border-radius:999px;
+
+  padding:4px 8px;
+
+  font-size:.78rem;
+
+  background:
+    rgba(255,255,255,.7);
+}
+
+
+.status-last {
+
+  margin-top:11px;
+
+  padding-top:10px;
+
+  border-top:
+    1px solid
+    rgba(0,0,0,.08);
+
+  font-size:.88rem;
+}
+
+
+/* HISTÓRICO */
+
+.history-section {
+
+  margin-top:22px;
+
+  border-top:
+    1px solid
+    #e5e7eb;
+
+  padding-top:18px;
+}
+
+
+.history-header {
+
+  display:flex;
+
+  justify-content:space-between;
+
+  gap:12px;
+
+  margin-bottom:12px;
+}
+
+
+.history-title {
+
+  font-size:1.05rem;
+
+  font-weight:700;
+
+  margin:0;
+}
+
+
+.history-count {
+
+  font-size:.8rem;
+
+  color:#6b7280;
+}
+
+
+#historicoSelectorArea {
+  display:none;
+}
+
+
+#historicoSelect {
+
+  width:100%;
+
+  padding:11px;
+
+  border:
+    1px solid
+    #d1d5db;
+
+  border-radius:9px;
+
+  background:#fff;
+
+  font:inherit;
+
+  margin-bottom:12px;
+}
+
+
+.history-detail {
+
+  border:
+    1px solid
+    #e5e7eb;
+
+  border-radius:12px;
+
+  padding:14px;
+
+  background:#fafafa;
+}
+
+
+.history-occurrence {
+
+  font-weight:800;
+
+  color:#374151;
+}
+
+
+.history-date {
+
+  font-weight:700;
+
+  margin-top:4px;
+}
+
+
+.history-meta {
+
+  font-size:.85rem;
+
+  color:#6b7280;
+
+  margin-top:5px;
+}
+
+
+.history-description {
+
+  margin-top:12px;
+
+  line-height:1.45;
+}
+
+
+.history-solution {
+
+  margin-top:12px;
+
+  padding-top:10px;
+
+  border-top:
+    1px dashed
+    #d1d5db;
+}
+
+
+.history-status-pill {
+
+  display:inline-block;
+
+  margin:6px 0;
+
+  padding:5px 9px;
+
+  border-radius:999px;
+
+  font-size:.78rem;
+
+  font-weight:700;
+
+  border:
+    1px solid
+    #d1d5db;
+
+  background:#fff;
+}
+
+
+.history-photo {
+
+  margin-top:10px;
+}
+
+
+.history-photo a {
+
+  display:inline-block;
+
+  padding:8px 12px;
+
+  border:
+    1px solid
+    #d1d5db;
+
+  border-radius:8px;
+
+  text-decoration:none;
+
+  color:#111827;
+
+  background:#fff;
+}
+
+
+.history-photo-conclusion a {
+
+  border-color:#86efac;
+
+  background:#f0fdf4;
+
+  color:#166534;
+}
+
+
+.manage-area {
+
+  margin-top:14px;
+
+  padding-top:12px;
+
+  border-top:
+    1px solid
+    #e5e7eb;
+}
+
+
+.btn-manage {
+
+  width:100%;
+
+  background:#1f4e78;
+
+  font-weight:700;
+}
+
+
+/* MODAIS */
+
+.modal {
+
+  position:fixed;
+
+  inset:0;
+
+  background:
+    rgba(0,0,0,.45);
+
+  display:none;
+
+  align-items:center;
+
+  justify-content:center;
+
+  z-index:9999;
+
+  padding:12px;
+}
+
+
+.modal-box {
+
+  background:#fff;
+
+  width:min(
+    680px,
+    94vw
+  );
+
+  max-height:90vh;
+
+  overflow-y:auto;
+
+  border-radius:14px;
+
+  padding:16px;
+
+  border:
+    1px solid
+    #e5e7eb;
+}
+
+
+.modal-header {
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:space-between;
+
+  gap:12px;
+
+  margin-bottom:14px;
+}
+
+
+.modal-header h2 {
+
+  margin:0;
+
+  font-size:1.1rem;
+}
+
+
+.row {
+
+  display:grid;
+
+  gap:12px;
+}
+
+
+label {
+
+  display:grid;
+
+  gap:6px;
+
+  font-weight:500;
+}
+
+
+input[type="text"],
+textarea,
+select {
+
+  width:100%;
+
+  padding:12px;
+
+  border:
+    1px solid
+    #d1d5db;
+
+  border-radius:10px;
+
+  font:inherit;
+
+  background:#fff;
+}
+
+
+textarea {
+  resize:vertical;
+}
+
+
+button {
+
+  padding:12px 16px;
+
+  border:0;
+
+  border-radius:10px;
+
+  background:#111827;
+
+  color:#fff;
+
+  cursor:pointer;
+
+  font:inherit;
+}
+
+
+button:disabled {
+
+  opacity:.55;
+
+  cursor:not-allowed;
+}
+
+
+.btn-secondary {
+
+  background:#e5e7eb;
+
+  color:#111827;
+}
+
+
+.modal-buttons {
+
+  display:flex;
+
+  gap:10px;
+
+  justify-content:flex-end;
+
+  margin-top:8px;
+}
+
+
+/* FOTO */
+
+.foto-area {
+
+  border:
+    1px solid
+    #e5e7eb;
+
+  border-radius:12px;
+
+  padding:12px;
+
+  background:#f9fafb;
+}
+
+
+.foto-title {
+
+  font-weight:600;
+
+  margin-bottom:8px;
+}
+
+
+.foto-help {
+
+  font-size:.85rem;
+
+  color:#6b7280;
+
+  margin-bottom:10px;
+}
+
+
+.preview-container {
+
+  display:none;
+
+  margin-top:12px;
+
+  text-align:center;
+}
+
+
+.foto-preview {
+
+  display:block;
+
+  max-width:100%;
+
+  max-height:320px;
+
+  margin:auto;
+
+  border-radius:10px;
+
+  border:
+    1px solid
+    #d1d5db;
+}
+
+
+.foto-info {
+
+  margin-top:7px;
+
+  font-size:.8rem;
+
+  color:#6b7280;
+}
+
+
+.foto-actions {
+
+  margin-top:10px;
+}
+
+
+.btn-remove-foto {
+
+  background:#ef4444;
+
+  padding:8px 12px;
+}
+
+
+#fotoConclusaoArea {
+  display:none;
+}
+
+
+/* MENSAGENS */
+
+.form-status {
+
+  display:none;
+
+  margin-top:10px;
+
+  padding:10px;
+
+  border-radius:8px;
+
+  font-size:.9rem;
+}
+
+
+.status-loading {
+
+  display:block !important;
+
+  background:#fef3c7;
+
+  color:#92400e;
+}
+
+
+.status-success {
+
+  display:block !important;
+
+  background:#d1fae5;
+
+  color:#065f46;
+}
+
+
+.status-error {
+
+  display:block !important;
+
+  background:#fee2e2;
+
+  color:#991b1b;
+}
+
+
+.footer {
+
+  margin-top:18px;
+
+  font-size:.85rem;
+
+  color:#6b7280;
+}
+
+
+iframe {
+
+  display:none;
+
+  width:0;
+
+  height:0;
+
+  border:0;
+}
+
+
+@media(max-width:600px) {
+
+  .modal-buttons {
+
+    flex-direction:
+      column-reverse;
+  }
+
+  .modal-buttons button {
+    width:100%;
+  }
+}
+
+</style>
 
 </head>
 
@@ -552,703 +878,767 @@
 <body>
 
 
-  <div class="card">
+<div class="card">
 
-    <h1 id="titulo">
-      Carregando…
-    </h1>
 
-    <div
-      id="meta"
-      class="muted"
-    ></div>
+<h1 id="titulo">
+  Carregando…
+</h1>
 
 
-    <section class="status-section">
+<div
+  id="meta"
+  class="muted"
+></div>
 
-      <div
-        id="equipStatusCard"
-        class="status-card"
-      >
 
-        <div class="status-main">
+<div
+  id="tipoBadge"
+  class="badge-asset"
+  style="display:none"
+></div>
 
-          <div
-            id="equipStatusIcon"
-            class="status-icon"
-          >
-            ⚪
-          </div>
 
-          <div>
 
-            <div
-              id="equipStatusTitle"
-              class="status-title"
-            >
-              Carregando situação…
-            </div>
+<!-- SITUAÇÃO -->
 
-            <div
-              id="equipStatusSubtitle"
-              class="status-subtitle"
-            ></div>
+<section class="status-section">
 
-          </div>
+<div
+  id="equipStatusCard"
+  class="status-card"
+>
 
-        </div>
+<div class="status-main">
 
-        <div
-          id="equipStatusCounts"
-          class="status-counts"
-        ></div>
+<div
+  id="equipStatusIcon"
+  class="status-icon"
+>
+⚪
+</div>
 
-        <div
-          id="equipStatusLast"
-          class="status-last"
-          style="display:none"
-        ></div>
 
-      </div>
+<div>
 
-    </section>
+<div
+  id="equipStatusTitle"
+  class="status-title"
+>
+Carregando situação…
+</div>
 
+<div
+  id="equipStatusSubtitle"
+  class="status-subtitle"
+></div>
 
-    <div class="grid">
+</div>
 
-      <div>
+</div>
 
-        <h3>
-          Características
-        </h3>
 
-        <div
-          id="carac"
-          class="kv"
-        ></div>
+<div
+  id="equipStatusCounts"
+  class="status-counts"
+></div>
 
-        <h3>
-          Plano Preventivo
-        </h3>
 
-        <div
-          id="pp"
-          class="empty"
-        >
-          -
-        </div>
+<div
+  id="equipStatusLast"
+  class="status-last"
+  style="display:none"
+></div>
 
-        <h3>
-          Localização
-        </h3>
+</div>
 
-        <div
-          id="localizacao"
-          class="empty"
-        >
-          -
-        </div>
+</section>
 
-      </div>
 
 
-      <div>
+<!-- CLASSIFICAÇÃO -->
 
-        <h3>
-          Responsável / Prestador
-        </h3>
+<section
+  id="secClassificacao"
+  class="section"
+  style="display:none"
+>
 
-        <div
-          id="resp"
-          class="empty"
-        >
-          -
-        </div>
+<h3>
+Classificação do Ativo
+</h3>
 
-      </div>
+<div
+  id="classificacao"
+  class="kv"
+></div>
 
-    </div>
+</section>
 
 
-    <p style="margin-top:18px">
 
-      <a
-        id="reportar"
-        class="chip"
-      >
-        Reportar Serviço/Anomalia/Reparo
-      </a>
+<!-- LOCALIZAÇÃO -->
 
-    </p>
+<section
+  id="secLocalizacao"
+  class="section"
+  style="display:none"
+>
 
+<h3>
+Localização
+</h3>
 
-    <section class="history-section">
+<div
+  id="dadosLocalizacao"
+  class="kv"
+></div>
 
-      <div class="history-header">
+</section>
 
-        <h2 class="history-title">
-          Histórico de Manutenção
-        </h2>
 
-        <span
-          id="historicoCount"
-          class="history-count"
-        ></span>
 
-      </div>
+<!-- TÉCNICO -->
 
-      <div id="historicoStatus">
-        Carregando histórico…
-      </div>
+<section
+  id="secTecnica"
+  class="section"
+  style="display:none"
+>
 
-      <div id="historicoSelectorArea">
+<h3>
+Características Técnicas
+</h3>
 
-        <label
-          for="historicoSelect"
-          style="
-            display:block;
-            font-size:.85rem;
-            font-weight:600;
-            margin-bottom:6px;
-          "
-        >
-          Selecione uma ocorrência
-        </label>
+<div
+  id="dadosTecnicos"
+  class="kv"
+></div>
 
-        <select id="historicoSelect"></select>
+</section>
 
-        <div id="historicoDetalhe"></div>
 
-      </div>
 
-    </section>
+<!-- MANUTENÇÃO -->
 
+<section class="section">
 
-    <p style="font-size:7px;">
-      JCPG-2026 - Ver.:2.3
-    </p>
+<h3>
+Gestão do Ativo
+</h3>
 
-    <div
-      class="footer"
-      id="ft"
-    ></div>
+<div
+  id="dadosGestao"
+  class="kv"
+></div>
 
-  </div>
+</section>
 
 
 
-  <!-- NOVA OCORRÊNCIA -->
+<p style="margin-top:18px">
 
-  <div
-    id="modal-anomalia"
-    class="modal"
-  >
+<a
+  id="reportar"
+  class="chip"
+>
+Reportar Serviço / Anomalia / Reparo
+</a>
 
-    <div class="modal-box">
+</p>
 
-      <div class="modal-header">
 
-        <h2>
-          Reportar Serviço, Anomalia ou Reparo
-        </h2>
 
-        <button
-          type="button"
-          class="btn-secondary"
-          id="fechar-modal"
-        >
-          Fechar
-        </button>
+<!-- HISTÓRICO -->
 
-      </div>
+<section class="history-section">
 
-      <div class="row">
+<div class="history-header">
 
-        <label>
+<h2 class="history-title">
+Histórico de Manutenção
+</h2>
 
-          <span>
-            Seu nome *
-          </span>
+<span
+  id="historicoCount"
+  class="history-count"
+></span>
 
-          <input
-            id="nome"
-            type="text"
-          >
+</div>
 
-        </label>
 
-        <label>
+<div
+  id="historicoStatus"
+  class="muted"
+>
+Carregando histórico…
+</div>
 
-          <span>
-            Contato
-          </span>
 
-          <input
-            id="contato"
-            type="text"
-          >
+<div id="historicoSelectorArea">
 
-        </label>
+<label
+  for="historicoSelect"
+  style="
+    display:block;
+    font-size:.85rem;
+    font-weight:600;
+    margin-bottom:6px;
+  "
+>
+Selecione uma ocorrência
+</label>
 
-        <label>
 
-          <span>
-            Descrição *
-          </span>
+<select id="historicoSelect"></select>
 
-          <textarea
-            id="descricao"
-            rows="5"
-          ></textarea>
 
-        </label>
+<div id="historicoDetalhe"></div>
 
+</div>
 
-        <div class="foto-area">
+</section>
 
-          <div class="foto-title">
-            📷 Foto da ocorrência
-          </div>
 
-          <div class="foto-help">
-            Opcional.
-          </div>
+<p style="font-size:7px">
+JCPG-2026 - Ver.:3.0
+</p>
 
-          <input
-            id="fotoInput"
-            type="file"
-            accept="image/*"
-            capture="environment"
-          >
 
-          <div
-            id="previewContainer"
-            class="preview-container"
-          >
+<div
+  id="ft"
+  class="footer"
+></div>
 
-            <img
-              id="fotoPreview"
-              class="foto-preview"
-            >
+</div>
 
-            <div
-              id="fotoInfo"
-              class="foto-info"
-            ></div>
 
-            <div class="foto-actions">
 
-              <button
-                type="button"
-                class="btn-remove-foto"
-                id="removerFoto"
-              >
-                Remover foto
-              </button>
+<!-- ========================================================
+     MODAL NOVA OCORRÊNCIA
+     ======================================================== -->
 
-            </div>
+<div
+  id="modal-anomalia"
+  class="modal"
+>
 
-          </div>
+<div class="modal-box">
 
-        </div>
 
+<div class="modal-header">
 
-        <div
-          id="status-reporte"
-          class="form-status"
-        ></div>
+<h2>
+Reportar Serviço, Anomalia ou Reparo
+</h2>
 
+<button
+  type="button"
+  class="btn-secondary"
+  id="fechar-modal"
+>
+Fechar
+</button>
 
-        <div class="modal-buttons">
+</div>
 
-          <button
-            type="button"
-            class="btn-secondary"
-            id="cancelar-modal"
-          >
-            Cancelar
-          </button>
 
-          <button
-            type="button"
-            id="btn-enviar"
-          >
-            Enviar
-          </button>
+<div class="row">
 
-        </div>
 
-      </div>
+<label>
 
-    </div>
+<span>
+Seu nome *
+</span>
 
-  </div>
+<input
+  id="nome"
+  type="text"
+>
 
+</label>
 
 
-  <!-- GERENCIAR OCORRÊNCIA -->
+<label>
 
-  <div
-    id="modal-gerenciar"
-    class="modal"
-  >
+<span>
+Contato
+</span>
 
-    <div class="modal-box">
+<input
+  id="contato"
+  type="text"
+>
 
-      <div class="modal-header">
+</label>
 
-        <div>
 
-          <h2>
-            Gerenciar ocorrência
-          </h2>
+<label>
 
-          <div
-            id="manageOccurrenceTitle"
-            class="muted"
-          ></div>
+<span>
+Descrição *
+</span>
 
-        </div>
+<textarea
+  id="descricao"
+  rows="5"
+  placeholder="Descreva o problema, serviço ou reparo..."
+></textarea>
 
-        <button
-          type="button"
-          class="btn-secondary"
-          id="fechar-gerenciar"
-        >
-          Fechar
-        </button>
+</label>
 
-      </div>
 
+<div class="foto-area">
 
-      <div class="row">
+<div class="foto-title">
+📷 Foto da ocorrência
+</div>
 
+<div class="foto-help">
+Opcional.
+</div>
 
-        <label>
+<input
+  id="fotoInput"
+  type="file"
+  accept="image/*"
+  capture="environment"
+>
 
-          <span>
-            Status
-          </span>
 
-          <select id="manageStatus">
+<div
+  id="previewContainer"
+  class="preview-container"
+>
 
-            <option value="Aberta">
-              Aberta
-            </option>
+<img
+  id="fotoPreview"
+  class="foto-preview"
+>
 
-            <option value="Em atendimento">
-              Em atendimento
-            </option>
+<div
+  id="fotoInfo"
+  class="foto-info"
+></div>
 
-            <option value="Aguardando peça">
-              Aguardando peça
-            </option>
+<div class="foto-actions">
 
-            <option value="Concluída">
-              Concluída
-            </option>
+<button
+  type="button"
+  class="btn-remove-foto"
+  id="removerFoto"
+>
+Remover foto
+</button>
 
-            <option value="Cancelada">
-              Cancelada
-            </option>
+</div>
 
-          </select>
+</div>
 
-        </label>
+</div>
 
 
-        <label>
+<div
+  id="status-reporte"
+  class="form-status"
+></div>
 
-          <span>
-            Responsável
-          </span>
 
-          <input
-            id="manageResponsavel"
-            type="text"
-            placeholder="Nome do técnico"
-          >
+<div class="modal-buttons">
 
-        </label>
+<button
+  type="button"
+  class="btn-secondary"
+  id="cancelar-modal"
+>
+Cancelar
+</button>
 
+<button
+  type="button"
+  id="btn-enviar"
+>
+Enviar
+</button>
 
-        <label>
+</div>
 
-          <span>
-            Solução / Serviço realizado
-          </span>
+</div>
 
-          <textarea
-            id="manageSolucao"
-            rows="6"
-            placeholder="Descreva o serviço realizado..."
-          ></textarea>
+</div>
 
-        </label>
+</div>
 
 
-        <!-- FOTO SOMENTE AO CONCLUIR -->
 
-        <div
-          id="fotoConclusaoArea"
-          class="foto-area"
-        >
+<!-- ========================================================
+     MODAL GERENCIAR
+     ======================================================== -->
 
-          <div class="foto-title">
-            📷 Foto após o serviço
-          </div>
+<div
+  id="modal-gerenciar"
+  class="modal"
+>
 
-          <div class="foto-help">
-            Opcional. Registre o estado do equipamento após a conclusão do serviço.
-          </div>
+<div class="modal-box">
 
-          <input
-            id="fotoConclusaoInput"
-            type="file"
-            accept="image/*"
-            capture="environment"
-          >
 
-          <div
-            id="previewConclusaoContainer"
-            class="preview-container"
-          >
+<div class="modal-header">
 
-            <img
-              id="fotoConclusaoPreview"
-              class="foto-preview"
-            >
+<div>
 
-            <div
-              id="fotoConclusaoInfo"
-              class="foto-info"
-            ></div>
+<h2>
+Gerenciar ocorrência
+</h2>
 
-            <div class="foto-actions">
+<div
+  id="manageOccurrenceTitle"
+  class="muted"
+></div>
 
-              <button
-                type="button"
-                class="btn-remove-foto"
-                id="removerFotoConclusao"
-              >
-                Remover foto
-              </button>
+</div>
 
-            </div>
+<button
+  type="button"
+  class="btn-secondary"
+  id="fechar-gerenciar"
+>
+Fechar
+</button>
 
-          </div>
+</div>
 
 
-          <div
-            id="fotoConclusaoExistente"
-            style="
-              display:none;
-              margin-top:10px;
-              font-size:.85rem;
-            "
-          >
+<div class="row">
 
-            <a
-              id="linkFotoConclusaoExistente"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              ✅ Ver foto de conclusão atual
-            </a>
 
-          </div>
+<label>
 
-        </div>
+<span>
+Status
+</span>
 
+<select id="manageStatus">
 
-        <div
-          id="manageCurrentInfo"
-          style="
-            background:#f9fafb;
-            border:1px solid #e5e7eb;
-            border-radius:10px;
-            padding:10px;
-            font-size:.85rem;
-            color:#6b7280;
-          "
-        ></div>
+<option value="Aberta">
+Aberta
+</option>
 
+<option value="Em atendimento">
+Em atendimento
+</option>
 
-        <div
-          id="status-gerenciar"
-          class="form-status"
-        ></div>
+<option value="Aguardando peça">
+Aguardando peça
+</option>
 
+<option value="Concluída">
+Concluída
+</option>
 
-        <div class="modal-buttons">
+<option value="Cancelada">
+Cancelada
+</option>
 
-          <button
-            type="button"
-            class="btn-secondary"
-            id="cancelar-gerenciar"
-          >
-            Cancelar
-          </button>
+</select>
 
-          <button
-            type="button"
-            id="btn-salvar-gerenciar"
-          >
-            Salvar alterações
-          </button>
+</label>
 
-        </div>
 
-      </div>
+<label>
 
-    </div>
+<span>
+Responsável
+</span>
 
-  </div>
+<input
+  id="manageResponsavel"
+  type="text"
+  placeholder="Nome do técnico ou responsável"
+>
 
+</label>
 
 
-  <!-- FORM NOVA OCORRÊNCIA -->
+<label>
 
-  <form
-    id="nativePostForm"
-    method="POST"
-    target="postFrame"
-    style="display:none"
-  >
+<span>
+Solução / Serviço realizado
+</span>
 
-    <input
-      type="hidden"
-      name="token"
-      id="post_token"
-    >
+<textarea
+  id="manageSolucao"
+  rows="6"
+  placeholder="Descreva o serviço realizado..."
+></textarea>
 
-    <input
-      type="hidden"
-      name="id"
-      id="post_id"
-    >
+</label>
 
-    <input
-      type="hidden"
-      name="nomeEquipamento"
-      id="post_nomeEquipamento"
-    >
 
-    <input
-      type="hidden"
-      name="reportadoPor"
-      id="post_reportadoPor"
-    >
 
-    <input
-      type="hidden"
-      name="contato"
-      id="post_contato"
-    >
+<!-- FOTO CONCLUSÃO -->
 
-    <input
-      type="hidden"
-      name="descricao"
-      id="post_descricao"
-    >
+<div
+  id="fotoConclusaoArea"
+  class="foto-area"
+>
 
-    <input
-      type="hidden"
-      name="fotoBase64"
-      id="post_fotoBase64"
-    >
+<div class="foto-title">
+📷 Foto após o serviço
+</div>
 
-    <input
-      type="hidden"
-      name="fotoNome"
-      id="post_fotoNome"
-    >
+<div class="foto-help">
+Opcional. Disponível quando a ocorrência for concluída.
+</div>
 
-    <input
-      type="hidden"
-      name="fotoMime"
-      id="post_fotoMime"
-    >
+<input
+  id="fotoConclusaoInput"
+  type="file"
+  accept="image/*"
+  capture="environment"
+>
 
-  </form>
 
+<div
+  id="previewConclusaoContainer"
+  class="preview-container"
+>
 
+<img
+  id="fotoConclusaoPreview"
+  class="foto-preview"
+>
 
-  <!-- FORM GERENCIAMENTO -->
+<div
+  id="fotoConclusaoInfo"
+  class="foto-info"
+></div>
 
-  <form
-    id="managePostForm"
-    method="POST"
-    target="managePostFrame"
-    style="display:none"
-  >
+<div class="foto-actions">
 
-    <input
-      type="hidden"
-      name="action"
-      value="updateOccurrence"
-    >
+<button
+  type="button"
+  class="btn-remove-foto"
+  id="removerFotoConclusao"
+>
+Remover foto
+</button>
 
-    <input
-      type="hidden"
-      name="token"
-      id="manage_post_token"
-    >
+</div>
 
-    <input
-      type="hidden"
-      name="ocorrencia"
-      id="manage_post_ocorrencia"
-    >
+</div>
 
-    <input
-      type="hidden"
-      name="status"
-      id="manage_post_status"
-    >
 
-    <input
-      type="hidden"
-      name="responsavel"
-      id="manage_post_responsavel"
-    >
+<div
+  id="fotoConclusaoExistente"
+  style="
+    display:none;
+    margin-top:10px;
+  "
+>
 
-    <input
-      type="hidden"
-      name="solucao"
-      id="manage_post_solucao"
-    >
+<a
+  id="linkFotoConclusaoExistente"
+  target="_blank"
+>
+✅ Ver foto de conclusão atual
+</a>
 
-    <input
-      type="hidden"
-      name="fotoConclusaoBase64"
-      id="manage_post_fotoConclusaoBase64"
-    >
+</div>
 
-    <input
-      type="hidden"
-      name="fotoConclusaoNome"
-      id="manage_post_fotoConclusaoNome"
-    >
+</div>
 
-    <input
-      type="hidden"
-      name="fotoConclusaoMime"
-      id="manage_post_fotoConclusaoMime"
-    >
 
-  </form>
+<div
+  id="manageCurrentInfo"
+  style="
+    background:#f9fafb;
+    border:1px solid #e5e7eb;
+    border-radius:10px;
+    padding:10px;
+    font-size:.85rem;
+    color:#6b7280;
+  "
+></div>
 
 
-  <iframe
-    id="postFrame"
-    name="postFrame"
-  ></iframe>
+<div
+  id="status-gerenciar"
+  class="form-status"
+></div>
 
-  <iframe
-    id="managePostFrame"
-    name="managePostFrame"
-  ></iframe>
+
+<div class="modal-buttons">
+
+<button
+  type="button"
+  class="btn-secondary"
+  id="cancelar-gerenciar"
+>
+Cancelar
+</button>
+
+<button
+  type="button"
+  id="btn-salvar-gerenciar"
+>
+Salvar alterações
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<!-- FORM NOVA OCORRÊNCIA -->
+
+<form
+  id="nativePostForm"
+  method="POST"
+  target="postFrame"
+  style="display:none"
+>
+
+<input
+  type="hidden"
+  name="token"
+  id="post_token"
+>
+
+<input
+  type="hidden"
+  name="id"
+  id="post_id"
+>
+
+<input
+  type="hidden"
+  name="nomeEquipamento"
+  id="post_nomeEquipamento"
+>
+
+<input
+  type="hidden"
+  name="reportadoPor"
+  id="post_reportadoPor"
+>
+
+<input
+  type="hidden"
+  name="contato"
+  id="post_contato"
+>
+
+<input
+  type="hidden"
+  name="descricao"
+  id="post_descricao"
+>
+
+<input
+  type="hidden"
+  name="fotoBase64"
+  id="post_fotoBase64"
+>
+
+<input
+  type="hidden"
+  name="fotoNome"
+  id="post_fotoNome"
+>
+
+<input
+  type="hidden"
+  name="fotoMime"
+  id="post_fotoMime"
+>
+
+</form>
+
+
+
+<!-- FORM GERENCIAMENTO -->
+
+<form
+  id="managePostForm"
+  method="POST"
+  target="managePostFrame"
+  style="display:none"
+>
+
+<input
+  type="hidden"
+  name="action"
+  value="updateOccurrence"
+>
+
+<input
+  type="hidden"
+  name="token"
+  id="manage_post_token"
+>
+
+<input
+  type="hidden"
+  name="ocorrencia"
+  id="manage_post_ocorrencia"
+>
+
+<input
+  type="hidden"
+  name="status"
+  id="manage_post_status"
+>
+
+<input
+  type="hidden"
+  name="responsavel"
+  id="manage_post_responsavel"
+>
+
+<input
+  type="hidden"
+  name="solucao"
+  id="manage_post_solucao"
+>
+
+<input
+  type="hidden"
+  name="fotoConclusaoBase64"
+  id="manage_post_fotoConclusaoBase64"
+>
+
+<input
+  type="hidden"
+  name="fotoConclusaoNome"
+  id="manage_post_fotoConclusaoNome"
+>
+
+<input
+  type="hidden"
+  name="fotoConclusaoMime"
+  id="manage_post_fotoConclusaoMime"
+>
+
+</form>
+
+
+<iframe
+  id="postFrame"
+  name="postFrame"
+></iframe>
+
+
+<iframe
+  id="managePostFrame"
+  name="managePostFrame"
+></iframe>
 
 
 
@@ -1286,14 +1676,6 @@ false;
 
 let gerenciaEmAndamento =
 false;
-
-
-let postTimer =
-null;
-
-
-let manageTimer =
-null;
 
 
 let fotoProcessada =
@@ -1336,7 +1718,7 @@ function el(s) {
 function esc(s) {
 
   return (
-    s || ""
+    s ?? ""
   )
   .toString()
   .replace(
@@ -1355,59 +1737,76 @@ function esc(s) {
 }
 
 
+function temValor(v) {
+
+  return !(
+    v === null ||
+    v === undefined ||
+    String(v).trim() === "" ||
+    String(v).trim() === "-"
+  );
+}
+
+
 function formatDateBR(s) {
 
-  const v =
-    String(
-      s || ""
-    ).trim();
+  if (!s) {
 
-
-  if (!v) {
     return "";
   }
 
 
-  const date =
+  const d =
     new Date(
-      v
+      s
     );
 
 
-  if (!isNaN(date)) {
+  if (
+    isNaN(d)
+  ) {
 
-    return date.toLocaleString(
-      "pt-BR",
-      {
-        day:"2-digit",
-        month:"2-digit",
-        year:"numeric",
-        hour:"2-digit",
-        minute:"2-digit"
-      }
+    return String(
+      s
     );
   }
 
 
-  return v;
+  return d.toLocaleString(
+    "pt-BR",
+    {
+      day:"2-digit",
+      month:"2-digit",
+      year:"numeric",
+      hour:"2-digit",
+      minute:"2-digit"
+    }
+  );
 }
 
 
 function formatBytes(bytes) {
 
   if (!bytes) {
+
     return "0 KB";
   }
 
 
-  if (bytes < 1024) {
+  if (
+    bytes <
+    1024
+  ) {
 
     return bytes +
       " bytes";
   }
 
 
-  if (bytes < 1024 * 1024) {
+  if (
+    bytes <
+    1024 * 1024
+  ) {
 
     return (
       bytes /
@@ -1420,13 +1819,52 @@ function formatBytes(bytes) {
 
   return (
     bytes /
-    (
-      1024 *
-      1024
-    )
+    1024 /
+    1024
   )
   .toFixed(2) +
   " MB";
+}
+
+
+function htmlPares(pares) {
+
+  const validos =
+    pares.filter(
+      p =>
+        temValor(
+          p[1]
+        )
+    );
+
+
+  if (
+    validos.length === 0
+  ) {
+
+    return "";
+  }
+
+
+  return validos
+    .map(
+      p => `
+
+        <div class="pair">
+
+          <b>
+            ${esc(p[0])}:
+          </b>
+
+          <span>
+            ${esc(p[1])}
+          </span>
+
+        </div>
+
+      `
+    )
+    .join("");
 }
 
 
@@ -1474,7 +1912,6 @@ async function fetchEquipById(id) {
 }
 
 
-
 async function fetchStatusById(id) {
 
   const response =
@@ -1513,7 +1950,6 @@ async function fetchStatusById(id) {
 
   return json.data;
 }
-
 
 
 async function fetchHistoryById(id) {
@@ -1558,60 +1994,10 @@ async function fetchHistoryById(id) {
 
 
 /* ============================================================
-   RECARREGA DADOS
-   ============================================================ */
-
-async function atualizarDadosOperacionais() {
-
-  if (!window.__EQUIP_ID__) {
-    return;
-  }
-
-
-  const [
-    situacao,
-    historico
-  ] =
-    await Promise.all([
-
-      fetchStatusById(
-        window.__EQUIP_ID__
-      ),
-
-      fetchHistoryById(
-        window.__EQUIP_ID__
-      )
-
-    ]);
-
-
-  renderEquipmentStatus(
-    situacao
-  );
-
-
-  renderHistory(
-    historico
-  );
-}
-
-
-
-/* ============================================================
-   EQUIPAMENTO
+   RENDER DO ATIVO
    ============================================================ */
 
 function render(eq) {
-
-  if (!eq) {
-
-    el("#titulo")
-      .textContent =
-      "Ativo não encontrado";
-
-    return;
-  }
-
 
   const id =
     eq.id ||
@@ -1643,148 +2029,258 @@ function render(eq) {
     );
 
 
-  el("#meta")
-    .innerHTML =
-
-    [
-      eq.fabricante,
-      eq.modelo
-    ]
-
-    .filter(Boolean)
-
-    .map(esc)
-
-    .join("<br>");
+  const tipo =
+    eq.tipo_de_ativo ||
+    "Equipamento";
 
 
-  const pares = [
-
-    [
-      "Fabricante",
-      eq.fabricante
-    ],
-
-    [
-      "Modelo",
-      eq.modelo
-    ],
-
-    [
-      "Capacidade",
-      eq.capacidade
-    ],
-
-    [
-      "Amperagem Nominal (FLA)",
-      eq.amperagem_nominal_fla
-    ],
-
-    [
-      "Voltagem",
-      eq.voltagem
-    ]
-
-  ];
+  el("#tipoBadge")
+    .style.display =
+    "inline-block";
 
 
-  el("#carac")
-    .innerHTML =
-
-    pares
-
-    .filter(
-      p =>
-        p[1] &&
-        p[1] !== "-"
-    )
-
-    .map(
-      p => `
-
-        <div class="pair">
-
-          <b>
-            ${esc(p[0])}:
-          </b>
-
-          <span>
-            ${esc(p[1])}
-          </span>
-
-        </div>
-
-      `
-    )
-
-    .join("")
-
-    ||
-
-    "<div class='empty'>Sem dados</div>";
-
-
-  const pp = [];
-
-
-  if (eq.periodicidade) {
-
-    pp.push(
-
-      "<b>Periodicidade:</b> " +
-
-      esc(
-        eq.periodicidade
-      )
-
-    );
-  }
-
-
-  if (eq.proxima_manutencao) {
-
-    pp.push(
-
-      "<b>Próxima:</b> " +
-
-      esc(
-        formatDateBR(
-          eq.proxima_manutencao
-        )
-      )
-
-    );
-  }
-
-
-  el("#pp")
-    .innerHTML =
-
-    pp.join("<br>")
-
-    ||
-
-    "<span class='empty'>-</span>";
-
-
-  el("#localizacao")
+  el("#tipoBadge")
     .textContent =
+    tipo;
+
+
+  el("#meta")
+    .textContent =
+
+    eq.local_detalhado ||
 
     eq.localizacao ||
-    "-";
+
+    eq.pavimento ||
+
+    "";
 
 
-  el("#resp")
-    .textContent =
+  /* CLASSIFICAÇÃO */
 
-    eq.prestador ||
-    "-";
+  const classificacao =
+    htmlPares([
+
+      [
+        "Tipo de Ativo",
+        eq.tipo_de_ativo
+      ],
+
+      [
+        "Categoria",
+        eq.categoria_do_ativo
+      ],
+
+      [
+        "Subcategoria",
+        eq.subcategoria
+      ],
+
+      [
+        "Classe de Manutenção",
+        eq.classe_de_manutencao
+      ],
+
+      [
+        "Criticidade",
+        eq.criticidade
+      ]
+
+    ]);
+
+
+  if (
+    classificacao
+  ) {
+
+    el("#secClassificacao")
+      .style.display =
+      "block";
+
+
+    el("#classificacao")
+      .innerHTML =
+      classificacao;
+  }
+
+
+  /* LOCALIZAÇÃO */
+
+  const localizacao =
+    htmlPares([
+
+      [
+        "Área",
+        eq.area
+      ],
+
+      [
+        "Ambiente",
+        eq.ambiente
+      ],
+
+      [
+        "Componente / Elemento",
+        eq.componente_elemento
+      ],
+
+      [
+        "Pavimento",
+        eq.pavimento
+      ],
+
+      [
+        "Localização",
+        eq.localizacao
+      ],
+
+      [
+        "Local Detalhado",
+        eq.local_detalhado
+      ]
+
+    ]);
+
+
+  if (
+    localizacao
+  ) {
+
+    el("#secLocalizacao")
+      .style.display =
+      "block";
+
+
+    el("#dadosLocalizacao")
+      .innerHTML =
+      localizacao;
+  }
+
+
+  /* DADOS TÉCNICOS */
+
+  const tecnico =
+    htmlPares([
+
+      [
+        "Fabricante",
+        eq.fabricante
+      ],
+
+      [
+        "Modelo",
+        eq.modelo
+      ],
+
+      [
+        "Número de Série",
+        eq.numero_de_serie
+      ],
+
+      [
+        "Capacidade",
+        eq.capacidade
+      ],
+
+      [
+        "Amperagem Nominal",
+        eq.amperagem_nominal_fla
+      ],
+
+      [
+        "Amperagem de Partida",
+        eq.amperagem_de_partida_flr
+      ],
+
+      [
+        "Amperagem Medida",
+        eq.amperagem_medida
+      ],
+
+      [
+        "Voltagem",
+        eq.voltagem
+      ],
+
+      [
+        "Peso",
+        eq.peso
+      ],
+
+      [
+        "Ano de Aquisição",
+        formatDateBR(
+          eq.ano_de_aquisicao
+        )
+      ],
+
+      [
+        "Vida Útil Estimada",
+        eq.vida_util_estimada
+      ]
+
+    ]);
+
+
+  if (
+    tecnico
+  ) {
+
+    el("#secTecnica")
+      .style.display =
+      "block";
+
+
+    el("#dadosTecnicos")
+      .innerHTML =
+      tecnico;
+
+  } else {
+
+    el("#secTecnica")
+      .style.display =
+      "none";
+  }
+
+
+  /* GESTÃO */
+
+  el("#dadosGestao")
+    .innerHTML =
+
+    htmlPares([
+
+      [
+        "Status cadastral",
+        eq.status
+      ],
+
+      [
+        "Prestador",
+        eq.prestador
+      ],
+
+      [
+        "Periodicidade",
+        eq.periodicidade
+      ],
+
+      [
+        "Observações",
+        eq.observacoes
+      ]
+
+    ])
+
+    ||
+
+    "<span class='muted'>Sem informações adicionais.</span>";
 
 
   el("#ft")
     .textContent =
 
-    "Última atualização: " +
+    "Última atualização da ficha: " +
 
     new Date()
       .toLocaleString(
@@ -1831,7 +2327,7 @@ function renderEquipmentStatus(data) {
 
     data.totalAtivas === 0
 
-      ? "Nenhuma ocorrência ativa para este equipamento."
+      ? "Nenhuma ocorrência ativa para este ativo."
 
       : data.totalAtivas +
         " ocorrência(s) ativa(s)";
@@ -1848,7 +2344,9 @@ function renderEquipmentStatus(data) {
   const badges = [];
 
 
-  if (data.abertas > 0) {
+  if (
+    data.abertas > 0
+  ) {
 
     badges.push(
       "🔴 " +
@@ -1858,7 +2356,9 @@ function renderEquipmentStatus(data) {
   }
 
 
-  if (data.emAtendimento > 0) {
+  if (
+    data.emAtendimento > 0
+  ) {
 
     badges.push(
       "🟡 " +
@@ -1868,7 +2368,9 @@ function renderEquipmentStatus(data) {
   }
 
 
-  if (data.aguardandoPeca > 0) {
+  if (
+    data.aguardandoPeca > 0
+  ) {
 
     badges.push(
       "🟠 " +
@@ -1910,7 +2412,9 @@ function renderEquipmentStatus(data) {
     data.ultimaOcorrenciaAtiva;
 
 
-  if (ultima) {
+  if (
+    ultima
+  ) {
 
     last.style.display =
       "block";
@@ -1919,9 +2423,13 @@ function renderEquipmentStatus(data) {
     last.innerHTML = `
 
       <b>
-        ${esc(ultima.ocorrencia)}
+        ${esc(
+          ultima.ocorrencia
+        )}
         •
-        ${esc(ultima.status)}
+        ${esc(
+          ultima.status
+        )}
       </b>
 
       <div>
@@ -1955,6 +2463,7 @@ function renderEquipmentStatus(data) {
 
     last.style.display =
       "none";
+
 
     last.innerHTML =
       "";
@@ -2010,7 +2519,7 @@ function renderHistory(result) {
 
     el("#historicoStatus")
       .textContent =
-      "Nenhum histórico encontrado para este equipamento.";
+      "Nenhum histórico encontrado para este ativo.";
 
 
     area.style.display =
@@ -2032,7 +2541,7 @@ function renderHistory(result) {
 
   historicoAtual.forEach(
 
-    function(item, index) {
+    function(item,index) {
 
 
       const option =
@@ -2083,10 +2592,6 @@ function renderHistory(result) {
   );
 
 
-  select.value =
-    "0";
-
-
   mostrarHistoricoSelecionado(
     0
   );
@@ -2104,14 +2609,7 @@ function mostrarHistoricoSelecionado(index) {
     historicoAtual[index];
 
 
-  const detalhe =
-    el("#historicoDetalhe");
-
-
   if (!item) {
-
-    detalhe.innerHTML =
-      "";
 
     return;
   }
@@ -2121,251 +2619,229 @@ function mostrarHistoricoSelecionado(index) {
     item;
 
 
-  detalhe.innerHTML = `
+  el("#historicoDetalhe")
+    .innerHTML = `
 
-    <div class="history-detail">
+      <div class="history-detail">
 
-      <div class="history-occurrence">
-        ${esc(
-          item.ocorrencia ||
-          ""
-        )}
-      </div>
-
-      <div class="history-date">
-        ${esc(
-          formatDateBR(
-            item.data
-          )
-        )}
-      </div>
-
-      <div class="history-status-pill">
-        ${esc(
-          item.status ||
-          "Aberta"
-        )}
-      </div>
-
-      <div class="history-meta">
-
-        <b>Reportado por:</b>
-
-        ${esc(
-          item.reportadoPor ||
-          "Não informado"
-        )}
-
-      </div>
-
-
-      ${
-        item.contato
-          ? `
-            <div class="history-meta">
-
-              <b>Contato:</b>
-
-              ${esc(
-                item.contato
-              )}
-
-            </div>
-          `
-          : ""
-      }
-
-
-      ${
-        item.responsavel
-          ? `
-            <div class="history-meta">
-
-              <b>Responsável:</b>
-
-              ${esc(
-                item.responsavel
-              )}
-
-            </div>
-          `
-          : ""
-      }
-
-
-      ${
-        item.dataInicio
-          ? `
-            <div class="history-meta">
-
-              <b>Início:</b>
-
-              ${esc(
-                formatDateBR(
-                  item.dataInicio
-                )
-              )}
-
-            </div>
-          `
-          : ""
-      }
-
-
-      ${
-        item.dataConclusao
-          ? `
-            <div class="history-meta">
-
-              <b>Conclusão:</b>
-
-              ${esc(
-                formatDateBR(
-                  item.dataConclusao
-                )
-              )}
-
-            </div>
-          `
-          : ""
-      }
-
-
-      <div class="history-description">
-
-        <b>Descrição:</b>
-
-        <div style="margin-top:5px">
-
+        <div class="history-occurrence">
           ${esc(
-            item.descricao ||
-            ""
+            item.ocorrencia
           )}
+        </div>
+
+        <div class="history-date">
+          ${esc(
+            formatDateBR(
+              item.data
+            )
+          )}
+        </div>
+
+        <div class="history-status-pill">
+          ${esc(
+            item.status ||
+            "Aberta"
+          )}
+        </div>
+
+
+        ${
+          item.reportadoPor
+            ? `
+              <div class="history-meta">
+                <b>Reportado por:</b>
+                ${esc(
+                  item.reportadoPor
+                )}
+              </div>
+            `
+            : ""
+        }
+
+
+        ${
+          item.contato
+            ? `
+              <div class="history-meta">
+                <b>Contato:</b>
+                ${esc(
+                  item.contato
+                )}
+              </div>
+            `
+            : ""
+        }
+
+
+        ${
+          item.responsavel
+            ? `
+              <div class="history-meta">
+                <b>Responsável:</b>
+                ${esc(
+                  item.responsavel
+                )}
+              </div>
+            `
+            : ""
+        }
+
+
+        ${
+          item.dataInicio
+            ? `
+              <div class="history-meta">
+                <b>Início:</b>
+                ${esc(
+                  formatDateBR(
+                    item.dataInicio
+                  )
+                )}
+              </div>
+            `
+            : ""
+        }
+
+
+        ${
+          item.dataConclusao
+            ? `
+              <div class="history-meta">
+                <b>Conclusão:</b>
+                ${esc(
+                  formatDateBR(
+                    item.dataConclusao
+                  )
+                )}
+              </div>
+            `
+            : ""
+        }
+
+
+        <div class="history-description">
+
+          <b>
+            Descrição:
+          </b>
+
+          <div style="margin-top:5px">
+            ${esc(
+              item.descricao ||
+              ""
+            )}
+          </div>
+
+        </div>
+
+
+        ${
+          item.solucao
+            ? `
+              <div class="history-solution">
+
+                <b>
+                  Solução / Serviço realizado:
+                </b>
+
+                <div style="margin-top:5px">
+                  ${esc(
+                    item.solucao
+                  )}
+                </div>
+
+              </div>
+            `
+            : ""
+        }
+
+
+        ${
+          item.foto
+            ? `
+              <div class="history-photo">
+
+                <a
+                  href="${esc(
+                    item.foto
+                  )}"
+                  target="_blank"
+                >
+                  📷 Foto da ocorrência
+                </a>
+
+              </div>
+            `
+            : ""
+        }
+
+
+        ${
+          item.fotoConclusao
+            ? `
+              <div
+                class="
+                  history-photo
+                  history-photo-conclusion
+                "
+              >
+
+                <a
+                  href="${esc(
+                    item.fotoConclusao
+                  )}"
+                  target="_blank"
+                >
+                  ✅ Foto após o serviço
+                </a>
+
+              </div>
+            `
+            : ""
+        }
+
+
+        <div class="manage-area">
+
+          <button
+            class="btn-manage"
+            onclick="
+              abrirGerenciamento(
+                ${index}
+              )
+            "
+          >
+            ⚙️ Gerenciar ocorrência
+          </button>
 
         </div>
 
       </div>
 
-
-      ${
-        item.solucao
-          ? `
-            <div class="history-solution">
-
-              <b>
-                Solução / Serviço realizado:
-              </b>
-
-              <div style="margin-top:5px">
-
-                ${esc(
-                  item.solucao
-                )}
-
-              </div>
-
-            </div>
-          `
-          : ""
-      }
-
-
-      ${
-        item.foto
-          ? `
-            <div class="history-photo">
-
-              <a
-                href="${esc(item.foto)}"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                📷 Foto da ocorrência
-              </a>
-
-            </div>
-          `
-          : ""
-      }
-
-
-      ${
-        item.fotoConclusao
-          ? `
-            <div
-              class="
-                history-photo
-                history-photo-conclusion
-              "
-            >
-
-              <a
-                href="${esc(
-                  item.fotoConclusao
-                )}"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                ✅ Foto após o serviço
-              </a>
-
-            </div>
-          `
-          : ""
-      }
-
-
-      <div class="manage-area">
-
-        <button
-          type="button"
-          class="btn-manage"
-          onclick="abrirGerenciamento(${index})"
-        >
-          ⚙️ Gerenciar ocorrência
-        </button>
-
-      </div>
-
-    </div>
-
-  `;
+    `;
 }
 
 
 
 /* ============================================================
-   FOTO GENÉRICA
+   PROCESSAMENTO FOTO
    ============================================================ */
 
 function processarFoto(file) {
 
   return new Promise(
 
-    (
+    function(
       resolve,
       reject
-    ) => {
+    ) {
 
 
       if (!file) {
 
-        resolve(null);
-
-        return;
-      }
-
-
-      if (
-        !file.type.startsWith(
-          "image/"
-        )
-      ) {
-
-        reject(
-          new Error(
-            "O arquivo selecionado não é uma imagem."
-          )
+        resolve(
+          null
         );
 
         return;
@@ -2388,96 +2864,86 @@ function processarFoto(file) {
             function() {
 
 
-              try {
+              let width =
+                img.width;
 
 
-                let width =
-                  img.width;
+              let height =
+                img.height;
 
 
-                let height =
-                  img.height;
+              if (
+
+                width >
+                PHOTO_MAX_DIMENSION
+
+                ||
+
+                height >
+                PHOTO_MAX_DIMENSION
+
+              ) {
 
 
                 if (
-
                   width >
-                  PHOTO_MAX_DIMENSION
-
-                  ||
-
-                  height >
-                  PHOTO_MAX_DIMENSION
-
+                  height
                 ) {
 
+                  height =
+                    Math.round(
 
-                  if (
-                    width >
-                    height
-                  ) {
+                      height *
 
-                    height =
-                      Math.round(
+                      PHOTO_MAX_DIMENSION /
 
-                        height *
+                      width
 
-                        (
-                          PHOTO_MAX_DIMENSION /
-                          width
-                        )
-
-                      );
+                    );
 
 
-                    width =
-                      PHOTO_MAX_DIMENSION;
+                  width =
+                    PHOTO_MAX_DIMENSION;
+
+                } else {
+
+                  width =
+                    Math.round(
+
+                      width *
+
+                      PHOTO_MAX_DIMENSION /
+
+                      height
+
+                    );
 
 
-                  } else {
-
-
-                    width =
-                      Math.round(
-
-                        width *
-
-                        (
-                          PHOTO_MAX_DIMENSION /
-                          height
-                        )
-
-                      );
-
-
-                    height =
-                      PHOTO_MAX_DIMENSION;
-
-                  }
+                  height =
+                    PHOTO_MAX_DIMENSION;
                 }
+              }
 
 
-                const canvas =
-                  document.createElement(
-                    "canvas"
-                  );
+              const canvas =
+                document.createElement(
+                  "canvas"
+                );
 
 
-                canvas.width =
-                  width;
+              canvas.width =
+                width;
 
 
-                canvas.height =
-                  height;
+              canvas.height =
+                height;
 
 
-                const ctx =
-                  canvas.getContext(
-                    "2d"
-                  );
-
-
-                ctx.drawImage(
+              canvas
+                .getContext(
+                  "2d"
+                )
+                .drawImage(
                   img,
                   0,
                   0,
@@ -2486,68 +2952,48 @@ function processarFoto(file) {
                 );
 
 
-                const dataUrl =
-                  canvas.toDataURL(
-                    "image/jpeg",
-                    PHOTO_QUALITY
-                  );
-
-
-                const base64 =
-                  dataUrl.split(
-                    ","
-                  )[1];
-
-
-                resolve({
-
-                  base64:
-                    base64,
-
-                  dataUrl:
-                    dataUrl,
-
-                  mime:
-                    "image/jpeg",
-
-                  nome:
-
-                    (
-                      file.name
-
-                        ? file.name.replace(
-                            /\.[^.]+$/,
-                            ""
-                          )
-
-                        : "foto"
-                    )
-
-                    +
-
-                    ".jpg",
-
-                  tamanhoFinal:
-                    Math.round(
-                      base64.length *
-                      .75
-                    ),
-
-                  width:
-                    width,
-
-                  height:
-                    height
-
-                });
-
-
-              } catch(error) {
-
-                reject(
-                  error
+              const dataUrl =
+                canvas.toDataURL(
+                  "image/jpeg",
+                  PHOTO_QUALITY
                 );
-              }
+
+
+              const base64 =
+                dataUrl.split(
+                  ","
+                )[1];
+
+
+              resolve({
+
+                base64:
+                  base64,
+
+                dataUrl:
+                  dataUrl,
+
+                mime:
+                  "image/jpeg",
+
+                nome:
+                  "foto_" +
+                  Date.now() +
+                  ".jpg",
+
+                tamanhoFinal:
+                  Math.round(
+                    base64.length *
+                    .75
+                  ),
+
+                width:
+                  width,
+
+                height:
+                  height
+
+              });
             };
 
 
@@ -2563,7 +3009,6 @@ function processarFoto(file) {
       reader.readAsDataURL(
         file
       );
-
     }
   );
 }
@@ -2589,79 +3034,37 @@ async function onFotoSelecionada() {
   }
 
 
-  const msg =
-    el("#status-reporte");
+  fotoProcessada =
+    await processarFoto(
+      file
+    );
 
 
-  msg.className =
-    "form-status status-loading";
+  el("#fotoPreview")
+    .src =
+    fotoProcessada.dataUrl;
 
 
-  msg.textContent =
-    "Preparando foto...";
+  el("#previewContainer")
+    .style.display =
+    "block";
 
 
-  try {
+  el("#fotoInfo")
+    .textContent =
 
-    fotoProcessada =
-      await processarFoto(
-        file
-      );
+    fotoProcessada.width +
 
+    " × " +
 
-    el("#fotoPreview")
-      .src =
-      fotoProcessada.dataUrl;
+    fotoProcessada.height +
 
+    " • " +
 
-    el("#previewContainer")
-      .style.display =
-      "block";
-
-
-    el("#fotoInfo")
-      .textContent =
-
-      fotoProcessada.nome +
-
-      " • " +
-
-      fotoProcessada.width +
-
-      " × " +
-
-      fotoProcessada.height +
-
-      " • " +
-
-      formatBytes(
-        fotoProcessada.tamanhoFinal
-      );
-
-
-    msg.className =
-      "form-status";
-
-
-    msg.textContent =
-      "";
-
-
-  } catch(error) {
-
-    fotoProcessada =
-      null;
-
-
-    msg.className =
-      "form-status status-error";
-
-
-    msg.textContent =
-      error.message;
-  }
+    formatBytes(
+      fotoProcessada.tamanhoFinal
+    );
 }
-
 
 
 function removerFotoSelecionada() {
@@ -2675,20 +3078,9 @@ function removerFotoSelecionada() {
     "";
 
 
-  el("#fotoPreview")
-    .removeAttribute(
-      "src"
-    );
-
-
   el("#previewContainer")
     .style.display =
     "none";
-
-
-  el("#fotoInfo")
-    .textContent =
-    "";
 }
 
 
@@ -2712,81 +3104,37 @@ async function onFotoConclusaoSelecionada() {
   }
 
 
-  const msg =
-    el("#status-gerenciar");
+  fotoConclusaoProcessada =
+    await processarFoto(
+      file
+    );
 
 
-  msg.className =
-    "form-status status-loading";
+  el("#fotoConclusaoPreview")
+    .src =
+    fotoConclusaoProcessada.dataUrl;
 
 
-  msg.textContent =
-    "Preparando foto após o serviço...";
+  el("#previewConclusaoContainer")
+    .style.display =
+    "block";
 
 
-  try {
+  el("#fotoConclusaoInfo")
+    .textContent =
 
+    fotoConclusaoProcessada.width +
 
-    fotoConclusaoProcessada =
-      await processarFoto(
-        file
-      );
+    " × " +
 
+    fotoConclusaoProcessada.height +
 
-    el("#fotoConclusaoPreview")
-      .src =
-      fotoConclusaoProcessada.dataUrl;
+    " • " +
 
-
-    el("#previewConclusaoContainer")
-      .style.display =
-      "block";
-
-
-    el("#fotoConclusaoInfo")
-      .textContent =
-
-      fotoConclusaoProcessada.nome +
-
-      " • " +
-
-      fotoConclusaoProcessada.width +
-
-      " × " +
-
-      fotoConclusaoProcessada.height +
-
-      " • " +
-
-      formatBytes(
-        fotoConclusaoProcessada.tamanhoFinal
-      );
-
-
-    msg.className =
-      "form-status";
-
-
-    msg.textContent =
-      "";
-
-
-  } catch(error) {
-
-
-    fotoConclusaoProcessada =
-      null;
-
-
-    msg.className =
-      "form-status status-error";
-
-
-    msg.textContent =
-      error.message;
-  }
+    formatBytes(
+      fotoConclusaoProcessada.tamanhoFinal
+    );
 }
-
 
 
 function removerFotoConclusaoSelecionada() {
@@ -2800,52 +3148,149 @@ function removerFotoConclusaoSelecionada() {
     "";
 
 
-  el("#fotoConclusaoPreview")
-    .removeAttribute(
-      "src"
-    );
-
-
   el("#previewConclusaoContainer")
     .style.display =
     "none";
-
-
-  el("#fotoConclusaoInfo")
-    .textContent =
-    "";
 }
 
 
 
 /* ============================================================
-   MOSTRAR / ESCONDER FOTO CONCLUSÃO
+   NOVA OCORRÊNCIA
    ============================================================ */
 
-function atualizarVisibilidadeFotoConclusao() {
+function abrirModal() {
 
-  const status =
-    el("#manageStatus")
-      .value;
+  el("#modal-anomalia")
+    .style.display =
+    "flex";
+}
 
 
-  const area =
-    el("#fotoConclusaoArea");
+function fecharModal() {
+
+  if (
+    postEmAndamento
+  ) {
+
+    return;
+  }
+
+
+  el("#modal-anomalia")
+    .style.display =
+    "none";
+}
+
+
+function enviarReporte() {
+
+  const nome =
+    el("#nome")
+      .value
+      .trim();
+
+
+  const descricao =
+    el("#descricao")
+      .value
+      .trim();
 
 
   if (
-    status ===
-    "Concluída"
+    !nome ||
+    !descricao
   ) {
 
-    area.style.display =
-      "block";
+    const msg =
+      el("#status-reporte");
 
-  } else {
 
-    area.style.display =
-      "none";
+    msg.className =
+      "form-status status-error";
+
+
+    msg.textContent =
+      "Informe seu nome e a descrição.";
+
+    return;
   }
+
+
+  el("#post_token")
+    .value =
+    API_TOKEN;
+
+
+  el("#post_id")
+    .value =
+    window.__EQUIP_ID__;
+
+
+  el("#post_nomeEquipamento")
+    .value =
+    window.__EQUIP_NOME__;
+
+
+  el("#post_reportadoPor")
+    .value =
+    nome;
+
+
+  el("#post_contato")
+    .value =
+    el("#contato")
+      .value;
+
+
+  el("#post_descricao")
+    .value =
+    descricao;
+
+
+  if (
+    fotoProcessada
+  ) {
+
+    el("#post_fotoBase64")
+      .value =
+      fotoProcessada.base64;
+
+
+    el("#post_fotoNome")
+      .value =
+      fotoProcessada.nome;
+
+
+    el("#post_fotoMime")
+      .value =
+      fotoProcessada.mime;
+  }
+
+
+  const form =
+    el("#nativePostForm");
+
+
+  form.action =
+    API_URL;
+
+
+  postEmAndamento =
+    true;
+
+
+  el("#status-reporte")
+    .className =
+    "form-status status-loading";
+
+
+  el("#status-reporte")
+    .textContent =
+    "Registrando ocorrência...";
+
+
+  form.submit();
 }
 
 
@@ -2854,16 +3299,25 @@ function atualizarVisibilidadeFotoConclusao() {
    GERENCIAMENTO
    ============================================================ */
 
+function atualizarVisibilidadeFotoConclusao() {
+
+  el("#fotoConclusaoArea")
+    .style.display =
+
+    el("#manageStatus")
+      .value ===
+      "Concluída"
+
+      ? "block"
+
+      : "none";
+}
+
+
 function abrirGerenciamento(index) {
 
   const item =
     historicoAtual[index];
-
-
-  if (!item) {
-
-    return;
-  }
 
 
   ocorrenciaSelecionada =
@@ -2915,7 +3369,9 @@ function abrirGerenciamento(index) {
     );
 
 
-  if (item.dataInicio) {
+  if (
+    item.dataInicio
+  ) {
 
     info +=
 
@@ -2929,7 +3385,9 @@ function abrirGerenciamento(index) {
   }
 
 
-  if (item.dataConclusao) {
+  if (
+    item.dataConclusao
+  ) {
 
     info +=
 
@@ -2948,7 +3406,9 @@ function abrirGerenciamento(index) {
     info;
 
 
-  if (item.fotoConclusao) {
+  if (
+    item.fotoConclusao
+  ) {
 
     el("#fotoConclusaoExistente")
       .style.display =
@@ -2964,23 +3424,7 @@ function abrirGerenciamento(index) {
     el("#fotoConclusaoExistente")
       .style.display =
       "none";
-
-
-    el("#linkFotoConclusaoExistente")
-      .removeAttribute(
-        "href"
-      );
   }
-
-
-  el("#status-gerenciar")
-    .className =
-    "form-status";
-
-
-  el("#status-gerenciar")
-    .textContent =
-    "";
 
 
   atualizarVisibilidadeFotoConclusao();
@@ -2992,10 +3436,11 @@ function abrirGerenciamento(index) {
 }
 
 
-
 function fecharGerenciamento() {
 
-  if (gerenciaEmAndamento) {
+  if (
+    gerenciaEmAndamento
+  ) {
 
     return;
   }
@@ -3007,28 +3452,11 @@ function fecharGerenciamento() {
 }
 
 
-
-/* ============================================================
-   SALVAR GERENCIAMENTO
-   ============================================================ */
-
 function salvarGerenciamento() {
-
-  if (!ocorrenciaSelecionada) {
-
-    return;
-  }
-
 
   const status =
     el("#manageStatus")
       .value;
-
-
-  const responsavel =
-    el("#manageResponsavel")
-      .value
-      .trim();
 
 
   const solucao =
@@ -3037,28 +3465,25 @@ function salvarGerenciamento() {
       .trim();
 
 
-  const msg =
-    el("#status-gerenciar");
-
-
-  const btn =
-    el("#btn-salvar-gerenciar");
-
-
-  /* REGRA AO CONCLUIR */
-
   if (
-    status === "Concluída" &&
+
+    status ===
+      "Concluída"
+
+    &&
+
     !solucao
+
   ) {
 
-    msg.className =
+    el("#status-gerenciar")
+      .className =
       "form-status status-error";
 
 
-    msg.textContent =
-      "Para concluir a ocorrência, informe a solução ou serviço realizado.";
-
+    el("#status-gerenciar")
+      .textContent =
+      "Informe a solução antes de concluir.";
 
     return;
   }
@@ -3081,7 +3506,8 @@ function salvarGerenciamento() {
 
   el("#manage_post_responsavel")
     .value =
-    responsavel;
+    el("#manageResponsavel")
+      .value;
 
 
   el("#manage_post_solucao")
@@ -3090,7 +3516,6 @@ function salvarGerenciamento() {
 
 
   if (
-    status === "Concluída" &&
     fotoConclusaoProcessada
   ) {
 
@@ -3113,16 +3538,6 @@ function salvarGerenciamento() {
     el("#manage_post_fotoConclusaoBase64")
       .value =
       "";
-
-
-    el("#manage_post_fotoConclusaoNome")
-      .value =
-      "";
-
-
-    el("#manage_post_fotoConclusaoMime")
-      .value =
-      "";
   }
 
 
@@ -3134,399 +3549,55 @@ function salvarGerenciamento() {
     API_URL;
 
 
-  btn.disabled =
+  gerenciaEmAndamento =
     true;
 
 
-  btn.textContent =
-    "Salvando...";
-
-
-  msg.className =
+  el("#status-gerenciar")
+    .className =
     "form-status status-loading";
 
 
-  msg.textContent =
+  el("#status-gerenciar")
+    .textContent =
     "Atualizando ocorrência...";
 
 
-  gerenciaEmAndamento =
-    true;
-
-
   form.submit();
-
-
-  manageTimer =
-    setTimeout(
-      finalizarGerenciamento,
-      fotoConclusaoProcessada
-        ? 12000
-        : 5000
-    );
 }
 
 
 
 /* ============================================================
-   FINALIZA GERENCIAMENTO
+   RECARREGA
    ============================================================ */
 
-async function finalizarGerenciamento() {
+async function atualizarDadosOperacionais() {
 
-  if (!gerenciaEmAndamento) {
+  const [
+    status,
+    historico
+  ] =
+    await Promise.all([
 
-    return;
-  }
+      fetchStatusById(
+        window.__EQUIP_ID__
+      ),
 
+      fetchHistoryById(
+        window.__EQUIP_ID__
+      )
 
-  gerenciaEmAndamento =
-    false;
-
-
-  if (manageTimer) {
-
-    clearTimeout(
-      manageTimer
-    );
-
-    manageTimer =
-      null;
-  }
+    ]);
 
 
-  const btn =
-    el("#btn-salvar-gerenciar");
-
-
-  const msg =
-    el("#status-gerenciar");
-
-
-  btn.disabled =
-    false;
-
-
-  btn.textContent =
-    "Salvar alterações";
-
-
-  msg.className =
-    "form-status status-success";
-
-
-  msg.textContent =
-    "Ocorrência atualizada com sucesso.";
-
-
-  try {
-
-    await atualizarDadosOperacionais();
-
-  } catch(error) {
-
-    console.error(
-      error
-    );
-  }
-
-
-  setTimeout(
-
-    function() {
-
-      el("#modal-gerenciar")
-        .style.display =
-        "none";
-
-    },
-
-    1200
-
+  renderEquipmentStatus(
+    status
   );
-}
 
 
-
-/* ============================================================
-   NOVA OCORRÊNCIA
-   ============================================================ */
-
-function abrirModal() {
-
-  el("#status-reporte")
-    .className =
-    "form-status";
-
-
-  el("#status-reporte")
-    .textContent =
-    "";
-
-
-  el("#modal-anomalia")
-    .style.display =
-    "flex";
-}
-
-
-
-function fecharModal() {
-
-  if (postEmAndamento) {
-
-    return;
-  }
-
-
-  el("#modal-anomalia")
-    .style.display =
-    "none";
-}
-
-
-
-function limparFormularioReporte() {
-
-  el("#nome").value = "";
-
-  el("#contato").value = "";
-
-  el("#descricao").value = "";
-
-
-  removerFotoSelecionada();
-}
-
-
-
-function enviarReporte() {
-
-  const nome =
-    el("#nome")
-      .value
-      .trim();
-
-
-  const contato =
-    el("#contato")
-      .value
-      .trim();
-
-
-  const descricao =
-    el("#descricao")
-      .value
-      .trim();
-
-
-  const msg =
-    el("#status-reporte");
-
-
-  const btn =
-    el("#btn-enviar");
-
-
-  if (!nome) {
-
-    msg.className =
-      "form-status status-error";
-
-
-    msg.textContent =
-      "Informe seu nome.";
-
-    return;
-  }
-
-
-  if (!descricao) {
-
-    msg.className =
-      "form-status status-error";
-
-
-    msg.textContent =
-      "Informe a descrição.";
-
-    return;
-  }
-
-
-  el("#post_token")
-    .value =
-    API_TOKEN;
-
-
-  el("#post_id")
-    .value =
-    window.__EQUIP_ID__;
-
-
-  el("#post_nomeEquipamento")
-    .value =
-    window.__EQUIP_NOME__ ||
-    "";
-
-
-  el("#post_reportadoPor")
-    .value =
-    nome;
-
-
-  el("#post_contato")
-    .value =
-    contato;
-
-
-  el("#post_descricao")
-    .value =
-    descricao;
-
-
-  if (fotoProcessada) {
-
-    el("#post_fotoBase64")
-      .value =
-      fotoProcessada.base64;
-
-
-    el("#post_fotoNome")
-      .value =
-      fotoProcessada.nome;
-
-
-    el("#post_fotoMime")
-      .value =
-      fotoProcessada.mime;
-
-  } else {
-
-    el("#post_fotoBase64").value = "";
-
-    el("#post_fotoNome").value = "";
-
-    el("#post_fotoMime").value = "";
-  }
-
-
-  const form =
-    el("#nativePostForm");
-
-
-  form.action =
-    API_URL;
-
-
-  btn.disabled =
-    true;
-
-
-  btn.textContent =
-    "Enviando...";
-
-
-  msg.className =
-    "form-status status-loading";
-
-
-  msg.textContent =
-    "Registrando ocorrência...";
-
-
-  postEmAndamento =
-    true;
-
-
-  form.submit();
-
-
-  postTimer =
-    setTimeout(
-      finalizarEnvioVisual,
-      fotoProcessada
-        ? 12000
-        : 6000
-    );
-}
-
-
-
-async function finalizarEnvioVisual() {
-
-  if (!postEmAndamento) {
-
-    return;
-  }
-
-
-  postEmAndamento =
-    false;
-
-
-  if (postTimer) {
-
-    clearTimeout(
-      postTimer
-    );
-
-    postTimer =
-      null;
-  }
-
-
-  const msg =
-    el("#status-reporte");
-
-
-  const btn =
-    el("#btn-enviar");
-
-
-  btn.disabled =
-    false;
-
-
-  btn.textContent =
-    "Enviar";
-
-
-  msg.className =
-    "form-status status-success";
-
-
-  msg.textContent =
-    "Ocorrência registrada com sucesso.";
-
-
-  try {
-
-    await atualizarDadosOperacionais();
-
-  } catch(error) {
-
-    console.error(
-      error
-    );
-  }
-
-
-  setTimeout(
-
-    function() {
-
-      limparFormularioReporte();
-
-
-      el("#modal-anomalia")
-        .style.display =
-        "none";
-
-    },
-
-    1400
-
+  renderHistory(
+    historico
   );
 }
 
@@ -3541,16 +3612,61 @@ el("#postFrame")
 
     "load",
 
-    function() {
+    async function() {
 
-      if (postEmAndamento) {
+      if (
+        !postEmAndamento
+      ) {
 
-        setTimeout(
-          finalizarEnvioVisual,
-          700
-        );
+        return;
       }
 
+
+      postEmAndamento =
+        false;
+
+
+      el("#status-reporte")
+        .className =
+        "form-status status-success";
+
+
+      el("#status-reporte")
+        .textContent =
+        "Ocorrência registrada com sucesso.";
+
+
+      await atualizarDadosOperacionais();
+
+
+      setTimeout(
+
+        function() {
+
+          el("#modal-anomalia")
+            .style.display =
+            "none";
+
+
+          el("#nome").value =
+            "";
+
+
+          el("#contato").value =
+            "";
+
+
+          el("#descricao").value =
+            "";
+
+
+          removerFotoSelecionada();
+
+        },
+
+        1000
+
+      );
     }
   );
 
@@ -3560,16 +3676,46 @@ el("#managePostFrame")
 
     "load",
 
-    function() {
+    async function() {
 
-      if (gerenciaEmAndamento) {
+      if (
+        !gerenciaEmAndamento
+      ) {
 
-        setTimeout(
-          finalizarGerenciamento,
-          900
-        );
+        return;
       }
 
+
+      gerenciaEmAndamento =
+        false;
+
+
+      el("#status-gerenciar")
+        .className =
+        "form-status status-success";
+
+
+      el("#status-gerenciar")
+        .textContent =
+        "Ocorrência atualizada com sucesso.";
+
+
+      await atualizarDadosOperacionais();
+
+
+      setTimeout(
+
+        function() {
+
+          el("#modal-gerenciar")
+            .style.display =
+            "none";
+
+        },
+
+        1000
+
+      );
     }
   );
 
@@ -3581,134 +3727,93 @@ el("#managePostFrame")
 
 document.addEventListener(
 
-  "DOMContentLoaded",
+"DOMContentLoaded",
 
-  function() {
-
-
-    el("#reportar")
-      .onclick =
-      abrirModal;
+function() {
 
 
-    el("#fechar-modal")
-      .onclick =
-      fecharModal;
+el("#reportar")
+  .onclick =
+  abrirModal;
 
 
-    el("#cancelar-modal")
-      .onclick =
-      fecharModal;
+el("#fechar-modal")
+  .onclick =
+  fecharModal;
 
 
-    el("#btn-enviar")
-      .onclick =
-      enviarReporte;
+el("#cancelar-modal")
+  .onclick =
+  fecharModal;
 
 
-    el("#fotoInput")
-      .addEventListener(
-        "change",
-        onFotoSelecionada
+el("#btn-enviar")
+  .onclick =
+  enviarReporte;
+
+
+el("#fotoInput")
+  .addEventListener(
+    "change",
+    onFotoSelecionada
+  );
+
+
+el("#removerFoto")
+  .onclick =
+  removerFotoSelecionada;
+
+
+el("#historicoSelect")
+  .addEventListener(
+
+    "change",
+
+    function() {
+
+      mostrarHistoricoSelecionado(
+        Number(
+          this.value
+        )
       );
+    }
+  );
 
 
-    el("#removerFoto")
-      .addEventListener(
-        "click",
-        removerFotoSelecionada
-      );
+el("#manageStatus")
+  .addEventListener(
+    "change",
+    atualizarVisibilidadeFotoConclusao
+  );
 
 
-    el("#historicoSelect")
-      .addEventListener(
-
-        "change",
-
-        function() {
-
-          mostrarHistoricoSelecionado(
-            Number(
-              this.value
-            )
-          );
-
-        }
-      );
+el("#fechar-gerenciar")
+  .onclick =
+  fecharGerenciamento;
 
 
-    el("#manageStatus")
-      .addEventListener(
-        "change",
-        atualizarVisibilidadeFotoConclusao
-      );
+el("#cancelar-gerenciar")
+  .onclick =
+  fecharGerenciamento;
 
 
-    el("#fechar-gerenciar")
-      .onclick =
-      fecharGerenciamento;
+el("#btn-salvar-gerenciar")
+  .onclick =
+  salvarGerenciamento;
 
 
-    el("#cancelar-gerenciar")
-      .onclick =
-      fecharGerenciamento;
+el("#fotoConclusaoInput")
+  .addEventListener(
+    "change",
+    onFotoConclusaoSelecionada
+  );
 
 
-    el("#btn-salvar-gerenciar")
-      .onclick =
-      salvarGerenciamento;
+el("#removerFotoConclusao")
+  .onclick =
+  removerFotoConclusaoSelecionada;
 
-
-    el("#fotoConclusaoInput")
-      .addEventListener(
-        "change",
-        onFotoConclusaoSelecionada
-      );
-
-
-    el("#removerFotoConclusao")
-      .addEventListener(
-        "click",
-        removerFotoConclusaoSelecionada
-      );
-
-
-    el("#modal-anomalia")
-      .addEventListener(
-
-        "click",
-
-        function(event) {
-
-          if (
-            event.target.id ===
-            "modal-anomalia"
-          ) {
-
-            fecharModal();
-          }
-        }
-      );
-
-
-    el("#modal-gerenciar")
-      .addEventListener(
-
-        "click",
-
-        function(event) {
-
-          if (
-            event.target.id ===
-            "modal-gerenciar"
-          ) {
-
-            fecharGerenciamento();
-          }
-        }
-      );
-
-  }
+}
 );
 
 
@@ -3729,7 +3834,7 @@ async function main() {
 
     el("#titulo")
       .textContent =
-      "Sem ID na URL";
+      "ID não informado";
 
     return;
   }
@@ -3737,10 +3842,9 @@ async function main() {
 
   try {
 
-
     const [
-      equipamento,
-      situacao,
+      ativo,
+      status,
       historico
     ] =
       await Promise.all([
@@ -3761,12 +3865,12 @@ async function main() {
 
 
     render(
-      equipamento
+      ativo
     );
 
 
     renderEquipmentStatus(
-      situacao
+      status
     );
 
 
@@ -3775,28 +3879,28 @@ async function main() {
     );
 
 
-  } catch(error) {
-
+  } catch (
+    erro
+  ) {
 
     console.error(
-      error
+      erro
     );
 
 
     el("#titulo")
       .textContent =
-      "Erro ao carregar dados";
+      "Erro ao carregar ativo";
 
 
     el("#meta")
       .textContent =
-      error.message;
+      erro.message;
   }
 }
 
 
 main();
-
 
 </script>
 
