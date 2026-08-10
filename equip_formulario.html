@@ -10,14 +10,9 @@
   content="width=device-width,initial-scale=1"
 >
 
-<title>QRManut - Ficha do Ativo</title>
-
+<title>QRManut - Busca Geral de Ativos</title>
 
 <style>
-
-:root {
-  --gap:16px;
-}
 
 * {
   box-sizing:border-box;
@@ -25,23 +20,53 @@
 
 body {
 
+  margin:0;
+
+  background:#f5f7fa;
+
+  color:#111827;
+
   font-family:
     system-ui,
     -apple-system,
     Segoe UI,
     Roboto,
-    Ubuntu,
+    Arial,
     sans-serif;
+}
 
-  max-width:960px;
+
+.container {
+
+  max-width:900px;
 
   margin:auto;
 
-  padding:var(--gap);
+  padding:20px;
+}
 
-  background:#f8f9fb;
 
-  color:#111827;
+.header {
+
+  margin-bottom:20px;
+}
+
+
+.logo {
+
+  font-size:1.45rem;
+
+  font-weight:800;
+
+  color:#1f4e78;
+}
+
+
+.subtitulo {
+
+  color:#6b7280;
+
+  margin-top:4px;
 }
 
 
@@ -53,840 +78,290 @@ body {
 
   border-radius:16px;
 
-  padding:var(--gap);
+  padding:18px;
 
   box-shadow:
-    0 6px 16px
+    0 5px 14px
     rgba(0,0,0,.05);
 }
 
 
-h1 {
-
-  font-size:1.3rem;
-
-  margin:0 0 4px 0;
-}
-
-
-h3 {
-
-  margin-top:18px;
-
-  margin-bottom:8px;
-
-  font-size:1rem;
-}
-
-
-.muted {
-  color:#6b7280;
-}
-
-
-.section {
-
-  margin-top:18px;
-
-  padding-top:14px;
-
-  border-top:
-    1px solid
-    #e5e7eb;
-}
-
-
-.kv {
-
-  display:block;
-
-  margin-top:6px;
-}
-
-
-.kv .pair {
-
-  padding:7px 0;
-
-  border-bottom:
-    1px dashed
-    #eee;
-
-  line-height:1.35;
-}
-
-
-.kv .pair:last-child {
-  border-bottom:0;
-}
-
-
-.kv .pair b {
-
-  font-weight:600;
-
-  margin-right:6px;
-}
-
-
-.kv .pair span {
-
-  word-break:break-word;
-
-  overflow-wrap:anywhere;
-}
-
-
-.grid {
-
-  display:grid;
-
-  grid-template-columns:
-    1fr 1fr;
-
-  gap:18px;
-}
-
-
-@media(max-width:780px) {
-
-  .grid {
-    grid-template-columns:1fr;
-  }
-}
-
-
-.badge-asset {
-
-  display:inline-block;
-
-  margin-top:7px;
-
-  padding:5px 9px;
-
-  border-radius:999px;
-
-  background:#e8eef8;
-
-  color:#1f4e78;
-
-  font-size:.8rem;
-
-  font-weight:700;
-}
-
-
-.chip {
-
-  display:inline-block;
-
-  border:
-    1px solid
-    #b91c1c;
-
-  border-radius:999px;
-
-  padding:11px 16px;
-
-  text-decoration:none;
-
-  color:#fff;
-
-  cursor:pointer;
-
-  background:#dc2626;
-
-  font-weight:700;
-
-  box-shadow:
-    0 2px 5px
-    rgba(0,0,0,.12);
-}
-
-
-.status-section {
-  margin-top:16px;
-}
-
-
-.status-card {
-
-  border-radius:14px;
-
-  padding:14px;
-
-  border:
-    1px solid
-    #e5e7eb;
-
-  background:#f9fafb;
-}
-
-
-.status-card.ok {
-
-  background:#ecfdf5;
-
-  border-color:#a7f3d0;
-}
-
-
-.status-card.critico {
-
-  background:#fef2f2;
-
-  border-color:#fecaca;
-}
-
-
-.status-card.atendimento {
-
-  background:#fffbeb;
-
-  border-color:#fde68a;
-}
-
-
-.status-card.aguardando {
-
-  background:#fff7ed;
-
-  border-color:#fed7aa;
-}
-
-
-.status-main {
+.search-box {
 
   display:flex;
 
-  gap:10px;
-
-  align-items:flex-start;
+  gap:8px;
 }
 
 
-.status-icon {
+.search-box input {
 
-  font-size:1.5rem;
+  flex:1;
 
-  line-height:1;
-}
-
-
-.status-title {
-
-  font-weight:800;
-}
-
-
-.status-subtitle {
-
-  font-size:.88rem;
-
-  color:#6b7280;
-
-  margin-top:3px;
-}
-
-
-.status-counts {
-
-  display:flex;
-
-  flex-wrap:wrap;
-
-  gap:6px;
-
-  margin-top:10px;
-}
-
-
-.status-badge {
-
-  border:
-    1px solid
-    rgba(0,0,0,.1);
-
-  border-radius:999px;
-
-  padding:4px 8px;
-
-  font-size:.78rem;
-
-  background:
-    rgba(255,255,255,.7);
-}
-
-
-.status-last {
-
-  margin-top:11px;
-
-  padding-top:10px;
-
-  border-top:
-    1px solid
-    rgba(0,0,0,.08);
-
-  font-size:.88rem;
-}
-
-
-/* HISTÓRICO */
-
-.history-section {
-
-  margin-top:22px;
-
-  border-top:
-    1px solid
-    #e5e7eb;
-
-  padding-top:18px;
-}
-
-
-.history-header {
-
-  display:flex;
-
-  justify-content:space-between;
-
-  gap:12px;
-
-  margin-bottom:12px;
-}
-
-
-.history-title {
-
-  font-size:1.05rem;
-
-  font-weight:700;
-
-  margin:0;
-}
-
-
-.history-count {
-
-  font-size:.8rem;
-
-  color:#6b7280;
-}
-
-
-#historicoSelectorArea {
-  display:none;
-}
-
-
-#historicoSelect {
-
-  width:100%;
-
-  padding:11px;
+  min-width:0;
 
   border:
     1px solid
     #d1d5db;
-
-  border-radius:9px;
-
-  background:#fff;
-
-  font:inherit;
-
-  margin-bottom:12px;
-}
-
-
-.history-detail {
-
-  border:
-    1px solid
-    #e5e7eb;
 
   border-radius:12px;
 
   padding:14px;
 
-  background:#fafafa;
+  font-size:1rem;
+
+  outline:none;
 }
 
 
-.history-occurrence {
+.search-box input:focus {
 
-  font-weight:800;
+  border-color:#1f4e78;
 
-  color:#374151;
+  box-shadow:
+    0 0 0 2px
+    rgba(31,78,120,.1);
 }
 
 
-.history-date {
-
-  font-weight:700;
-
-  margin-top:4px;
-}
-
-
-.history-meta {
-
-  font-size:.85rem;
-
-  color:#6b7280;
-
-  margin-top:5px;
-}
-
-
-.history-description {
-
-  margin-top:12px;
-
-  line-height:1.45;
-}
-
-
-.history-solution {
-
-  margin-top:12px;
-
-  padding-top:10px;
-
-  border-top:
-    1px dashed
-    #d1d5db;
-}
-
-
-.history-status-pill {
-
-  display:inline-block;
-
-  margin:6px 0;
-
-  padding:5px 9px;
-
-  border-radius:999px;
-
-  font-size:.78rem;
-
-  font-weight:700;
-
-  border:
-    1px solid
-    #d1d5db;
-
-  background:#fff;
-}
-
-
-.history-tag {
-
-  display:inline-block;
-
-  margin:5px 6px 0 0;
-
-  padding:5px 9px;
-
-  border-radius:999px;
-
-  font-size:.78rem;
-
-  background:#eef2ff;
-
-  color:#3730a3;
-
-  border:1px solid #c7d2fe;
-}
-
-
-.history-photo {
-
-  margin-top:10px;
-}
-
-
-.history-photo a {
-
-  display:inline-block;
-
-  padding:8px 12px;
-
-  border:
-    1px solid
-    #d1d5db;
-
-  border-radius:8px;
-
-  text-decoration:none;
-
-  color:#111827;
-
-  background:#fff;
-}
-
-
-.history-photo-conclusion a {
-
-  border-color:#86efac;
-
-  background:#f0fdf4;
-
-  color:#166534;
-}
-
-
-.manage-area {
-
-  margin-top:14px;
-
-  padding-top:12px;
-
-  border-top:
-    1px solid
-    #e5e7eb;
-}
-
-
-.btn-manage {
-
-  width:100%;
-
-  background:#1f4e78;
-
-  font-weight:700;
-}
-
-
-/* MODAIS */
-
-.modal {
-
-  position:fixed;
-
-  inset:0;
-
-  background:
-    rgba(0,0,0,.45);
-
-  display:none;
-
-  align-items:center;
-
-  justify-content:center;
-
-  z-index:9999;
-
-  padding:12px;
-}
-
-
-.modal-box {
-
-  background:#fff;
-
-  width:min(
-    680px,
-    94vw
-  );
-
-  max-height:90vh;
-
-  overflow-y:auto;
-
-  border-radius:14px;
-
-  padding:16px;
-
-  border:
-    1px solid
-    #e5e7eb;
-}
-
-
-.modal-header {
-
-  display:flex;
-
-  align-items:center;
-
-  justify-content:space-between;
-
-  gap:12px;
-
-  margin-bottom:14px;
-}
-
-
-.modal-header h2 {
-
-  margin:0;
-
-  font-size:1.1rem;
-}
-
-
-.row {
-
-  display:grid;
-
-  gap:12px;
-}
-
-
-label {
-
-  display:grid;
-
-  gap:6px;
-
-  font-weight:500;
-}
-
-
-input[type="text"],
-textarea,
-select {
-
-  width:100%;
-
-  padding:12px;
-
-  border:
-    1px solid
-    #d1d5db;
-
-  border-radius:10px;
-
-  font:inherit;
-
-  background:#fff;
-}
-
-
-textarea {
-  resize:vertical;
-}
-
-
-button {
-
-  padding:12px 16px;
+.search-box button {
 
   border:0;
 
-  border-radius:10px;
+  border-radius:12px;
 
-  background:#111827;
+  background:#1f4e78;
 
   color:#fff;
 
-  cursor:pointer;
+  font-weight:700;
 
-  font:inherit;
+  padding:0 20px;
+
+  cursor:pointer;
 }
 
 
-button:disabled {
+.search-box button:disabled {
 
-  opacity:.55;
+  opacity:.6;
 
   cursor:not-allowed;
 }
 
 
-.btn-secondary {
+.ajuda {
 
-  background:#e5e7eb;
+  margin-top:10px;
 
-  color:#111827;
-}
-
-
-.modal-buttons {
-
-  display:flex;
-
-  gap:10px;
-
-  justify-content:flex-end;
-
-  margin-top:8px;
-}
-
-
-/* FOTO */
-
-.foto-area {
-
-  border:
-    1px solid
-    #e5e7eb;
-
-  border-radius:12px;
-
-  padding:12px;
-
-  background:#f9fafb;
-}
-
-
-.foto-title {
-
-  font-weight:600;
-
-  margin-bottom:8px;
-}
-
-
-.foto-help {
+  color:#6b7280;
 
   font-size:.85rem;
+}
+
+
+#status {
+
+  margin-top:18px;
 
   color:#6b7280;
-
-  margin-bottom:10px;
-}
-
-
-.preview-container {
-
-  display:none;
-
-  margin-top:12px;
-
-  text-align:center;
-}
-
-
-.foto-preview {
-
-  display:block;
-
-  max-width:100%;
-
-  max-height:320px;
-
-  margin:auto;
-
-  border-radius:10px;
-
-  border:
-    1px solid
-    #d1d5db;
-}
-
-
-.foto-info {
-
-  margin-top:7px;
-
-  font-size:.8rem;
-
-  color:#6b7280;
-}
-
-
-.foto-actions {
-
-  margin-top:10px;
-}
-
-
-.btn-remove-foto {
-
-  background:#ef4444;
-
-  padding:8px 12px;
-}
-
-
-#fotoConclusaoArea {
-  display:none;
-}
-
-
-/* MENSAGENS */
-
-.form-status {
-
-  display:none;
-
-  margin-top:10px;
-
-  padding:10px;
-
-  border-radius:8px;
 
   font-size:.9rem;
 }
 
 
-.status-loading {
+.resultados {
 
-  display:block !important;
+  margin-top:16px;
 
-  background:#fef3c7;
+  display:grid;
 
-  color:#92400e;
+  gap:12px;
 }
 
 
-.status-success {
+.ativo {
 
-  display:block !important;
+  background:#fff;
 
-  background:#d1fae5;
+  border:1px solid #e5e7eb;
 
-  color:#065f46;
+  border-radius:14px;
+
+  padding:15px;
+
+  box-shadow:
+    0 2px 5px
+    rgba(0,0,0,.03);
 }
 
 
-.status-error {
+.ativo-topo {
 
-  display:block !important;
+  display:flex;
 
-  background:#fee2e2;
+  justify-content:space-between;
 
-  color:#991b1b;
+  gap:12px;
+
+  align-items:flex-start;
+}
+
+
+.ativo-id {
+
+  font-size:.8rem;
+
+  font-weight:800;
+
+  color:#1f4e78;
+
+  margin-bottom:3px;
+}
+
+
+.ativo-nome {
+
+  font-size:1rem;
+
+  font-weight:700;
+}
+
+
+.tipo {
+
+  background:#eef2ff;
+
+  color:#3730a3;
+
+  border-radius:999px;
+
+  padding:5px 9px;
+
+  font-size:.72rem;
+
+  font-weight:700;
+
+  white-space:nowrap;
+}
+
+
+.status-ativo {
+
+  display:inline-block;
+
+  margin-top:7px;
+
+  padding:4px 8px;
+
+  border-radius:999px;
+
+  font-size:.72rem;
+
+  border:1px solid #d1d5db;
+
+  background:#f9fafb;
+}
+
+
+.dados {
+
+  margin-top:11px;
+
+  font-size:.88rem;
+
+  color:#4b5563;
+
+  line-height:1.6;
+}
+
+
+.acoes {
+
+  margin-top:13px;
+
+  padding-top:12px;
+
+  border-top:
+    1px solid
+    #f0f0f0;
+}
+
+
+.btn-abrir {
+
+  display:block;
+
+  width:100%;
+
+  text-align:center;
+
+  background:#1f4e78;
+
+  color:#fff;
+
+  text-decoration:none;
+
+  border-radius:9px;
+
+  padding:11px;
+
+  font-weight:700;
+}
+
+
+.vazio {
+
+  background:#fff;
+
+  padding:22px;
+
+  border-radius:12px;
+
+  text-align:center;
+
+  color:#6b7280;
+
+  border:
+    1px solid
+    #e5e7eb;
 }
 
 
 .footer {
 
-  margin-top:18px;
+  margin-top:24px;
 
-  font-size:.85rem;
+  text-align:center;
 
-  color:#6b7280;
-}
+  color:#9ca3af;
 
-
-iframe {
-
-  display:none;
-
-  width:0;
-
-  height:0;
-
-  border:0;
+  font-size:.75rem;
 }
 
 
 @media(max-width:600px) {
 
-  .modal-buttons {
-
-    flex-direction:
-      column-reverse;
+  .search-box {
+    display:grid;
   }
 
-  .modal-buttons button {
-    width:100%;
+
+  .search-box button {
+    padding:13px;
+  }
+
+
+  .ativo-topo {
+    display:block;
+  }
+
+
+  .tipo {
+
+    display:inline-block;
+
+    margin-top:7px;
   }
 }
 
@@ -898,950 +373,81 @@ iframe {
 <body>
 
 
+<div class="container">
+
+
+<div class="header">
+
+<div class="logo">
+🔎 QRManut
+</div>
+
+<div class="subtitulo">
+Busca geral de equipamentos, ambientes e ativos
+</div>
+
+</div>
+
+
 <div class="card">
 
 
-<h1 id="titulo">
-  Carregando…
-</h1>
+<div class="search-box">
 
-
-<div
-  id="meta"
-  class="muted"
-></div>
-
-
-<div
-  id="tipoBadge"
-  class="badge-asset"
-  style="display:none"
-></div>
-
-
-
-<!-- SITUAÇÃO -->
-
-<section class="status-section">
-
-<div
-  id="equipStatusCard"
-  class="status-card"
+<input
+  id="busca"
+  type="search"
+  placeholder="Digite ID, equipamento, ambiente ou localização..."
+  autocomplete="off"
 >
-
-<div class="status-main">
-
-<div
-  id="equipStatusIcon"
-  class="status-icon"
->
-⚪
-</div>
-
-
-<div>
-
-<div
-  id="equipStatusTitle"
-  class="status-title"
->
-Carregando situação…
-</div>
-
-<div
-  id="equipStatusSubtitle"
-  class="status-subtitle"
-></div>
-
-</div>
-
-</div>
-
-
-<div
-  id="equipStatusCounts"
-  class="status-counts"
-></div>
-
-
-<div
-  id="equipStatusLast"
-  class="status-last"
-  style="display:none"
-></div>
-
-</div>
-
-</section>
-
-
-
-<!-- CLASSIFICAÇÃO -->
-
-<section
-  id="secClassificacao"
-  class="section"
-  style="display:none"
->
-
-<h3>
-Classificação do Ativo
-</h3>
-
-<div
-  id="classificacao"
-  class="kv"
-></div>
-
-</section>
-
-
-
-<!-- LOCALIZAÇÃO -->
-
-<section
-  id="secLocalizacao"
-  class="section"
-  style="display:none"
->
-
-<h3>
-Localização
-</h3>
-
-<div
-  id="dadosLocalizacao"
-  class="kv"
-></div>
-
-</section>
-
-
-
-<!-- TÉCNICO -->
-
-<section
-  id="secTecnica"
-  class="section"
-  style="display:none"
->
-
-<h3>
-Características Técnicas
-</h3>
-
-<div
-  id="dadosTecnicos"
-  class="kv"
-></div>
-
-</section>
-
-
-
-<!-- GESTÃO -->
-
-<section class="section">
-
-<h3>
-Gestão do Ativo
-</h3>
-
-<div
-  id="dadosGestao"
-  class="kv"
-></div>
-
-</section>
-
-
-
-<p style="margin-top:18px">
-
-<a
-  id="reportar"
-  class="chip"
->
-Reportar Serviço / Anomalia / Reparo
-</a>
-
-</p>
-
-
-
-<!-- HISTÓRICO -->
-
-<section class="history-section">
-
-<div class="history-header">
-
-<h2 class="history-title">
-Histórico de Manutenção
-</h2>
-
-<span
-  id="historicoCount"
-  class="history-count"
-></span>
-
-</div>
-
-
-<div
-  id="historicoStatus"
-  class="muted"
->
-Carregando histórico…
-</div>
-
-
-<div id="historicoSelectorArea">
-
-<label
-  for="historicoSelect"
-  style="
-    display:block;
-    font-size:.85rem;
-    font-weight:600;
-    margin-bottom:6px;
-  "
->
-Selecione uma ocorrência
-</label>
-
-
-<select id="historicoSelect"></select>
-
-
-<div id="historicoDetalhe"></div>
-
-</div>
-
-</section>
-
-
-<p style="font-size:7px">
-JCPG-2026 - Ver.:3.1
-</p>
-
-
-<div
-  id="ft"
-  class="footer"
-></div>
-
-</div>
-
-
-
-<!-- ========================================================
-     MODAL NOVA OCORRÊNCIA
-     ======================================================== -->
-
-<div
-  id="modal-anomalia"
-  class="modal"
->
-
-<div class="modal-box">
-
-
-<div class="modal-header">
-
-<h2>
-Reportar Serviço, Anomalia ou Reparo
-</h2>
 
 <button
+  id="btnBuscar"
   type="button"
-  class="btn-secondary"
-  id="fechar-modal"
 >
-Fechar
+Buscar
 </button>
 
 </div>
 
 
-<div class="row">
+<div class="ajuda">
 
+Você pode pesquisar por:
 
-<label>
+<strong>
+ID, equipamento, ambiente, pavimento, localização, fabricante ou modelo.
+</strong>
 
-<span>
-Seu nome *
-</span>
+<br><br>
 
-<input
-  id="nome"
-  type="text"
->
+Exemplos:
+Microbiologia, 2º Piso, Recepção, Bomba, Dancor ou EQ001BH1P.
 
-</label>
-
-
-<label>
-
-<span>
-Contato
-</span>
-
-<input
-  id="contato"
-  type="text"
->
-
-</label>
-
-
-<label>
-
-<span>
-Categoria da ocorrência *
-</span>
-
-<select id="categoriaOcorrencia">
-
-<option value="">
-Selecione...
-</option>
-
-<option value="Civil">
-Civil
-</option>
-
-<option value="Sanitário">
-Sanitário
-</option>
-
-<option value="Elétrica">
-Elétrica
-</option>
-
-<option value="Hidráulica">
-Hidráulica
-</option>
-
-<option value="Climatização">
-Climatização
-</option>
-
-<option value="Refrigeração">
-Refrigeração
-</option>
-
-<option value="Utilidades">
-Utilidades
-</option>
-
-<option value="Segurança">
-Segurança
-</option>
-
-<option value="Mobiliário">
-Mobiliário
-</option>
-
-<option value="Equipamento">
-Equipamento
-</option>
-
-<option value="Outros">
-Outros
-</option>
-
-</select>
-
-</label>
-
-
-<label>
-
-<span>
-Componente afetado *
-</span>
-
-<select id="componenteAfetado">
-
-<option value="">
-Selecione...
-</option>
-
-<option value="Geral">
-Geral
-</option>
-
-<option value="Piso">
-Piso
-</option>
-
-<option value="Parede">
-Parede
-</option>
-
-<option value="Teto">
-Teto
-</option>
-
-<option value="Porta">
-Porta
-</option>
-
-<option value="Janela">
-Janela
-</option>
-
-<option value="Vaso Sanitário">
-Vaso Sanitário
-</option>
-
-<option value="Pia">
-Pia
-</option>
-
-<option value="Torneira">
-Torneira
-</option>
-
-<option value="Descarga">
-Descarga
-</option>
-
-<option value="Mictório">
-Mictório
-</option>
-
-<option value="Ralo">
-Ralo
-</option>
-
-<option value="Luminária">
-Luminária
-</option>
-
-<option value="Tomada">
-Tomada
-</option>
-
-<option value="Interruptor">
-Interruptor
-</option>
-
-<option value="Tubulação">
-Tubulação
-</option>
-
-<option value="Registro">
-Registro
-</option>
-
-<option value="Bomba">
-Bomba
-</option>
-
-<option value="Motor">
-Motor
-</option>
-
-<option value="Painel">
-Painel
-</option>
-
-<option value="Ar-condicionado">
-Ar-condicionado
-</option>
-
-<option value="Mobiliário">
-Mobiliário
-</option>
-
-<option value="Outro">
-Outro
-</option>
-
-</select>
-
-</label>
-
-
-<label>
-
-<span>
-Descrição *
-</span>
-
-<textarea
-  id="descricao"
-  rows="5"
-  placeholder="Descreva o problema, serviço ou reparo..."
-></textarea>
-
-</label>
-
-
-<div class="foto-area">
-
-<div class="foto-title">
-📷 Foto da ocorrência
 </div>
 
-<div class="foto-help">
-Opcional.
 </div>
 
-<input
-  id="fotoInput"
-  type="file"
-  accept="image/*"
-  capture="environment"
->
+
+<div id="status"></div>
 
 
 <div
-  id="previewContainer"
-  class="preview-container"
->
-
-<img
-  id="fotoPreview"
-  class="foto-preview"
->
-
-<div
-  id="fotoInfo"
-  class="foto-info"
-></div>
-
-<div class="foto-actions">
-
-<button
-  type="button"
-  class="btn-remove-foto"
-  id="removerFoto"
->
-Remover foto
-</button>
-
-</div>
-
-</div>
-
-</div>
-
-
-<div
-  id="status-reporte"
-  class="form-status"
+  id="resultados"
+  class="resultados"
 ></div>
 
 
-<div class="modal-buttons">
+<div class="footer">
 
-<button
-  type="button"
-  class="btn-secondary"
-  id="cancelar-modal"
->
-Cancelar
-</button>
+QRManut • Sistema de Gestão de Manutenção<br>
 
-<button
-  type="button"
-  id="btn-enviar"
->
-Enviar
-</button>
-
-</div>
-
-</div>
-
-</div>
+JCPG-2026 - Busca v1.0
 
 </div>
 
 
-
-<!-- ========================================================
-     MODAL GERENCIAR
-     ======================================================== -->
-
-<div
-  id="modal-gerenciar"
-  class="modal"
->
-
-<div class="modal-box">
-
-
-<div class="modal-header">
-
-<div>
-
-<h2>
-Gerenciar ocorrência
-</h2>
-
-<div
-  id="manageOccurrenceTitle"
-  class="muted"
-></div>
-
 </div>
-
-<button
-  type="button"
-  class="btn-secondary"
-  id="fechar-gerenciar"
->
-Fechar
-</button>
-
-</div>
-
-
-<div class="row">
-
-
-<label>
-
-<span>
-Status
-</span>
-
-<select id="manageStatus">
-
-<option value="Aberta">
-Aberta
-</option>
-
-<option value="Em atendimento">
-Em atendimento
-</option>
-
-<option value="Aguardando peça">
-Aguardando peça
-</option>
-
-<option value="Concluída">
-Concluída
-</option>
-
-<option value="Cancelada">
-Cancelada
-</option>
-
-</select>
-
-</label>
-
-
-<label>
-
-<span>
-Responsável
-</span>
-
-<input
-  id="manageResponsavel"
-  type="text"
-  placeholder="Nome do técnico ou responsável"
->
-
-</label>
-
-
-<label>
-
-<span>
-Solução / Serviço realizado
-</span>
-
-<textarea
-  id="manageSolucao"
-  rows="6"
-  placeholder="Descreva o serviço realizado..."
-></textarea>
-
-</label>
-
-
-
-<!-- FOTO CONCLUSÃO -->
-
-<div
-  id="fotoConclusaoArea"
-  class="foto-area"
->
-
-<div class="foto-title">
-📷 Foto após o serviço
-</div>
-
-<div class="foto-help">
-Opcional. Disponível quando a ocorrência for concluída.
-</div>
-
-<input
-  id="fotoConclusaoInput"
-  type="file"
-  accept="image/*"
-  capture="environment"
->
-
-
-<div
-  id="previewConclusaoContainer"
-  class="preview-container"
->
-
-<img
-  id="fotoConclusaoPreview"
-  class="foto-preview"
->
-
-<div
-  id="fotoConclusaoInfo"
-  class="foto-info"
-></div>
-
-<div class="foto-actions">
-
-<button
-  type="button"
-  class="btn-remove-foto"
-  id="removerFotoConclusao"
->
-Remover foto
-</button>
-
-</div>
-
-</div>
-
-
-<div
-  id="fotoConclusaoExistente"
-  style="
-    display:none;
-    margin-top:10px;
-  "
->
-
-<a
-  id="linkFotoConclusaoExistente"
-  target="_blank"
->
-✅ Ver foto de conclusão atual
-</a>
-
-</div>
-
-</div>
-
-
-<div
-  id="manageCurrentInfo"
-  style="
-    background:#f9fafb;
-    border:1px solid #e5e7eb;
-    border-radius:10px;
-    padding:10px;
-    font-size:.85rem;
-    color:#6b7280;
-  "
-></div>
-
-
-<div
-  id="status-gerenciar"
-  class="form-status"
-></div>
-
-
-<div class="modal-buttons">
-
-<button
-  type="button"
-  class="btn-secondary"
-  id="cancelar-gerenciar"
->
-Cancelar
-</button>
-
-<button
-  type="button"
-  id="btn-salvar-gerenciar"
->
-Salvar alterações
-</button>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-
-
-<!-- FORM NOVA OCORRÊNCIA -->
-
-<form
-  id="nativePostForm"
-  method="POST"
-  target="postFrame"
-  style="display:none"
->
-
-<input
-  type="hidden"
-  name="token"
-  id="post_token"
->
-
-<input
-  type="hidden"
-  name="id"
-  id="post_id"
->
-
-<input
-  type="hidden"
-  name="nomeEquipamento"
-  id="post_nomeEquipamento"
->
-
-<input
-  type="hidden"
-  name="reportadoPor"
-  id="post_reportadoPor"
->
-
-<input
-  type="hidden"
-  name="contato"
-  id="post_contato"
->
-
-<input
-  type="hidden"
-  name="categoriaOcorrencia"
-  id="post_categoriaOcorrencia"
->
-
-<input
-  type="hidden"
-  name="componenteAfetado"
-  id="post_componenteAfetado"
->
-
-<input
-  type="hidden"
-  name="descricao"
-  id="post_descricao"
->
-
-<input
-  type="hidden"
-  name="fotoBase64"
-  id="post_fotoBase64"
->
-
-<input
-  type="hidden"
-  name="fotoNome"
-  id="post_fotoNome"
->
-
-<input
-  type="hidden"
-  name="fotoMime"
-  id="post_fotoMime"
->
-
-</form>
-
-
-
-<!-- FORM GERENCIAMENTO -->
-
-<form
-  id="managePostForm"
-  method="POST"
-  target="managePostFrame"
-  style="display:none"
->
-
-<input
-  type="hidden"
-  name="action"
-  value="updateOccurrence"
->
-
-<input
-  type="hidden"
-  name="token"
-  id="manage_post_token"
->
-
-<input
-  type="hidden"
-  name="ocorrencia"
-  id="manage_post_ocorrencia"
->
-
-<input
-  type="hidden"
-  name="status"
-  id="manage_post_status"
->
-
-<input
-  type="hidden"
-  name="responsavel"
-  id="manage_post_responsavel"
->
-
-<input
-  type="hidden"
-  name="solucao"
-  id="manage_post_solucao"
->
-
-<input
-  type="hidden"
-  name="fotoConclusaoBase64"
-  id="manage_post_fotoConclusaoBase64"
->
-
-<input
-  type="hidden"
-  name="fotoConclusaoNome"
-  id="manage_post_fotoConclusaoNome"
->
-
-<input
-  type="hidden"
-  name="fotoConclusaoMime"
-  id="manage_post_fotoConclusaoMime"
->
-
-</form>
-
-
-<iframe
-  id="postFrame"
-  name="postFrame"
-></iframe>
-
-
-<iframe
-  id="managePostFrame"
-  name="managePostFrame"
-></iframe>
-
 
 
 <script>
@@ -1859,2347 +465,172 @@ const API_TOKEN =
 "pncqalpha123";
 
 
-const PHOTO_MAX_DIMENSION =
-1280;
+/*
+ * IMPORTANTE
+ *
+ * Esta página considera que o HTML da ficha
+ * principal está no arquivo index.html.
+ *
+ * Se o nome do arquivo for diferente,
+ * altere somente esta constante.
+ */
 
-
-const PHOTO_QUALITY =
-0.72;
-
-
-
-/* ============================================================
-   ESTADO
-   ============================================================ */
-
-let postEmAndamento =
-false;
-
-
-let gerenciaEmAndamento =
-false;
-
-
-let fotoProcessada =
-null;
-
-
-let fotoConclusaoProcessada =
-null;
-
-
-let historicoAtual =
-[];
-
-
-let ocorrenciaSelecionada =
-null;
-
+const FICHA_URL =
+"index.html";
 
 
 /* ============================================================
-   HELPERS
+   ELEMENTOS
    ============================================================ */
 
-function qs(k) {
-
-  return new URLSearchParams(
-    location.search
-  ).get(k);
-}
-
-
-function el(s) {
-
-  return document.querySelector(
-    s
+const busca =
+  document.getElementById(
+    "busca"
   );
-}
 
 
-function esc(s) {
+const btnBuscar =
+  document.getElementById(
+    "btnBuscar"
+  );
 
-  return (
-    s ?? ""
+
+const statusEl =
+  document.getElementById(
+    "status"
+  );
+
+
+const resultados =
+  document.getElementById(
+    "resultados"
+  );
+
+
+/* ============================================================
+   SEGURANÇA HTML
+   ============================================================ */
+
+function esc(texto) {
+
+  return String(
+    texto ?? ""
   )
-  .toString()
   .replace(
-    /[&<>"]/g,
-    function(c) {
-
-      return {
-        "&":"&amp;",
-        "<":"&lt;",
-        ">":"&gt;",
-        '"':"&quot;"
-      }[c];
-
-    }
-  );
-}
-
-
-function temValor(v) {
-
-  return !(
-    v === null ||
-    v === undefined ||
-    String(v).trim() === "" ||
-    String(v).trim() === "-"
-  );
-}
-
-
-function formatDateBR(s) {
-
-  if (!s) {
-
-    return "";
-  }
-
-
-  const d =
-    new Date(
-      s
-    );
-
-
-  if (
-    isNaN(d)
-  ) {
-
-    return String(
-      s
-    );
-  }
-
-
-  return d.toLocaleString(
-    "pt-BR",
-    {
-      day:"2-digit",
-      month:"2-digit",
-      year:"numeric",
-      hour:"2-digit",
-      minute:"2-digit"
-    }
-  );
-}
-
-
-function formatBytes(bytes) {
-
-  if (!bytes) {
-
-    return "0 KB";
-  }
-
-
-  if (
-    bytes <
-    1024
-  ) {
-
-    return bytes +
-      " bytes";
-  }
-
-
-  if (
-    bytes <
-    1024 * 1024
-  ) {
-
-    return (
-      bytes /
-      1024
-    )
-    .toFixed(1) +
-    " KB";
-  }
-
-
-  return (
-    bytes /
-    1024 /
-    1024
+    /&/g,
+    "&amp;"
   )
-  .toFixed(2) +
-  " MB";
-}
-
-
-function htmlPares(pares) {
-
-  const validos =
-    pares.filter(
-      p =>
-        temValor(
-          p[1]
-        )
-    );
-
-
-  if (
-    validos.length === 0
-  ) {
-
-    return "";
-  }
-
-
-  return validos
-    .map(
-      p => `
-
-        <div class="pair">
-
-          <b>
-            ${esc(p[0])}:
-          </b>
-
-          <span>
-            ${esc(p[1])}
-          </span>
-
-        </div>
-
-      `
-    )
-    .join("");
-}
-
-
-
-/* ============================================================
-   API
-   ============================================================ */
-
-async function fetchEquipById(id) {
-
-  const response =
-    await fetch(
-
-      API_URL +
-
-      "?id=" +
-
-      encodeURIComponent(
-        id
-      ) +
-
-      "&token=" +
-
-      encodeURIComponent(
-        API_TOKEN
-      )
-
-    );
-
-
-  const json =
-    await response.json();
-
-
-  if (!json.ok) {
-
-    throw new Error(
-      json.error ||
-      "Erro na API"
-    );
-  }
-
-
-  return json.data;
-}
-
-
-async function fetchStatusById(id) {
-
-  const response =
-    await fetch(
-
-      API_URL +
-
-      "?action=status&id=" +
-
-      encodeURIComponent(
-        id
-      ) +
-
-      "&token=" +
-
-      encodeURIComponent(
-        API_TOKEN
-      )
-
-    );
-
-
-  const json =
-    await response.json();
-
-
-  if (!json.ok) {
-
-    throw new Error(
-      json.detail ||
-      json.error ||
-      "Erro ao buscar situação"
-    );
-  }
-
-
-  return json.data;
-}
-
-
-async function fetchHistoryById(id) {
-
-  const response =
-    await fetch(
-
-      API_URL +
-
-      "?action=history&id=" +
-
-      encodeURIComponent(
-        id
-      ) +
-
-      "&token=" +
-
-      encodeURIComponent(
-        API_TOKEN
-      )
-
-    );
-
-
-  const json =
-    await response.json();
-
-
-  if (!json.ok) {
-
-    throw new Error(
-      json.detail ||
-      json.error ||
-      "Erro ao buscar histórico"
-    );
-  }
-
-
-  return json;
-}
-
-
-
-/* ============================================================
-   RENDER DO ATIVO
-   ============================================================ */
-
-function render(eq) {
-
-  const id =
-    eq.id ||
-    "";
-
-
-  const nome =
-    eq.nome_do_equipamento ||
-    "";
-
-
-  window.__EQUIP_ID__ =
-    id;
-
-
-  window.__EQUIP_NOME__ =
-    nome;
-
-
-  el("#titulo")
-    .textContent =
-
-    id +
-
-    (
-      nome
-        ? " – " + nome
-        : ""
-    );
-
-
-  const tipo =
-    eq.tipo_de_ativo ||
-    "Equipamento";
-
-
-  el("#tipoBadge")
-    .style.display =
-    "inline-block";
-
-
-  el("#tipoBadge")
-    .textContent =
-    tipo;
-
-
-  el("#meta")
-    .textContent =
-
-    eq.local_detalhado ||
-
-    eq.localizacao ||
-
-    eq.pavimento ||
-
-    "";
-
-
-  const classificacao =
-    htmlPares([
-
-      [
-        "Tipo de Ativo",
-        eq.tipo_de_ativo
-      ],
-
-      [
-        "Categoria",
-        eq.categoria_do_ativo
-      ],
-
-      [
-        "Subcategoria",
-        eq.subcategoria
-      ],
-
-      [
-        "Classe de Manutenção",
-        eq.classe_de_manutencao
-      ],
-
-      [
-        "Criticidade",
-        eq.criticidade
-      ]
-
-    ]);
-
-
-  if (
-    classificacao
-  ) {
-
-    el("#secClassificacao")
-      .style.display =
-      "block";
-
-
-    el("#classificacao")
-      .innerHTML =
-      classificacao;
-  }
-
-
-  const localizacao =
-    htmlPares([
-
-      [
-        "Área",
-        eq.area
-      ],
-
-      [
-        "Ambiente",
-        eq.ambiente
-      ],
-
-      [
-        "Componente / Elemento",
-        eq.componente_elemento
-      ],
-
-      [
-        "Pavimento",
-        eq.pavimento
-      ],
-
-      [
-        "Localização",
-        eq.localizacao
-      ],
-
-      [
-        "Local Detalhado",
-        eq.local_detalhado
-      ]
-
-    ]);
-
-
-  if (
-    localizacao
-  ) {
-
-    el("#secLocalizacao")
-      .style.display =
-      "block";
-
-
-    el("#dadosLocalizacao")
-      .innerHTML =
-      localizacao;
-  }
-
-
-  const tecnico =
-    htmlPares([
-
-      [
-        "Fabricante",
-        eq.fabricante
-      ],
-
-      [
-        "Modelo",
-        eq.modelo
-      ],
-
-      [
-        "Número de Série",
-        eq.numero_de_serie
-      ],
-
-      [
-        "Capacidade",
-        eq.capacidade
-      ],
-
-      [
-        "Amperagem Nominal",
-        eq.amperagem_nominal_fla
-      ],
-
-      [
-        "Amperagem de Partida",
-        eq.amperagem_de_partida_flr
-      ],
-
-      [
-        "Amperagem Medida",
-        eq.amperagem_medida
-      ],
-
-      [
-        "Voltagem",
-        eq.voltagem
-      ],
-
-      [
-        "Peso",
-        eq.peso
-      ],
-
-      [
-        "Ano de Aquisição",
-        formatDateBR(
-          eq.ano_de_aquisicao
-        )
-      ],
-
-      [
-        "Vida Útil Estimada",
-        eq.vida_util_estimada
-      ]
-
-    ]);
-
-
-  if (
-    tecnico
-  ) {
-
-    el("#secTecnica")
-      .style.display =
-      "block";
-
-
-    el("#dadosTecnicos")
-      .innerHTML =
-      tecnico;
-
-  } else {
-
-    el("#secTecnica")
-      .style.display =
-      "none";
-  }
-
-
-  el("#dadosGestao")
-    .innerHTML =
-
-    htmlPares([
-
-      [
-        "Status cadastral",
-        eq.status
-      ],
-
-      [
-        "Prestador",
-        eq.prestador
-      ],
-
-      [
-        "Periodicidade",
-        eq.periodicidade
-      ],
-
-      [
-        "Observações",
-        eq.observacoes
-      ]
-
-    ])
-
-    ||
-
-    "<span class='muted'>Sem informações adicionais.</span>";
-
-
-  el("#ft")
-    .textContent =
-
-    "Última atualização da ficha: " +
-
-    new Date()
-      .toLocaleString(
-        "pt-BR"
-      );
-}
-
-
-
-/* ============================================================
-   SITUAÇÃO
-   ============================================================ */
-
-function renderEquipmentStatus(data) {
-
-  const card =
-    el("#equipStatusCard");
-
-
-  card.className =
-    "status-card " +
-    (
-      data.nivel ||
-      ""
-    );
-
-
-  el("#equipStatusIcon")
-    .textContent =
-
-    data.icone ||
-    "⚪";
-
-
-  el("#equipStatusTitle")
-    .textContent =
-
-    data.situacao ||
-    "Situação indisponível";
-
-
-  el("#equipStatusSubtitle")
-    .textContent =
-
-    data.totalAtivas === 0
-
-      ? "Nenhuma ocorrência ativa para este ativo."
-
-      : data.totalAtivas +
-        " ocorrência(s) ativa(s)";
-
-
-  const counts =
-    el("#equipStatusCounts");
-
-
-  counts.innerHTML =
-    "";
-
-
-  const badges = [];
-
-
-  if (
-    data.abertas > 0
-  ) {
-
-    badges.push(
-      "🔴 " +
-      data.abertas +
-      " aberta(s)"
-    );
-  }
-
-
-  if (
-    data.emAtendimento > 0
-  ) {
-
-    badges.push(
-      "🟡 " +
-      data.emAtendimento +
-      " em atendimento"
-    );
-  }
-
-
-  if (
-    data.aguardandoPeca > 0
-  ) {
-
-    badges.push(
-      "🟠 " +
-      data.aguardandoPeca +
-      " aguardando peça"
-    );
-  }
-
-
-  badges.forEach(
-    function(texto) {
-
-      const span =
-        document.createElement(
-          "span"
-        );
-
-
-      span.className =
-        "status-badge";
-
-
-      span.textContent =
-        texto;
-
-
-      counts.appendChild(
-        span
-      );
-    }
-  );
-
-
-  const last =
-    el("#equipStatusLast");
-
-
-  const ultima =
-    data.ultimaOcorrenciaAtiva;
-
-
-  if (
-    ultima
-  ) {
-
-    last.style.display =
-      "block";
-
-
-    last.innerHTML = `
-
-      <b>
-        ${esc(
-          ultima.ocorrencia
-        )}
-        •
-        ${esc(
-          ultima.status
-        )}
-      </b>
-
-      <div>
-        ${esc(
-          ultima.descricao ||
-          ""
-        )}
-      </div>
-
-      ${
-        ultima.responsavel
-          ? `
-            <div
-              style="
-                margin-top:5px;
-                color:#6b7280;
-              "
-            >
-              Responsável:
-              ${esc(
-                ultima.responsavel
-              )}
-            </div>
-          `
-          : ""
-      }
-
-    `;
-
-  } else {
-
-    last.style.display =
-      "none";
-
-
-    last.innerHTML =
-      "";
-  }
-}
-
-
-
-/* ============================================================
-   HISTÓRICO
-   ============================================================ */
-
-function renderHistory(result) {
-
-  historicoAtual =
-
-    result &&
-    Array.isArray(
-      result.history
-    )
-
-      ? result.history
-
-      : [];
-
-
-  el("#historicoCount")
-    .textContent =
-
-    historicoAtual.length
-
-      ? historicoAtual.length +
-        " registro(s)"
-
-      : "";
-
-
-  const area =
-    el("#historicoSelectorArea");
-
-
-  const select =
-    el("#historicoSelect");
-
-
-  select.innerHTML =
-    "";
-
-
-  if (
-    historicoAtual.length === 0
-  ) {
-
-    el("#historicoStatus")
-      .textContent =
-      "Nenhum histórico encontrado para este ativo.";
-
-
-    area.style.display =
-      "none";
-
-
-    return;
-  }
-
-
-  el("#historicoStatus")
-    .textContent =
-    "";
-
-
-  area.style.display =
-    "block";
-
-
-  historicoAtual.forEach(
-
-    function(item,index) {
-
-
-      const option =
-        document.createElement(
-          "option"
-        );
-
-
-      option.value =
-        String(index);
-
-
-      option.textContent =
-
-        (
-          item.ocorrencia ||
-          "Ocorrência"
-        )
-
-        +
-
-        " | "
-
-        +
-
-        formatDateBR(
-          item.data
-        )
-
-        +
-
-        " | "
-
-        +
-
-        (
-          item.status ||
-          "Aberta"
-        );
-
-
-      select.appendChild(
-        option
-      );
-
-    }
-
-  );
-
-
-  mostrarHistoricoSelecionado(
-    0
+  .replace(
+    /</g,
+    "&lt;"
+  )
+  .replace(
+    />/g,
+    "&gt;"
+  )
+  .replace(
+    /"/g,
+    "&quot;"
+  )
+  .replace(
+    /'/g,
+    "&#039;"
   );
 }
 
 
-
 /* ============================================================
-   DETALHE HISTÓRICO
+   EXECUTA BUSCA
    ============================================================ */
 
-function mostrarHistoricoSelecionado(index) {
+async function executarBusca() {
 
-  const item =
-    historicoAtual[index];
+  const termo =
+    busca.value.trim();
 
 
-  if (!item) {
-
-    return;
-  }
-
-
-  ocorrenciaSelecionada =
-    item;
-
-
-  el("#historicoDetalhe")
-    .innerHTML = `
-
-      <div class="history-detail">
-
-        <div class="history-occurrence">
-          ${esc(
-            item.ocorrencia
-          )}
-        </div>
-
-        <div class="history-date">
-          ${esc(
-            formatDateBR(
-              item.data
-            )
-          )}
-        </div>
-
-        <div class="history-status-pill">
-          ${esc(
-            item.status ||
-            "Aberta"
-          )}
-        </div>
-
-
-        ${
-          item.categoriaOcorrencia
-            ? `
-              <span class="history-tag">
-                ${esc(
-                  item.categoriaOcorrencia
-                )}
-              </span>
-            `
-            : ""
-        }
-
-
-        ${
-          item.componenteAfetado
-            ? `
-              <span class="history-tag">
-                ${esc(
-                  item.componenteAfetado
-                )}
-              </span>
-            `
-            : ""
-        }
-
-
-        ${
-          item.reportadoPor
-            ? `
-              <div class="history-meta">
-                <b>Reportado por:</b>
-                ${esc(
-                  item.reportadoPor
-                )}
-              </div>
-            `
-            : ""
-        }
-
-
-        ${
-          item.contato
-            ? `
-              <div class="history-meta">
-                <b>Contato:</b>
-                ${esc(
-                  item.contato
-                )}
-              </div>
-            `
-            : ""
-        }
-
-
-        ${
-          item.responsavel
-            ? `
-              <div class="history-meta">
-                <b>Responsável:</b>
-                ${esc(
-                  item.responsavel
-                )}
-              </div>
-            `
-            : ""
-        }
-
-
-        ${
-          item.dataInicio
-            ? `
-              <div class="history-meta">
-                <b>Início:</b>
-                ${esc(
-                  formatDateBR(
-                    item.dataInicio
-                  )
-                )}
-              </div>
-            `
-            : ""
-        }
-
-
-        ${
-          item.dataConclusao
-            ? `
-              <div class="history-meta">
-                <b>Conclusão:</b>
-                ${esc(
-                  formatDateBR(
-                    item.dataConclusao
-                  )
-                )}
-              </div>
-            `
-            : ""
-        }
-
-
-        <div class="history-description">
-
-          <b>
-            Descrição:
-          </b>
-
-          <div style="margin-top:5px">
-            ${esc(
-              item.descricao ||
-              ""
-            )}
-          </div>
-
-        </div>
-
-
-        ${
-          item.solucao
-            ? `
-              <div class="history-solution">
-
-                <b>
-                  Solução / Serviço realizado:
-                </b>
-
-                <div style="margin-top:5px">
-                  ${esc(
-                    item.solucao
-                  )}
-                </div>
-
-              </div>
-            `
-            : ""
-        }
-
-
-        ${
-          item.foto
-            ? `
-              <div class="history-photo">
-
-                <a
-                  href="${esc(
-                    item.foto
-                  )}"
-                  target="_blank"
-                >
-                  📷 Foto da ocorrência
-                </a>
-
-              </div>
-            `
-            : ""
-        }
-
-
-        ${
-          item.fotoConclusao
-            ? `
-              <div
-                class="
-                  history-photo
-                  history-photo-conclusion
-                "
-              >
-
-                <a
-                  href="${esc(
-                    item.fotoConclusao
-                  )}"
-                  target="_blank"
-                >
-                  ✅ Foto após o serviço
-                </a>
-
-              </div>
-            `
-            : ""
-        }
-
-
-        <div class="manage-area">
-
-          <button
-            class="btn-manage"
-            onclick="
-              abrirGerenciamento(
-                ${index}
-              )
-            "
-          >
-            ⚙️ Gerenciar ocorrência
-          </button>
-
-        </div>
-
-      </div>
-
-    `;
-}
-
-
-
-/* ============================================================
-   PROCESSAMENTO FOTO
-   ============================================================ */
-
-function processarFoto(file) {
-
-  return new Promise(
-
-    function(
-      resolve,
-      reject
-    ) {
-
-
-      if (!file) {
-
-        resolve(
-          null
-        );
-
-        return;
-      }
-
-
-      const reader =
-        new FileReader();
-
-
-      reader.onload =
-        function(event) {
-
-
-          const img =
-            new Image();
-
-
-          img.onload =
-            function() {
-
-
-              let width =
-                img.width;
-
-
-              let height =
-                img.height;
-
-
-              if (
-
-                width >
-                PHOTO_MAX_DIMENSION
-
-                ||
-
-                height >
-                PHOTO_MAX_DIMENSION
-
-              ) {
-
-
-                if (
-                  width >
-                  height
-                ) {
-
-                  height =
-                    Math.round(
-
-                      height *
-
-                      PHOTO_MAX_DIMENSION /
-
-                      width
-
-                    );
-
-
-                  width =
-                    PHOTO_MAX_DIMENSION;
-
-                } else {
-
-                  width =
-                    Math.round(
-
-                      width *
-
-                      PHOTO_MAX_DIMENSION /
-
-                      height
-
-                    );
-
-
-                  height =
-                    PHOTO_MAX_DIMENSION;
-                }
-              }
-
-
-              const canvas =
-                document.createElement(
-                  "canvas"
-                );
-
-
-              canvas.width =
-                width;
-
-
-              canvas.height =
-                height;
-
-
-              canvas
-                .getContext(
-                  "2d"
-                )
-                .drawImage(
-                  img,
-                  0,
-                  0,
-                  width,
-                  height
-                );
-
-
-              const dataUrl =
-                canvas.toDataURL(
-                  "image/jpeg",
-                  PHOTO_QUALITY
-                );
-
-
-              const base64 =
-                dataUrl.split(
-                  ","
-                )[1];
-
-
-              resolve({
-
-                base64:
-                  base64,
-
-                dataUrl:
-                  dataUrl,
-
-                mime:
-                  "image/jpeg",
-
-                nome:
-                  "foto_" +
-                  Date.now() +
-                  ".jpg",
-
-                tamanhoFinal:
-                  Math.round(
-                    base64.length *
-                    .75
-                  ),
-
-                width:
-                  width,
-
-                height:
-                  height
-
-              });
-            };
-
-
-          img.src =
-            event.target.result;
-        };
-
-
-      reader.onerror =
-        reject;
-
-
-      reader.readAsDataURL(
-        file
-      );
-    }
-  );
-}
-
-
-
-/* ============================================================
-   FOTO ABERTURA
-   ============================================================ */
-
-async function onFotoSelecionada() {
-
-  const file =
-    el("#fotoInput")
-      .files[0];
-
-
-  if (!file) {
-
-    removerFotoSelecionada();
-
-    return;
-  }
-
-
-  fotoProcessada =
-    await processarFoto(
-      file
-    );
-
-
-  el("#fotoPreview")
-    .src =
-    fotoProcessada.dataUrl;
-
-
-  el("#previewContainer")
-    .style.display =
-    "block";
-
-
-  el("#fotoInfo")
-    .textContent =
-
-    fotoProcessada.width +
-
-    " × " +
-
-    fotoProcessada.height +
-
-    " • " +
-
-    formatBytes(
-      fotoProcessada.tamanhoFinal
-    );
-}
-
-
-function removerFotoSelecionada() {
-
-  fotoProcessada =
-    null;
-
-
-  el("#fotoInput")
-    .value =
+  resultados.innerHTML =
     "";
 
 
-  el("#previewContainer")
-    .style.display =
-    "none";
-}
-
-
-
-/* ============================================================
-   FOTO CONCLUSÃO
-   ============================================================ */
-
-async function onFotoConclusaoSelecionada() {
-
-  const file =
-    el("#fotoConclusaoInput")
-      .files[0];
-
-
-  if (!file) {
-
-    removerFotoConclusaoSelecionada();
-
-    return;
-  }
-
-
-  fotoConclusaoProcessada =
-    await processarFoto(
-      file
-    );
-
-
-  el("#fotoConclusaoPreview")
-    .src =
-    fotoConclusaoProcessada.dataUrl;
-
-
-  el("#previewConclusaoContainer")
-    .style.display =
-    "block";
-
-
-  el("#fotoConclusaoInfo")
-    .textContent =
-
-    fotoConclusaoProcessada.width +
-
-    " × " +
-
-    fotoConclusaoProcessada.height +
-
-    " • " +
-
-    formatBytes(
-      fotoConclusaoProcessada.tamanhoFinal
-    );
-}
-
-
-function removerFotoConclusaoSelecionada() {
-
-  fotoConclusaoProcessada =
-    null;
-
-
-  el("#fotoConclusaoInput")
-    .value =
-    "";
-
-
-  el("#previewConclusaoContainer")
-    .style.display =
-    "none";
-}
-
-
-
-/* ============================================================
-   NOVA OCORRÊNCIA
-   ============================================================ */
-
-function abrirModal() {
-
-  el("#modal-anomalia")
-    .style.display =
-    "flex";
-}
-
-
-function fecharModal() {
-
   if (
-    postEmAndamento
+    termo.length < 2
   ) {
 
-    return;
-  }
+    statusEl.textContent =
+      "Digite pelo menos 2 caracteres.";
 
-
-  el("#modal-anomalia")
-    .style.display =
-    "none";
-}
-
-
-function enviarReporte() {
-
-  const nome =
-    el("#nome")
-      .value
-      .trim();
-
-
-  const categoria =
-    el("#categoriaOcorrencia")
-      .value
-      .trim();
-
-
-  const componente =
-    el("#componenteAfetado")
-      .value
-      .trim();
-
-
-  const descricao =
-    el("#descricao")
-      .value
-      .trim();
-
-
-  const msg =
-    el("#status-reporte");
-
-
-  if (!nome) {
-
-    msg.className =
-      "form-status status-error";
-
-
-    msg.textContent =
-      "Informe seu nome.";
+    busca.focus();
 
     return;
   }
 
 
-  if (!categoria) {
-
-    msg.className =
-      "form-status status-error";
+  statusEl.textContent =
+    "Buscando ativos...";
 
 
-    msg.textContent =
-      "Selecione a categoria da ocorrência.";
-
-    return;
-  }
-
-
-  if (!componente) {
-
-    msg.className =
-      "form-status status-error";
-
-
-    msg.textContent =
-      "Selecione o componente afetado.";
-
-    return;
-  }
-
-
-  if (!descricao) {
-
-    msg.className =
-      "form-status status-error";
-
-
-    msg.textContent =
-      "Informe a descrição.";
-
-    return;
-  }
-
-
-  el("#post_token")
-    .value =
-    API_TOKEN;
-
-
-  el("#post_id")
-    .value =
-    window.__EQUIP_ID__;
-
-
-  el("#post_nomeEquipamento")
-    .value =
-    window.__EQUIP_NOME__;
-
-
-  el("#post_reportadoPor")
-    .value =
-    nome;
-
-
-  el("#post_contato")
-    .value =
-    el("#contato")
-      .value;
-
-
-  el("#post_categoriaOcorrencia")
-    .value =
-    categoria;
-
-
-  el("#post_componenteAfetado")
-    .value =
-    componente;
-
-
-  el("#post_descricao")
-    .value =
-    descricao;
-
-
-  if (
-    fotoProcessada
-  ) {
-
-    el("#post_fotoBase64")
-      .value =
-      fotoProcessada.base64;
-
-
-    el("#post_fotoNome")
-      .value =
-      fotoProcessada.nome;
-
-
-    el("#post_fotoMime")
-      .value =
-      fotoProcessada.mime;
-
-  } else {
-
-    el("#post_fotoBase64")
-      .value =
-      "";
-
-
-    el("#post_fotoNome")
-      .value =
-      "";
-
-
-    el("#post_fotoMime")
-      .value =
-      "";
-  }
-
-
-  const form =
-    el("#nativePostForm");
-
-
-  form.action =
-    API_URL;
-
-
-  postEmAndamento =
+  btnBuscar.disabled =
     true;
-
-
-  msg.className =
-    "form-status status-loading";
-
-
-  msg.textContent =
-    "Registrando ocorrência...";
-
-
-  form.submit();
-}
-
-
-
-/* ============================================================
-   GERENCIAMENTO
-   ============================================================ */
-
-function atualizarVisibilidadeFotoConclusao() {
-
-  el("#fotoConclusaoArea")
-    .style.display =
-
-    el("#manageStatus")
-      .value ===
-      "Concluída"
-
-      ? "block"
-
-      : "none";
-}
-
-
-function abrirGerenciamento(index) {
-
-  const item =
-    historicoAtual[index];
-
-
-  ocorrenciaSelecionada =
-    item;
-
-
-  removerFotoConclusaoSelecionada();
-
-
-  el("#manageOccurrenceTitle")
-    .textContent =
-
-    item.ocorrencia +
-
-    " • " +
-
-    window.__EQUIP_ID__;
-
-
-  el("#manageStatus")
-    .value =
-
-    item.status ||
-    "Aberta";
-
-
-  el("#manageResponsavel")
-    .value =
-
-    item.responsavel ||
-    "";
-
-
-  el("#manageSolucao")
-    .value =
-
-    item.solucao ||
-    "";
-
-
-  let info =
-
-    "<b>Categoria:</b> " +
-
-    esc(
-      item.categoriaOcorrencia ||
-      "-"
-    ) +
-
-    "<br><b>Componente:</b> " +
-
-    esc(
-      item.componenteAfetado ||
-      "-"
-    ) +
-
-    "<br><b>Aberta em:</b> " +
-
-    esc(
-      formatDateBR(
-        item.data
-      )
-    );
-
-
-  if (
-    item.dataInicio
-  ) {
-
-    info +=
-
-      "<br><b>Início:</b> " +
-
-      esc(
-        formatDateBR(
-          item.dataInicio
-        )
-      );
-  }
-
-
-  if (
-    item.dataConclusao
-  ) {
-
-    info +=
-
-      "<br><b>Conclusão:</b> " +
-
-      esc(
-        formatDateBR(
-          item.dataConclusao
-        )
-      );
-  }
-
-
-  el("#manageCurrentInfo")
-    .innerHTML =
-    info;
-
-
-  if (
-    item.fotoConclusao
-  ) {
-
-    el("#fotoConclusaoExistente")
-      .style.display =
-      "block";
-
-
-    el("#linkFotoConclusaoExistente")
-      .href =
-      item.fotoConclusao;
-
-  } else {
-
-    el("#fotoConclusaoExistente")
-      .style.display =
-      "none";
-  }
-
-
-  atualizarVisibilidadeFotoConclusao();
-
-
-  el("#modal-gerenciar")
-    .style.display =
-    "flex";
-}
-
-
-function fecharGerenciamento() {
-
-  if (
-    gerenciaEmAndamento
-  ) {
-
-    return;
-  }
-
-
-  el("#modal-gerenciar")
-    .style.display =
-    "none";
-}
-
-
-function salvarGerenciamento() {
-
-  const status =
-    el("#manageStatus")
-      .value;
-
-
-  const solucao =
-    el("#manageSolucao")
-      .value
-      .trim();
-
-
-  if (
-
-    status ===
-      "Concluída"
-
-    &&
-
-    !solucao
-
-  ) {
-
-    el("#status-gerenciar")
-      .className =
-      "form-status status-error";
-
-
-    el("#status-gerenciar")
-      .textContent =
-      "Informe a solução antes de concluir.";
-
-    return;
-  }
-
-
-  el("#manage_post_token")
-    .value =
-    API_TOKEN;
-
-
-  el("#manage_post_ocorrencia")
-    .value =
-    ocorrenciaSelecionada.ocorrencia;
-
-
-  el("#manage_post_status")
-    .value =
-    status;
-
-
-  el("#manage_post_responsavel")
-    .value =
-    el("#manageResponsavel")
-      .value;
-
-
-  el("#manage_post_solucao")
-    .value =
-    solucao;
-
-
-  if (
-    fotoConclusaoProcessada
-  ) {
-
-    el("#manage_post_fotoConclusaoBase64")
-      .value =
-      fotoConclusaoProcessada.base64;
-
-
-    el("#manage_post_fotoConclusaoNome")
-      .value =
-      fotoConclusaoProcessada.nome;
-
-
-    el("#manage_post_fotoConclusaoMime")
-      .value =
-      fotoConclusaoProcessada.mime;
-
-  } else {
-
-    el("#manage_post_fotoConclusaoBase64")
-      .value =
-      "";
-
-
-    el("#manage_post_fotoConclusaoNome")
-      .value =
-      "";
-
-
-    el("#manage_post_fotoConclusaoMime")
-      .value =
-      "";
-  }
-
-
-  const form =
-    el("#managePostForm");
-
-
-  form.action =
-    API_URL;
-
-
-  gerenciaEmAndamento =
-    true;
-
-
-  el("#status-gerenciar")
-    .className =
-    "form-status status-loading";
-
-
-  el("#status-gerenciar")
-    .textContent =
-    "Atualizando ocorrência...";
-
-
-  form.submit();
-}
-
-
-
-/* ============================================================
-   RECARREGA
-   ============================================================ */
-
-async function atualizarDadosOperacionais() {
-
-  const [
-    status,
-    historico
-  ] =
-    await Promise.all([
-
-      fetchStatusById(
-        window.__EQUIP_ID__
-      ),
-
-      fetchHistoryById(
-        window.__EQUIP_ID__
-      )
-
-    ]);
-
-
-  renderEquipmentStatus(
-    status
-  );
-
-
-  renderHistory(
-    historico
-  );
-}
-
-
-
-/* ============================================================
-   IFRAMES
-   ============================================================ */
-
-el("#postFrame")
-  .addEventListener(
-
-    "load",
-
-    async function() {
-
-      if (
-        !postEmAndamento
-      ) {
-
-        return;
-      }
-
-
-      postEmAndamento =
-        false;
-
-
-      el("#status-reporte")
-        .className =
-        "form-status status-success";
-
-
-      el("#status-reporte")
-        .textContent =
-        "Ocorrência registrada com sucesso.";
-
-
-      await atualizarDadosOperacionais();
-
-
-      setTimeout(
-
-        function() {
-
-          el("#modal-anomalia")
-            .style.display =
-            "none";
-
-
-          el("#nome").value =
-            "";
-
-
-          el("#contato").value =
-            "";
-
-
-          el("#categoriaOcorrencia").value =
-            "";
-
-
-          el("#componenteAfetado").value =
-            "";
-
-
-          el("#descricao").value =
-            "";
-
-
-          removerFotoSelecionada();
-
-        },
-
-        1000
-
-      );
-    }
-  );
-
-
-el("#managePostFrame")
-  .addEventListener(
-
-    "load",
-
-    async function() {
-
-      if (
-        !gerenciaEmAndamento
-      ) {
-
-        return;
-      }
-
-
-      gerenciaEmAndamento =
-        false;
-
-
-      el("#status-gerenciar")
-        .className =
-        "form-status status-success";
-
-
-      el("#status-gerenciar")
-        .textContent =
-        "Ocorrência atualizada com sucesso.";
-
-
-      await atualizarDadosOperacionais();
-
-
-      setTimeout(
-
-        function() {
-
-          el("#modal-gerenciar")
-            .style.display =
-            "none";
-
-        },
-
-        1000
-
-      );
-    }
-  );
-
-
-
-/* ============================================================
-   EVENTOS
-   ============================================================ */
-
-document.addEventListener(
-
-"DOMContentLoaded",
-
-function() {
-
-
-el("#reportar")
-  .onclick =
-  abrirModal;
-
-
-el("#fechar-modal")
-  .onclick =
-  fecharModal;
-
-
-el("#cancelar-modal")
-  .onclick =
-  fecharModal;
-
-
-el("#btn-enviar")
-  .onclick =
-  enviarReporte;
-
-
-el("#fotoInput")
-  .addEventListener(
-    "change",
-    onFotoSelecionada
-  );
-
-
-el("#removerFoto")
-  .onclick =
-  removerFotoSelecionada;
-
-
-el("#historicoSelect")
-  .addEventListener(
-
-    "change",
-
-    function() {
-
-      mostrarHistoricoSelecionado(
-        Number(
-          this.value
-        )
-      );
-    }
-  );
-
-
-el("#manageStatus")
-  .addEventListener(
-    "change",
-    atualizarVisibilidadeFotoConclusao
-  );
-
-
-el("#fechar-gerenciar")
-  .onclick =
-  fecharGerenciamento;
-
-
-el("#cancelar-gerenciar")
-  .onclick =
-  fecharGerenciamento;
-
-
-el("#btn-salvar-gerenciar")
-  .onclick =
-  salvarGerenciamento;
-
-
-el("#fotoConclusaoInput")
-  .addEventListener(
-    "change",
-    onFotoConclusaoSelecionada
-  );
-
-
-el("#removerFotoConclusao")
-  .onclick =
-  removerFotoConclusaoSelecionada;
-
-}
-);
-
-
-
-/* ============================================================
-   INICIALIZAÇÃO
-   ============================================================ */
-
-async function main() {
-
-  const id =
-    qs(
-      "id"
-    );
-
-
-  if (!id) {
-
-    el("#titulo")
-      .textContent =
-      "ID não informado";
-
-    return;
-  }
 
 
   try {
 
-    const [
-      ativo,
-      status,
-      historico
-    ] =
-      await Promise.all([
 
-        fetchEquipById(
-          id
-        ),
+    const url =
 
-        fetchStatusById(
-          id
-        ),
+      API_URL +
 
-        fetchHistoryById(
-          id
-        )
+      "?action=search" +
 
-      ]);
+      "&q=" +
+
+      encodeURIComponent(
+        termo
+      ) +
+
+      "&token=" +
+
+      encodeURIComponent(
+        API_TOKEN
+      );
 
 
-    render(
-      ativo
-    );
+    const response =
+      await fetch(
+        url
+      );
 
 
-    renderEquipmentStatus(
-      status
-    );
+    if (
+      !response.ok
+    ) {
+
+      throw new Error(
+        "Erro HTTP " +
+        response.status
+      );
+    }
 
 
-    renderHistory(
-      historico
+    const json =
+      await response.json();
+
+
+    if (
+      !json.ok
+    ) {
+
+      throw new Error(
+        json.detail ||
+        json.error ||
+        "Erro na busca."
+      );
+    }
+
+
+    renderizarResultados(
+      json.results || []
     );
 
 
@@ -4212,19 +643,420 @@ async function main() {
     );
 
 
-    el("#titulo")
-      .textContent =
-      "Erro ao carregar ativo";
+    statusEl.textContent =
+      "Não foi possível realizar a busca.";
 
 
-    el("#meta")
-      .textContent =
-      erro.message;
+    resultados.innerHTML = `
+
+      <div class="vazio">
+
+        Ocorreu um erro ao consultar o QRManut.
+
+      </div>
+
+    `;
+
+
+  } finally {
+
+    btnBuscar.disabled =
+      false;
   }
 }
 
 
-main();
+/* ============================================================
+   RENDERIZA RESULTADOS
+   ============================================================ */
+
+function renderizarResultados(lista) {
+
+  resultados.innerHTML =
+    "";
+
+
+  if (
+    lista.length === 0
+  ) {
+
+    statusEl.textContent =
+      "";
+
+
+    resultados.innerHTML = `
+
+      <div class="vazio">
+
+        Nenhum ativo encontrado.
+
+      </div>
+
+    `;
+
+
+    return;
+  }
+
+
+  statusEl.textContent =
+
+    lista.length +
+
+    (
+      lista.length === 1
+        ? " resultado encontrado"
+        : " resultados encontrados"
+    );
+
+
+  lista.forEach(
+    function(item) {
+
+
+      const card =
+        document.createElement(
+          "div"
+        );
+
+
+      card.className =
+        "ativo";
+
+
+      let dados =
+        "";
+
+
+      if (
+        item.pavimento
+      ) {
+
+        dados += `
+
+          <div>
+
+            📍
+
+            <b>
+              Pavimento:
+            </b>
+
+            ${esc(
+              item.pavimento
+            )}
+
+          </div>
+
+        `;
+      }
+
+
+      if (
+        item.localizacao
+      ) {
+
+        dados += `
+
+          <div>
+
+            <b>
+              Localização:
+            </b>
+
+            ${esc(
+              item.localizacao
+            )}
+
+          </div>
+
+        `;
+      }
+
+
+      if (
+
+        item.ambiente &&
+
+        item.ambiente !==
+        item.localizacao
+
+      ) {
+
+        dados += `
+
+          <div>
+
+            <b>
+              Ambiente:
+            </b>
+
+            ${esc(
+              item.ambiente
+            )}
+
+          </div>
+
+        `;
+      }
+
+
+      if (
+        item.fabricante
+      ) {
+
+        dados += `
+
+          <div>
+
+            <b>
+              Fabricante:
+            </b>
+
+            ${esc(
+              item.fabricante
+            )}
+
+          </div>
+
+        `;
+      }
+
+
+      if (
+        item.modelo
+      ) {
+
+        dados += `
+
+          <div>
+
+            <b>
+              Modelo:
+            </b>
+
+            ${esc(
+              item.modelo
+            )}
+
+          </div>
+
+        `;
+      }
+
+
+      if (
+        item.categoria
+      ) {
+
+        dados += `
+
+          <div>
+
+            <b>
+              Categoria:
+            </b>
+
+            ${esc(
+              item.categoria
+            )}
+
+          </div>
+
+        `;
+      }
+
+
+      if (
+        item.criticidade
+      ) {
+
+        dados += `
+
+          <div>
+
+            <b>
+              Criticidade:
+            </b>
+
+            ${esc(
+              item.criticidade
+            )}
+
+          </div>
+
+        `;
+      }
+
+
+      const ficha =
+
+        FICHA_URL +
+
+        "?id=" +
+
+        encodeURIComponent(
+          item.id
+        );
+
+
+      card.innerHTML = `
+
+        <div class="ativo-topo">
+
+
+          <div>
+
+
+            <div class="ativo-id">
+
+              ${esc(
+                item.id
+              )}
+
+            </div>
+
+
+            <div class="ativo-nome">
+
+              ${esc(
+                item.nome ||
+                "Sem descrição"
+              )}
+
+            </div>
+
+
+            ${
+              item.status
+                ? `
+
+                  <span class="status-ativo">
+
+                    ${esc(
+                      item.status
+                    )}
+
+                  </span>
+
+                `
+                : ""
+            }
+
+
+          </div>
+
+
+          <span class="tipo">
+
+            ${esc(
+              item.tipo ||
+              "Ativo"
+            )}
+
+          </span>
+
+
+        </div>
+
+
+        <div class="dados">
+
+          ${dados}
+
+        </div>
+
+
+        <div class="acoes">
+
+          <a
+            class="btn-abrir"
+            href="${ficha}"
+          >
+
+            Abrir ficha do ativo
+
+          </a>
+
+        </div>
+
+      `;
+
+
+      resultados.appendChild(
+        card
+      );
+
+    }
+  );
+}
+
+
+/* ============================================================
+   EVENTOS
+   ============================================================ */
+
+btnBuscar.addEventListener(
+  "click",
+  executarBusca
+);
+
+
+busca.addEventListener(
+
+  "keydown",
+
+  function(event) {
+
+    if (
+      event.key ===
+      "Enter"
+    ) {
+
+      event.preventDefault();
+
+      executarBusca();
+    }
+  }
+);
+
+
+/* ============================================================
+   BUSCA AUTOMÁTICA VIA URL
+ *
+ * Exemplo:
+ *
+ * buscar.html?q=microbiologia
+ * ============================================================ */
+
+const parametros =
+  new URLSearchParams(
+    window.location.search
+  );
+
+
+const termoInicial =
+  parametros.get(
+    "q"
+  );
+
+
+if (
+  termoInicial &&
+  termoInicial.length >= 2
+) {
+
+  busca.value =
+    termoInicial;
+
+
+  executarBusca();
+
+} else {
+
+  busca.focus();
+}
+
 
 </script>
 
