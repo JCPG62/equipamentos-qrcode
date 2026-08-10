@@ -10,15 +10,18 @@
   content="width=device-width,initial-scale=1"
 >
 
-<title>QRManut - Busca Geral de Ativos</title>
+<title>
+QRManut
+</title>
+
 
 <style>
 
-* {
+*{
   box-sizing:border-box;
 }
 
-body {
+body{
 
   margin:0;
 
@@ -36,41 +39,17 @@ body {
 }
 
 
-.container {
+.container{
 
-  max-width:900px;
+  max-width:960px;
 
   margin:auto;
 
-  padding:20px;
+  padding:16px;
 }
 
 
-.header {
-
-  margin-bottom:20px;
-}
-
-
-.logo {
-
-  font-size:1.45rem;
-
-  font-weight:800;
-
-  color:#1f4e78;
-}
-
-
-.subtitulo {
-
-  color:#6b7280;
-
-  margin-top:4px;
-}
-
-
-.card {
+.card{
 
   background:#fff;
 
@@ -78,157 +57,218 @@ body {
 
   border-radius:16px;
 
-  padding:18px;
+  padding:16px;
 
   box-shadow:
-    0 5px 14px
+    0 5px 15px
     rgba(0,0,0,.05);
 }
 
 
-.search-box {
+h1{
 
-  display:flex;
+  margin:0 0 5px;
 
-  gap:8px;
+  font-size:1.35rem;
 }
 
 
-.search-box input {
+h2{
 
-  flex:1;
+  font-size:1.05rem;
+}
 
-  min-width:0;
 
-  border:
-    1px solid
-    #d1d5db;
-
-  border-radius:12px;
-
-  padding:14px;
+h3{
 
   font-size:1rem;
 
-  outline:none;
+  margin-top:18px;
 }
 
 
-.search-box input:focus {
-
-  border-color:#1f4e78;
-
-  box-shadow:
-    0 0 0 2px
-    rgba(31,78,120,.1);
+.muted{
+  color:#6b7280;
 }
 
 
-.search-box button {
+.hidden{
+  display:none !important;
+}
 
-  border:0;
 
-  border-radius:12px;
+.badge{
 
-  background:#1f4e78;
+  display:inline-block;
+
+  background:#e8eef8;
+
+  color:#1f4e78;
+
+  padding:5px 9px;
+
+  border-radius:999px;
+
+  font-size:.8rem;
+
+  font-weight:700;
+
+  margin-top:6px;
+}
+
+
+.section{
+
+  border-top:1px solid #e5e7eb;
+
+  margin-top:18px;
+
+  padding-top:14px;
+}
+
+
+.pair{
+
+  padding:7px 0;
+
+  border-bottom:
+    1px dashed #eee;
+}
+
+
+.pair:last-child{
+  border-bottom:0;
+}
+
+
+.chip{
+
+  display:inline-block;
+
+  padding:11px 15px;
+
+  border-radius:999px;
+
+  background:#dc2626;
 
   color:#fff;
 
   font-weight:700;
 
-  padding:0 20px;
+  cursor:pointer;
+
+  text-decoration:none;
+}
+
+
+.btn-search{
+
+  display:inline-block;
+
+  padding:11px 15px;
+
+  border-radius:999px;
+
+  border:1px solid #1f4e78;
+
+  color:#1f4e78;
+
+  background:#fff;
+
+  font-weight:700;
+
+  text-decoration:none;
 
   cursor:pointer;
 }
 
 
-.search-box button:disabled {
-
-  opacity:.6;
-
-  cursor:not-allowed;
-}
-
-
-.ajuda {
-
-  margin-top:10px;
-
-  color:#6b7280;
-
-  font-size:.85rem;
-}
-
-
-#status {
-
-  margin-top:18px;
-
-  color:#6b7280;
-
-  font-size:.9rem;
-}
-
-
-.resultados {
-
-  margin-top:16px;
-
-  display:grid;
-
-  gap:12px;
-}
-
-
-.ativo {
-
-  background:#fff;
-
-  border:1px solid #e5e7eb;
-
-  border-radius:14px;
-
-  padding:15px;
-
-  box-shadow:
-    0 2px 5px
-    rgba(0,0,0,.03);
-}
-
-
-.ativo-topo {
+.actions{
 
   display:flex;
 
-  justify-content:space-between;
+  flex-wrap:wrap;
 
-  gap:12px;
+  gap:9px;
 
-  align-items:flex-start;
+  margin-top:18px;
 }
 
 
-.ativo-id {
+/* SITUAÇÃO */
 
-  font-size:.8rem;
+.status-card{
 
+  margin-top:16px;
+
+  border-radius:13px;
+
+  padding:13px;
+
+  border:1px solid #e5e7eb;
+
+  background:#f9fafb;
+}
+
+
+.status-card.ok{
+  background:#ecfdf5;
+}
+
+
+.status-card.critico{
+  background:#fef2f2;
+}
+
+
+.status-card.atendimento{
+  background:#fffbeb;
+}
+
+
+.status-card.aguardando{
+  background:#fff7ed;
+}
+
+
+.status-title{
   font-weight:800;
-
-  color:#1f4e78;
-
-  margin-bottom:3px;
 }
 
 
-.ativo-nome {
+.status-info{
 
-  font-size:1rem;
+  font-size:.86rem;
 
-  font-weight:700;
+  margin-top:5px;
+
+  color:#6b7280;
 }
 
 
-.tipo {
+/* HISTÓRICO */
+
+.history-card{
+
+  margin-top:12px;
+
+  padding:13px;
+
+  background:#fafafa;
+
+  border:1px solid #e5e7eb;
+
+  border-radius:12px;
+}
+
+
+.tag{
+
+  display:inline-block;
+
+  margin:5px 4px 5px 0;
+
+  padding:4px 8px;
 
   background:#eef2ff;
 
@@ -236,132 +276,345 @@ body {
 
   border-radius:999px;
 
-  padding:5px 9px;
-
-  font-size:.72rem;
-
-  font-weight:700;
-
-  white-space:nowrap;
+  font-size:.75rem;
 }
 
 
-.status-ativo {
+/* BUSCA */
 
-  display:inline-block;
+.search-header{
 
-  margin-top:7px;
+  margin-bottom:18px;
+}
 
-  padding:4px 8px;
 
-  border-radius:999px;
+.search-title{
 
-  font-size:.72rem;
+  color:#1f4e78;
+
+  font-size:1.4rem;
+
+  font-weight:800;
+}
+
+
+.search-box{
+
+  display:flex;
+
+  gap:8px;
+}
+
+
+.search-box input{
+
+  flex:1;
+
+  min-width:0;
 
   border:1px solid #d1d5db;
 
-  background:#f9fafb;
+  border-radius:11px;
+
+  padding:13px;
+
+  font-size:1rem;
 }
 
 
-.dados {
+.search-box button{
 
-  margin-top:11px;
-
-  font-size:.88rem;
-
-  color:#4b5563;
-
-  line-height:1.6;
-}
-
-
-.acoes {
-
-  margin-top:13px;
-
-  padding-top:12px;
-
-  border-top:
-    1px solid
-    #f0f0f0;
-}
-
-
-.btn-abrir {
-
-  display:block;
-
-  width:100%;
-
-  text-align:center;
+  border:0;
 
   background:#1f4e78;
 
   color:#fff;
 
-  text-decoration:none;
+  border-radius:11px;
 
-  border-radius:9px;
-
-  padding:11px;
+  padding:0 20px;
 
   font-weight:700;
 }
 
 
-.vazio {
+.search-help{
+
+  margin-top:9px;
+
+  font-size:.83rem;
+
+  color:#6b7280;
+}
+
+
+.search-result{
+
+  margin-top:11px;
+
+  padding:14px;
+
+  border:1px solid #e5e7eb;
+
+  border-radius:13px;
+
+  background:#fff;
+}
+
+
+.search-result-id{
+
+  font-size:.78rem;
+
+  font-weight:800;
+
+  color:#1f4e78;
+}
+
+
+.search-result-name{
+
+  font-weight:700;
+
+  margin-top:2px;
+}
+
+
+.search-result-data{
+
+  margin-top:8px;
+
+  font-size:.86rem;
+
+  color:#4b5563;
+
+  line-height:1.55;
+}
+
+
+.open-button{
+
+  display:block;
+
+  margin-top:11px;
+
+  padding:10px;
+
+  background:#1f4e78;
+
+  color:#fff;
+
+  text-align:center;
+
+  text-decoration:none;
+
+  font-weight:700;
+
+  border-radius:9px;
+}
+
+
+/* MODAL */
+
+.modal{
+
+  position:fixed;
+
+  inset:0;
+
+  display:none;
+
+  align-items:center;
+
+  justify-content:center;
+
+  padding:12px;
+
+  background:
+    rgba(0,0,0,.45);
+
+  z-index:999;
+}
+
+
+.modal-box{
+
+  width:min(680px,96vw);
+
+  max-height:92vh;
+
+  overflow:auto;
 
   background:#fff;
 
-  padding:22px;
+  padding:17px;
 
-  border-radius:12px;
-
-  text-align:center;
-
-  color:#6b7280;
-
-  border:
-    1px solid
-    #e5e7eb;
+  border-radius:15px;
 }
 
 
-.footer {
+label{
 
-  margin-top:24px;
+  display:grid;
 
-  text-align:center;
+  gap:5px;
+
+  margin-top:12px;
+
+  font-weight:600;
+}
+
+
+input,
+select,
+textarea{
+
+  width:100%;
+
+  padding:11px;
+
+  border:1px solid #d1d5db;
+
+  border-radius:9px;
+
+  font:inherit;
+
+  background:#fff;
+}
+
+
+textarea{
+  resize:vertical;
+}
+
+
+button{
+
+  cursor:pointer;
+
+  font:inherit;
+}
+
+
+.modal-actions{
+
+  display:flex;
+
+  justify-content:flex-end;
+
+  gap:8px;
+
+  margin-top:15px;
+}
+
+
+.btn{
+
+  border:0;
+
+  border-radius:9px;
+
+  padding:11px 15px;
+
+  background:#111827;
+
+  color:#fff;
+}
+
+
+.btn-secondary{
+
+  background:#e5e7eb;
+
+  color:#111827;
+}
+
+
+.photo-preview{
+
+  display:none;
+
+  max-width:100%;
+
+  max-height:280px;
+
+  margin-top:10px;
+
+  border-radius:10px;
+}
+
+
+.message{
+
+  display:none;
+
+  margin-top:10px;
+
+  padding:10px;
+
+  border-radius:8px;
+}
+
+
+.success{
+
+  display:block;
+
+  background:#d1fae5;
+
+  color:#065f46;
+}
+
+
+.error{
+
+  display:block;
+
+  background:#fee2e2;
+
+  color:#991b1b;
+}
+
+
+.loading{
+
+  display:block;
+
+  background:#fef3c7;
+
+  color:#92400e;
+}
+
+
+.footer{
+
+  margin-top:20px;
 
   color:#9ca3af;
 
-  font-size:.75rem;
+  font-size:.72rem;
+
+  text-align:center;
 }
 
 
-@media(max-width:600px) {
+iframe{
+  display:none;
+}
 
-  .search-box {
+
+@media(max-width:600px){
+
+  .search-box{
     display:grid;
   }
 
-
-  .search-box button {
-    padding:13px;
+  .search-box button{
+    padding:12px;
   }
 
-
-  .ativo-topo {
-    display:block;
-  }
-
-
-  .tipo {
-
-    display:inline-block;
-
-    margin-top:7px;
+  .modal-actions{
+    flex-direction:column-reverse;
   }
 }
 
@@ -376,14 +629,24 @@ body {
 <div class="container">
 
 
-<div class="header">
+<!-- =========================================================
+     BUSCA GERAL
+     ========================================================= -->
 
-<div class="logo">
+<div
+  id="searchScreen"
+  class="hidden"
+>
+
+
+<div class="search-header">
+
+<div class="search-title">
 🔎 QRManut
 </div>
 
-<div class="subtitulo">
-Busca geral de equipamentos, ambientes e ativos
+<div class="muted">
+Busca Geral de Ativos
 </div>
 
 </div>
@@ -395,15 +658,12 @@ Busca geral de equipamentos, ambientes e ativos
 <div class="search-box">
 
 <input
-  id="busca"
-  type="search"
-  placeholder="Digite ID, equipamento, ambiente ou localização..."
-  autocomplete="off"
+  id="searchInput"
+  placeholder="ID, equipamento, ambiente, pavimento ou localização..."
 >
 
 <button
-  id="btnBuscar"
-  type="button"
+  id="searchButton"
 >
 Buscar
 </button>
@@ -411,652 +671,2017 @@ Buscar
 </div>
 
 
-<div class="ajuda">
-
-Você pode pesquisar por:
-
-<strong>
-ID, equipamento, ambiente, pavimento, localização, fabricante ou modelo.
-</strong>
-
-<br><br>
+<div class="search-help">
 
 Exemplos:
-Microbiologia, 2º Piso, Recepção, Bomba, Dancor ou EQ001BH1P.
+Microbiologia, Bomba, Recepção, 2º Piso ou EQ001BH1P.
 
 </div>
 
 </div>
-
-
-<div id="status"></div>
 
 
 <div
-  id="resultados"
-  class="resultados"
+  id="searchStatus"
+  class="muted"
+  style="margin-top:15px"
 ></div>
 
 
+<div id="searchResults"></div>
+
+
+</div>
+
+
+
+<!-- =========================================================
+     FICHA DO ATIVO
+     ========================================================= -->
+
+<div
+  id="assetScreen"
+  class="hidden"
+>
+
+
+<div class="card">
+
+
+<h1 id="titulo">
+Carregando...
+</h1>
+
+
+<div
+  id="meta"
+  class="muted"
+></div>
+
+
+<div
+  id="tipoBadge"
+  class="badge"
+></div>
+
+
+<div
+  id="statusCard"
+  class="status-card"
+>
+
+<div
+  id="statusTitle"
+  class="status-title"
+>
+Carregando situação...
+</div>
+
+<div
+  id="statusInfo"
+  class="status-info"
+></div>
+
+</div>
+
+
+
+<div
+  id="classificationSection"
+  class="section hidden"
+>
+
+<h3>
+Classificação
+</h3>
+
+<div id="classification"></div>
+
+</div>
+
+
+
+<div
+  id="locationSection"
+  class="section hidden"
+>
+
+<h3>
+Localização
+</h3>
+
+<div id="location"></div>
+
+</div>
+
+
+
+<div
+  id="technicalSection"
+  class="section hidden"
+>
+
+<h3>
+Características Técnicas
+</h3>
+
+<div id="technical"></div>
+
+</div>
+
+
+
+<div class="section">
+
+<h3>
+Gestão do Ativo
+</h3>
+
+<div id="management"></div>
+
+</div>
+
+
+
+<div class="actions">
+
+<a
+  id="reportButton"
+  class="chip"
+>
+Reportar Serviço / Anomalia / Reparo
+</a>
+
+
+<a
+  id="searchAssetsButton"
+  class="btn-search"
+>
+🔎 Buscar ativos
+</a>
+
+</div>
+
+
+
+<div class="section">
+
+<h3>
+Histórico de Manutenção
+</h3>
+
+<div id="historyStatus"></div>
+
+<select
+  id="historySelect"
+  class="hidden"
+></select>
+
+<div id="historyDetail"></div>
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+<!-- =========================================================
+     MODAL NOVA OCORRÊNCIA
+     ========================================================= -->
+
+<div
+  id="reportModal"
+  class="modal"
+>
+
+<div class="modal-box">
+
+
+<h2>
+Reportar Serviço / Anomalia / Reparo
+</h2>
+
+
+<label>
+
+Seu nome *
+
+<input
+  id="reporterName"
+>
+
+</label>
+
+
+<label>
+
+Contato
+
+<input
+  id="reporterContact"
+>
+
+</label>
+
+
+<label>
+
+Categoria da ocorrência *
+
+<select id="category">
+
+<option value="">
+Selecione...
+</option>
+
+<option>Civil</option>
+<option>Sanitário</option>
+<option>Elétrica</option>
+<option>Hidráulica</option>
+<option>Climatização</option>
+<option>Refrigeração</option>
+<option>Utilidades</option>
+<option>Segurança</option>
+<option>Mobiliário</option>
+<option>Equipamento</option>
+<option>Outros</option>
+
+</select>
+
+</label>
+
+
+<label>
+
+Componente afetado *
+
+<select id="component">
+
+<option value="">
+Selecione...
+</option>
+
+<option>Geral</option>
+<option>Piso</option>
+<option>Parede</option>
+<option>Teto</option>
+<option>Porta</option>
+<option>Janela</option>
+<option>Vaso Sanitário</option>
+<option>Pia</option>
+<option>Torneira</option>
+<option>Descarga</option>
+<option>Mictório</option>
+<option>Ralo</option>
+<option>Luminária</option>
+<option>Tomada</option>
+<option>Interruptor</option>
+<option>Tubulação</option>
+<option>Registro</option>
+<option>Bomba</option>
+<option>Motor</option>
+<option>Painel</option>
+<option>Ar-condicionado</option>
+<option>Mobiliário</option>
+<option>Outro</option>
+
+</select>
+
+</label>
+
+
+<label>
+
+Descrição *
+
+<textarea
+  id="description"
+  rows="5"
+></textarea>
+
+</label>
+
+
+<label>
+
+Foto da ocorrência
+
+<input
+  id="photoInput"
+  type="file"
+  accept="image/*"
+  capture="environment"
+>
+
+</label>
+
+
+<img
+  id="photoPreview"
+  class="photo-preview"
+>
+
+
+<div
+  id="reportMessage"
+  class="message"
+></div>
+
+
+<div class="modal-actions">
+
+<button
+  id="cancelReport"
+  class="btn btn-secondary"
+>
+Cancelar
+</button>
+
+<button
+  id="sendReport"
+  class="btn"
+>
+Enviar
+</button>
+
+</div>
+
+
+</div>
+
+</div>
+
+
+
+<!-- =========================================================
+     GERENCIAMENTO
+     ========================================================= -->
+
+<div
+  id="manageModal"
+  class="modal"
+>
+
+<div class="modal-box">
+
+
+<h2 id="manageTitle">
+Gerenciar ocorrência
+</h2>
+
+
+<label>
+
+Status
+
+<select id="manageStatus">
+
+<option>Aberta</option>
+<option>Em atendimento</option>
+<option>Aguardando peça</option>
+<option>Concluída</option>
+<option>Cancelada</option>
+
+</select>
+
+</label>
+
+
+<label>
+
+Responsável
+
+<input id="manageResponsible">
+
+</label>
+
+
+<label>
+
+Solução / Serviço realizado
+
+<textarea
+  id="manageSolution"
+  rows="5"
+></textarea>
+
+</label>
+
+
+<div
+  id="conclusionPhotoArea"
+  class="hidden"
+>
+
+<label>
+
+Foto após o serviço
+
+<input
+  id="conclusionPhotoInput"
+  type="file"
+  accept="image/*"
+  capture="environment"
+>
+
+</label>
+
+
+<img
+  id="conclusionPhotoPreview"
+  class="photo-preview"
+>
+
+</div>
+
+
+<div
+  id="manageMessage"
+  class="message"
+></div>
+
+
+<div class="modal-actions">
+
+<button
+  id="cancelManage"
+  class="btn btn-secondary"
+>
+Cancelar
+</button>
+
+<button
+  id="saveManage"
+  class="btn"
+>
+Salvar
+</button>
+
+</div>
+
+
+</div>
+
+</div>
+
+
+
+<!-- POSTS -->
+
+<form
+  id="reportForm"
+  method="POST"
+  target="reportFrame"
+  style="display:none"
+>
+
+<input name="token" id="p_token">
+<input name="id" id="p_id">
+<input name="nomeEquipamento" id="p_name">
+<input name="reportadoPor" id="p_reporter">
+<input name="contato" id="p_contact">
+<input name="categoriaOcorrencia" id="p_category">
+<input name="componenteAfetado" id="p_component">
+<input name="descricao" id="p_description">
+<input name="fotoBase64" id="p_photo">
+<input name="fotoNome" id="p_photoName">
+<input name="fotoMime" id="p_photoMime">
+
+</form>
+
+
+<form
+  id="manageForm"
+  method="POST"
+  target="manageFrame"
+  style="display:none"
+>
+
+<input name="action" value="updateOccurrence">
+<input name="token" id="m_token">
+<input name="ocorrencia" id="m_occurrence">
+<input name="status" id="m_status">
+<input name="responsavel" id="m_responsible">
+<input name="solucao" id="m_solution">
+<input name="fotoConclusaoBase64" id="m_photo">
+<input name="fotoConclusaoNome" id="m_photoName">
+<input name="fotoConclusaoMime" id="m_photoMime">
+
+</form>
+
+
+<iframe
+  id="reportFrame"
+  name="reportFrame"
+></iframe>
+
+<iframe
+  id="manageFrame"
+  name="manageFrame"
+></iframe>
+
+
 <div class="footer">
-
-QRManut • Sistema de Gestão de Manutenção<br>
-
-JCPG-2026 - Busca v1.0
-
+QRManut • JCPG-2026 • v3.2
 </div>
 
 
 </div>
+
 
 
 <script>
 
-
-/* ============================================================
-   CONFIGURAÇÃO
-   ============================================================ */
-
 const API_URL =
 "https://script.google.com/macros/s/AKfycbx4tpC42Q6WdkNhTUTAGoZWvG5M24zwlNscnwbDP5B3Q5pWo8B32-Lf0rQ2Xtua1AFMAQ/exec";
 
-
-const API_TOKEN =
+const TOKEN =
 "pncqalpha123";
 
+const SEARCH_ID =
+"EQBUSCA";
 
-/*
- * IMPORTANTE
- *
- * Esta página considera que o HTML da ficha
- * principal está no arquivo index.html.
- *
- * Se o nome do arquivo for diferente,
- * altere somente esta constante.
- */
+const MAX_DIM =
+1280;
 
-const FICHA_URL =
-"index.html";
+const QUALITY =
+0.72;
 
 
-/* ============================================================
-   ELEMENTOS
-   ============================================================ */
+let currentAsset = null;
+let history = [];
+let selectedOccurrence = null;
 
-const busca =
-  document.getElementById(
-    "busca"
-  );
+let photoData = null;
+let conclusionPhotoData = null;
 
-
-const btnBuscar =
-  document.getElementById(
-    "btnBuscar"
-  );
+let reportPosting = false;
+let managePosting = false;
 
 
-const statusEl =
-  document.getElementById(
-    "status"
-  );
+/* HELPERS */
+
+function $(id){
+  return document.getElementById(id);
+}
 
 
-const resultados =
-  document.getElementById(
-    "resultados"
-  );
-
-
-/* ============================================================
-   SEGURANÇA HTML
-   ============================================================ */
-
-function esc(texto) {
+function esc(s){
 
   return String(
-    texto ?? ""
+    s ?? ""
   )
-  .replace(
-    /&/g,
-    "&amp;"
+  .replace(/&/g,"&amp;")
+  .replace(/</g,"&lt;")
+  .replace(/>/g,"&gt;")
+  .replace(/"/g,"&quot;");
+}
+
+
+function getId(){
+
+  return String(
+    new URLSearchParams(
+      location.search
+    )
+    .get("id") || ""
   )
-  .replace(
-    /</g,
-    "&lt;"
-  )
-  .replace(
-    />/g,
-    "&gt;"
-  )
-  .replace(
-    /"/g,
-    "&quot;"
-  )
-  .replace(
-    /'/g,
-    "&#039;"
+  .trim()
+  .toUpperCase();
+}
+
+
+function show(id){
+  $(id).classList.remove("hidden");
+}
+
+
+function hide(id){
+  $(id).classList.add("hidden");
+}
+
+
+function valueExists(v){
+
+  return (
+    v !== null &&
+    v !== undefined &&
+    String(v).trim() !== ""
   );
 }
 
 
-/* ============================================================
-   EXECUTA BUSCA
-   ============================================================ */
+function pairs(items){
 
-async function executarBusca() {
+  return items
+    .filter(
+      x => valueExists(x[1])
+    )
+    .map(
+      x => `
 
-  const termo =
-    busca.value.trim();
+        <div class="pair">
+
+          <b>${esc(x[0])}:</b>
+
+          ${esc(x[1])}
+
+        </div>
+
+      `
+    )
+    .join("");
+}
 
 
-  resultados.innerHTML =
-    "";
+function formatDate(v){
+
+  if (!v) return "";
+
+  const d =
+    new Date(v);
+
+  if (
+    isNaN(d)
+  ) {
+
+    return String(v);
+  }
+
+  return d.toLocaleString(
+    "pt-BR"
+  );
+}
+
+
+/* API */
+
+async function api(params){
+
+  const url =
+    API_URL +
+    "?" +
+    new URLSearchParams(
+      Object.assign(
+        {
+          token:TOKEN
+        },
+        params
+      )
+    )
+    .toString();
+
+
+  const response =
+    await fetch(url);
+
+
+  return response.json();
+}
+
+
+/* BUSCA */
+
+function openSearch(){
+
+  history = [];
+
+  hide("assetScreen");
+
+  show("searchScreen");
+
+  $("searchInput").focus();
+}
+
+
+async function searchAssets(){
+
+  const q =
+    $("searchInput")
+      .value
+      .trim();
 
 
   if (
-    termo.length < 2
+    q.length < 2
   ) {
 
-    statusEl.textContent =
+    $("searchStatus")
+      .textContent =
       "Digite pelo menos 2 caracteres.";
-
-    busca.focus();
 
     return;
   }
 
 
-  statusEl.textContent =
-    "Buscando ativos...";
+  $("searchStatus")
+    .textContent =
+    "Buscando...";
 
 
-  btnBuscar.disabled =
-    true;
+  $("searchResults")
+    .innerHTML =
+    "";
 
 
-  try {
+  try{
+
+    const data =
+      await api({
+        action:"search",
+        q:q
+      });
 
 
-    const url =
-
-      API_URL +
-
-      "?action=search" +
-
-      "&q=" +
-
-      encodeURIComponent(
-        termo
-      ) +
-
-      "&token=" +
-
-      encodeURIComponent(
-        API_TOKEN
-      );
-
-
-    const response =
-      await fetch(
-        url
-      );
-
-
-    if (
-      !response.ok
-    ) {
+    if (!data.ok){
 
       throw new Error(
-        "Erro HTTP " +
-        response.status
+        data.error
       );
     }
 
 
-    const json =
-      await response.json();
-
-
-    if (
-      !json.ok
-    ) {
-
-      throw new Error(
-        json.detail ||
-        json.error ||
-        "Erro na busca."
-      );
-    }
-
-
-    renderizarResultados(
-      json.results || []
+    renderSearchResults(
+      data.results || []
     );
 
 
-  } catch (
-    erro
-  ) {
+  }catch(error){
 
-    console.error(
-      erro
-    );
-
-
-    statusEl.textContent =
-      "Não foi possível realizar a busca.";
-
-
-    resultados.innerHTML = `
-
-      <div class="vazio">
-
-        Ocorreu um erro ao consultar o QRManut.
-
-      </div>
-
-    `;
-
-
-  } finally {
-
-    btnBuscar.disabled =
-      false;
+    $("searchStatus")
+      .textContent =
+      "Erro ao realizar busca.";
   }
 }
 
 
-/* ============================================================
-   RENDERIZA RESULTADOS
-   ============================================================ */
+function renderSearchResults(items){
 
-function renderizarResultados(lista) {
+  $("searchStatus")
+    .textContent =
 
-  resultados.innerHTML =
-    "";
-
-
-  if (
-    lista.length === 0
-  ) {
-
-    statusEl.textContent =
-      "";
-
-
-    resultados.innerHTML = `
-
-      <div class="vazio">
-
-        Nenhum ativo encontrado.
-
-      </div>
-
-    `;
-
-
-    return;
-  }
-
-
-  statusEl.textContent =
-
-    lista.length +
-
+    items.length +
     (
-      lista.length === 1
-        ? " resultado encontrado"
-        : " resultados encontrados"
+      items.length === 1
+        ? " resultado"
+        : " resultados"
     );
 
 
-  lista.forEach(
-    function(item) {
+  if (!items.length){
 
+    $("searchResults")
+      .innerHTML = `
 
-      const card =
-        document.createElement(
-          "div"
-        );
+        <div class="search-result">
 
-
-      card.className =
-        "ativo";
-
-
-      let dados =
-        "";
-
-
-      if (
-        item.pavimento
-      ) {
-
-        dados += `
-
-          <div>
-
-            📍
-
-            <b>
-              Pavimento:
-            </b>
-
-            ${esc(
-              item.pavimento
-            )}
-
-          </div>
-
-        `;
-      }
-
-
-      if (
-        item.localizacao
-      ) {
-
-        dados += `
-
-          <div>
-
-            <b>
-              Localização:
-            </b>
-
-            ${esc(
-              item.localizacao
-            )}
-
-          </div>
-
-        `;
-      }
-
-
-      if (
-
-        item.ambiente &&
-
-        item.ambiente !==
-        item.localizacao
-
-      ) {
-
-        dados += `
-
-          <div>
-
-            <b>
-              Ambiente:
-            </b>
-
-            ${esc(
-              item.ambiente
-            )}
-
-          </div>
-
-        `;
-      }
-
-
-      if (
-        item.fabricante
-      ) {
-
-        dados += `
-
-          <div>
-
-            <b>
-              Fabricante:
-            </b>
-
-            ${esc(
-              item.fabricante
-            )}
-
-          </div>
-
-        `;
-      }
-
-
-      if (
-        item.modelo
-      ) {
-
-        dados += `
-
-          <div>
-
-            <b>
-              Modelo:
-            </b>
-
-            ${esc(
-              item.modelo
-            )}
-
-          </div>
-
-        `;
-      }
-
-
-      if (
-        item.categoria
-      ) {
-
-        dados += `
-
-          <div>
-
-            <b>
-              Categoria:
-            </b>
-
-            ${esc(
-              item.categoria
-            )}
-
-          </div>
-
-        `;
-      }
-
-
-      if (
-        item.criticidade
-      ) {
-
-        dados += `
-
-          <div>
-
-            <b>
-              Criticidade:
-            </b>
-
-            ${esc(
-              item.criticidade
-            )}
-
-          </div>
-
-        `;
-      }
-
-
-      const ficha =
-
-        FICHA_URL +
-
-        "?id=" +
-
-        encodeURIComponent(
-          item.id
-        );
-
-
-      card.innerHTML = `
-
-        <div class="ativo-topo">
-
-
-          <div>
-
-
-            <div class="ativo-id">
-
-              ${esc(
-                item.id
-              )}
-
-            </div>
-
-
-            <div class="ativo-nome">
-
-              ${esc(
-                item.nome ||
-                "Sem descrição"
-              )}
-
-            </div>
-
-
-            ${
-              item.status
-                ? `
-
-                  <span class="status-ativo">
-
-                    ${esc(
-                      item.status
-                    )}
-
-                  </span>
-
-                `
-                : ""
-            }
-
-
-          </div>
-
-
-          <span class="tipo">
-
-            ${esc(
-              item.tipo ||
-              "Ativo"
-            )}
-
-          </span>
-
-
-        </div>
-
-
-        <div class="dados">
-
-          ${dados}
-
-        </div>
-
-
-        <div class="acoes">
-
-          <a
-            class="btn-abrir"
-            href="${ficha}"
-          >
-
-            Abrir ficha do ativo
-
-          </a>
+          Nenhum ativo encontrado.
 
         </div>
 
       `;
 
+    return;
+  }
 
-      resultados.appendChild(
-        card
+
+  $("searchResults")
+    .innerHTML =
+
+    items.map(
+      item => `
+
+        <div class="search-result">
+
+          <div class="search-result-id">
+            ${esc(item.id)}
+          </div>
+
+          <div class="search-result-name">
+            ${esc(item.nome)}
+          </div>
+
+          <span class="tag">
+            ${esc(item.tipo)}
+          </span>
+
+          <div class="search-result-data">
+
+            ${
+              item.pavimento
+                ? `
+                  <div>
+                    <b>Pavimento:</b>
+                    ${esc(item.pavimento)}
+                  </div>
+                `
+                : ""
+            }
+
+            ${
+              item.localizacao
+                ? `
+                  <div>
+                    <b>Localização:</b>
+                    ${esc(item.localizacao)}
+                  </div>
+                `
+                : ""
+            }
+
+            ${
+              item.fabricante
+                ? `
+                  <div>
+                    <b>Fabricante:</b>
+                    ${esc(item.fabricante)}
+                  </div>
+                `
+                : ""
+            }
+
+            ${
+              item.modelo
+                ? `
+                  <div>
+                    <b>Modelo:</b>
+                    ${esc(item.modelo)}
+                  </div>
+                `
+                : ""
+            }
+
+          </div>
+
+          <a
+            class="open-button"
+            href="?id=${encodeURIComponent(item.id)}"
+          >
+            Abrir ficha
+          </a>
+
+        </div>
+
+      `
+    )
+    .join("");
+}
+
+
+/* FICHA */
+
+async function loadAsset(id){
+
+  hide("searchScreen");
+
+  show("assetScreen");
+
+
+  const [
+    asset,
+    status,
+    hist
+  ] =
+    await Promise.all([
+
+      api({id:id}),
+
+      api({
+        action:"status",
+        id:id
+      }),
+
+      api({
+        action:"history",
+        id:id
+      })
+
+    ]);
+
+
+  if (!asset.ok){
+
+    $("titulo")
+      .textContent =
+      "Ativo não encontrado";
+
+    return;
+  }
+
+
+  currentAsset =
+    asset.data;
+
+
+  renderAsset(
+    asset.data
+  );
+
+
+  if (
+    status.ok
+  ) {
+
+    renderStatus(
+      status.data
+    );
+  }
+
+
+  if (
+    hist.ok
+  ) {
+
+    renderHistory(
+      hist.history || []
+    );
+  }
+}
+
+
+function renderAsset(a){
+
+  $("titulo")
+    .textContent =
+    a.id +
+    " – " +
+    a.nome_do_equipamento;
+
+
+  $("meta")
+    .textContent =
+    a.local_detalhado ||
+    a.localizacao ||
+    a.pavimento ||
+    "";
+
+
+  $("tipoBadge")
+    .textContent =
+    a.tipo_de_ativo ||
+    "Equipamento";
+
+
+  const classification =
+    pairs([
+
+      [
+        "Tipo de Ativo",
+        a.tipo_de_ativo
+      ],
+
+      [
+        "Categoria",
+        a.categoria_do_ativo
+      ],
+
+      [
+        "Subcategoria",
+        a.subcategoria
+      ],
+
+      [
+        "Criticidade",
+        a.criticidade
+      ],
+
+      [
+        "Classe de Manutenção",
+        a.classe_de_manutencao
+      ]
+
+    ]);
+
+
+  if (classification){
+
+    show(
+      "classificationSection"
+    );
+
+    $("classification")
+      .innerHTML =
+      classification;
+  }
+
+
+  const location =
+    pairs([
+
+      ["Área",a.area],
+
+      ["Ambiente",a.ambiente],
+
+      [
+        "Componente / Elemento",
+        a.componente_elemento
+      ],
+
+      ["Pavimento",a.pavimento],
+
+      ["Localização",a.localizacao],
+
+      [
+        "Local Detalhado",
+        a.local_detalhado
+      ]
+
+    ]);
+
+
+  if (location){
+
+    show(
+      "locationSection"
+    );
+
+    $("location")
+      .innerHTML =
+      location;
+  }
+
+
+  const technical =
+    pairs([
+
+      ["Fabricante",a.fabricante],
+      ["Modelo",a.modelo],
+      ["Número de Série",a.numero_de_serie],
+      ["Capacidade",a.capacidade],
+      ["Amperagem Nominal",a.amperagem_nominal_fla],
+      ["Amperagem de Partida",a.amperagem_de_partida_flr],
+      ["Amperagem Medida",a.amperagem_medida],
+      ["Voltagem",a.voltagem],
+      ["Peso",a.peso],
+      ["Ano de Aquisição",a.ano_de_aquisicao],
+      ["Vida Útil Estimada",a.vida_util_estimada]
+
+    ]);
+
+
+  if (technical){
+
+    show(
+      "technicalSection"
+    );
+
+    $("technical")
+      .innerHTML =
+      technical;
+  }
+
+
+  $("management")
+    .innerHTML =
+    pairs([
+
+      ["Status cadastral",a.status],
+
+      ["Prestador",a.prestador],
+
+      ["Periodicidade",a.periodicidade],
+
+      ["Observações",a.observacoes]
+
+    ]);
+}
+
+
+function renderStatus(s){
+
+  $("statusCard")
+    .className =
+    "status-card " +
+    (
+      s.nivel || ""
+    );
+
+
+  $("statusTitle")
+    .textContent =
+
+    (s.icone || "") +
+    " " +
+    s.situacao;
+
+
+  $("statusInfo")
+    .textContent =
+
+    s.totalAtivas
+
+      ? s.totalAtivas +
+        " ocorrência(s) ativa(s)"
+
+      : "Nenhuma ocorrência ativa.";
+}
+
+
+/* HISTÓRICO */
+
+function renderHistory(items){
+
+  history =
+    items;
+
+
+  if (!history.length){
+
+    $("historyStatus")
+      .textContent =
+      "Nenhum histórico registrado.";
+
+    hide(
+      "historySelect"
+    );
+
+    $("historyDetail")
+      .innerHTML =
+      "";
+
+    return;
+  }
+
+
+  $("historyStatus")
+    .textContent =
+    history.length +
+    " registro(s)";
+
+
+  show(
+    "historySelect"
+  );
+
+
+  $("historySelect")
+    .innerHTML =
+
+    history.map(
+      (x,i) => `
+
+        <option value="${i}">
+
+          ${esc(x.ocorrencia)}
+          |
+          ${esc(x.status)}
+
+        </option>
+
+      `
+    )
+    .join("");
+
+
+  renderHistoryItem(0);
+}
+
+
+function renderHistoryItem(index){
+
+  const x =
+    history[index];
+
+
+  selectedOccurrence =
+    x;
+
+
+  $("historyDetail")
+    .innerHTML = `
+
+      <div class="history-card">
+
+        <b>
+          ${esc(x.ocorrencia)}
+        </b>
+
+        <div class="muted">
+          ${esc(formatDate(x.data))}
+        </div>
+
+        <span class="tag">
+          ${esc(x.status)}
+        </span>
+
+        ${
+          x.categoriaOcorrencia
+            ? `
+              <span class="tag">
+                ${esc(x.categoriaOcorrencia)}
+              </span>
+            `
+            : ""
+        }
+
+        ${
+          x.componenteAfetado
+            ? `
+              <span class="tag">
+                ${esc(x.componenteAfetado)}
+              </span>
+            `
+            : ""
+        }
+
+        <div style="margin-top:10px">
+
+          <b>Descrição:</b><br>
+
+          ${esc(x.descricao)}
+
+        </div>
+
+        ${
+          x.responsavel
+            ? `
+              <div style="margin-top:8px">
+
+                <b>Responsável:</b>
+
+                ${esc(x.responsavel)}
+
+              </div>
+            `
+            : ""
+        }
+
+        ${
+          x.solucao
+            ? `
+              <div style="margin-top:8px">
+
+                <b>Solução:</b><br>
+
+                ${esc(x.solucao)}
+
+              </div>
+            `
+            : ""
+        }
+
+        ${
+          x.foto
+            ? `
+              <div style="margin-top:10px">
+
+                <a
+                  href="${esc(x.foto)}"
+                  target="_blank"
+                >
+                  📷 Foto da ocorrência
+                </a>
+
+              </div>
+            `
+            : ""
+        }
+
+        ${
+          x.fotoConclusao
+            ? `
+              <div style="margin-top:8px">
+
+                <a
+                  href="${esc(x.fotoConclusao)}"
+                  target="_blank"
+                >
+                  ✅ Foto após o serviço
+                </a>
+
+              </div>
+            `
+            : ""
+        }
+
+        <button
+          class="btn"
+          style="
+            width:100%;
+            margin-top:12px
+          "
+          onclick="openManage(${index})"
+        >
+          Gerenciar ocorrência
+        </button>
+
+      </div>
+
+    `;
+}
+
+
+/* FOTO */
+
+function processPhoto(file){
+
+  return new Promise(
+    function(resolve,reject){
+
+      const reader =
+        new FileReader();
+
+
+      reader.onload =
+        function(event){
+
+          const img =
+            new Image();
+
+
+          img.onload =
+            function(){
+
+              let w =
+                img.width;
+
+              let h =
+                img.height;
+
+
+              if (
+                w > MAX_DIM ||
+                h > MAX_DIM
+              ){
+
+                if (
+                  w > h
+                ){
+
+                  h =
+                    Math.round(
+                      h * MAX_DIM / w
+                    );
+
+                  w =
+                    MAX_DIM;
+
+                }else{
+
+                  w =
+                    Math.round(
+                      w * MAX_DIM / h
+                    );
+
+                  h =
+                    MAX_DIM;
+                }
+              }
+
+
+              const canvas =
+                document.createElement(
+                  "canvas"
+                );
+
+
+              canvas.width =
+                w;
+
+              canvas.height =
+                h;
+
+
+              canvas
+                .getContext("2d")
+                .drawImage(
+                  img,
+                  0,
+                  0,
+                  w,
+                  h
+                );
+
+
+              const dataUrl =
+                canvas.toDataURL(
+                  "image/jpeg",
+                  QUALITY
+                );
+
+
+              resolve({
+
+                base64:
+                  dataUrl.split(",")[1],
+
+                dataUrl:
+                  dataUrl,
+
+                mime:
+                  "image/jpeg",
+
+                name:
+                  "foto_" +
+                  Date.now() +
+                  ".jpg"
+
+              });
+            };
+
+
+          img.src =
+            event.target.result;
+        };
+
+
+      reader.onerror =
+        reject;
+
+
+      reader.readAsDataURL(
+        file
       );
-
     }
   );
 }
 
 
-/* ============================================================
-   EVENTOS
-   ============================================================ */
+/* ABERTURA */
 
-btnBuscar.addEventListener(
-  "click",
-  executarBusca
-);
+function openReport(){
+
+  $("reportModal")
+    .style.display =
+    "flex";
+}
 
 
-busca.addEventListener(
+function closeReport(){
 
-  "keydown",
+  if (
+    reportPosting
+  ) return;
 
-  function(event) {
+
+  $("reportModal")
+    .style.display =
+    "none";
+}
+
+
+async function sendReport(){
+
+  const reporter =
+    $("reporterName")
+      .value
+      .trim();
+
+
+  const category =
+    $("category")
+      .value;
+
+
+  const component =
+    $("component")
+      .value;
+
+
+  const description =
+    $("description")
+      .value
+      .trim();
+
+
+  const msg =
+    $("reportMessage");
+
+
+  if (
+    !reporter ||
+    !category ||
+    !component ||
+    !description
+  ){
+
+    msg.className =
+      "message error";
+
+    msg.textContent =
+      "Preencha todos os campos obrigatórios.";
+
+    return;
+  }
+
+
+  $("p_token").value =
+    TOKEN;
+
+  $("p_id").value =
+    currentAsset.id;
+
+  $("p_name").value =
+    currentAsset.nome_do_equipamento;
+
+  $("p_reporter").value =
+    reporter;
+
+  $("p_contact").value =
+    $("reporterContact").value;
+
+  $("p_category").value =
+    category;
+
+  $("p_component").value =
+    component;
+
+  $("p_description").value =
+    description;
+
+
+  if (
+    photoData
+  ){
+
+    $("p_photo").value =
+      photoData.base64;
+
+    $("p_photoName").value =
+      photoData.name;
+
+    $("p_photoMime").value =
+      photoData.mime;
+
+  }else{
+
+    $("p_photo").value = "";
+    $("p_photoName").value = "";
+    $("p_photoMime").value = "";
+  }
+
+
+  $("reportForm").action =
+    API_URL;
+
+
+  reportPosting =
+    true;
+
+
+  msg.className =
+    "message loading";
+
+  msg.textContent =
+    "Registrando ocorrência...";
+
+
+  $("reportForm")
+    .submit();
+}
+
+
+/* GERENCIAMENTO */
+
+function openManage(index){
+
+  selectedOccurrence =
+    history[index];
+
+
+  $("manageTitle")
+    .textContent =
+    "Gerenciar " +
+    selectedOccurrence.ocorrencia;
+
+
+  $("manageStatus")
+    .value =
+    selectedOccurrence.status;
+
+
+  $("manageResponsible")
+    .value =
+    selectedOccurrence.responsavel || "";
+
+
+  $("manageSolution")
+    .value =
+    selectedOccurrence.solucao || "";
+
+
+  toggleConclusionPhoto();
+
+
+  $("manageModal")
+    .style.display =
+    "flex";
+}
+
+
+function toggleConclusionPhoto(){
+
+  if (
+    $("manageStatus").value ===
+    "Concluída"
+  ){
+
+    show(
+      "conclusionPhotoArea"
+    );
+
+  }else{
+
+    hide(
+      "conclusionPhotoArea"
+    );
+  }
+}
+
+
+function closeManage(){
+
+  if (
+    managePosting
+  ) return;
+
+
+  $("manageModal")
+    .style.display =
+    "none";
+}
+
+
+function saveManage(){
+
+  const status =
+    $("manageStatus").value;
+
+
+  const solution =
+    $("manageSolution")
+      .value
+      .trim();
+
+
+  if (
+    status === "Concluída" &&
+    !solution
+  ){
+
+    $("manageMessage")
+      .className =
+      "message error";
+
+
+    $("manageMessage")
+      .textContent =
+      "Informe a solução antes de concluir.";
+
+    return;
+  }
+
+
+  $("m_token").value =
+    TOKEN;
+
+  $("m_occurrence").value =
+    selectedOccurrence.ocorrencia;
+
+  $("m_status").value =
+    status;
+
+  $("m_responsible").value =
+    $("manageResponsible").value;
+
+  $("m_solution").value =
+    solution;
+
+
+  if (
+    conclusionPhotoData
+  ){
+
+    $("m_photo").value =
+      conclusionPhotoData.base64;
+
+    $("m_photoName").value =
+      conclusionPhotoData.name;
+
+    $("m_photoMime").value =
+      conclusionPhotoData.mime;
+
+  }else{
+
+    $("m_photo").value = "";
+    $("m_photoName").value = "";
+    $("m_photoMime").value = "";
+  }
+
+
+  $("manageForm").action =
+    API_URL;
+
+
+  managePosting =
+    true;
+
+
+  $("manageMessage")
+    .className =
+    "message loading";
+
+
+  $("manageMessage")
+    .textContent =
+    "Salvando alterações...";
+
+
+  $("manageForm")
+    .submit();
+}
+
+
+/* RELOAD */
+
+async function reloadOperations(){
+
+  const id =
+    currentAsset.id;
+
+
+  const [
+    status,
+    hist
+  ] =
+    await Promise.all([
+
+      api({
+        action:"status",
+        id:id
+      }),
+
+      api({
+        action:"history",
+        id:id
+      })
+
+    ]);
+
+
+  if (
+    status.ok
+  ){
+
+    renderStatus(
+      status.data
+    );
+  }
+
+
+  if (
+    hist.ok
+  ){
+
+    renderHistory(
+      hist.history || []
+    );
+  }
+}
+
+
+/* EVENTOS */
+
+$("searchButton")
+  .onclick =
+  searchAssets;
+
+
+$("searchInput")
+  .addEventListener(
+    "keydown",
+    function(e){
+
+      if (
+        e.key === "Enter"
+      ){
+
+        searchAssets();
+      }
+    }
+  );
+
+
+$("searchAssetsButton")
+  .onclick =
+  openSearch;
+
+
+$("reportButton")
+  .onclick =
+  openReport;
+
+
+$("cancelReport")
+  .onclick =
+  closeReport;
+
+
+$("sendReport")
+  .onclick =
+  sendReport;
+
+
+$("historySelect")
+  .onchange =
+  function(){
+
+    renderHistoryItem(
+      Number(
+        this.value
+      )
+    );
+  };
+
+
+$("cancelManage")
+  .onclick =
+  closeManage;
+
+
+$("saveManage")
+  .onclick =
+  saveManage;
+
+
+$("manageStatus")
+  .onchange =
+  toggleConclusionPhoto;
+
+
+$("photoInput")
+  .onchange =
+  async function(){
 
     if (
-      event.key ===
-      "Enter"
-    ) {
+      !this.files[0]
+    ) return;
 
-      event.preventDefault();
 
-      executarBusca();
-    }
+    photoData =
+      await processPhoto(
+        this.files[0]
+      );
+
+
+    $("photoPreview").src =
+      photoData.dataUrl;
+
+
+    $("photoPreview")
+      .style.display =
+      "block";
+  };
+
+
+$("conclusionPhotoInput")
+  .onchange =
+  async function(){
+
+    if (
+      !this.files[0]
+    ) return;
+
+
+    conclusionPhotoData =
+      await processPhoto(
+        this.files[0]
+      );
+
+
+    $("conclusionPhotoPreview").src =
+      conclusionPhotoData.dataUrl;
+
+
+    $("conclusionPhotoPreview")
+      .style.display =
+      "block";
+  };
+
+
+$("reportFrame")
+  .onload =
+  async function(){
+
+    if (
+      !reportPosting
+    ) return;
+
+
+    reportPosting =
+      false;
+
+
+    $("reportMessage")
+      .className =
+      "message success";
+
+
+    $("reportMessage")
+      .textContent =
+      "Ocorrência registrada com sucesso.";
+
+
+    await reloadOperations();
+
+
+    setTimeout(
+      function(){
+
+        closeReport();
+
+      },
+      900
+    );
+  };
+
+
+$("manageFrame")
+  .onload =
+  async function(){
+
+    if (
+      !managePosting
+    ) return;
+
+
+    managePosting =
+      false;
+
+
+    $("manageMessage")
+      .className =
+      "message success";
+
+
+    $("manageMessage")
+      .textContent =
+      "Ocorrência atualizada.";
+
+
+    await reloadOperations();
+
+
+    setTimeout(
+      function(){
+
+        closeManage();
+
+      },
+      900
+    );
+  };
+
+
+/* INICIALIZAÇÃO */
+
+async function main(){
+
+  const id =
+    getId();
+
+
+  if (!id){
+
+    /*
+     * Se alguém abrir a página sem ID,
+     * entra na Busca Geral.
+     */
+
+    openSearch();
+
+    return;
   }
-);
 
 
-/* ============================================================
-   BUSCA AUTOMÁTICA VIA URL
- *
- * Exemplo:
- *
- * buscar.html?q=microbiologia
- * ============================================================ */
+  if (
+    id === SEARCH_ID
+  ){
 
-const parametros =
-  new URLSearchParams(
-    window.location.search
-  );
+    /*
+     * QR EQBUSCA
+     */
 
+    openSearch();
 
-const termoInicial =
-  parametros.get(
-    "q"
-  );
+    return;
+  }
 
 
-if (
-  termoInicial &&
-  termoInicial.length >= 2
-) {
+  /*
+   * Qualquer outro QR continua
+   * abrindo diretamente a ficha.
+   */
 
-  busca.value =
-    termoInicial;
-
-
-  executarBusca();
-
-} else {
-
-  busca.focus();
+  await loadAsset(id);
 }
 
+
+main();
 
 </script>
 
