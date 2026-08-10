@@ -1,5 +1,4 @@
 <!doctype html>
-
 <html lang="pt-br">
 
 <head>
@@ -13,13 +12,11 @@
 
 <title>QRManut</title>
 
-
 <style>
 
 *{
   box-sizing:border-box;
 }
-
 
 body{
 
@@ -38,7 +35,6 @@ body{
     sans-serif;
 }
 
-
 .container{
 
   max-width:960px;
@@ -47,7 +43,6 @@ body{
 
   padding:16px;
 }
-
 
 .card{
 
@@ -64,7 +59,6 @@ body{
     rgba(0,0,0,.05);
 }
 
-
 h1{
 
   margin:0 0 5px;
@@ -72,12 +66,10 @@ h1{
   font-size:1.35rem;
 }
 
-
 h2{
 
   font-size:1.05rem;
 }
-
 
 h3{
 
@@ -86,16 +78,13 @@ h3{
   margin-top:18px;
 }
 
-
 .muted{
   color:#6b7280;
 }
 
-
 .hidden{
   display:none !important;
 }
-
 
 .badge{
 
@@ -116,7 +105,6 @@ h3{
   margin-top:6px;
 }
 
-
 .section{
 
   border-top:1px solid #e5e7eb;
@@ -125,7 +113,6 @@ h3{
 
   padding-top:14px;
 }
-
 
 .pair{
 
@@ -137,11 +124,9 @@ h3{
   line-height:1.45;
 }
 
-
 .pair:last-child{
   border-bottom:0;
 }
-
 
 .chip{
 
@@ -161,7 +146,6 @@ h3{
 
   text-decoration:none;
 }
-
 
 .btn-search{
 
@@ -184,7 +168,6 @@ h3{
   cursor:pointer;
 }
 
-
 .actions{
 
   display:flex;
@@ -196,10 +179,7 @@ h3{
   margin-top:18px;
 }
 
-
-/* ============================================================
-   STATUS DO ATIVO
-   ============================================================ */
+/* STATUS */
 
 .status-card{
 
@@ -214,14 +194,12 @@ h3{
   background:#f9fafb;
 }
 
-
 .status-card.ok{
 
   background:#ecfdf5;
 
   border-color:#a7f3d0;
 }
-
 
 .status-card.critico{
 
@@ -230,14 +208,12 @@ h3{
   border-color:#fecaca;
 }
 
-
 .status-card.atendimento{
 
   background:#fffbeb;
 
   border-color:#fde68a;
 }
-
 
 .status-card.aguardando{
 
@@ -246,12 +222,10 @@ h3{
   border-color:#fed7aa;
 }
 
-
 .status-title{
 
   font-weight:800;
 }
-
 
 .status-info{
 
@@ -262,10 +236,7 @@ h3{
   color:#6b7280;
 }
 
-
-/* ============================================================
-   HISTÓRICO
-   ============================================================ */
+/* HISTÓRICO */
 
 .history-card{
 
@@ -279,7 +250,6 @@ h3{
 
   border-radius:12px;
 }
-
 
 .tag{
 
@@ -300,16 +270,12 @@ h3{
   border:1px solid #c7d2fe;
 }
 
-
-/* ============================================================
-   TELA EQBUSCA
-   ============================================================ */
+/* TELA EQBUSCA */
 
 .search-header{
 
   margin-bottom:18px;
 }
-
 
 .search-title{
 
@@ -319,7 +285,6 @@ h3{
 
   font-weight:800;
 }
-
 
 .menu-busca{
 
@@ -332,7 +297,6 @@ h3{
 
   margin-bottom:16px;
 }
-
 
 .menu-button{
 
@@ -355,12 +319,10 @@ h3{
   transition:.15s;
 }
 
-
 .menu-button:hover{
 
   border-color:#1f4e78;
 }
-
 
 .menu-button.active{
 
@@ -371,12 +333,10 @@ h3{
   border-color:#1f4e78;
 }
 
-
 .menu-button.pending{
 
   border-color:#f59e0b;
 }
-
 
 .search-box{
 
@@ -384,7 +344,6 @@ h3{
 
   gap:8px;
 }
-
 
 .search-box input{
 
@@ -403,7 +362,6 @@ h3{
   outline:none;
 }
 
-
 .search-box input:focus{
 
   border-color:#1f4e78;
@@ -412,7 +370,6 @@ h3{
     0 0 0 2px
     rgba(31,78,120,.1);
 }
-
 
 .search-box button{
 
@@ -429,14 +386,12 @@ h3{
   font-weight:700;
 }
 
-
 .search-box button:disabled{
 
   opacity:.6;
 
   cursor:not-allowed;
 }
-
 
 .search-help{
 
@@ -448,7 +403,6 @@ h3{
 
   line-height:1.5;
 }
-
 
 .search-result,
 .pending-card{
@@ -468,7 +422,6 @@ h3{
     rgba(0,0,0,.03);
 }
 
-
 .search-result-id{
 
   font-size:.78rem;
@@ -478,14 +431,12 @@ h3{
   color:#1f4e78;
 }
 
-
 .search-result-name{
 
   font-weight:700;
 
   margin-top:2px;
 }
-
 
 .search-result-data{
 
@@ -497,7 +448,6 @@ h3{
 
   line-height:1.55;
 }
-
 
 .open-button{
 
@@ -520,10 +470,7 @@ h3{
   border-radius:9px;
 }
 
-
-/* ============================================================
-   RESUMO OCs PENDENTES
-   ============================================================ */
+/* OCs PENDENTES */
 
 .pending-summary{
 
@@ -539,7 +486,6 @@ h3{
   margin-bottom:14px;
 }
 
-
 .pending-number{
 
   background:#fff;
@@ -553,14 +499,12 @@ h3{
   text-align:center;
 }
 
-
 .pending-number strong{
 
   display:block;
 
   font-size:1.25rem;
 }
-
 
 .pending-label{
 
@@ -570,7 +514,6 @@ h3{
 
   margin-top:3px;
 }
-
 
 .pending-head{
 
@@ -583,14 +526,12 @@ h3{
   align-items:flex-start;
 }
 
-
 .pending-occurrence{
 
   font-weight:800;
 
   color:#1f4e78;
 }
-
 
 .pending-status{
 
@@ -605,14 +546,12 @@ h3{
   white-space:nowrap;
 }
 
-
 .st-aberta{
 
   background:#fee2e2;
 
   color:#991b1b;
 }
-
 
 .st-atendimento{
 
@@ -621,14 +560,12 @@ h3{
   color:#92400e;
 }
 
-
 .st-aguardando{
 
   background:#ffedd5;
 
   color:#9a3412;
 }
-
 
 .pending-description{
 
@@ -641,10 +578,25 @@ h3{
   line-height:1.45;
 }
 
+.elapsed-open{
 
-/* ============================================================
-   MODAIS
-   ============================================================ */
+  margin-top:5px;
+
+  font-weight:800;
+
+  color:#374151;
+}
+
+.elapsed-service{
+
+  margin-top:5px;
+
+  font-weight:800;
+
+  color:#92400e;
+}
+
+/* MODAIS */
 
 .modal{
 
@@ -665,7 +617,6 @@ h3{
 
   z-index:999;
 }
-
 
 .modal-box{
 
@@ -689,7 +640,6 @@ h3{
     rgba(0,0,0,.2);
 }
 
-
 label{
 
   display:grid;
@@ -700,7 +650,6 @@ label{
 
   font-weight:600;
 }
-
 
 input,
 select,
@@ -719,11 +668,9 @@ textarea{
   background:#fff;
 }
 
-
 textarea{
   resize:vertical;
 }
-
 
 button{
 
@@ -731,7 +678,6 @@ button{
 
   font:inherit;
 }
-
 
 .modal-actions{
 
@@ -743,7 +689,6 @@ button{
 
   margin-top:15px;
 }
-
 
 .btn{
 
@@ -758,14 +703,12 @@ button{
   color:#fff;
 }
 
-
 .btn-secondary{
 
   background:#e5e7eb;
 
   color:#111827;
 }
-
 
 .photo-preview{
 
@@ -782,7 +725,6 @@ button{
   border:1px solid #e5e7eb;
 }
 
-
 .message{
 
   display:none;
@@ -794,7 +736,6 @@ button{
   border-radius:8px;
 }
 
-
 .success{
 
   display:block;
@@ -803,7 +744,6 @@ button{
 
   color:#065f46;
 }
-
 
 .error{
 
@@ -814,7 +754,6 @@ button{
   color:#991b1b;
 }
 
-
 .loading{
 
   display:block;
@@ -823,11 +762,6 @@ button{
 
   color:#92400e;
 }
-
-
-/* ============================================================
-   RODAPÉ
-   ============================================================ */
 
 .footer{
 
@@ -842,15 +776,9 @@ button{
   padding-bottom:10px;
 }
 
-
 iframe{
   display:none;
 }
-
-
-/* ============================================================
-   MOBILE
-   ============================================================ */
 
 @media(max-width:600px){
 
@@ -858,36 +786,29 @@ iframe{
     grid-template-columns:1fr;
   }
 
-
   .pending-summary{
     grid-template-columns:1fr 1fr;
   }
-
 
   .search-box{
     display:grid;
   }
 
-
   .search-box button{
     padding:12px;
   }
-
 
   .modal-actions{
     flex-direction:column-reverse;
   }
 
-
   .modal-actions button{
     width:100%;
   }
 
-
   .pending-head{
     display:block;
   }
-
 
   .pending-status{
 
@@ -953,11 +874,6 @@ Gestão rápida de manutenção
 </div>
 
 
-
-<!-- =========================================================
-     ÁREA BUSCA DE ATIVOS
-     ========================================================= -->
-
 <div id="searchArea">
 
 
@@ -997,15 +913,8 @@ A busca não diferencia letras maiúsculas de minúsculas.
 <br><br>
 
 Exemplos:
-
-<strong>
-EQ001BH1P
-</strong>,
-
-<strong>
-eq001bh1p
-</strong>,
-
+<strong>EQ001BH1P</strong>,
+<strong>eq001bh1p</strong>,
 Microbiologia, Bomba, Recepção ou 2º Piso.
 
 </div>
@@ -1026,10 +935,6 @@ Microbiologia, Bomba, Recepção ou 2º Piso.
 </div>
 
 
-
-<!-- =========================================================
-     ÁREA OCs PENDENTES
-     ========================================================= -->
 
 <div
   id="pendingArea"
@@ -1225,7 +1130,7 @@ Histórico de Manutenção
 
 
 <!-- =========================================================
-     MODAL NOVA OCORRÊNCIA
+     MODAL NOVA OC
      ========================================================= -->
 
 <div
@@ -1276,49 +1181,17 @@ Categoria da ocorrência *
 Selecione...
 </option>
 
-<option value="Civil">
-Civil
-</option>
-
-<option value="Sanitário">
-Sanitário
-</option>
-
-<option value="Elétrica">
-Elétrica
-</option>
-
-<option value="Hidráulica">
-Hidráulica
-</option>
-
-<option value="Climatização">
-Climatização
-</option>
-
-<option value="Refrigeração">
-Refrigeração
-</option>
-
-<option value="Utilidades">
-Utilidades
-</option>
-
-<option value="Segurança">
-Segurança
-</option>
-
-<option value="Mobiliário">
-Mobiliário
-</option>
-
-<option value="Equipamento">
-Equipamento
-</option>
-
-<option value="Outros">
-Outros
-</option>
+<option value="Civil">Civil</option>
+<option value="Sanitário">Sanitário</option>
+<option value="Elétrica">Elétrica</option>
+<option value="Hidráulica">Hidráulica</option>
+<option value="Climatização">Climatização</option>
+<option value="Refrigeração">Refrigeração</option>
+<option value="Utilidades">Utilidades</option>
+<option value="Segurança">Segurança</option>
+<option value="Mobiliário">Mobiliário</option>
+<option value="Equipamento">Equipamento</option>
+<option value="Outros">Outros</option>
 
 </select>
 
@@ -1335,97 +1208,29 @@ Componente afetado *
 Selecione...
 </option>
 
-<option value="Geral">
-Geral
-</option>
-
-<option value="Piso">
-Piso
-</option>
-
-<option value="Parede">
-Parede
-</option>
-
-<option value="Teto">
-Teto
-</option>
-
-<option value="Porta">
-Porta
-</option>
-
-<option value="Janela">
-Janela
-</option>
-
-<option value="Vaso Sanitário">
-Vaso Sanitário
-</option>
-
-<option value="Pia">
-Pia
-</option>
-
-<option value="Torneira">
-Torneira
-</option>
-
-<option value="Descarga">
-Descarga
-</option>
-
-<option value="Mictório">
-Mictório
-</option>
-
-<option value="Ralo">
-Ralo
-</option>
-
-<option value="Luminária">
-Luminária
-</option>
-
-<option value="Tomada">
-Tomada
-</option>
-
-<option value="Interruptor">
-Interruptor
-</option>
-
-<option value="Tubulação">
-Tubulação
-</option>
-
-<option value="Registro">
-Registro
-</option>
-
-<option value="Bomba">
-Bomba
-</option>
-
-<option value="Motor">
-Motor
-</option>
-
-<option value="Painel">
-Painel
-</option>
-
-<option value="Ar-condicionado">
-Ar-condicionado
-</option>
-
-<option value="Mobiliário">
-Mobiliário
-</option>
-
-<option value="Outro">
-Outro
-</option>
+<option value="Geral">Geral</option>
+<option value="Piso">Piso</option>
+<option value="Parede">Parede</option>
+<option value="Teto">Teto</option>
+<option value="Porta">Porta</option>
+<option value="Janela">Janela</option>
+<option value="Vaso Sanitário">Vaso Sanitário</option>
+<option value="Pia">Pia</option>
+<option value="Torneira">Torneira</option>
+<option value="Descarga">Descarga</option>
+<option value="Mictório">Mictório</option>
+<option value="Ralo">Ralo</option>
+<option value="Luminária">Luminária</option>
+<option value="Tomada">Tomada</option>
+<option value="Interruptor">Interruptor</option>
+<option value="Tubulação">Tubulação</option>
+<option value="Registro">Registro</option>
+<option value="Bomba">Bomba</option>
+<option value="Motor">Motor</option>
+<option value="Painel">Painel</option>
+<option value="Ar-condicionado">Ar-condicionado</option>
+<option value="Mobiliário">Mobiliário</option>
+<option value="Outro">Outro</option>
 
 </select>
 
@@ -1522,25 +1327,11 @@ Status
 
 <select id="manageStatus">
 
-<option value="Aberta">
-Aberta
-</option>
-
-<option value="Em atendimento">
-Em atendimento
-</option>
-
-<option value="Aguardando peça">
-Aguardando peça
-</option>
-
-<option value="Concluída">
-Concluída
-</option>
-
-<option value="Cancelada">
-Cancelada
-</option>
+<option value="Aberta">Aberta</option>
+<option value="Em atendimento">Em atendimento</option>
+<option value="Aguardando peça">Aguardando peça</option>
+<option value="Concluída">Concluída</option>
+<option value="Cancelada">Cancelada</option>
 
 </select>
 
@@ -1635,7 +1426,7 @@ Salvar
 
 
 <!-- =========================================================
-     FORM POST NOVA OCORRÊNCIA
+     FORMS
      ========================================================= -->
 
 <form
@@ -1645,68 +1436,20 @@ Salvar
   style="display:none"
 >
 
-<input
-  name="token"
-  id="p_token"
->
-
-<input
-  name="id"
-  id="p_id"
->
-
-<input
-  name="nomeEquipamento"
-  id="p_name"
->
-
-<input
-  name="reportadoPor"
-  id="p_reporter"
->
-
-<input
-  name="contato"
-  id="p_contact"
->
-
-<input
-  name="categoriaOcorrencia"
-  id="p_category"
->
-
-<input
-  name="componenteAfetado"
-  id="p_component"
->
-
-<input
-  name="descricao"
-  id="p_description"
->
-
-<input
-  name="fotoBase64"
-  id="p_photo"
->
-
-<input
-  name="fotoNome"
-  id="p_photoName"
->
-
-<input
-  name="fotoMime"
-  id="p_photoMime"
->
+<input name="token" id="p_token">
+<input name="id" id="p_id">
+<input name="nomeEquipamento" id="p_name">
+<input name="reportadoPor" id="p_reporter">
+<input name="contato" id="p_contact">
+<input name="categoriaOcorrencia" id="p_category">
+<input name="componenteAfetado" id="p_component">
+<input name="descricao" id="p_description">
+<input name="fotoBase64" id="p_photo">
+<input name="fotoNome" id="p_photoName">
+<input name="fotoMime" id="p_photoMime">
 
 </form>
 
-
-
-<!-- =========================================================
-     FORM POST GERENCIAMENTO
-     ========================================================= -->
 
 <form
   id="manageForm"
@@ -1715,50 +1458,15 @@ Salvar
   style="display:none"
 >
 
-<input
-  name="action"
-  value="updateOccurrence"
->
-
-<input
-  name="token"
-  id="m_token"
->
-
-<input
-  name="ocorrencia"
-  id="m_occurrence"
->
-
-<input
-  name="status"
-  id="m_status"
->
-
-<input
-  name="responsavel"
-  id="m_responsible"
->
-
-<input
-  name="solucao"
-  id="m_solution"
->
-
-<input
-  name="fotoConclusaoBase64"
-  id="m_photo"
->
-
-<input
-  name="fotoConclusaoNome"
-  id="m_photoName"
->
-
-<input
-  name="fotoConclusaoMime"
-  id="m_photoMime"
->
+<input name="action" value="updateOccurrence">
+<input name="token" id="m_token">
+<input name="ocorrencia" id="m_occurrence">
+<input name="status" id="m_status">
+<input name="responsavel" id="m_responsible">
+<input name="solucao" id="m_solution">
+<input name="fotoConclusaoBase64" id="m_photo">
+<input name="fotoConclusaoNome" id="m_photoName">
+<input name="fotoConclusaoMime" id="m_photoMime">
 
 </form>
 
@@ -1778,21 +1486,16 @@ Salvar
 
 <div class="footer">
 
-QRManut • Versão 6.4.1
+QRManut • Versão 6.5
 
 </div>
 
 
 </div>
-
 
 
 <script>
 
-
-/* ============================================================
-   CONFIGURAÇÃO
-   ============================================================ */
 
 const API_URL =
 "https://script.google.com/macros/s/AKfycbx4tpC42Q6WdkNhTUTAGoZWvG5M24zwlNscnwbDP5B3Q5pWo8B32-Lf0rQ2Xtua1AFMAQ/exec";
@@ -1814,10 +1517,6 @@ const QUALITY =
 0.72;
 
 
-
-/* ============================================================
-   ESTADO
-   ============================================================ */
 
 let currentAsset =
 null;
@@ -1865,40 +1564,13 @@ function esc(s){
   return String(
     s ?? ""
   )
-  .replace(
-    /&/g,
-    "&amp;"
-  )
-  .replace(
-    /</g,
-    "&lt;"
-  )
-  .replace(
-    />/g,
-    "&gt;"
-  )
-  .replace(
-    /"/g,
-    "&quot;"
-  )
-  .replace(
-    /'/g,
-    "&#039;"
-  );
+  .replace(/&/g,"&amp;")
+  .replace(/</g,"&lt;")
+  .replace(/>/g,"&gt;")
+  .replace(/"/g,"&quot;")
+  .replace(/'/g,"&#039;");
 }
 
-
-/*
- * Normaliza IDs.
- *
- * Dessa forma:
- *
- * eq001bh1p
- * Eq001Bh1P
- * EQ001BH1P
- *
- * são tratados da mesma maneira.
- */
 
 function normalizeId(value){
 
@@ -1907,35 +1579,6 @@ function normalizeId(value){
   )
   .trim()
   .toUpperCase();
-}
-
-
-/*
- * Normalização para busca textual.
- *
- * Remove diferença entre:
- *
- * Microbiologia
- * microbiologia
- * MICROBIOLOGIA
- */
-
-function normalizeSearch(value){
-
-  return String(
-    value || ""
-  )
-  .normalize("NFD")
-  .replace(
-    /[\u0300-\u036f]/g,
-    ""
-  )
-  .toLowerCase()
-  .trim()
-  .replace(
-    /\s+/g,
-    " "
-  );
 }
 
 
@@ -1989,14 +1632,12 @@ function valueExists(v){
 function pairs(items){
 
   return items
-
     .filter(
       item =>
         valueExists(
           item[1]
         )
     )
-
     .map(
       item => `
 
@@ -2012,7 +1653,6 @@ function pairs(items){
 
       `
     )
-
     .join("");
 }
 
@@ -2054,6 +1694,117 @@ function formatDate(value){
 }
 
 
+/* ============================================================
+   NOVO 6.5 - TEMPO DECORRIDO
+   ============================================================ */
+
+function tempoDecorrido(dataInicial){
+
+  if (!dataInicial){
+
+    return "";
+  }
+
+
+  const inicio =
+    new Date(
+      dataInicial
+    );
+
+
+  if (
+    isNaN(inicio)
+  ){
+
+    return "";
+  }
+
+
+  const agora =
+    new Date();
+
+
+  let diff =
+    agora.getTime() -
+    inicio.getTime();
+
+
+  if (
+    diff < 0
+  ){
+
+    diff =
+      0;
+  }
+
+
+  const minutos =
+    Math.floor(
+      diff / 60000
+    );
+
+
+  const horas =
+    Math.floor(
+      diff / 3600000
+    );
+
+
+  const dias =
+    Math.floor(
+      diff / 86400000
+    );
+
+
+  if (
+    minutos < 1
+  ){
+
+    return "menos de 1 minuto";
+  }
+
+
+  if (
+    minutos < 60
+  ){
+
+    return (
+      minutos +
+      (
+        minutos === 1
+          ? " minuto"
+          : " minutos"
+      )
+    );
+  }
+
+
+  if (
+    horas < 24
+  ){
+
+    return (
+      horas +
+      (
+        horas === 1
+          ? " hora"
+          : " horas"
+      )
+    );
+  }
+
+
+  return (
+    dias +
+    (
+      dias === 1
+        ? " dia"
+        : " dias"
+    )
+  );
+}
+
+
 
 /* ============================================================
    API
@@ -2072,8 +1823,7 @@ async function api(params){
       Object.assign(
 
         {
-          token:
-            TOKEN
+          token:TOKEN
         },
 
         params
@@ -2219,14 +1969,6 @@ async function searchAssets(){
   }
 
 
-  /*
-   * Não é obrigatório transformar o texto em maiúsculas
-   * porque o GS já faz busca case-insensitive.
-   *
-   * Porém, se parecer um ID, enviamos normalizado.
-   */
-
-
   const pareceId =
     /^[a-z0-9_-]+$/i
       .test(
@@ -2237,11 +1979,6 @@ async function searchAssets(){
   if (
     pareceId
   ){
-
-    /*
-     * O backend continuaria encontrando mesmo em minúsculo,
-     * mas esta normalização também garante a busca por ID.
-     */
 
     q =
       normalizeId(
@@ -2365,9 +2102,7 @@ function renderSearchResults(items){
 
           <div class="search-result-id">
 
-            ${esc(
-              item.id
-            )}
+            ${esc(item.id)}
 
           </div>
 
@@ -2405,9 +2140,7 @@ function renderSearchResults(items){
                       Pavimento:
                     </b>
 
-                    ${esc(
-                      item.pavimento
-                    )}
+                    ${esc(item.pavimento)}
 
                   </div>
 
@@ -2426,9 +2159,7 @@ function renderSearchResults(items){
                       Localização:
                     </b>
 
-                    ${esc(
-                      item.localizacao
-                    )}
+                    ${esc(item.localizacao)}
 
                   </div>
 
@@ -2449,9 +2180,7 @@ function renderSearchResults(items){
                       Ambiente:
                     </b>
 
-                    ${esc(
-                      item.ambiente
-                    )}
+                    ${esc(item.ambiente)}
 
                   </div>
 
@@ -2470,9 +2199,7 @@ function renderSearchResults(items){
                       Fabricante:
                     </b>
 
-                    ${esc(
-                      item.fabricante
-                    )}
+                    ${esc(item.fabricante)}
 
                   </div>
 
@@ -2491,30 +2218,7 @@ function renderSearchResults(items){
                       Modelo:
                     </b>
 
-                    ${esc(
-                      item.modelo
-                    )}
-
-                  </div>
-
-                `
-                : ""
-            }
-
-
-            ${
-              item.status
-                ? `
-
-                  <div>
-
-                    <b>
-                      Status:
-                    </b>
-
-                    ${esc(
-                      item.status
-                    )}
+                    ${esc(item.modelo)}
 
                   </div>
 
@@ -2640,9 +2344,7 @@ function renderPending(data){
       <div class="pending-number">
 
         <strong>
-
           ${summary.total || 0}
-
         </strong>
 
         <div class="pending-label">
@@ -2655,10 +2357,7 @@ function renderPending(data){
       <div class="pending-number">
 
         <strong>
-
-          🔴
-          ${summary.abertas || 0}
-
+          🔴 ${summary.abertas || 0}
         </strong>
 
         <div class="pending-label">
@@ -2671,10 +2370,7 @@ function renderPending(data){
       <div class="pending-number">
 
         <strong>
-
-          🟡
-          ${summary.emAtendimento || 0}
-
+          🟡 ${summary.emAtendimento || 0}
         </strong>
 
         <div class="pending-label">
@@ -2687,10 +2383,7 @@ function renderPending(data){
       <div class="pending-number">
 
         <strong>
-
-          🟠
-          ${summary.aguardandoPeca || 0}
-
+          🟠 ${summary.aguardandoPeca || 0}
         </strong>
 
         <div class="pending-label">
@@ -2940,11 +2633,28 @@ function renderPending(data){
               </div>
 
 
+              <div class="elapsed-open">
+
+                ⏱️ Aberta há
+
+                ${esc(
+                  tempoDecorrido(
+                    item.data
+                  )
+                )}
+
+              </div>
+
+
               ${
                 item.dataInicio
                   ? `
 
-                    <div>
+                    <div
+                      style="
+                        margin-top:6px;
+                      "
+                    >
 
                       <b>
                         Atendimento iniciado:
@@ -2964,10 +2674,35 @@ function renderPending(data){
 
 
               ${
+                item.dataInicio
+                  ? `
+
+                    <div class="elapsed-service">
+
+                      🛠️ Em atendimento há
+
+                      ${esc(
+                        tempoDecorrido(
+                          item.dataInicio
+                        )
+                      )}
+
+                    </div>
+
+                  `
+                  : ""
+              }
+
+
+              ${
                 item.responsavel
                   ? `
 
-                    <div>
+                    <div
+                      style="
+                        margin-top:6px;
+                      "
+                    >
 
                       <b>
                         Responsável:
@@ -3061,7 +2796,7 @@ function renderPending(data){
 
 
 /* ============================================================
-   CARREGAR FICHA DO ATIVO
+   FICHA DO ATIVO
    ============================================================ */
 
 async function loadAsset(id){
@@ -3094,9 +2829,7 @@ async function loadAsset(id){
         }),
 
         api({
-          action:
-            "status",
-
+          action:"status",
           id:
             normalizeId(
               id
@@ -3104,9 +2837,7 @@ async function loadAsset(id){
         }),
 
         api({
-          action:
-            "history",
-
+          action:"history",
           id:
             normalizeId(
               id
@@ -3186,10 +2917,6 @@ async function loadAsset(id){
 }
 
 
-
-/* ============================================================
-   RENDER FICHA
-   ============================================================ */
 
 function renderAsset(a){
 
@@ -3448,10 +3175,6 @@ function renderAsset(a){
 
 
 
-/* ============================================================
-   STATUS
-   ============================================================ */
-
 function renderStatus(s){
 
   $("statusCard")
@@ -3666,31 +3389,6 @@ function renderHistoryItem(index){
         }
 
 
-        ${
-          x.reportadoPor
-            ? `
-
-              <div
-                style="
-                  margin-top:8px;
-                "
-              >
-
-                <b>
-                  Reportado por:
-                </b>
-
-                ${esc(
-                  x.reportadoPor
-                )}
-
-              </div>
-
-            `
-            : ""
-        }
-
-
         <div
           style="
             margin-top:10px;
@@ -3727,60 +3425,6 @@ function renderHistoryItem(index){
 
                 ${esc(
                   x.responsavel
-                )}
-
-              </div>
-
-            `
-            : ""
-        }
-
-
-        ${
-          x.dataInicio
-            ? `
-
-              <div
-                style="
-                  margin-top:8px;
-                "
-              >
-
-                <b>
-                  Início:
-                </b>
-
-                ${esc(
-                  formatDate(
-                    x.dataInicio
-                  )
-                )}
-
-              </div>
-
-            `
-            : ""
-        }
-
-
-        ${
-          x.dataConclusao
-            ? `
-
-              <div
-                style="
-                  margin-top:8px;
-                "
-              >
-
-                <b>
-                  Conclusão:
-                </b>
-
-                ${esc(
-                  formatDate(
-                    x.dataConclusao
-                  )
                 )}
 
               </div>
@@ -3899,7 +3543,7 @@ function renderHistoryItem(index){
 
 
 /* ============================================================
-   PROCESSAMENTO DE FOTO
+   FOTO
    ============================================================ */
 
 function processPhoto(file){
@@ -4050,7 +3694,7 @@ function processPhoto(file){
 
 
 /* ============================================================
-   ABERTURA DA OC
+   ABERTURA
    ============================================================ */
 
 function openReport(){
@@ -4058,11 +3702,6 @@ function openReport(){
   $("reportMessage")
     .className =
     "message";
-
-
-  $("reportMessage")
-    .textContent =
-    "";
 
 
   $("reportModal")
@@ -4134,22 +3773,6 @@ async function sendReport(){
   }
 
 
-  if (
-    !currentAsset
-  ){
-
-    msg.className =
-      "message error";
-
-
-    msg.textContent =
-      "Ativo não carregado.";
-
-
-    return;
-  }
-
-
   $("p_token").value =
     TOKEN;
 
@@ -4200,20 +3823,13 @@ async function sendReport(){
     $("p_photoMime").value =
       photoData.mime;
 
-
   }else{
 
+    $("p_photo").value = "";
 
-    $("p_photo").value =
-      "";
+    $("p_photoName").value = "";
 
-
-    $("p_photoName").value =
-      "";
-
-
-    $("p_photoMime").value =
-      "";
+    $("p_photoMime").value = "";
   }
 
 
@@ -4277,11 +3893,6 @@ function openManage(index){
     "message";
 
 
-  $("manageMessage")
-    .textContent =
-    "";
-
-
   $("manageTitle")
     .textContent =
 
@@ -4335,9 +3946,7 @@ function toggleConclusionPhoto(){
       "conclusionPhotoArea"
     );
 
-
   }else{
-
 
     hide(
       "conclusionPhotoArea"
@@ -4398,14 +4007,6 @@ function saveManage(){
   }
 
 
-  if (
-    !selectedOccurrence
-  ){
-
-    return;
-  }
-
-
   $("m_token").value =
     TOKEN;
 
@@ -4442,20 +4043,13 @@ function saveManage(){
     $("m_photoMime").value =
       conclusionPhotoData.mime;
 
-
   }else{
 
+    $("m_photo").value = "";
 
-    $("m_photo").value =
-      "";
+    $("m_photoName").value = "";
 
-
-    $("m_photoName").value =
-      "";
-
-
-    $("m_photoMime").value =
-      "";
+    $("m_photoMime").value = "";
   }
 
 
@@ -4485,7 +4079,7 @@ function saveManage(){
 
 
 /* ============================================================
-   RECARREGAR STATUS / HISTÓRICO
+   RELOAD
    ============================================================ */
 
 async function reloadOperations(){
@@ -4511,23 +4105,13 @@ async function reloadOperations(){
     await Promise.all([
 
       api({
-
-        action:
-          "status",
-
-        id:
-          id
-
+        action:"status",
+        id:id
       }),
 
       api({
-
-        action:
-          "history",
-
-        id:
-          id
-
+        action:"history",
+        id:id
       })
 
     ]);
@@ -4575,10 +4159,6 @@ $("searchButton")
   searchAssets;
 
 
-/*
- * Enter também executa a pesquisa.
- */
-
 $("searchInput")
   .addEventListener(
 
@@ -4597,18 +4177,6 @@ $("searchInput")
       }
     }
   );
-
-
-/*
- * Não alteramos visualmente tudo para maiúsculo,
- * pois também permitimos pesquisar palavras como:
- *
- * microbiologia
- * bomba
- * recepção
- *
- * O tratamento é feito na função searchAssets().
- */
 
 
 $("searchAssetsButton")
@@ -4658,9 +4226,6 @@ $("manageStatus")
   toggleConclusionPhoto;
 
 
-
-/* FOTO DA OC */
-
 $("photoInput")
   .onchange =
   async function(){
@@ -4682,41 +4247,22 @@ $("photoInput")
     }
 
 
-    try{
-
-
-      photoData =
-        await processPhoto(
-          this.files[0]
-        );
-
-
-      $("photoPreview")
-        .src =
-        photoData.dataUrl;
-
-
-      $("photoPreview")
-        .style.display =
-        "block";
-
-
-    }catch(error){
-
-
-      console.error(
-        error
+    photoData =
+      await processPhoto(
+        this.files[0]
       );
 
 
-      photoData =
-        null;
-    }
+    $("photoPreview")
+      .src =
+      photoData.dataUrl;
+
+
+    $("photoPreview")
+      .style.display =
+      "block";
   };
 
-
-
-/* FOTO CONCLUSÃO */
 
 $("conclusionPhotoInput")
   .onchange =
@@ -4739,43 +4285,22 @@ $("conclusionPhotoInput")
     }
 
 
-    try{
-
-
-      conclusionPhotoData =
-        await processPhoto(
-          this.files[0]
-        );
-
-
-      $("conclusionPhotoPreview")
-        .src =
-        conclusionPhotoData.dataUrl;
-
-
-      $("conclusionPhotoPreview")
-        .style.display =
-        "block";
-
-
-    }catch(error){
-
-
-      console.error(
-        error
+    conclusionPhotoData =
+      await processPhoto(
+        this.files[0]
       );
 
 
-      conclusionPhotoData =
-        null;
-    }
+    $("conclusionPhotoPreview")
+      .src =
+      conclusionPhotoData.dataUrl;
+
+
+    $("conclusionPhotoPreview")
+      .style.display =
+      "block";
   };
 
-
-
-/* ============================================================
-   RESPOSTA POST NOVA OC
-   ============================================================ */
 
 $("reportFrame")
   .onload =
@@ -4810,48 +4335,7 @@ $("reportFrame")
 
       function(){
 
-
         closeReport();
-
-
-        $("reporterName")
-          .value =
-          "";
-
-
-        $("reporterContact")
-          .value =
-          "";
-
-
-        $("category")
-          .value =
-          "";
-
-
-        $("component")
-          .value =
-          "";
-
-
-        $("description")
-          .value =
-          "";
-
-
-        $("photoInput")
-          .value =
-          "";
-
-
-        $("photoPreview")
-          .style.display =
-          "none";
-
-
-        photoData =
-          null;
-
 
       },
 
@@ -4860,11 +4344,6 @@ $("reportFrame")
     );
   };
 
-
-
-/* ============================================================
-   RESPOSTA POST GERENCIAMENTO
-   ============================================================ */
 
 $("manageFrame")
   .onload =
@@ -4899,23 +4378,7 @@ $("manageFrame")
 
       function(){
 
-
         closeManage();
-
-
-        conclusionPhotoData =
-          null;
-
-
-        $("conclusionPhotoInput")
-          .value =
-          "";
-
-
-        $("conclusionPhotoPreview")
-          .style.display =
-          "none";
-
 
       },
 
@@ -4936,11 +4399,6 @@ async function main(){
     getId();
 
 
-  /*
-   * Sem ID:
-   * abre a tela de busca.
-   */
-
   if (
     !id
   ){
@@ -4950,11 +4408,6 @@ async function main(){
     return;
   }
 
-
-  /*
-   * EQBUSCA:
-   * abre Busca Geral + OCs Pendentes.
-   */
 
   if (
     id ===
@@ -4966,22 +4419,6 @@ async function main(){
     return;
   }
 
-
-  /*
-   * Qualquer outro ID:
-   * abre diretamente a ficha.
-   *
-   * Como getId() já usa toUpperCase(),
-   * tanto:
-   *
-   * ?id=EQ001BH1P
-   *
-   * quanto:
-   *
-   * ?id=eq001bh1p
-   *
-   * funcionarão.
-   */
 
   await loadAsset(
     id
