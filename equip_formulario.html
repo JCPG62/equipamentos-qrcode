@@ -1,4 +1,5 @@
 <!doctype html>
+
 <html lang="pt-br">
 
 <head>
@@ -10,9 +11,7 @@
   content="width=device-width,initial-scale=1"
 >
 
-<title>
-QRManut
-</title>
+<title>QRManut</title>
 
 
 <style>
@@ -20,6 +19,7 @@ QRManut
 *{
   box-sizing:border-box;
 }
+
 
 body{
 
@@ -133,6 +133,8 @@ h3{
 
   border-bottom:
     1px dashed #eee;
+
+  line-height:1.45;
 }
 
 
@@ -195,7 +197,9 @@ h3{
 }
 
 
-/* SITUAÇÃO */
+/* ============================================================
+   STATUS DO ATIVO
+   ============================================================ */
 
 .status-card{
 
@@ -212,26 +216,39 @@ h3{
 
 
 .status-card.ok{
+
   background:#ecfdf5;
+
+  border-color:#a7f3d0;
 }
 
 
 .status-card.critico{
+
   background:#fef2f2;
+
+  border-color:#fecaca;
 }
 
 
 .status-card.atendimento{
+
   background:#fffbeb;
+
+  border-color:#fde68a;
 }
 
 
 .status-card.aguardando{
+
   background:#fff7ed;
+
+  border-color:#fed7aa;
 }
 
 
 .status-title{
+
   font-weight:800;
 }
 
@@ -246,7 +263,9 @@ h3{
 }
 
 
-/* HISTÓRICO */
+/* ============================================================
+   HISTÓRICO
+   ============================================================ */
 
 .history-card{
 
@@ -277,10 +296,14 @@ h3{
   border-radius:999px;
 
   font-size:.75rem;
+
+  border:1px solid #c7d2fe;
 }
 
 
-/* BUSCA */
+/* ============================================================
+   TELA EQBUSCA
+   ============================================================ */
 
 .search-header{
 
@@ -292,9 +315,66 @@ h3{
 
   color:#1f4e78;
 
-  font-size:1.4rem;
+  font-size:1.45rem;
 
   font-weight:800;
+}
+
+
+.menu-busca{
+
+  display:grid;
+
+  grid-template-columns:
+    1fr 1fr;
+
+  gap:10px;
+
+  margin-bottom:16px;
+}
+
+
+.menu-button{
+
+  border:1px solid #d1d5db;
+
+  background:#fff;
+
+  border-radius:12px;
+
+  padding:13px;
+
+  font-size:.9rem;
+
+  font-weight:700;
+
+  color:#374151;
+
+  cursor:pointer;
+
+  transition:.15s;
+}
+
+
+.menu-button:hover{
+
+  border-color:#1f4e78;
+}
+
+
+.menu-button.active{
+
+  background:#1f4e78;
+
+  color:#fff;
+
+  border-color:#1f4e78;
+}
+
+
+.menu-button.pending{
+
+  border-color:#f59e0b;
 }
 
 
@@ -319,6 +399,18 @@ h3{
   padding:13px;
 
   font-size:1rem;
+
+  outline:none;
+}
+
+
+.search-box input:focus{
+
+  border-color:#1f4e78;
+
+  box-shadow:
+    0 0 0 2px
+    rgba(31,78,120,.1);
 }
 
 
@@ -338,6 +430,14 @@ h3{
 }
 
 
+.search-box button:disabled{
+
+  opacity:.6;
+
+  cursor:not-allowed;
+}
+
+
 .search-help{
 
   margin-top:9px;
@@ -345,10 +445,13 @@ h3{
   font-size:.83rem;
 
   color:#6b7280;
+
+  line-height:1.5;
 }
 
 
-.search-result{
+.search-result,
+.pending-card{
 
   margin-top:11px;
 
@@ -359,6 +462,10 @@ h3{
   border-radius:13px;
 
   background:#fff;
+
+  box-shadow:
+    0 2px 5px
+    rgba(0,0,0,.03);
 }
 
 
@@ -414,7 +521,130 @@ h3{
 }
 
 
-/* MODAL */
+/* ============================================================
+   RESUMO OCs PENDENTES
+   ============================================================ */
+
+.pending-summary{
+
+  display:grid;
+
+  grid-template-columns:
+    repeat(4,1fr);
+
+  gap:8px;
+
+  margin-top:14px;
+
+  margin-bottom:14px;
+}
+
+
+.pending-number{
+
+  background:#fff;
+
+  border:1px solid #e5e7eb;
+
+  border-radius:12px;
+
+  padding:10px;
+
+  text-align:center;
+}
+
+
+.pending-number strong{
+
+  display:block;
+
+  font-size:1.25rem;
+}
+
+
+.pending-label{
+
+  font-size:.72rem;
+
+  color:#6b7280;
+
+  margin-top:3px;
+}
+
+
+.pending-head{
+
+  display:flex;
+
+  justify-content:space-between;
+
+  gap:10px;
+
+  align-items:flex-start;
+}
+
+
+.pending-occurrence{
+
+  font-weight:800;
+
+  color:#1f4e78;
+}
+
+
+.pending-status{
+
+  border-radius:999px;
+
+  padding:5px 8px;
+
+  font-size:.75rem;
+
+  font-weight:700;
+
+  white-space:nowrap;
+}
+
+
+.st-aberta{
+
+  background:#fee2e2;
+
+  color:#991b1b;
+}
+
+
+.st-atendimento{
+
+  background:#fef3c7;
+
+  color:#92400e;
+}
+
+
+.st-aguardando{
+
+  background:#ffedd5;
+
+  color:#9a3412;
+}
+
+
+.pending-description{
+
+  margin-top:11px;
+
+  padding-top:9px;
+
+  border-top:1px dashed #ddd;
+
+  line-height:1.45;
+}
+
+
+/* ============================================================
+   MODAIS
+   ============================================================ */
 
 .modal{
 
@@ -439,7 +669,10 @@ h3{
 
 .modal-box{
 
-  width:min(680px,96vw);
+  width:min(
+    680px,
+    96vw
+  );
 
   max-height:92vh;
 
@@ -450,6 +683,10 @@ h3{
   padding:17px;
 
   border-radius:15px;
+
+  box-shadow:
+    0 20px 50px
+    rgba(0,0,0,.2);
 }
 
 
@@ -541,6 +778,8 @@ button{
   margin-top:10px;
 
   border-radius:10px;
+
+  border:1px solid #e5e7eb;
 }
 
 
@@ -586,6 +825,10 @@ button{
 }
 
 
+/* ============================================================
+   RODAPÉ
+   ============================================================ */
+
 .footer{
 
   margin-top:20px;
@@ -595,6 +838,8 @@ button{
   font-size:.72rem;
 
   text-align:center;
+
+  padding-bottom:10px;
 }
 
 
@@ -603,18 +848,52 @@ iframe{
 }
 
 
+/* ============================================================
+   MOBILE
+   ============================================================ */
+
 @media(max-width:600px){
+
+  .menu-busca{
+    grid-template-columns:1fr;
+  }
+
+
+  .pending-summary{
+    grid-template-columns:1fr 1fr;
+  }
+
 
   .search-box{
     display:grid;
   }
 
+
   .search-box button{
     padding:12px;
   }
 
+
   .modal-actions{
     flex-direction:column-reverse;
+  }
+
+
+  .modal-actions button{
+    width:100%;
+  }
+
+
+  .pending-head{
+    display:block;
+  }
+
+
+  .pending-status{
+
+    display:inline-block;
+
+    margin-top:6px;
   }
 }
 
@@ -630,7 +909,7 @@ iframe{
 
 
 <!-- =========================================================
-     BUSCA GERAL
+     TELA EQBUSCA
      ========================================================= -->
 
 <div
@@ -642,14 +921,44 @@ iframe{
 <div class="search-header">
 
 <div class="search-title">
-🔎 QRManut
+QRManut
 </div>
 
 <div class="muted">
-Busca Geral de Ativos
+Gestão rápida de manutenção
 </div>
 
 </div>
+
+
+<div class="menu-busca">
+
+<button
+  id="tabSearch"
+  type="button"
+  class="menu-button active"
+>
+🔎 Buscar ativos
+</button>
+
+
+<button
+  id="tabPending"
+  type="button"
+  class="menu-button pending"
+>
+⚠️ OCs pendentes
+</button>
+
+</div>
+
+
+
+<!-- =========================================================
+     ÁREA BUSCA DE ATIVOS
+     ========================================================= -->
+
+<div id="searchArea">
 
 
 <div class="card">
@@ -659,11 +968,14 @@ Busca Geral de Ativos
 
 <input
   id="searchInput"
+  type="search"
   placeholder="ID, equipamento, ambiente, pavimento ou localização..."
+  autocomplete="off"
 >
 
 <button
   id="searchButton"
+  type="button"
 >
 Buscar
 </button>
@@ -673,8 +985,28 @@ Buscar
 
 <div class="search-help">
 
+Você pode pesquisar por
+<strong>
+ID, equipamento, fabricante, modelo, ambiente, pavimento ou localização.
+</strong>
+
+<br>
+
+A busca não diferencia letras maiúsculas de minúsculas.
+
+<br><br>
+
 Exemplos:
-Microbiologia, Bomba, Recepção, 2º Piso ou EQ001BH1P.
+
+<strong>
+EQ001BH1P
+</strong>,
+
+<strong>
+eq001bh1p
+</strong>,
+
+Microbiologia, Bomba, Recepção ou 2º Piso.
 
 </div>
 
@@ -689,6 +1021,40 @@ Microbiologia, Bomba, Recepção, 2º Piso ou EQ001BH1P.
 
 
 <div id="searchResults"></div>
+
+
+</div>
+
+
+
+<!-- =========================================================
+     ÁREA OCs PENDENTES
+     ========================================================= -->
+
+<div
+  id="pendingArea"
+  class="hidden"
+>
+
+
+<div
+  id="pendingStatus"
+  class="muted"
+>
+Carregando ocorrências pendentes...
+</div>
+
+
+<div
+  id="pendingSummary"
+  class="pending-summary hidden"
+></div>
+
+
+<div id="pendingResults"></div>
+
+
+</div>
 
 
 </div>
@@ -723,6 +1089,7 @@ Carregando...
   id="tipoBadge"
   class="badge"
 ></div>
+
 
 
 <div
@@ -830,14 +1197,22 @@ Reportar Serviço / Anomalia / Reparo
 Histórico de Manutenção
 </h3>
 
-<div id="historyStatus"></div>
+
+<div
+  id="historyStatus"
+  class="muted"
+></div>
+
 
 <select
   id="historySelect"
   class="hidden"
+  style="margin-top:10px"
 ></select>
 
+
 <div id="historyDetail"></div>
+
 
 </div>
 
@@ -858,6 +1233,7 @@ Histórico de Manutenção
   class="modal"
 >
 
+
 <div class="modal-box">
 
 
@@ -872,6 +1248,7 @@ Seu nome *
 
 <input
   id="reporterName"
+  type="text"
 >
 
 </label>
@@ -883,6 +1260,7 @@ Contato
 
 <input
   id="reporterContact"
+  type="text"
 >
 
 </label>
@@ -898,17 +1276,49 @@ Categoria da ocorrência *
 Selecione...
 </option>
 
-<option>Civil</option>
-<option>Sanitário</option>
-<option>Elétrica</option>
-<option>Hidráulica</option>
-<option>Climatização</option>
-<option>Refrigeração</option>
-<option>Utilidades</option>
-<option>Segurança</option>
-<option>Mobiliário</option>
-<option>Equipamento</option>
-<option>Outros</option>
+<option value="Civil">
+Civil
+</option>
+
+<option value="Sanitário">
+Sanitário
+</option>
+
+<option value="Elétrica">
+Elétrica
+</option>
+
+<option value="Hidráulica">
+Hidráulica
+</option>
+
+<option value="Climatização">
+Climatização
+</option>
+
+<option value="Refrigeração">
+Refrigeração
+</option>
+
+<option value="Utilidades">
+Utilidades
+</option>
+
+<option value="Segurança">
+Segurança
+</option>
+
+<option value="Mobiliário">
+Mobiliário
+</option>
+
+<option value="Equipamento">
+Equipamento
+</option>
+
+<option value="Outros">
+Outros
+</option>
 
 </select>
 
@@ -925,29 +1335,97 @@ Componente afetado *
 Selecione...
 </option>
 
-<option>Geral</option>
-<option>Piso</option>
-<option>Parede</option>
-<option>Teto</option>
-<option>Porta</option>
-<option>Janela</option>
-<option>Vaso Sanitário</option>
-<option>Pia</option>
-<option>Torneira</option>
-<option>Descarga</option>
-<option>Mictório</option>
-<option>Ralo</option>
-<option>Luminária</option>
-<option>Tomada</option>
-<option>Interruptor</option>
-<option>Tubulação</option>
-<option>Registro</option>
-<option>Bomba</option>
-<option>Motor</option>
-<option>Painel</option>
-<option>Ar-condicionado</option>
-<option>Mobiliário</option>
-<option>Outro</option>
+<option value="Geral">
+Geral
+</option>
+
+<option value="Piso">
+Piso
+</option>
+
+<option value="Parede">
+Parede
+</option>
+
+<option value="Teto">
+Teto
+</option>
+
+<option value="Porta">
+Porta
+</option>
+
+<option value="Janela">
+Janela
+</option>
+
+<option value="Vaso Sanitário">
+Vaso Sanitário
+</option>
+
+<option value="Pia">
+Pia
+</option>
+
+<option value="Torneira">
+Torneira
+</option>
+
+<option value="Descarga">
+Descarga
+</option>
+
+<option value="Mictório">
+Mictório
+</option>
+
+<option value="Ralo">
+Ralo
+</option>
+
+<option value="Luminária">
+Luminária
+</option>
+
+<option value="Tomada">
+Tomada
+</option>
+
+<option value="Interruptor">
+Interruptor
+</option>
+
+<option value="Tubulação">
+Tubulação
+</option>
+
+<option value="Registro">
+Registro
+</option>
+
+<option value="Bomba">
+Bomba
+</option>
+
+<option value="Motor">
+Motor
+</option>
+
+<option value="Painel">
+Painel
+</option>
+
+<option value="Ar-condicionado">
+Ar-condicionado
+</option>
+
+<option value="Mobiliário">
+Mobiliário
+</option>
+
+<option value="Outro">
+Outro
+</option>
 
 </select>
 
@@ -961,6 +1439,7 @@ Descrição *
 <textarea
   id="description"
   rows="5"
+  placeholder="Descreva o problema, serviço ou reparo..."
 ></textarea>
 
 </label>
@@ -996,6 +1475,7 @@ Foto da ocorrência
 
 <button
   id="cancelReport"
+  type="button"
   class="btn btn-secondary"
 >
 Cancelar
@@ -1003,6 +1483,7 @@ Cancelar
 
 <button
   id="sendReport"
+  type="button"
   class="btn"
 >
 Enviar
@@ -1018,13 +1499,14 @@ Enviar
 
 
 <!-- =========================================================
-     GERENCIAMENTO
+     MODAL GERENCIAMENTO
      ========================================================= -->
 
 <div
   id="manageModal"
   class="modal"
 >
+
 
 <div class="modal-box">
 
@@ -1040,11 +1522,25 @@ Status
 
 <select id="manageStatus">
 
-<option>Aberta</option>
-<option>Em atendimento</option>
-<option>Aguardando peça</option>
-<option>Concluída</option>
-<option>Cancelada</option>
+<option value="Aberta">
+Aberta
+</option>
+
+<option value="Em atendimento">
+Em atendimento
+</option>
+
+<option value="Aguardando peça">
+Aguardando peça
+</option>
+
+<option value="Concluída">
+Concluída
+</option>
+
+<option value="Cancelada">
+Cancelada
+</option>
 
 </select>
 
@@ -1055,7 +1551,10 @@ Status
 
 Responsável
 
-<input id="manageResponsible">
+<input
+  id="manageResponsible"
+  type="text"
+>
 
 </label>
 
@@ -1072,10 +1571,12 @@ Solução / Serviço realizado
 </label>
 
 
+
 <div
   id="conclusionPhotoArea"
   class="hidden"
 >
+
 
 <label>
 
@@ -1096,6 +1597,7 @@ Foto após o serviço
   class="photo-preview"
 >
 
+
 </div>
 
 
@@ -1109,6 +1611,7 @@ Foto após o serviço
 
 <button
   id="cancelManage"
+  type="button"
   class="btn btn-secondary"
 >
 Cancelar
@@ -1116,6 +1619,7 @@ Cancelar
 
 <button
   id="saveManage"
+  type="button"
   class="btn"
 >
 Salvar
@@ -1130,7 +1634,9 @@ Salvar
 
 
 
-<!-- POSTS -->
+<!-- =========================================================
+     FORM POST NOVA OCORRÊNCIA
+     ========================================================= -->
 
 <form
   id="reportForm"
@@ -1139,20 +1645,68 @@ Salvar
   style="display:none"
 >
 
-<input name="token" id="p_token">
-<input name="id" id="p_id">
-<input name="nomeEquipamento" id="p_name">
-<input name="reportadoPor" id="p_reporter">
-<input name="contato" id="p_contact">
-<input name="categoriaOcorrencia" id="p_category">
-<input name="componenteAfetado" id="p_component">
-<input name="descricao" id="p_description">
-<input name="fotoBase64" id="p_photo">
-<input name="fotoNome" id="p_photoName">
-<input name="fotoMime" id="p_photoMime">
+<input
+  name="token"
+  id="p_token"
+>
+
+<input
+  name="id"
+  id="p_id"
+>
+
+<input
+  name="nomeEquipamento"
+  id="p_name"
+>
+
+<input
+  name="reportadoPor"
+  id="p_reporter"
+>
+
+<input
+  name="contato"
+  id="p_contact"
+>
+
+<input
+  name="categoriaOcorrencia"
+  id="p_category"
+>
+
+<input
+  name="componenteAfetado"
+  id="p_component"
+>
+
+<input
+  name="descricao"
+  id="p_description"
+>
+
+<input
+  name="fotoBase64"
+  id="p_photo"
+>
+
+<input
+  name="fotoNome"
+  id="p_photoName"
+>
+
+<input
+  name="fotoMime"
+  id="p_photoMime"
+>
 
 </form>
 
+
+
+<!-- =========================================================
+     FORM POST GERENCIAMENTO
+     ========================================================= -->
 
 <form
   id="manageForm"
@@ -1161,15 +1715,50 @@ Salvar
   style="display:none"
 >
 
-<input name="action" value="updateOccurrence">
-<input name="token" id="m_token">
-<input name="ocorrencia" id="m_occurrence">
-<input name="status" id="m_status">
-<input name="responsavel" id="m_responsible">
-<input name="solucao" id="m_solution">
-<input name="fotoConclusaoBase64" id="m_photo">
-<input name="fotoConclusaoNome" id="m_photoName">
-<input name="fotoConclusaoMime" id="m_photoMime">
+<input
+  name="action"
+  value="updateOccurrence"
+>
+
+<input
+  name="token"
+  id="m_token"
+>
+
+<input
+  name="ocorrencia"
+  id="m_occurrence"
+>
+
+<input
+  name="status"
+  id="m_status"
+>
+
+<input
+  name="responsavel"
+  id="m_responsible"
+>
+
+<input
+  name="solucao"
+  id="m_solution"
+>
+
+<input
+  name="fotoConclusaoBase64"
+  id="m_photo"
+>
+
+<input
+  name="fotoConclusaoNome"
+  id="m_photoName"
+>
+
+<input
+  name="fotoConclusaoMime"
+  id="m_photoMime"
+>
 
 </form>
 
@@ -1179,14 +1768,18 @@ Salvar
   name="reportFrame"
 ></iframe>
 
+
 <iframe
   id="manageFrame"
   name="manageFrame"
 ></iframe>
 
 
+
 <div class="footer">
-QRManut • Versão 6.4
+
+QRManut • Versão 6.4.1
+
 </div>
 
 
@@ -1196,37 +1789,74 @@ QRManut • Versão 6.4
 
 <script>
 
+
+/* ============================================================
+   CONFIGURAÇÃO
+   ============================================================ */
+
 const API_URL =
 "https://script.google.com/macros/s/AKfycbx4tpC42Q6WdkNhTUTAGoZWvG5M24zwlNscnwbDP5B3Q5pWo8B32-Lf0rQ2Xtua1AFMAQ/exec";
+
 
 const TOKEN =
 "pncqalpha123";
 
+
 const SEARCH_ID =
 "EQBUSCA";
 
+
 const MAX_DIM =
 1280;
+
 
 const QUALITY =
 0.72;
 
 
-let currentAsset = null;
-let history = [];
-let selectedOccurrence = null;
 
-let photoData = null;
-let conclusionPhotoData = null;
+/* ============================================================
+   ESTADO
+   ============================================================ */
 
-let reportPosting = false;
-let managePosting = false;
+let currentAsset =
+null;
 
 
-/* HELPERS */
+let history =
+[];
+
+
+let selectedOccurrence =
+null;
+
+
+let photoData =
+null;
+
+
+let conclusionPhotoData =
+null;
+
+
+let reportPosting =
+false;
+
+
+let managePosting =
+false;
+
+
+
+/* ============================================================
+   HELPERS
+   ============================================================ */
 
 function $(id){
-  return document.getElementById(id);
+
+  return document.getElementById(
+    id
+  );
 }
 
 
@@ -1235,33 +1865,114 @@ function esc(s){
   return String(
     s ?? ""
   )
-  .replace(/&/g,"&amp;")
-  .replace(/</g,"&lt;")
-  .replace(/>/g,"&gt;")
-  .replace(/"/g,"&quot;");
+  .replace(
+    /&/g,
+    "&amp;"
+  )
+  .replace(
+    /</g,
+    "&lt;"
+  )
+  .replace(
+    />/g,
+    "&gt;"
+  )
+  .replace(
+    /"/g,
+    "&quot;"
+  )
+  .replace(
+    /'/g,
+    "&#039;"
+  );
 }
 
 
-function getId(){
+/*
+ * Normaliza IDs.
+ *
+ * Dessa forma:
+ *
+ * eq001bh1p
+ * Eq001Bh1P
+ * EQ001BH1P
+ *
+ * são tratados da mesma maneira.
+ */
+
+function normalizeId(value){
 
   return String(
-    new URLSearchParams(
-      location.search
-    )
-    .get("id") || ""
+    value || ""
   )
   .trim()
   .toUpperCase();
 }
 
 
+/*
+ * Normalização para busca textual.
+ *
+ * Remove diferença entre:
+ *
+ * Microbiologia
+ * microbiologia
+ * MICROBIOLOGIA
+ */
+
+function normalizeSearch(value){
+
+  return String(
+    value || ""
+  )
+  .normalize("NFD")
+  .replace(
+    /[\u0300-\u036f]/g,
+    ""
+  )
+  .toLowerCase()
+  .trim()
+  .replace(
+    /\s+/g,
+    " "
+  );
+}
+
+
+function getId(){
+
+  const rawId =
+    new URLSearchParams(
+      location.search
+    )
+    .get(
+      "id"
+    );
+
+
+  return normalizeId(
+    rawId
+  );
+}
+
+
 function show(id){
-  $(id).classList.remove("hidden");
+
+  $(id)
+    .classList
+    .remove(
+      "hidden"
+    );
 }
 
 
 function hide(id){
-  $(id).classList.add("hidden");
+
+  $(id)
+    .classList
+    .add(
+      "hidden"
+    );
 }
 
 
@@ -1278,89 +1989,218 @@ function valueExists(v){
 function pairs(items){
 
   return items
+
     .filter(
-      x => valueExists(x[1])
+      item =>
+        valueExists(
+          item[1]
+        )
     )
+
     .map(
-      x => `
+      item => `
 
         <div class="pair">
 
-          <b>${esc(x[0])}:</b>
+          <b>
+            ${esc(item[0])}:
+          </b>
 
-          ${esc(x[1])}
+          ${esc(item[1])}
 
         </div>
 
       `
     )
+
     .join("");
 }
 
 
-function formatDate(v){
+function formatDate(value){
 
-  if (!v) return "";
+  if (!value){
+
+    return "";
+  }
+
 
   const d =
-    new Date(v);
+    new Date(
+      value
+    );
+
 
   if (
     isNaN(d)
-  ) {
+  ){
 
-    return String(v);
+    return String(
+      value
+    );
   }
 
+
   return d.toLocaleString(
-    "pt-BR"
+    "pt-BR",
+    {
+      day:"2-digit",
+      month:"2-digit",
+      year:"numeric",
+      hour:"2-digit",
+      minute:"2-digit"
+    }
   );
 }
 
 
-/* API */
+
+/* ============================================================
+   API
+   ============================================================ */
 
 async function api(params){
 
   const url =
+
     API_URL +
+
     "?" +
+
     new URLSearchParams(
+
       Object.assign(
+
         {
-          token:TOKEN
+          token:
+            TOKEN
         },
+
         params
+
       )
-    )
-    .toString();
+
+    ).toString();
 
 
   const response =
-    await fetch(url);
+    await fetch(
+      url
+    );
+
+
+  if (
+    !response.ok
+  ){
+
+    throw new Error(
+      "Erro HTTP " +
+      response.status
+    );
+  }
 
 
   return response.json();
 }
 
 
-/* BUSCA */
+
+/* ============================================================
+   TELA EQBUSCA
+   ============================================================ */
 
 function openSearch(){
 
-  history = [];
+  hide(
+    "assetScreen"
+  );
 
-  hide("assetScreen");
 
-  show("searchScreen");
+  show(
+    "searchScreen"
+  );
 
-  $("searchInput").focus();
+
+  showSearchTab();
 }
 
 
+function showSearchTab(){
+
+  $("tabSearch")
+    .classList
+    .add(
+      "active"
+    );
+
+
+  $("tabPending")
+    .classList
+    .remove(
+      "active"
+    );
+
+
+  show(
+    "searchArea"
+  );
+
+
+  hide(
+    "pendingArea"
+  );
+
+
+  setTimeout(
+    function(){
+
+      $("searchInput")
+        .focus();
+
+    },
+    50
+  );
+}
+
+
+async function showPendingTab(){
+
+  $("tabSearch")
+    .classList
+    .remove(
+      "active"
+    );
+
+
+  $("tabPending")
+    .classList
+    .add(
+      "active"
+    );
+
+
+  hide(
+    "searchArea"
+  );
+
+
+  show(
+    "pendingArea"
+  );
+
+
+  await loadPending();
+}
+
+
+
+/* ============================================================
+   BUSCA GERAL
+   ============================================================ */
+
 async function searchAssets(){
 
-  const q =
+  let q =
     $("searchInput")
       .value
       .trim();
@@ -1368,13 +2208,45 @@ async function searchAssets(){
 
   if (
     q.length < 2
-  ) {
+  ){
 
     $("searchStatus")
       .textContent =
       "Digite pelo menos 2 caracteres.";
 
+
     return;
+  }
+
+
+  /*
+   * Não é obrigatório transformar o texto em maiúsculas
+   * porque o GS já faz busca case-insensitive.
+   *
+   * Porém, se parecer um ID, enviamos normalizado.
+   */
+
+
+  const pareceId =
+    /^[a-z0-9_-]+$/i
+      .test(
+        q
+      );
+
+
+  if (
+    pareceId
+  ){
+
+    /*
+     * O backend continuaria encontrando mesmo em minúsculo,
+     * mas esta normalização também garante a busca por ID.
+     */
+
+    q =
+      normalizeId(
+        q
+      );
   }
 
 
@@ -1388,33 +2260,62 @@ async function searchAssets(){
     "";
 
 
+  $("searchButton")
+    .disabled =
+    true;
+
+
   try{
+
 
     const data =
       await api({
-        action:"search",
-        q:q
+
+        action:
+          "search",
+
+        q:
+          q
+
       });
 
 
-    if (!data.ok){
+    if (
+      !data.ok
+    ){
 
       throw new Error(
-        data.error
+        data.error ||
+        "Erro na busca"
       );
     }
 
 
     renderSearchResults(
-      data.results || []
+      data.results ||
+      []
     );
 
 
   }catch(error){
 
+
+    console.error(
+      error
+    );
+
+
     $("searchStatus")
       .textContent =
       "Erro ao realizar busca.";
+
+
+  }finally{
+
+
+    $("searchButton")
+      .disabled =
+      false;
   }
 }
 
@@ -1425,14 +2326,17 @@ function renderSearchResults(items){
     .textContent =
 
     items.length +
+
     (
       items.length === 1
-        ? " resultado"
-        : " resultados"
+        ? " resultado encontrado"
+        : " resultados encontrados"
     );
 
 
-  if (!items.length){
+  if (
+    !items.length
+  ){
 
     $("searchResults")
       .innerHTML = `
@@ -1444,6 +2348,7 @@ function renderSearchResults(items){
         </div>
 
       `;
+
 
     return;
   }
@@ -1457,72 +2362,183 @@ function renderSearchResults(items){
 
         <div class="search-result">
 
+
           <div class="search-result-id">
-            ${esc(item.id)}
+
+            ${esc(
+              item.id
+            )}
+
           </div>
+
 
           <div class="search-result-name">
-            ${esc(item.nome)}
+
+            ${esc(
+              item.nome ||
+              "Sem descrição"
+            )}
+
           </div>
 
+
           <span class="tag">
-            ${esc(item.tipo)}
+
+            ${esc(
+              item.tipo ||
+              "Ativo"
+            )}
+
           </span>
 
+
           <div class="search-result-data">
+
 
             ${
               item.pavimento
                 ? `
+
                   <div>
-                    <b>Pavimento:</b>
-                    ${esc(item.pavimento)}
+
+                    <b>
+                      Pavimento:
+                    </b>
+
+                    ${esc(
+                      item.pavimento
+                    )}
+
                   </div>
+
                 `
                 : ""
             }
+
 
             ${
               item.localizacao
                 ? `
+
                   <div>
-                    <b>Localização:</b>
-                    ${esc(item.localizacao)}
+
+                    <b>
+                      Localização:
+                    </b>
+
+                    ${esc(
+                      item.localizacao
+                    )}
+
                   </div>
+
                 `
                 : ""
             }
+
+
+            ${
+              item.ambiente &&
+              item.ambiente !==
+              item.localizacao
+                ? `
+
+                  <div>
+
+                    <b>
+                      Ambiente:
+                    </b>
+
+                    ${esc(
+                      item.ambiente
+                    )}
+
+                  </div>
+
+                `
+                : ""
+            }
+
 
             ${
               item.fabricante
                 ? `
+
                   <div>
-                    <b>Fabricante:</b>
-                    ${esc(item.fabricante)}
+
+                    <b>
+                      Fabricante:
+                    </b>
+
+                    ${esc(
+                      item.fabricante
+                    )}
+
                   </div>
+
                 `
                 : ""
             }
+
 
             ${
               item.modelo
                 ? `
+
                   <div>
-                    <b>Modelo:</b>
-                    ${esc(item.modelo)}
+
+                    <b>
+                      Modelo:
+                    </b>
+
+                    ${esc(
+                      item.modelo
+                    )}
+
                   </div>
+
                 `
                 : ""
             }
 
+
+            ${
+              item.status
+                ? `
+
+                  <div>
+
+                    <b>
+                      Status:
+                    </b>
+
+                    ${esc(
+                      item.status
+                    )}
+
+                  </div>
+
+                `
+                : ""
+            }
+
+
           </div>
+
 
           <a
             class="open-button"
-            href="?id=${encodeURIComponent(item.id)}"
+            href="?id=${encodeURIComponent(
+              normalizeId(
+                item.id
+              )
+            )}"
           >
+
             Abrir ficha
+
           </a>
+
 
         </div>
 
@@ -1532,97 +2548,678 @@ function renderSearchResults(items){
 }
 
 
-/* FICHA */
 
-async function loadAsset(id){
+/* ============================================================
+   OCs PENDENTES
+   ============================================================ */
 
-  hide("searchScreen");
+async function loadPending(){
 
-  show("assetScreen");
-
-
-  const [
-    asset,
-    status,
-    hist
-  ] =
-    await Promise.all([
-
-      api({id:id}),
-
-      api({
-        action:"status",
-        id:id
-      }),
-
-      api({
-        action:"history",
-        id:id
-      })
-
-    ]);
+  $("pendingStatus")
+    .textContent =
+    "Carregando ocorrências pendentes...";
 
 
-  if (!asset.ok){
+  $("pendingResults")
+    .innerHTML =
+    "";
 
-    $("titulo")
+
+  hide(
+    "pendingSummary"
+  );
+
+
+  try{
+
+
+    const data =
+      await api({
+
+        action:
+          "pending"
+
+      });
+
+
+    if (
+      !data.ok
+    ){
+
+      throw new Error(
+        data.error
+      );
+    }
+
+
+    renderPending(
+      data
+    );
+
+
+  }catch(error){
+
+
+    console.error(
+      error
+    );
+
+
+    $("pendingStatus")
       .textContent =
-      "Ativo não encontrado";
+      "Não foi possível carregar as ocorrências pendentes.";
+  }
+}
+
+
+function renderPending(data){
+
+  const summary =
+    data.summary ||
+    {};
+
+
+  const items =
+    data.occurrences ||
+    [];
+
+
+  $("pendingStatus")
+    .textContent =
+
+    items.length
+
+      ? "Ocorrências que ainda precisam de tratamento."
+
+      : "Nenhuma ocorrência pendente.";
+
+
+  $("pendingSummary")
+    .innerHTML = `
+
+      <div class="pending-number">
+
+        <strong>
+
+          ${summary.total || 0}
+
+        </strong>
+
+        <div class="pending-label">
+          Total
+        </div>
+
+      </div>
+
+
+      <div class="pending-number">
+
+        <strong>
+
+          🔴
+          ${summary.abertas || 0}
+
+        </strong>
+
+        <div class="pending-label">
+          Abertas
+        </div>
+
+      </div>
+
+
+      <div class="pending-number">
+
+        <strong>
+
+          🟡
+          ${summary.emAtendimento || 0}
+
+        </strong>
+
+        <div class="pending-label">
+          Em atendimento
+        </div>
+
+      </div>
+
+
+      <div class="pending-number">
+
+        <strong>
+
+          🟠
+          ${summary.aguardandoPeca || 0}
+
+        </strong>
+
+        <div class="pending-label">
+          Aguardando peça
+        </div>
+
+      </div>
+
+    `;
+
+
+  show(
+    "pendingSummary"
+  );
+
+
+  if (
+    !items.length
+  ){
+
+    $("pendingResults")
+      .innerHTML =
+      "";
+
 
     return;
   }
 
 
-  currentAsset =
-    asset.data;
+  $("pendingResults")
+    .innerHTML =
+
+    items.map(
+
+      function(item){
 
 
-  renderAsset(
-    asset.data
+        let classeStatus =
+          "";
+
+
+        let icone =
+          "";
+
+
+        if (
+          item.status ===
+          "Aberta"
+        ){
+
+          classeStatus =
+            "st-aberta";
+
+          icone =
+            "🔴";
+        }
+
+
+        if (
+          item.status ===
+          "Em atendimento"
+        ){
+
+          classeStatus =
+            "st-atendimento";
+
+          icone =
+            "🟡";
+        }
+
+
+        if (
+          item.status ===
+          "Aguardando peça"
+        ){
+
+          classeStatus =
+            "st-aguardando";
+
+          icone =
+            "🟠";
+        }
+
+
+        return `
+
+          <div class="pending-card">
+
+
+            <div class="pending-head">
+
+
+              <div>
+
+
+                <div class="pending-occurrence">
+
+                  ${esc(
+                    item.ocorrencia
+                  )}
+
+                </div>
+
+
+                <div
+                  style="
+                    font-weight:700;
+                    margin-top:3px;
+                  "
+                >
+
+                  ${esc(
+                    item.id
+                  )}
+
+                  –
+
+                  ${esc(
+                    item.nome
+                  )}
+
+                </div>
+
+
+              </div>
+
+
+              <span
+                class="
+                  pending-status
+                  ${classeStatus}
+                "
+              >
+
+                ${icone}
+
+                ${esc(
+                  item.status
+                )}
+
+              </span>
+
+
+            </div>
+
+
+
+            <div class="search-result-data">
+
+
+              ${
+                item.pavimento
+                  ? `
+
+                    <div>
+
+                      <b>
+                        Pavimento:
+                      </b>
+
+                      ${esc(
+                        item.pavimento
+                      )}
+
+                    </div>
+
+                  `
+                  : ""
+              }
+
+
+              ${
+                item.localizacao
+                  ? `
+
+                    <div>
+
+                      <b>
+                        Localização:
+                      </b>
+
+                      ${esc(
+                        item.localizacao
+                      )}
+
+                    </div>
+
+                  `
+                  : ""
+              }
+
+
+              ${
+                item.categoriaOcorrencia
+                  ? `
+
+                    <div>
+
+                      <b>
+                        Categoria:
+                      </b>
+
+                      ${esc(
+                        item.categoriaOcorrencia
+                      )}
+
+                    </div>
+
+                  `
+                  : ""
+              }
+
+
+              ${
+                item.componenteAfetado
+                  ? `
+
+                    <div>
+
+                      <b>
+                        Componente:
+                      </b>
+
+                      ${esc(
+                        item.componenteAfetado
+                      )}
+
+                    </div>
+
+                  `
+                  : ""
+              }
+
+
+              <div>
+
+                <b>
+                  Aberta em:
+                </b>
+
+                ${esc(
+                  formatDate(
+                    item.data
+                  )
+                )}
+
+              </div>
+
+
+              ${
+                item.dataInicio
+                  ? `
+
+                    <div>
+
+                      <b>
+                        Atendimento iniciado:
+                      </b>
+
+                      ${esc(
+                        formatDate(
+                          item.dataInicio
+                        )
+                      )}
+
+                    </div>
+
+                  `
+                  : ""
+              }
+
+
+              ${
+                item.responsavel
+                  ? `
+
+                    <div>
+
+                      <b>
+                        Responsável:
+                      </b>
+
+                      ${esc(
+                        item.responsavel
+                      )}
+
+                    </div>
+
+                  `
+                  : ""
+              }
+
+
+            </div>
+
+
+
+            <div class="pending-description">
+
+              <b>
+                Descrição:
+              </b>
+
+              <br>
+
+              ${esc(
+                item.descricao ||
+                ""
+              )}
+
+            </div>
+
+
+
+            ${
+              item.foto
+                ? `
+
+                  <div
+                    style="
+                      margin-top:10px;
+                    "
+                  >
+
+                    <a
+                      href="${esc(
+                        item.foto
+                      )}"
+                      target="_blank"
+                    >
+
+                      📷 Ver foto da ocorrência
+
+                    </a>
+
+                  </div>
+
+                `
+                : ""
+            }
+
+
+
+            <a
+              class="open-button"
+              href="?id=${encodeURIComponent(
+                normalizeId(
+                  item.id
+                )
+              )}"
+            >
+
+              Abrir ficha e gerenciar
+
+            </a>
+
+
+          </div>
+
+        `;
+
+      }
+
+    )
+    .join("");
+}
+
+
+
+/* ============================================================
+   CARREGAR FICHA DO ATIVO
+   ============================================================ */
+
+async function loadAsset(id){
+
+  hide(
+    "searchScreen"
   );
 
 
-  if (
-    status.ok
-  ) {
+  show(
+    "assetScreen"
+  );
 
-    renderStatus(
-      status.data
+
+  try{
+
+
+    const [
+      asset,
+      status,
+      hist
+    ] =
+      await Promise.all([
+
+        api({
+          id:
+            normalizeId(
+              id
+            )
+        }),
+
+        api({
+          action:
+            "status",
+
+          id:
+            normalizeId(
+              id
+            )
+        }),
+
+        api({
+          action:
+            "history",
+
+          id:
+            normalizeId(
+              id
+            )
+        })
+
+      ]);
+
+
+    if (
+      !asset.ok
+    ){
+
+      $("titulo")
+        .textContent =
+        "Ativo não encontrado";
+
+
+      $("meta")
+        .textContent =
+        normalizeId(
+          id
+        );
+
+
+      return;
+    }
+
+
+    currentAsset =
+      asset.data;
+
+
+    renderAsset(
+      asset.data
     );
-  }
 
 
-  if (
-    hist.ok
-  ) {
+    if (
+      status.ok
+    ){
 
-    renderHistory(
-      hist.history || []
+      renderStatus(
+        status.data
+      );
+    }
+
+
+    if (
+      hist.ok
+    ){
+
+      renderHistory(
+        hist.history ||
+        []
+      );
+    }
+
+
+  }catch(error){
+
+
+    console.error(
+      error
     );
+
+
+    $("titulo")
+      .textContent =
+      "Erro ao carregar ativo";
+
+
+    $("meta")
+      .textContent =
+      error.message;
   }
 }
 
+
+
+/* ============================================================
+   RENDER FICHA
+   ============================================================ */
 
 function renderAsset(a){
 
   $("titulo")
     .textContent =
+
     a.id +
+
     " – " +
+
     a.nome_do_equipamento;
 
 
   $("meta")
     .textContent =
+
     a.local_detalhado ||
+
     a.localizacao ||
+
     a.pavimento ||
+
     "";
 
 
   $("tipoBadge")
     .textContent =
+
     a.tipo_de_ativo ||
+
     "Equipamento";
 
 
@@ -1657,33 +3254,54 @@ function renderAsset(a){
     ]);
 
 
-  if (classification){
+  if (
+    classification
+  ){
 
     show(
       "classificationSection"
     );
 
+
     $("classification")
       .innerHTML =
       classification;
+
+  }else{
+
+    hide(
+      "classificationSection"
+    );
   }
 
 
   const location =
     pairs([
 
-      ["Área",a.area],
+      [
+        "Área",
+        a.area
+      ],
 
-      ["Ambiente",a.ambiente],
+      [
+        "Ambiente",
+        a.ambiente
+      ],
 
       [
         "Componente / Elemento",
         a.componente_elemento
       ],
 
-      ["Pavimento",a.pavimento],
+      [
+        "Pavimento",
+        a.pavimento
+      ],
 
-      ["Localização",a.localizacao],
+      [
+        "Localização",
+        a.localizacao
+      ],
 
       [
         "Local Detalhado",
@@ -1693,80 +3311,178 @@ function renderAsset(a){
     ]);
 
 
-  if (location){
+  if (
+    location
+  ){
 
     show(
       "locationSection"
     );
 
+
     $("location")
       .innerHTML =
       location;
+
+  }else{
+
+    hide(
+      "locationSection"
+    );
   }
 
 
   const technical =
     pairs([
 
-      ["Fabricante",a.fabricante],
-      ["Modelo",a.modelo],
-      ["Número de Série",a.numero_de_serie],
-      ["Capacidade",a.capacidade],
-      ["Amperagem Nominal",a.amperagem_nominal_fla],
-      ["Amperagem de Partida",a.amperagem_de_partida_flr],
-      ["Amperagem Medida",a.amperagem_medida],
-      ["Voltagem",a.voltagem],
-      ["Peso",a.peso],
-      ["Ano de Aquisição",a.ano_de_aquisicao],
-      ["Vida Útil Estimada",a.vida_util_estimada]
+      [
+        "Fabricante",
+        a.fabricante
+      ],
+
+      [
+        "Modelo",
+        a.modelo
+      ],
+
+      [
+        "Número de Série",
+        a.numero_de_serie
+      ],
+
+      [
+        "Capacidade",
+        a.capacidade
+      ],
+
+      [
+        "Amperagem Nominal",
+        a.amperagem_nominal_fla
+      ],
+
+      [
+        "Amperagem de Partida",
+        a.amperagem_de_partida_flr
+      ],
+
+      [
+        "Amperagem Medida",
+        a.amperagem_medida
+      ],
+
+      [
+        "Voltagem",
+        a.voltagem
+      ],
+
+      [
+        "Peso",
+        a.peso
+      ],
+
+      [
+        "Ano de Aquisição",
+        a.ano_de_aquisicao
+      ],
+
+      [
+        "Vida Útil Estimada",
+        a.vida_util_estimada
+      ]
 
     ]);
 
 
-  if (technical){
+  if (
+    technical
+  ){
 
     show(
       "technicalSection"
     );
 
+
     $("technical")
       .innerHTML =
       technical;
+
+  }else{
+
+    hide(
+      "technicalSection"
+    );
   }
 
 
   $("management")
     .innerHTML =
+
     pairs([
 
-      ["Status cadastral",a.status],
+      [
+        "Status cadastral",
+        a.status
+      ],
 
-      ["Prestador",a.prestador],
+      [
+        "Prestador",
+        a.prestador
+      ],
 
-      ["Periodicidade",a.periodicidade],
+      [
+        "Periodicidade",
+        a.periodicidade
+      ],
 
-      ["Observações",a.observacoes]
+      [
+        "Observações",
+        a.observacoes
+      ]
 
-    ]);
+    ])
+
+    ||
+
+    "<span class='muted'>Sem informações adicionais.</span>";
 }
 
+
+
+/* ============================================================
+   STATUS
+   ============================================================ */
 
 function renderStatus(s){
 
   $("statusCard")
     .className =
+
     "status-card " +
+
     (
-      s.nivel || ""
+      s.nivel ||
+      ""
     );
 
 
   $("statusTitle")
     .textContent =
 
-    (s.icone || "") +
-    " " +
-    s.situacao;
+    (
+      s.icone ||
+      ""
+    )
+
+    +
+
+    " "
+
+    +
+
+    (
+      s.situacao ||
+      "Situação indisponível"
+    );
 
 
   $("statusInfo")
@@ -1781,7 +3497,10 @@ function renderStatus(s){
 }
 
 
-/* HISTÓRICO */
+
+/* ============================================================
+   HISTÓRICO
+   ============================================================ */
 
 function renderHistory(items){
 
@@ -1789,19 +3508,24 @@ function renderHistory(items){
     items;
 
 
-  if (!history.length){
+  if (
+    !history.length
+  ){
 
     $("historyStatus")
       .textContent =
       "Nenhum histórico registrado.";
 
+
     hide(
       "historySelect"
     );
 
+
     $("historyDetail")
       .innerHTML =
       "";
+
 
     return;
   }
@@ -1809,8 +3533,14 @@ function renderHistory(items){
 
   $("historyStatus")
     .textContent =
+
     history.length +
-    " registro(s)";
+
+    (
+      history.length === 1
+        ? " registro"
+        : " registros"
+    );
 
 
   show(
@@ -1822,22 +3552,32 @@ function renderHistory(items){
     .innerHTML =
 
     history.map(
+
       (x,i) => `
 
         <option value="${i}">
 
-          ${esc(x.ocorrencia)}
+          ${esc(
+            x.ocorrencia
+          )}
+
           |
-          ${esc(x.status)}
+
+          ${esc(
+            x.status
+          )}
 
         </option>
 
       `
+
     )
     .join("");
 
 
-  renderHistoryItem(0);
+  renderHistoryItem(
+    0
+  );
 }
 
 
@@ -1845,6 +3585,12 @@ function renderHistoryItem(index){
 
   const x =
     history[index];
+
+
+  if (!x){
+
+    return;
+  }
 
 
   selectedOccurrence =
@@ -1856,118 +3602,294 @@ function renderHistoryItem(index){
 
       <div class="history-card">
 
+
         <b>
-          ${esc(x.ocorrencia)}
+
+          ${esc(
+            x.ocorrencia
+          )}
+
         </b>
 
+
         <div class="muted">
-          ${esc(formatDate(x.data))}
+
+          ${esc(
+            formatDate(
+              x.data
+            )
+          )}
+
         </div>
 
+
         <span class="tag">
-          ${esc(x.status)}
+
+          ${esc(
+            x.status
+          )}
+
         </span>
+
 
         ${
           x.categoriaOcorrencia
             ? `
+
               <span class="tag">
-                ${esc(x.categoriaOcorrencia)}
+
+                ${esc(
+                  x.categoriaOcorrencia
+                )}
+
               </span>
+
             `
             : ""
         }
+
 
         ${
           x.componenteAfetado
             ? `
+
               <span class="tag">
-                ${esc(x.componenteAfetado)}
+
+                ${esc(
+                  x.componenteAfetado
+                )}
+
               </span>
+
             `
             : ""
         }
 
-        <div style="margin-top:10px">
 
-          <b>Descrição:</b><br>
+        ${
+          x.reportadoPor
+            ? `
 
-          ${esc(x.descricao)}
+              <div
+                style="
+                  margin-top:8px;
+                "
+              >
+
+                <b>
+                  Reportado por:
+                </b>
+
+                ${esc(
+                  x.reportadoPor
+                )}
+
+              </div>
+
+            `
+            : ""
+        }
+
+
+        <div
+          style="
+            margin-top:10px;
+          "
+        >
+
+          <b>
+            Descrição:
+          </b>
+
+          <br>
+
+          ${esc(
+            x.descricao ||
+            ""
+          )}
 
         </div>
+
 
         ${
           x.responsavel
             ? `
-              <div style="margin-top:8px">
 
-                <b>Responsável:</b>
+              <div
+                style="
+                  margin-top:8px;
+                "
+              >
 
-                ${esc(x.responsavel)}
+                <b>
+                  Responsável:
+                </b>
+
+                ${esc(
+                  x.responsavel
+                )}
 
               </div>
+
             `
             : ""
         }
+
+
+        ${
+          x.dataInicio
+            ? `
+
+              <div
+                style="
+                  margin-top:8px;
+                "
+              >
+
+                <b>
+                  Início:
+                </b>
+
+                ${esc(
+                  formatDate(
+                    x.dataInicio
+                  )
+                )}
+
+              </div>
+
+            `
+            : ""
+        }
+
+
+        ${
+          x.dataConclusao
+            ? `
+
+              <div
+                style="
+                  margin-top:8px;
+                "
+              >
+
+                <b>
+                  Conclusão:
+                </b>
+
+                ${esc(
+                  formatDate(
+                    x.dataConclusao
+                  )
+                )}
+
+              </div>
+
+            `
+            : ""
+        }
+
 
         ${
           x.solucao
             ? `
-              <div style="margin-top:8px">
 
-                <b>Solução:</b><br>
+              <div
+                style="
+                  margin-top:10px;
+                "
+              >
 
-                ${esc(x.solucao)}
+                <b>
+                  Solução / Serviço realizado:
+                </b>
+
+                <br>
+
+                ${esc(
+                  x.solucao
+                )}
 
               </div>
+
             `
             : ""
         }
+
 
         ${
           x.foto
             ? `
-              <div style="margin-top:10px">
+
+              <div
+                style="
+                  margin-top:10px;
+                "
+              >
 
                 <a
-                  href="${esc(x.foto)}"
+                  href="${esc(
+                    x.foto
+                  )}"
                   target="_blank"
                 >
+
                   📷 Foto da ocorrência
+
                 </a>
 
               </div>
+
             `
             : ""
         }
+
 
         ${
           x.fotoConclusao
             ? `
-              <div style="margin-top:8px">
+
+              <div
+                style="
+                  margin-top:8px;
+                "
+              >
 
                 <a
-                  href="${esc(x.fotoConclusao)}"
+                  href="${esc(
+                    x.fotoConclusao
+                  )}"
                   target="_blank"
                 >
+
                   ✅ Foto após o serviço
+
                 </a>
 
               </div>
+
             `
             : ""
         }
+
 
         <button
           class="btn"
           style="
             width:100%;
-            margin-top:12px
+            margin-top:12px;
           "
-          onclick="openManage(${index})"
+          onclick="
+            openManage(
+              ${index}
+            )
+          "
         >
+
           Gerenciar ocorrência
+
         </button>
+
 
       </div>
 
@@ -1975,12 +3897,20 @@ function renderHistoryItem(index){
 }
 
 
-/* FOTO */
+
+/* ============================================================
+   PROCESSAMENTO DE FOTO
+   ============================================================ */
 
 function processPhoto(file){
 
   return new Promise(
-    function(resolve,reject){
+
+    function(
+      resolve,
+      reject
+    ){
+
 
       const reader =
         new FileReader();
@@ -1989,6 +3919,7 @@ function processPhoto(file){
       reader.onload =
         function(event){
 
+
           const img =
             new Image();
 
@@ -1996,8 +3927,10 @@ function processPhoto(file){
           img.onload =
             function(){
 
+
               let w =
                 img.width;
+
 
               let h =
                 img.height;
@@ -2008,24 +3941,34 @@ function processPhoto(file){
                 h > MAX_DIM
               ){
 
+
                 if (
                   w > h
                 ){
 
+
                   h =
                     Math.round(
-                      h * MAX_DIM / w
+                      h *
+                      MAX_DIM /
+                      w
                     );
+
 
                   w =
                     MAX_DIM;
 
+
                 }else{
+
 
                   w =
                     Math.round(
-                      w * MAX_DIM / h
+                      w *
+                      MAX_DIM /
+                      h
                     );
+
 
                   h =
                     MAX_DIM;
@@ -2042,12 +3985,15 @@ function processPhoto(file){
               canvas.width =
                 w;
 
+
               canvas.height =
                 h;
 
 
               canvas
-                .getContext("2d")
+                .getContext(
+                  "2d"
+                )
                 .drawImage(
                   img,
                   0,
@@ -2067,7 +4013,8 @@ function processPhoto(file){
               resolve({
 
                 base64:
-                  dataUrl.split(",")[1],
+                  dataUrl
+                    .split(",")[1],
 
                 dataUrl:
                   dataUrl,
@@ -2101,9 +4048,22 @@ function processPhoto(file){
 }
 
 
-/* ABERTURA */
+
+/* ============================================================
+   ABERTURA DA OC
+   ============================================================ */
 
 function openReport(){
+
+  $("reportMessage")
+    .className =
+    "message";
+
+
+  $("reportMessage")
+    .textContent =
+    "";
+
 
   $("reportModal")
     .style.display =
@@ -2115,7 +4075,10 @@ function closeReport(){
 
   if (
     reportPosting
-  ) return;
+  ){
+
+    return;
+  }
 
 
   $("reportModal")
@@ -2162,8 +4125,26 @@ async function sendReport(){
     msg.className =
       "message error";
 
+
     msg.textContent =
       "Preencha todos os campos obrigatórios.";
+
+
+    return;
+  }
+
+
+  if (
+    !currentAsset
+  ){
+
+    msg.className =
+      "message error";
+
+
+    msg.textContent =
+      "Ativo não carregado.";
+
 
     return;
   }
@@ -2172,23 +4153,33 @@ async function sendReport(){
   $("p_token").value =
     TOKEN;
 
+
   $("p_id").value =
-    currentAsset.id;
+    normalizeId(
+      currentAsset.id
+    );
+
 
   $("p_name").value =
     currentAsset.nome_do_equipamento;
 
+
   $("p_reporter").value =
     reporter;
 
+
   $("p_contact").value =
-    $("reporterContact").value;
+    $("reporterContact")
+      .value;
+
 
   $("p_category").value =
     category;
 
+
   $("p_component").value =
     component;
+
 
   $("p_description").value =
     description;
@@ -2201,21 +4192,33 @@ async function sendReport(){
     $("p_photo").value =
       photoData.base64;
 
+
     $("p_photoName").value =
       photoData.name;
+
 
     $("p_photoMime").value =
       photoData.mime;
 
+
   }else{
 
-    $("p_photo").value = "";
-    $("p_photoName").value = "";
-    $("p_photoMime").value = "";
+
+    $("p_photo").value =
+      "";
+
+
+    $("p_photoName").value =
+      "";
+
+
+    $("p_photoMime").value =
+      "";
   }
 
 
-  $("reportForm").action =
+  $("reportForm")
+    .action =
     API_URL;
 
 
@@ -2226,6 +4229,7 @@ async function sendReport(){
   msg.className =
     "message loading";
 
+
   msg.textContent =
     "Registrando ocorrência...";
 
@@ -2235,7 +4239,10 @@ async function sendReport(){
 }
 
 
-/* GERENCIAMENTO */
+
+/* ============================================================
+   GERENCIAMENTO
+   ============================================================ */
 
 function openManage(index){
 
@@ -2243,25 +4250,68 @@ function openManage(index){
     history[index];
 
 
+  if (
+    !selectedOccurrence
+  ){
+
+    return;
+  }
+
+
+  conclusionPhotoData =
+    null;
+
+
+  $("conclusionPhotoInput")
+    .value =
+    "";
+
+
+  $("conclusionPhotoPreview")
+    .style.display =
+    "none";
+
+
+  $("manageMessage")
+    .className =
+    "message";
+
+
+  $("manageMessage")
+    .textContent =
+    "";
+
+
   $("manageTitle")
     .textContent =
+
     "Gerenciar " +
+
     selectedOccurrence.ocorrencia;
 
 
   $("manageStatus")
     .value =
-    selectedOccurrence.status;
+
+    selectedOccurrence.status ||
+
+    "Aberta";
 
 
   $("manageResponsible")
     .value =
-    selectedOccurrence.responsavel || "";
+
+    selectedOccurrence.responsavel ||
+
+    "";
 
 
   $("manageSolution")
     .value =
-    selectedOccurrence.solucao || "";
+
+    selectedOccurrence.solucao ||
+
+    "";
 
 
   toggleConclusionPhoto();
@@ -2276,7 +4326,8 @@ function openManage(index){
 function toggleConclusionPhoto(){
 
   if (
-    $("manageStatus").value ===
+    $("manageStatus")
+      .value ===
     "Concluída"
   ){
 
@@ -2284,7 +4335,9 @@ function toggleConclusionPhoto(){
       "conclusionPhotoArea"
     );
 
+
   }else{
+
 
     hide(
       "conclusionPhotoArea"
@@ -2297,7 +4350,10 @@ function closeManage(){
 
   if (
     managePosting
-  ) return;
+  ){
+
+    return;
+  }
 
 
   $("manageModal")
@@ -2309,7 +4365,8 @@ function closeManage(){
 function saveManage(){
 
   const status =
-    $("manageStatus").value;
+    $("manageStatus")
+      .value;
 
 
   const solution =
@@ -2319,7 +4376,11 @@ function saveManage(){
 
 
   if (
-    status === "Concluída" &&
+    status ===
+      "Concluída"
+
+    &&
+
     !solution
   ){
 
@@ -2332,6 +4393,15 @@ function saveManage(){
       .textContent =
       "Informe a solução antes de concluir.";
 
+
+    return;
+  }
+
+
+  if (
+    !selectedOccurrence
+  ){
+
     return;
   }
 
@@ -2339,14 +4409,19 @@ function saveManage(){
   $("m_token").value =
     TOKEN;
 
+
   $("m_occurrence").value =
     selectedOccurrence.ocorrencia;
+
 
   $("m_status").value =
     status;
 
+
   $("m_responsible").value =
-    $("manageResponsible").value;
+    $("manageResponsible")
+      .value;
+
 
   $("m_solution").value =
     solution;
@@ -2359,21 +4434,33 @@ function saveManage(){
     $("m_photo").value =
       conclusionPhotoData.base64;
 
+
     $("m_photoName").value =
       conclusionPhotoData.name;
+
 
     $("m_photoMime").value =
       conclusionPhotoData.mime;
 
+
   }else{
 
-    $("m_photo").value = "";
-    $("m_photoName").value = "";
-    $("m_photoMime").value = "";
+
+    $("m_photo").value =
+      "";
+
+
+    $("m_photoName").value =
+      "";
+
+
+    $("m_photoMime").value =
+      "";
   }
 
 
-  $("manageForm").action =
+  $("manageForm")
+    .action =
     API_URL;
 
 
@@ -2396,12 +4483,25 @@ function saveManage(){
 }
 
 
-/* RELOAD */
+
+/* ============================================================
+   RECARREGAR STATUS / HISTÓRICO
+   ============================================================ */
 
 async function reloadOperations(){
 
+  if (
+    !currentAsset
+  ){
+
+    return;
+  }
+
+
   const id =
-    currentAsset.id;
+    normalizeId(
+      currentAsset.id
+    );
 
 
   const [
@@ -2411,13 +4511,23 @@ async function reloadOperations(){
     await Promise.all([
 
       api({
-        action:"status",
-        id:id
+
+        action:
+          "status",
+
+        id:
+          id
+
       }),
 
       api({
-        action:"history",
-        id:id
+
+        action:
+          "history",
+
+        id:
+          id
+
       })
 
     ]);
@@ -2438,32 +4548,67 @@ async function reloadOperations(){
   ){
 
     renderHistory(
-      hist.history || []
+      hist.history ||
+      []
     );
   }
 }
 
 
-/* EVENTOS */
+
+/* ============================================================
+   EVENTOS
+   ============================================================ */
+
+$("tabSearch")
+  .onclick =
+  showSearchTab;
+
+
+$("tabPending")
+  .onclick =
+  showPendingTab;
+
 
 $("searchButton")
   .onclick =
   searchAssets;
 
 
+/*
+ * Enter também executa a pesquisa.
+ */
+
 $("searchInput")
   .addEventListener(
+
     "keydown",
-    function(e){
+
+    function(event){
 
       if (
-        e.key === "Enter"
+        event.key ===
+        "Enter"
       ){
+
+        event.preventDefault();
 
         searchAssets();
       }
     }
   );
+
+
+/*
+ * Não alteramos visualmente tudo para maiúsculo,
+ * pois também permitimos pesquisar palavras como:
+ *
+ * microbiologia
+ * bomba
+ * recepção
+ *
+ * O tratamento é feito na função searchAssets().
+ */
 
 
 $("searchAssetsButton")
@@ -2513,30 +4658,65 @@ $("manageStatus")
   toggleConclusionPhoto;
 
 
+
+/* FOTO DA OC */
+
 $("photoInput")
   .onchange =
   async function(){
 
     if (
       !this.files[0]
-    ) return;
+    ){
+
+      photoData =
+        null;
 
 
-    photoData =
-      await processPhoto(
-        this.files[0]
+      $("photoPreview")
+        .style.display =
+        "none";
+
+
+      return;
+    }
+
+
+    try{
+
+
+      photoData =
+        await processPhoto(
+          this.files[0]
+        );
+
+
+      $("photoPreview")
+        .src =
+        photoData.dataUrl;
+
+
+      $("photoPreview")
+        .style.display =
+        "block";
+
+
+    }catch(error){
+
+
+      console.error(
+        error
       );
 
 
-    $("photoPreview").src =
-      photoData.dataUrl;
-
-
-    $("photoPreview")
-      .style.display =
-      "block";
+      photoData =
+        null;
+    }
   };
 
+
+
+/* FOTO CONCLUSÃO */
 
 $("conclusionPhotoInput")
   .onchange =
@@ -2544,24 +4724,58 @@ $("conclusionPhotoInput")
 
     if (
       !this.files[0]
-    ) return;
+    ){
+
+      conclusionPhotoData =
+        null;
 
 
-    conclusionPhotoData =
-      await processPhoto(
-        this.files[0]
+      $("conclusionPhotoPreview")
+        .style.display =
+        "none";
+
+
+      return;
+    }
+
+
+    try{
+
+
+      conclusionPhotoData =
+        await processPhoto(
+          this.files[0]
+        );
+
+
+      $("conclusionPhotoPreview")
+        .src =
+        conclusionPhotoData.dataUrl;
+
+
+      $("conclusionPhotoPreview")
+        .style.display =
+        "block";
+
+
+    }catch(error){
+
+
+      console.error(
+        error
       );
 
 
-    $("conclusionPhotoPreview").src =
-      conclusionPhotoData.dataUrl;
-
-
-    $("conclusionPhotoPreview")
-      .style.display =
-      "block";
+      conclusionPhotoData =
+        null;
+    }
   };
 
+
+
+/* ============================================================
+   RESPOSTA POST NOVA OC
+   ============================================================ */
 
 $("reportFrame")
   .onload =
@@ -2569,7 +4783,10 @@ $("reportFrame")
 
     if (
       !reportPosting
-    ) return;
+    ){
+
+      return;
+    }
 
 
     reportPosting =
@@ -2590,15 +4807,64 @@ $("reportFrame")
 
 
     setTimeout(
+
       function(){
+
 
         closeReport();
 
+
+        $("reporterName")
+          .value =
+          "";
+
+
+        $("reporterContact")
+          .value =
+          "";
+
+
+        $("category")
+          .value =
+          "";
+
+
+        $("component")
+          .value =
+          "";
+
+
+        $("description")
+          .value =
+          "";
+
+
+        $("photoInput")
+          .value =
+          "";
+
+
+        $("photoPreview")
+          .style.display =
+          "none";
+
+
+        photoData =
+          null;
+
+
       },
+
       900
+
     );
   };
 
+
+
+/* ============================================================
+   RESPOSTA POST GERENCIAMENTO
+   ============================================================ */
 
 $("manageFrame")
   .onload =
@@ -2606,7 +4872,10 @@ $("manageFrame")
 
     if (
       !managePosting
-    ) return;
+    ){
+
+      return;
+    }
 
 
     managePosting =
@@ -2627,17 +4896,39 @@ $("manageFrame")
 
 
     setTimeout(
+
       function(){
+
 
         closeManage();
 
+
+        conclusionPhotoData =
+          null;
+
+
+        $("conclusionPhotoInput")
+          .value =
+          "";
+
+
+        $("conclusionPhotoPreview")
+          .style.display =
+          "none";
+
+
       },
+
       900
+
     );
   };
 
 
-/* INICIALIZAÇÃO */
+
+/* ============================================================
+   INICIALIZAÇÃO
+   ============================================================ */
 
 async function main(){
 
@@ -2645,26 +4936,14 @@ async function main(){
     getId();
 
 
-  if (!id){
-
-    /*
-     * Se alguém abrir a página sem ID,
-     * entra na Busca Geral.
-     */
-
-    openSearch();
-
-    return;
-  }
-
+  /*
+   * Sem ID:
+   * abre a tela de busca.
+   */
 
   if (
-    id === SEARCH_ID
+    !id
   ){
-
-    /*
-     * QR EQBUSCA
-     */
 
     openSearch();
 
@@ -2673,15 +4952,45 @@ async function main(){
 
 
   /*
-   * Qualquer outro QR continua
-   * abrindo diretamente a ficha.
+   * EQBUSCA:
+   * abre Busca Geral + OCs Pendentes.
    */
 
-  await loadAsset(id);
+  if (
+    id ===
+    SEARCH_ID
+  ){
+
+    openSearch();
+
+    return;
+  }
+
+
+  /*
+   * Qualquer outro ID:
+   * abre diretamente a ficha.
+   *
+   * Como getId() já usa toUpperCase(),
+   * tanto:
+   *
+   * ?id=EQ001BH1P
+   *
+   * quanto:
+   *
+   * ?id=eq001bh1p
+   *
+   * funcionarão.
+   */
+
+  await loadAsset(
+    id
+  );
 }
 
 
 main();
+
 
 </script>
 
