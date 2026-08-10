@@ -69,6 +69,8 @@ h1{
 h2{
 
   font-size:1.05rem;
+
+  margin-top:0;
 }
 
 h3{
@@ -179,7 +181,10 @@ h3{
   margin-top:18px;
 }
 
-/* STATUS */
+
+/* ============================================================
+   STATUS
+   ============================================================ */
 
 .status-card{
 
@@ -236,7 +241,10 @@ h3{
   color:#6b7280;
 }
 
-/* HISTÓRICO */
+
+/* ============================================================
+   HISTÓRICO
+   ============================================================ */
 
 .history-card{
 
@@ -270,7 +278,27 @@ h3{
   border:1px solid #c7d2fe;
 }
 
-/* TELA EQBUSCA */
+.audit-box{
+
+  margin-top:12px;
+
+  padding:10px;
+
+  border-radius:10px;
+
+  background:#f3f4f6;
+
+  color:#4b5563;
+
+  font-size:.82rem;
+
+  line-height:1.5;
+}
+
+
+/* ============================================================
+   TELA EQBUSCA
+   ============================================================ */
 
 .search-header{
 
@@ -320,7 +348,6 @@ h3{
 }
 
 .menu-button:hover{
-
   border-color:#1f4e78;
 }
 
@@ -334,7 +361,6 @@ h3{
 }
 
 .menu-button.pending{
-
   border-color:#f59e0b;
 }
 
@@ -384,13 +410,6 @@ h3{
   padding:0 20px;
 
   font-weight:700;
-}
-
-.search-box button:disabled{
-
-  opacity:.6;
-
-  cursor:not-allowed;
 }
 
 .search-help{
@@ -470,7 +489,10 @@ h3{
   border-radius:9px;
 }
 
-/* OCs PENDENTES */
+
+/* ============================================================
+   OCs PENDENTES
+   ============================================================ */
 
 .pending-summary{
 
@@ -596,7 +618,10 @@ h3{
   color:#92400e;
 }
 
-/* MODAIS */
+
+/* ============================================================
+   MODAIS
+   ============================================================ */
 
 .modal{
 
@@ -621,7 +646,7 @@ h3{
 .modal-box{
 
   width:min(
-    680px,
+    700px,
     96vw
   );
 
@@ -638,6 +663,33 @@ h3{
   box-shadow:
     0 20px 50px
     rgba(0,0,0,.2);
+}
+
+.modal-section{
+
+  margin-top:18px;
+
+  padding-top:14px;
+
+  border-top:1px solid #e5e7eb;
+}
+
+.modal-section-title{
+
+  font-weight:800;
+
+  margin-bottom:7px;
+
+  color:#374151;
+}
+
+.modal-section-help{
+
+  color:#6b7280;
+
+  font-size:.82rem;
+
+  margin-bottom:10px;
 }
 
 label{
@@ -710,6 +762,19 @@ button{
   color:#111827;
 }
 
+.photo-box{
+
+  margin-top:12px;
+
+  padding:12px;
+
+  border:1px solid #e5e7eb;
+
+  border-radius:12px;
+
+  background:#f9fafb;
+}
+
 .photo-preview{
 
   display:none;
@@ -723,6 +788,32 @@ button{
   border-radius:10px;
 
   border:1px solid #e5e7eb;
+}
+
+.current-photo{
+
+  display:none;
+
+  margin-top:10px;
+}
+
+.current-photo a{
+
+  display:inline-block;
+
+  padding:8px 10px;
+
+  border:1px solid #d1d5db;
+
+  border-radius:8px;
+
+  background:#fff;
+
+  text-decoration:none;
+
+  color:#1f4e78;
+
+  font-weight:600;
 }
 
 .message{
@@ -779,6 +870,7 @@ button{
 iframe{
   display:none;
 }
+
 
 @media(max-width:600px){
 
@@ -838,7 +930,6 @@ iframe{
   class="hidden"
 >
 
-
 <div class="search-header">
 
 <div class="search-title">
@@ -862,7 +953,6 @@ Gestão rápida de manutenção
 🔎 Buscar ativos
 </button>
 
-
 <button
   id="tabPending"
   type="button"
@@ -876,9 +966,7 @@ Gestão rápida de manutenção
 
 <div id="searchArea">
 
-
 <div class="card">
-
 
 <div class="search-box">
 
@@ -910,13 +998,6 @@ ID, equipamento, fabricante, modelo, ambiente, pavimento ou localização.
 
 A busca não diferencia letras maiúsculas de minúsculas.
 
-<br><br>
-
-Exemplos:
-<strong>EQ001BH1P</strong>,
-<strong>eq001bh1p</strong>,
-Microbiologia, Bomba, Recepção ou 2º Piso.
-
 </div>
 
 </div>
@@ -931,16 +1012,13 @@ Microbiologia, Bomba, Recepção ou 2º Piso.
 
 <div id="searchResults"></div>
 
-
 </div>
-
 
 
 <div
   id="pendingArea"
   class="hidden"
 >
-
 
 <div
   id="pendingStatus"
@@ -958,7 +1036,6 @@ Carregando ocorrências pendentes...
 
 <div id="pendingResults"></div>
 
-
 </div>
 
 
@@ -967,7 +1044,7 @@ Carregando ocorrências pendentes...
 
 
 <!-- =========================================================
-     FICHA DO ATIVO
+     FICHA
      ========================================================= -->
 
 <div
@@ -975,26 +1052,21 @@ Carregando ocorrências pendentes...
   class="hidden"
 >
 
-
 <div class="card">
-
 
 <h1 id="titulo">
 Carregando...
 </h1>
-
 
 <div
   id="meta"
   class="muted"
 ></div>
 
-
 <div
   id="tipoBadge"
   class="badge"
 ></div>
-
 
 
 <div
@@ -1017,7 +1089,6 @@ Carregando situação...
 </div>
 
 
-
 <div
   id="classificationSection"
   class="section hidden"
@@ -1030,7 +1101,6 @@ Classificação
 <div id="classification"></div>
 
 </div>
-
 
 
 <div
@@ -1047,7 +1117,6 @@ Localização
 </div>
 
 
-
 <div
   id="technicalSection"
   class="section hidden"
@@ -1062,7 +1131,6 @@ Características Técnicas
 </div>
 
 
-
 <div class="section">
 
 <h3>
@@ -1074,7 +1142,6 @@ Gestão do Ativo
 </div>
 
 
-
 <div class="actions">
 
 <a
@@ -1083,7 +1150,6 @@ Gestão do Ativo
 >
 Reportar Serviço / Anomalia / Reparo
 </a>
-
 
 <a
   id="searchAssetsButton"
@@ -1095,19 +1161,16 @@ Reportar Serviço / Anomalia / Reparo
 </div>
 
 
-
 <div class="section">
 
 <h3>
 Histórico de Manutenção
 </h3>
 
-
 <div
   id="historyStatus"
   class="muted"
 ></div>
-
 
 <select
   id="historySelect"
@@ -1115,15 +1178,12 @@ Histórico de Manutenção
   style="margin-top:10px"
 ></select>
 
-
 <div id="historyDetail"></div>
 
-
 </div>
 
 
 </div>
-
 
 </div>
 
@@ -1138,9 +1198,7 @@ Histórico de Manutenção
   class="modal"
 >
 
-
 <div class="modal-box">
-
 
 <h2>
 Reportar Serviço / Anomalia / Reparo
@@ -1244,7 +1302,6 @@ Descrição *
 <textarea
   id="description"
   rows="5"
-  placeholder="Descreva o problema, serviço ou reparo..."
 ></textarea>
 
 </label>
@@ -1296,7 +1353,6 @@ Enviar
 
 </div>
 
-
 </div>
 
 </div>
@@ -1304,7 +1360,7 @@ Enviar
 
 
 <!-- =========================================================
-     MODAL GERENCIAMENTO
+     MODAL GERENCIAMENTO 6.6
      ========================================================= -->
 
 <div
@@ -1312,13 +1368,171 @@ Enviar
   class="modal"
 >
 
-
 <div class="modal-box">
 
 
 <h2 id="manageTitle">
 Gerenciar ocorrência
 </h2>
+
+
+<!-- QUEM ESTÁ ALTERANDO -->
+
+<label>
+
+Seu nome / Alterado por *
+
+<input
+  id="manageChangedBy"
+  type="text"
+  placeholder="Informe quem está realizando esta alteração"
+>
+
+</label>
+
+
+
+<!-- =======================================================
+     DADOS DA ABERTURA
+     ======================================================= -->
+
+<div class="modal-section">
+
+<div class="modal-section-title">
+Dados da abertura
+</div>
+
+<div class="modal-section-help">
+Você pode corrigir os dados informados originalmente na OC.
+</div>
+
+
+<label>
+
+Categoria da ocorrência *
+
+<select id="manageCategory">
+
+<option value="Civil">Civil</option>
+<option value="Sanitário">Sanitário</option>
+<option value="Elétrica">Elétrica</option>
+<option value="Hidráulica">Hidráulica</option>
+<option value="Climatização">Climatização</option>
+<option value="Refrigeração">Refrigeração</option>
+<option value="Utilidades">Utilidades</option>
+<option value="Segurança">Segurança</option>
+<option value="Mobiliário">Mobiliário</option>
+<option value="Equipamento">Equipamento</option>
+<option value="Outros">Outros</option>
+
+</select>
+
+</label>
+
+
+<label>
+
+Componente afetado *
+
+<select id="manageComponent">
+
+<option value="Geral">Geral</option>
+<option value="Piso">Piso</option>
+<option value="Parede">Parede</option>
+<option value="Teto">Teto</option>
+<option value="Porta">Porta</option>
+<option value="Janela">Janela</option>
+<option value="Vaso Sanitário">Vaso Sanitário</option>
+<option value="Pia">Pia</option>
+<option value="Torneira">Torneira</option>
+<option value="Descarga">Descarga</option>
+<option value="Mictório">Mictório</option>
+<option value="Ralo">Ralo</option>
+<option value="Luminária">Luminária</option>
+<option value="Tomada">Tomada</option>
+<option value="Interruptor">Interruptor</option>
+<option value="Tubulação">Tubulação</option>
+<option value="Registro">Registro</option>
+<option value="Bomba">Bomba</option>
+<option value="Motor">Motor</option>
+<option value="Painel">Painel</option>
+<option value="Ar-condicionado">Ar-condicionado</option>
+<option value="Mobiliário">Mobiliário</option>
+<option value="Outro">Outro</option>
+
+</select>
+
+</label>
+
+
+<label>
+
+Descrição da ocorrência *
+
+<textarea
+  id="manageDescription"
+  rows="5"
+></textarea>
+
+</label>
+
+
+<div class="photo-box">
+
+<div style="font-weight:700">
+📷 Foto da ocorrência
+</div>
+
+<div
+  id="currentOccurrencePhoto"
+  class="current-photo"
+>
+
+<a
+  id="currentOccurrencePhotoLink"
+  target="_blank"
+>
+Ver foto atual
+</a>
+
+</div>
+
+
+<label>
+
+Adicionar ou substituir foto
+
+<input
+  id="manageOccurrencePhotoInput"
+  type="file"
+  accept="image/*"
+  capture="environment"
+>
+
+</label>
+
+
+<img
+  id="manageOccurrencePhotoPreview"
+  class="photo-preview"
+>
+
+</div>
+
+
+</div>
+
+
+
+<!-- =======================================================
+     TRATAMENTO
+     ======================================================= -->
+
+<div class="modal-section">
+
+<div class="modal-section-title">
+Tratamento da ocorrência
+</div>
 
 
 <label>
@@ -1362,16 +1576,34 @@ Solução / Serviço realizado
 </label>
 
 
-
 <div
   id="conclusionPhotoArea"
-  class="hidden"
+  class="hidden photo-box"
 >
+
+<div style="font-weight:700">
+✅ Foto após o serviço
+</div>
+
+
+<div
+  id="currentConclusionPhoto"
+  class="current-photo"
+>
+
+<a
+  id="currentConclusionPhotoLink"
+  target="_blank"
+>
+Ver foto de conclusão atual
+</a>
+
+</div>
 
 
 <label>
 
-Foto após o serviço
+Adicionar ou substituir foto de conclusão
 
 <input
   id="conclusionPhotoInput"
@@ -1387,6 +1619,8 @@ Foto após o serviço
   id="conclusionPhotoPreview"
   class="photo-preview"
 >
+
+</div>
 
 
 </div>
@@ -1413,7 +1647,7 @@ Cancelar
   type="button"
   class="btn"
 >
-Salvar
+Salvar alterações
 </button>
 
 </div>
@@ -1451,6 +1685,7 @@ Salvar
 </form>
 
 
+
 <form
   id="manageForm"
   method="POST"
@@ -1458,15 +1693,76 @@ Salvar
   style="display:none"
 >
 
-<input name="action" value="updateOccurrence">
+<input
+  name="action"
+  value="updateOccurrence"
+>
+
 <input name="token" id="m_token">
+
 <input name="ocorrencia" id="m_occurrence">
+
 <input name="status" id="m_status">
+
 <input name="responsavel" id="m_responsible">
+
 <input name="solucao" id="m_solution">
-<input name="fotoConclusaoBase64" id="m_photo">
-<input name="fotoConclusaoNome" id="m_photoName">
-<input name="fotoConclusaoMime" id="m_photoMime">
+
+
+<!-- NOVOS 6.6 -->
+
+<input
+  name="alteradoPor"
+  id="m_changedBy"
+>
+
+<input
+  name="descricaoOcorrencia"
+  id="m_description"
+>
+
+<input
+  name="categoriaOcorrenciaEdit"
+  id="m_category"
+>
+
+<input
+  name="componenteAfetadoEdit"
+  id="m_component"
+>
+
+<input
+  name="fotoOcorrenciaBase64"
+  id="m_occurrencePhoto"
+>
+
+<input
+  name="fotoOcorrenciaNome"
+  id="m_occurrencePhotoName"
+>
+
+<input
+  name="fotoOcorrenciaMime"
+  id="m_occurrencePhotoMime"
+>
+
+
+<!-- FOTO CONCLUSÃO -->
+
+<input
+  name="fotoConclusaoBase64"
+  id="m_photo"
+>
+
+<input
+  name="fotoConclusaoNome"
+  id="m_photoName"
+>
+
+<input
+  name="fotoConclusaoMime"
+  id="m_photoMime"
+>
 
 </form>
 
@@ -1486,16 +1782,21 @@ Salvar
 
 <div class="footer">
 
-QRManut • Versão 6.5
+QRManut • Versão 6.6
 
 </div>
 
 
 </div>
+
 
 
 <script>
 
+
+/* ============================================================
+   CONFIGURAÇÃO
+   ============================================================ */
 
 const API_URL =
 "https://script.google.com/macros/s/AKfycbx4tpC42Q6WdkNhTUTAGoZWvG5M24zwlNscnwbDP5B3Q5pWo8B32-Lf0rQ2Xtua1AFMAQ/exec";
@@ -1518,6 +1819,10 @@ const QUALITY =
 
 
 
+/* ============================================================
+   ESTADO
+   ============================================================ */
+
 let currentAsset =
 null;
 
@@ -1535,6 +1840,12 @@ null;
 
 
 let conclusionPhotoData =
+null;
+
+
+/* NOVO 6.6 */
+
+let occurrenceCorrectionPhotoData =
 null;
 
 
@@ -1694,8 +2005,9 @@ function formatDate(value){
 }
 
 
+
 /* ============================================================
-   NOVO 6.5 - TEMPO DECORRIDO
+   TEMPO DECORRIDO 6.5
    ============================================================ */
 
 function tempoDecorrido(dataInicial){
@@ -1733,8 +2045,7 @@ function tempoDecorrido(dataInicial){
     diff < 0
   ){
 
-    diff =
-      0;
+    diff = 0;
   }
 
 
@@ -1945,7 +2256,7 @@ async function showPendingTab(){
 
 
 /* ============================================================
-   BUSCA GERAL
+   BUSCA
    ============================================================ */
 
 async function searchAssets(){
@@ -2008,11 +2319,9 @@ async function searchAssets(){
     const data =
       await api({
 
-        action:
-          "search",
+        action:"search",
 
-        q:
-          q
+        q:q
 
       });
 
@@ -2022,8 +2331,7 @@ async function searchAssets(){
     ){
 
       throw new Error(
-        data.error ||
-        "Erro na busca"
+        data.error
       );
     }
 
@@ -2099,136 +2407,65 @@ function renderSearchResults(items){
 
         <div class="search-result">
 
-
           <div class="search-result-id">
-
             ${esc(item.id)}
-
           </div>
-
 
           <div class="search-result-name">
-
-            ${esc(
-              item.nome ||
-              "Sem descrição"
-            )}
-
+            ${esc(item.nome)}
           </div>
 
-
           <span class="tag">
-
-            ${esc(
-              item.tipo ||
-              "Ativo"
-            )}
-
+            ${esc(item.tipo)}
           </span>
 
-
           <div class="search-result-data">
-
 
             ${
               item.pavimento
                 ? `
-
                   <div>
-
-                    <b>
-                      Pavimento:
-                    </b>
-
+                    <b>Pavimento:</b>
                     ${esc(item.pavimento)}
-
                   </div>
-
                 `
                 : ""
             }
 
-
             ${
               item.localizacao
                 ? `
-
                   <div>
-
-                    <b>
-                      Localização:
-                    </b>
-
+                    <b>Localização:</b>
                     ${esc(item.localizacao)}
-
                   </div>
-
                 `
                 : ""
             }
-
-
-            ${
-              item.ambiente &&
-              item.ambiente !==
-              item.localizacao
-                ? `
-
-                  <div>
-
-                    <b>
-                      Ambiente:
-                    </b>
-
-                    ${esc(item.ambiente)}
-
-                  </div>
-
-                `
-                : ""
-            }
-
 
             ${
               item.fabricante
                 ? `
-
                   <div>
-
-                    <b>
-                      Fabricante:
-                    </b>
-
+                    <b>Fabricante:</b>
                     ${esc(item.fabricante)}
-
                   </div>
-
                 `
                 : ""
             }
-
 
             ${
               item.modelo
                 ? `
-
                   <div>
-
-                    <b>
-                      Modelo:
-                    </b>
-
+                    <b>Modelo:</b>
                     ${esc(item.modelo)}
-
                   </div>
-
                 `
                 : ""
             }
 
-
           </div>
-
 
           <a
             class="open-button"
@@ -2238,11 +2475,8 @@ function renderSearchResults(items){
               )
             )}"
           >
-
             Abrir ficha
-
           </a>
-
 
         </div>
 
@@ -2254,7 +2488,7 @@ function renderSearchResults(items){
 
 
 /* ============================================================
-   OCs PENDENTES
+   PENDENTES
    ============================================================ */
 
 async function loadPending(){
@@ -2279,10 +2513,7 @@ async function loadPending(){
 
     const data =
       await api({
-
-        action:
-          "pending"
-
+        action:"pending"
       });
 
 
@@ -2319,13 +2550,11 @@ async function loadPending(){
 function renderPending(data){
 
   const summary =
-    data.summary ||
-    {};
+    data.summary || {};
 
 
   const items =
-    data.occurrences ||
-    [];
+    data.occurrences || [];
 
 
   $("pendingStatus")
@@ -2400,19 +2629,6 @@ function renderPending(data){
   );
 
 
-  if (
-    !items.length
-  ){
-
-    $("pendingResults")
-      .innerHTML =
-      "";
-
-
-    return;
-  }
-
-
   $("pendingResults")
     .innerHTML =
 
@@ -2475,9 +2691,7 @@ function renderPending(data){
 
             <div class="pending-head">
 
-
               <div>
-
 
                 <div class="pending-occurrence">
 
@@ -2486,7 +2700,6 @@ function renderPending(data){
                   )}
 
                 </div>
-
 
                 <div
                   style="
@@ -2507,7 +2720,6 @@ function renderPending(data){
 
                 </div>
 
-
               </div>
 
 
@@ -2526,97 +2738,54 @@ function renderPending(data){
 
               </span>
 
-
             </div>
-
 
 
             <div class="search-result-data">
 
-
               ${
                 item.pavimento
                   ? `
-
                     <div>
-
-                      <b>
-                        Pavimento:
-                      </b>
-
-                      ${esc(
-                        item.pavimento
-                      )}
-
+                      <b>Pavimento:</b>
+                      ${esc(item.pavimento)}
                     </div>
-
                   `
                   : ""
               }
-
 
               ${
                 item.localizacao
                   ? `
-
                     <div>
-
-                      <b>
-                        Localização:
-                      </b>
-
-                      ${esc(
-                        item.localizacao
-                      )}
-
+                      <b>Localização:</b>
+                      ${esc(item.localizacao)}
                     </div>
-
                   `
                   : ""
               }
-
 
               ${
                 item.categoriaOcorrencia
                   ? `
-
                     <div>
-
-                      <b>
-                        Categoria:
-                      </b>
-
-                      ${esc(
-                        item.categoriaOcorrencia
-                      )}
-
+                      <b>Categoria:</b>
+                      ${esc(item.categoriaOcorrencia)}
                     </div>
-
                   `
                   : ""
               }
-
 
               ${
                 item.componenteAfetado
                   ? `
-
                     <div>
-
-                      <b>
-                        Componente:
-                      </b>
-
-                      ${esc(
-                        item.componenteAfetado
-                      )}
-
+                      <b>Componente:</b>
+                      ${esc(item.componenteAfetado)}
                     </div>
-
                   `
                   : ""
               }
-
 
               <div>
 
@@ -2668,15 +2837,6 @@ function renderPending(data){
 
                     </div>
 
-                  `
-                  : ""
-              }
-
-
-              ${
-                item.dataInicio
-                  ? `
-
                     <div class="elapsed-service">
 
                       🛠️ Em atendimento há
@@ -2697,12 +2857,7 @@ function renderPending(data){
               ${
                 item.responsavel
                   ? `
-
-                    <div
-                      style="
-                        margin-top:6px;
-                      "
-                    >
+                    <div style="margin-top:6px">
 
                       <b>
                         Responsável:
@@ -2713,14 +2868,11 @@ function renderPending(data){
                       )}
 
                     </div>
-
                   `
                   : ""
               }
 
-
             </div>
-
 
 
             <div class="pending-description">
@@ -2739,34 +2891,45 @@ function renderPending(data){
             </div>
 
 
-
             ${
-              item.foto
+              item.ultimaAlteracao
                 ? `
 
-                  <div
-                    style="
-                      margin-top:10px;
-                    "
-                  >
+                  <div class="audit-box">
 
-                    <a
-                      href="${esc(
-                        item.foto
-                      )}"
-                      target="_blank"
-                    >
+                    <b>
+                      Última alteração:
+                    </b>
 
-                      📷 Ver foto da ocorrência
+                    ${esc(
+                      formatDate(
+                        item.ultimaAlteracao
+                      )
+                    )}
 
-                    </a>
+                    ${
+                      item.ultimaAlteracaoPor
+                        ? `
+
+                          <br>
+
+                          <b>
+                            Alterado por:
+                          </b>
+
+                          ${esc(
+                            item.ultimaAlteracaoPor
+                          )}
+
+                        `
+                        : ""
+                    }
 
                   </div>
 
                 `
                 : ""
             }
-
 
 
             <a
@@ -2782,7 +2945,6 @@ function renderPending(data){
 
             </a>
 
-
           </div>
 
         `;
@@ -2796,7 +2958,7 @@ function renderPending(data){
 
 
 /* ============================================================
-   FICHA DO ATIVO
+   FICHA
    ============================================================ */
 
 async function loadAsset(id){
@@ -2856,13 +3018,6 @@ async function loadAsset(id){
         "Ativo não encontrado";
 
 
-      $("meta")
-        .textContent =
-        normalizeId(
-          id
-        );
-
-
       return;
     }
 
@@ -2908,14 +3063,8 @@ async function loadAsset(id){
     $("titulo")
       .textContent =
       "Erro ao carregar ativo";
-
-
-    $("meta")
-      .textContent =
-      error.message;
   }
 }
-
 
 
 function renderAsset(a){
@@ -2993,42 +3142,24 @@ function renderAsset(a){
     $("classification")
       .innerHTML =
       classification;
-
-  }else{
-
-    hide(
-      "classificationSection"
-    );
   }
 
 
   const location =
     pairs([
 
-      [
-        "Área",
-        a.area
-      ],
+      ["Área",a.area],
 
-      [
-        "Ambiente",
-        a.ambiente
-      ],
+      ["Ambiente",a.ambiente],
 
       [
         "Componente / Elemento",
         a.componente_elemento
       ],
 
-      [
-        "Pavimento",
-        a.pavimento
-      ],
+      ["Pavimento",a.pavimento],
 
-      [
-        "Localização",
-        a.localizacao
-      ],
+      ["Localização",a.localizacao],
 
       [
         "Local Detalhado",
@@ -3050,37 +3181,22 @@ function renderAsset(a){
     $("location")
       .innerHTML =
       location;
-
-  }else{
-
-    hide(
-      "locationSection"
-    );
   }
 
 
   const technical =
     pairs([
 
-      [
-        "Fabricante",
-        a.fabricante
-      ],
+      ["Fabricante",a.fabricante],
 
-      [
-        "Modelo",
-        a.modelo
-      ],
+      ["Modelo",a.modelo],
 
       [
         "Número de Série",
         a.numero_de_serie
       ],
 
-      [
-        "Capacidade",
-        a.capacidade
-      ],
+      ["Capacidade",a.capacidade],
 
       [
         "Amperagem Nominal",
@@ -3097,15 +3213,9 @@ function renderAsset(a){
         a.amperagem_medida
       ],
 
-      [
-        "Voltagem",
-        a.voltagem
-      ],
+      ["Voltagem",a.voltagem],
 
-      [
-        "Peso",
-        a.peso
-      ],
+      ["Peso",a.peso],
 
       [
         "Ano de Aquisição",
@@ -3132,12 +3242,6 @@ function renderAsset(a){
     $("technical")
       .innerHTML =
       technical;
-
-  }else{
-
-    hide(
-      "technicalSection"
-    );
   }
 
 
@@ -3172,7 +3276,6 @@ function renderAsset(a){
 
     "<span class='muted'>Sem informações adicionais.</span>";
 }
-
 
 
 function renderStatus(s){
@@ -3389,11 +3492,7 @@ function renderHistoryItem(index){
         }
 
 
-        <div
-          style="
-            margin-top:10px;
-          "
-        >
+        <div style="margin-top:10px">
 
           <b>
             Descrição:
@@ -3413,11 +3512,7 @@ function renderHistoryItem(index){
           x.responsavel
             ? `
 
-              <div
-                style="
-                  margin-top:8px;
-                "
-              >
+              <div style="margin-top:8px">
 
                 <b>
                   Responsável:
@@ -3438,11 +3533,7 @@ function renderHistoryItem(index){
           x.solucao
             ? `
 
-              <div
-                style="
-                  margin-top:10px;
-                "
-              >
+              <div style="margin-top:10px">
 
                 <b>
                   Solução / Serviço realizado:
@@ -3465,11 +3556,7 @@ function renderHistoryItem(index){
           x.foto
             ? `
 
-              <div
-                style="
-                  margin-top:10px;
-                "
-              >
+              <div style="margin-top:10px">
 
                 <a
                   href="${esc(
@@ -3493,11 +3580,7 @@ function renderHistoryItem(index){
           x.fotoConclusao
             ? `
 
-              <div
-                style="
-                  margin-top:8px;
-                "
-              >
+              <div style="margin-top:8px">
 
                 <a
                   href="${esc(
@@ -3509,6 +3592,47 @@ function renderHistoryItem(index){
                   ✅ Foto após o serviço
 
                 </a>
+
+              </div>
+
+            `
+            : ""
+        }
+
+
+        ${
+          x.ultimaAlteracao
+            ? `
+
+              <div class="audit-box">
+
+                <b>
+                  Última alteração:
+                </b>
+
+                ${esc(
+                  formatDate(
+                    x.ultimaAlteracao
+                  )
+                )}
+
+                ${
+                  x.ultimaAlteracaoPor
+                    ? `
+
+                      <br>
+
+                      <b>
+                        Alterado por:
+                      </b>
+
+                      ${esc(
+                        x.ultimaAlteracaoPor
+                      )}
+
+                    `
+                    : ""
+                }
 
               </div>
 
@@ -3694,7 +3818,7 @@ function processPhoto(file){
 
 
 /* ============================================================
-   ABERTURA
+   NOVA OC
    ============================================================ */
 
 function openReport(){
@@ -3726,7 +3850,7 @@ function closeReport(){
 }
 
 
-async function sendReport(){
+function sendReport(){
 
   const reporter =
     $("reporterName")
@@ -3857,7 +3981,7 @@ async function sendReport(){
 
 
 /* ============================================================
-   GERENCIAMENTO
+   GERENCIAMENTO 6.6
    ============================================================ */
 
 function openManage(index){
@@ -3874,8 +3998,22 @@ function openManage(index){
   }
 
 
+  occurrenceCorrectionPhotoData =
+    null;
+
+
   conclusionPhotoData =
     null;
+
+
+  $("manageOccurrencePhotoInput")
+    .value =
+    "";
+
+
+  $("manageOccurrencePhotoPreview")
+    .style.display =
+    "none";
 
 
   $("conclusionPhotoInput")
@@ -3893,6 +4031,11 @@ function openManage(index){
     "message";
 
 
+  $("manageMessage")
+    .textContent =
+    "";
+
+
   $("manageTitle")
     .textContent =
 
@@ -3901,10 +4044,55 @@ function openManage(index){
     selectedOccurrence.ocorrencia;
 
 
+  /*
+   * O campo fica vazio para exigir
+   * identificação em cada alteração.
+   */
+
+  $("manageChangedBy")
+    .value =
+    "";
+
+
+  $("manageCategory")
+    .value =
+
+    selectedOccurrence
+      .categoriaOcorrencia
+
+    ||
+
+    "Outros";
+
+
+  $("manageComponent")
+    .value =
+
+    selectedOccurrence
+      .componenteAfetado
+
+    ||
+
+    "Geral";
+
+
+  $("manageDescription")
+    .value =
+
+    selectedOccurrence
+      .descricao
+
+    ||
+
+    "";
+
+
   $("manageStatus")
     .value =
 
-    selectedOccurrence.status ||
+    selectedOccurrence.status
+
+    ||
 
     "Aberta";
 
@@ -3912,7 +4100,10 @@ function openManage(index){
   $("manageResponsible")
     .value =
 
-    selectedOccurrence.responsavel ||
+    selectedOccurrence
+      .responsavel
+
+    ||
 
     "";
 
@@ -3920,9 +4111,64 @@ function openManage(index){
   $("manageSolution")
     .value =
 
-    selectedOccurrence.solucao ||
+    selectedOccurrence
+      .solucao
+
+    ||
 
     "";
+
+
+  /*
+   * FOTO ORIGINAL ATUAL
+   */
+
+  if (
+    selectedOccurrence.foto
+  ){
+
+    $("currentOccurrencePhoto")
+      .style.display =
+      "block";
+
+
+    $("currentOccurrencePhotoLink")
+      .href =
+      selectedOccurrence.foto;
+
+  }else{
+
+    $("currentOccurrencePhoto")
+      .style.display =
+      "none";
+  }
+
+
+  /*
+   * FOTO CONCLUSÃO ATUAL
+   */
+
+  if (
+    selectedOccurrence
+      .fotoConclusao
+  ){
+
+    $("currentConclusionPhoto")
+      .style.display =
+      "block";
+
+
+    $("currentConclusionPhotoLink")
+      .href =
+      selectedOccurrence
+        .fotoConclusao;
+
+  }else{
+
+    $("currentConclusionPhoto")
+      .style.display =
+      "none";
+  }
 
 
   toggleConclusionPhoto();
@@ -3939,7 +4185,7 @@ function toggleConclusionPhoto(){
   if (
     $("manageStatus")
       .value ===
-    "Concluída"
+      "Concluída"
   ){
 
     show(
@@ -3973,6 +4219,28 @@ function closeManage(){
 
 function saveManage(){
 
+  const changedBy =
+    $("manageChangedBy")
+      .value
+      .trim();
+
+
+  const description =
+    $("manageDescription")
+      .value
+      .trim();
+
+
+  const category =
+    $("manageCategory")
+      .value;
+
+
+  const component =
+    $("manageComponent")
+      .value;
+
+
   const status =
     $("manageStatus")
       .value;
@@ -3982,6 +4250,61 @@ function saveManage(){
     $("manageSolution")
       .value
       .trim();
+
+
+  if (
+    !changedBy
+  ){
+
+    $("manageMessage")
+      .className =
+      "message error";
+
+
+    $("manageMessage")
+      .textContent =
+      "Informe seu nome no campo Alterado por.";
+
+
+    return;
+  }
+
+
+  if (
+    !description
+  ){
+
+    $("manageMessage")
+      .className =
+      "message error";
+
+
+    $("manageMessage")
+      .textContent =
+      "A descrição da ocorrência não pode ficar vazia.";
+
+
+    return;
+  }
+
+
+  if (
+    !category ||
+    !component
+  ){
+
+    $("manageMessage")
+      .className =
+      "message error";
+
+
+    $("manageMessage")
+      .textContent =
+      "Informe categoria e componente afetado.";
+
+
+    return;
+  }
 
 
   if (
@@ -4015,6 +4338,22 @@ function saveManage(){
     selectedOccurrence.ocorrencia;
 
 
+  $("m_changedBy").value =
+    changedBy;
+
+
+  $("m_description").value =
+    description;
+
+
+  $("m_category").value =
+    category;
+
+
+  $("m_component").value =
+    component;
+
+
   $("m_status").value =
     status;
 
@@ -4028,28 +4367,77 @@ function saveManage(){
     solution;
 
 
+  /*
+   * FOTO ORIGINAL CORRIGIDA
+   */
+
+  if (
+    occurrenceCorrectionPhotoData
+  ){
+
+    $("m_occurrencePhoto").value =
+      occurrenceCorrectionPhotoData
+        .base64;
+
+
+    $("m_occurrencePhotoName").value =
+      occurrenceCorrectionPhotoData
+        .name;
+
+
+    $("m_occurrencePhotoMime").value =
+      occurrenceCorrectionPhotoData
+        .mime;
+
+  }else{
+
+    $("m_occurrencePhoto").value =
+      "";
+
+
+    $("m_occurrencePhotoName").value =
+      "";
+
+
+    $("m_occurrencePhotoMime").value =
+      "";
+  }
+
+
+  /*
+   * FOTO DE CONCLUSÃO
+   */
+
   if (
     conclusionPhotoData
   ){
 
     $("m_photo").value =
-      conclusionPhotoData.base64;
+      conclusionPhotoData
+        .base64;
 
 
     $("m_photoName").value =
-      conclusionPhotoData.name;
+      conclusionPhotoData
+        .name;
 
 
     $("m_photoMime").value =
-      conclusionPhotoData.mime;
+      conclusionPhotoData
+        .mime;
 
   }else{
 
-    $("m_photo").value = "";
+    $("m_photo").value =
+      "";
 
-    $("m_photoName").value = "";
 
-    $("m_photoMime").value = "";
+    $("m_photoName").value =
+      "";
+
+
+    $("m_photoMime").value =
+      "";
   }
 
 
@@ -4226,6 +4614,11 @@ $("manageStatus")
   toggleConclusionPhoto;
 
 
+
+/* ============================================================
+   FOTO ABERTURA
+   ============================================================ */
+
 $("photoInput")
   .onchange =
   async function(){
@@ -4264,6 +4657,55 @@ $("photoInput")
   };
 
 
+
+/* ============================================================
+   FOTO CORREÇÃO 6.6
+   ============================================================ */
+
+$("manageOccurrencePhotoInput")
+  .onchange =
+  async function(){
+
+    if (
+      !this.files[0]
+    ){
+
+      occurrenceCorrectionPhotoData =
+        null;
+
+
+      $("manageOccurrencePhotoPreview")
+        .style.display =
+        "none";
+
+
+      return;
+    }
+
+
+    occurrenceCorrectionPhotoData =
+      await processPhoto(
+        this.files[0]
+      );
+
+
+    $("manageOccurrencePhotoPreview")
+      .src =
+      occurrenceCorrectionPhotoData
+        .dataUrl;
+
+
+    $("manageOccurrencePhotoPreview")
+      .style.display =
+      "block";
+  };
+
+
+
+/* ============================================================
+   FOTO CONCLUSÃO
+   ============================================================ */
+
 $("conclusionPhotoInput")
   .onchange =
   async function(){
@@ -4293,7 +4735,8 @@ $("conclusionPhotoInput")
 
     $("conclusionPhotoPreview")
       .src =
-      conclusionPhotoData.dataUrl;
+      conclusionPhotoData
+        .dataUrl;
 
 
     $("conclusionPhotoPreview")
@@ -4301,6 +4744,11 @@ $("conclusionPhotoInput")
       "block";
   };
 
+
+
+/* ============================================================
+   RETORNO NOVA OC
+   ============================================================ */
 
 $("reportFrame")
   .onload =
@@ -4345,6 +4793,11 @@ $("reportFrame")
   };
 
 
+
+/* ============================================================
+   RETORNO GERENCIAMENTO
+   ============================================================ */
+
 $("manageFrame")
   .onload =
   async function(){
@@ -4368,7 +4821,7 @@ $("manageFrame")
 
     $("manageMessage")
       .textContent =
-      "Ocorrência atualizada.";
+      "Ocorrência atualizada com sucesso.";
 
 
     await reloadOperations();
@@ -4382,7 +4835,7 @@ $("manageFrame")
 
       },
 
-      900
+      1000
 
     );
   };
