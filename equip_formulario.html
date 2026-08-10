@@ -483,6 +483,26 @@ h3 {
 }
 
 
+.history-tag {
+
+  display:inline-block;
+
+  margin:5px 6px 0 0;
+
+  padding:5px 9px;
+
+  border-radius:999px;
+
+  font-size:.78rem;
+
+  background:#eef2ff;
+
+  color:#3730a3;
+
+  border:1px solid #c7d2fe;
+}
+
+
 .history-photo {
 
   margin-top:10px;
@@ -1019,7 +1039,7 @@ Características Técnicas
 
 
 
-<!-- MANUTENÇÃO -->
+<!-- GESTÃO -->
 
 <section class="section">
 
@@ -1101,7 +1121,7 @@ Selecione uma ocorrência
 
 
 <p style="font-size:7px">
-JCPG-2026 - Ver.:3.0
+JCPG-2026 - Ver.:3.1
 </p>
 
 
@@ -1170,6 +1190,176 @@ Contato
   id="contato"
   type="text"
 >
+
+</label>
+
+
+<label>
+
+<span>
+Categoria da ocorrência *
+</span>
+
+<select id="categoriaOcorrencia">
+
+<option value="">
+Selecione...
+</option>
+
+<option value="Civil">
+Civil
+</option>
+
+<option value="Sanitário">
+Sanitário
+</option>
+
+<option value="Elétrica">
+Elétrica
+</option>
+
+<option value="Hidráulica">
+Hidráulica
+</option>
+
+<option value="Climatização">
+Climatização
+</option>
+
+<option value="Refrigeração">
+Refrigeração
+</option>
+
+<option value="Utilidades">
+Utilidades
+</option>
+
+<option value="Segurança">
+Segurança
+</option>
+
+<option value="Mobiliário">
+Mobiliário
+</option>
+
+<option value="Equipamento">
+Equipamento
+</option>
+
+<option value="Outros">
+Outros
+</option>
+
+</select>
+
+</label>
+
+
+<label>
+
+<span>
+Componente afetado *
+</span>
+
+<select id="componenteAfetado">
+
+<option value="">
+Selecione...
+</option>
+
+<option value="Geral">
+Geral
+</option>
+
+<option value="Piso">
+Piso
+</option>
+
+<option value="Parede">
+Parede
+</option>
+
+<option value="Teto">
+Teto
+</option>
+
+<option value="Porta">
+Porta
+</option>
+
+<option value="Janela">
+Janela
+</option>
+
+<option value="Vaso Sanitário">
+Vaso Sanitário
+</option>
+
+<option value="Pia">
+Pia
+</option>
+
+<option value="Torneira">
+Torneira
+</option>
+
+<option value="Descarga">
+Descarga
+</option>
+
+<option value="Mictório">
+Mictório
+</option>
+
+<option value="Ralo">
+Ralo
+</option>
+
+<option value="Luminária">
+Luminária
+</option>
+
+<option value="Tomada">
+Tomada
+</option>
+
+<option value="Interruptor">
+Interruptor
+</option>
+
+<option value="Tubulação">
+Tubulação
+</option>
+
+<option value="Registro">
+Registro
+</option>
+
+<option value="Bomba">
+Bomba
+</option>
+
+<option value="Motor">
+Motor
+</option>
+
+<option value="Painel">
+Painel
+</option>
+
+<option value="Ar-condicionado">
+Ar-condicionado
+</option>
+
+<option value="Mobiliário">
+Mobiliário
+</option>
+
+<option value="Outro">
+Outro
+</option>
+
+</select>
 
 </label>
 
@@ -1533,6 +1723,18 @@ Salvar alterações
   type="hidden"
   name="contato"
   id="post_contato"
+>
+
+<input
+  type="hidden"
+  name="categoriaOcorrencia"
+  id="post_categoriaOcorrencia"
+>
+
+<input
+  type="hidden"
+  name="componenteAfetado"
+  id="post_componenteAfetado"
 >
 
 <input
@@ -2056,8 +2258,6 @@ function render(eq) {
     "";
 
 
-  /* CLASSIFICAÇÃO */
-
   const classificacao =
     htmlPares([
 
@@ -2103,8 +2303,6 @@ function render(eq) {
       classificacao;
   }
 
-
-  /* LOCALIZAÇÃO */
 
   const localizacao =
     htmlPares([
@@ -2156,8 +2354,6 @@ function render(eq) {
       localizacao;
   }
 
-
-  /* DADOS TÉCNICOS */
 
   const tecnico =
     htmlPares([
@@ -2242,8 +2438,6 @@ function render(eq) {
       "none";
   }
 
-
-  /* GESTÃO */
 
   el("#dadosGestao")
     .innerHTML =
@@ -2644,6 +2838,32 @@ function mostrarHistoricoSelecionado(index) {
             "Aberta"
           )}
         </div>
+
+
+        ${
+          item.categoriaOcorrencia
+            ? `
+              <span class="history-tag">
+                ${esc(
+                  item.categoriaOcorrencia
+                )}
+              </span>
+            `
+            : ""
+        }
+
+
+        ${
+          item.componenteAfetado
+            ? `
+              <span class="history-tag">
+                ${esc(
+                  item.componenteAfetado
+                )}
+              </span>
+            `
+            : ""
+        }
 
 
         ${
@@ -3191,27 +3411,75 @@ function enviarReporte() {
       .trim();
 
 
+  const categoria =
+    el("#categoriaOcorrencia")
+      .value
+      .trim();
+
+
+  const componente =
+    el("#componenteAfetado")
+      .value
+      .trim();
+
+
   const descricao =
     el("#descricao")
       .value
       .trim();
 
 
-  if (
-    !nome ||
-    !descricao
-  ) {
+  const msg =
+    el("#status-reporte");
 
-    const msg =
-      el("#status-reporte");
 
+  if (!nome) {
 
     msg.className =
       "form-status status-error";
 
 
     msg.textContent =
-      "Informe seu nome e a descrição.";
+      "Informe seu nome.";
+
+    return;
+  }
+
+
+  if (!categoria) {
+
+    msg.className =
+      "form-status status-error";
+
+
+    msg.textContent =
+      "Selecione a categoria da ocorrência.";
+
+    return;
+  }
+
+
+  if (!componente) {
+
+    msg.className =
+      "form-status status-error";
+
+
+    msg.textContent =
+      "Selecione o componente afetado.";
+
+    return;
+  }
+
+
+  if (!descricao) {
+
+    msg.className =
+      "form-status status-error";
+
+
+    msg.textContent =
+      "Informe a descrição.";
 
     return;
   }
@@ -3243,6 +3511,16 @@ function enviarReporte() {
       .value;
 
 
+  el("#post_categoriaOcorrencia")
+    .value =
+    categoria;
+
+
+  el("#post_componenteAfetado")
+    .value =
+    componente;
+
+
   el("#post_descricao")
     .value =
     descricao;
@@ -3265,6 +3543,22 @@ function enviarReporte() {
     el("#post_fotoMime")
       .value =
       fotoProcessada.mime;
+
+  } else {
+
+    el("#post_fotoBase64")
+      .value =
+      "";
+
+
+    el("#post_fotoNome")
+      .value =
+      "";
+
+
+    el("#post_fotoMime")
+      .value =
+      "";
   }
 
 
@@ -3280,13 +3574,11 @@ function enviarReporte() {
     true;
 
 
-  el("#status-reporte")
-    .className =
+  msg.className =
     "form-status status-loading";
 
 
-  el("#status-reporte")
-    .textContent =
+  msg.textContent =
     "Registrando ocorrência...";
 
 
@@ -3360,7 +3652,21 @@ function abrirGerenciamento(index) {
 
   let info =
 
-    "<b>Aberta em:</b> " +
+    "<b>Categoria:</b> " +
+
+    esc(
+      item.categoriaOcorrencia ||
+      "-"
+    ) +
+
+    "<br><b>Componente:</b> " +
+
+    esc(
+      item.componenteAfetado ||
+      "-"
+    ) +
+
+    "<br><b>Aberta em:</b> " +
 
     esc(
       formatDateBR(
@@ -3538,6 +3844,16 @@ function salvarGerenciamento() {
     el("#manage_post_fotoConclusaoBase64")
       .value =
       "";
+
+
+    el("#manage_post_fotoConclusaoNome")
+      .value =
+      "";
+
+
+    el("#manage_post_fotoConclusaoMime")
+      .value =
+      "";
   }
 
 
@@ -3653,6 +3969,14 @@ el("#postFrame")
 
 
           el("#contato").value =
+            "";
+
+
+          el("#categoriaOcorrencia").value =
+            "";
+
+
+          el("#componenteAfetado").value =
             "";
 
 
