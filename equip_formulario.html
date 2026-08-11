@@ -19,13 +19,9 @@
 }
 
 body{
-
   margin:0;
-
   background:#f5f7fa;
-
   color:#111827;
-
   font-family:
     system-ui,
     -apple-system,
@@ -36,47 +32,33 @@ body{
 }
 
 .container{
-
   max-width:960px;
-
   margin:auto;
-
   padding:16px;
 }
 
 .card{
-
   background:#fff;
-
   border:1px solid #e5e7eb;
-
   border-radius:16px;
-
   padding:16px;
-
   box-shadow:
     0 5px 15px
     rgba(0,0,0,.05);
 }
 
 h1{
-
   margin:0 0 5px;
-
   font-size:1.35rem;
 }
 
 h2{
-
   font-size:1.05rem;
-
   margin-top:0;
 }
 
 h3{
-
   font-size:1rem;
-
   margin-top:18px;
 }
 
@@ -89,40 +71,26 @@ h3{
 }
 
 .badge{
-
   display:inline-block;
-
   background:#e8eef8;
-
   color:#1f4e78;
-
   padding:5px 9px;
-
   border-radius:999px;
-
   font-size:.8rem;
-
   font-weight:700;
-
   margin-top:6px;
 }
 
 .section{
-
   border-top:1px solid #e5e7eb;
-
   margin-top:18px;
-
   padding-top:14px;
 }
 
 .pair{
-
   padding:7px 0;
-
   border-bottom:
     1px dashed #eee;
-
   line-height:1.45;
 }
 
@@ -131,76 +99,45 @@ h3{
 }
 
 .actions{
-
   display:flex;
-
   flex-wrap:wrap;
-
   gap:9px;
-
   margin-top:18px;
 }
 
 .chip{
-
   display:inline-block;
-
   padding:11px 15px;
-
   border-radius:999px;
-
   background:#dc2626;
-
   color:#fff;
-
   font-weight:700;
-
   cursor:pointer;
-
   text-decoration:none;
-
   border:0;
 }
 
 .btn-preventive{
-
   display:inline-block;
-
   padding:11px 15px;
-
   border-radius:999px;
-
   background:#047857;
-
   color:#fff;
-
   font-weight:700;
-
   cursor:pointer;
-
   text-decoration:none;
-
   border:0;
 }
 
 .btn-search{
-
   display:inline-block;
-
   padding:11px 15px;
-
   border-radius:999px;
-
   border:1px solid #1f4e78;
-
   color:#1f4e78;
-
   background:#fff;
-
   font-weight:700;
-
   text-decoration:none;
-
   cursor:pointer;
 }
 
@@ -210,57 +147,40 @@ h3{
    ============================================================ */
 
 .status-card{
-
   margin-top:16px;
-
   border-radius:13px;
-
   padding:13px;
-
   border:1px solid #e5e7eb;
-
   background:#f9fafb;
 }
 
 .status-card.ok{
-
   background:#ecfdf5;
-
   border-color:#a7f3d0;
 }
 
 .status-card.critico{
-
   background:#fef2f2;
-
   border-color:#fecaca;
 }
 
 .status-card.atendimento{
-
   background:#fffbeb;
-
   border-color:#fde68a;
 }
 
 .status-card.aguardando{
-
   background:#fff7ed;
-
   border-color:#fed7aa;
 }
 
 .status-title{
-
   font-weight:800;
 }
 
 .status-info{
-
   font-size:.86rem;
-
   margin-top:5px;
-
   color:#6b7280;
 }
 
@@ -271,119 +191,77 @@ h3{
 
 .history-card,
 .preventive-card{
-
   margin-top:12px;
-
   padding:13px;
-
   background:#fafafa;
-
   border:1px solid #e5e7eb;
-
   border-radius:12px;
 }
 
 .preventive-card{
-
   background:#f0fdf4;
-
   border-color:#bbf7d0;
 }
 
 .tag{
-
   display:inline-block;
-
   margin:5px 4px 5px 0;
-
   padding:4px 8px;
-
   background:#eef2ff;
-
   color:#3730a3;
-
   border-radius:999px;
-
   font-size:.75rem;
-
   border:1px solid #c7d2fe;
 }
 
 .tag-preventive{
-
   background:#dcfce7;
-
   color:#166534;
-
   border-color:#bbf7d0;
 }
 
 .audit-box{
-
   margin-top:12px;
-
   padding:10px;
-
   border-radius:10px;
-
   background:#f3f4f6;
-
   color:#4b5563;
-
   font-size:.82rem;
-
   line-height:1.5;
 }
 
 
 /* ============================================================
-   TELA EQBUSCA
+   EQBUSCA
    ============================================================ */
 
 .search-header{
-
   margin-bottom:18px;
 }
 
 .search-title{
-
   color:#1f4e78;
-
   font-size:1.45rem;
-
   font-weight:800;
 }
 
 .menu-busca{
-
   display:grid;
-
   grid-template-columns:
-    1fr 1fr;
-
+    repeat(3,1fr);
   gap:10px;
-
   margin-bottom:16px;
 }
 
 .menu-button{
-
   border:1px solid #d1d5db;
-
   background:#fff;
-
   border-radius:12px;
-
   padding:13px;
-
   font-size:.9rem;
-
   font-weight:700;
-
   color:#374151;
-
   cursor:pointer;
-
   transition:.15s;
 }
 
@@ -392,11 +270,8 @@ h3{
 }
 
 .menu-button.active{
-
   background:#1f4e78;
-
   color:#fff;
-
   border-color:#1f4e78;
 }
 
@@ -404,322 +279,402 @@ h3{
   border-color:#f59e0b;
 }
 
+.menu-button.preventive{
+  border-color:#059669;
+}
+
+.menu-button.preventive.active{
+  background:#047857;
+  border-color:#047857;
+}
+
 .search-box{
-
   display:flex;
-
   gap:8px;
 }
 
 .search-box input{
-
   flex:1;
-
   min-width:0;
-
   border:1px solid #d1d5db;
-
   border-radius:11px;
-
   padding:13px;
-
   font-size:1rem;
-
   outline:none;
 }
 
 .search-box input:focus{
-
   border-color:#1f4e78;
-
   box-shadow:
     0 0 0 2px
     rgba(31,78,120,.1);
 }
 
 .search-box button{
-
   border:0;
-
   background:#1f4e78;
-
   color:#fff;
-
   border-radius:11px;
-
   padding:0 20px;
-
   font-weight:700;
 }
 
 .search-box button:disabled{
-
   opacity:.55;
-
   cursor:not-allowed;
 }
 
 .search-help{
-
   margin-top:9px;
-
   font-size:.83rem;
-
   color:#6b7280;
-
   line-height:1.5;
 }
 
 .search-result,
-.pending-card{
-
+.pending-card,
+.control-item{
   margin-top:11px;
-
   padding:14px;
-
   border:1px solid #e5e7eb;
-
   border-radius:13px;
-
   background:#fff;
-
   box-shadow:
     0 2px 5px
     rgba(0,0,0,.03);
 }
 
 .search-result-id{
-
   font-size:.78rem;
-
   font-weight:800;
-
   color:#1f4e78;
 }
 
 .search-result-name{
-
   font-weight:700;
-
   margin-top:2px;
 }
 
 .search-result-data{
-
   margin-top:8px;
-
   font-size:.86rem;
-
   color:#4b5563;
-
   line-height:1.55;
 }
 
 .open-button{
-
   display:block;
-
   margin-top:11px;
-
   padding:10px;
-
   background:#1f4e78;
-
   color:#fff;
-
   text-align:center;
-
   text-decoration:none;
-
   font-weight:700;
-
   border-radius:9px;
 }
 
 
 /* ============================================================
-   PENDÊNCIAS
+   OCs PENDENTES
    ============================================================ */
 
 .pending-summary{
-
   display:grid;
-
   grid-template-columns:
     repeat(4,1fr);
-
   gap:8px;
-
   margin-top:14px;
-
   margin-bottom:14px;
 }
 
 .pending-number{
-
   background:#fff;
-
   border:1px solid #e5e7eb;
-
   border-radius:12px;
-
   padding:10px;
-
   text-align:center;
 }
 
 .pending-number strong{
-
   display:block;
-
   font-size:1.25rem;
 }
 
 .pending-label{
-
   font-size:.72rem;
-
   color:#6b7280;
-
   margin-top:3px;
 }
 
 .pending-head{
-
   display:flex;
-
   justify-content:space-between;
-
   gap:10px;
-
   align-items:flex-start;
 }
 
 .pending-occurrence{
-
   font-weight:800;
-
   color:#1f4e78;
 }
 
 .pending-status{
-
   border-radius:999px;
-
   padding:5px 8px;
-
   font-size:.75rem;
-
   font-weight:700;
-
   white-space:nowrap;
 }
 
 .st-aberta{
-
   background:#fee2e2;
-
   color:#991b1b;
 }
 
 .st-atendimento{
-
   background:#fef3c7;
-
   color:#92400e;
 }
 
 .st-aguardando{
-
   background:#ffedd5;
-
   color:#9a3412;
 }
 
 .pending-description{
-
   margin-top:11px;
-
   padding-top:9px;
-
   border-top:1px dashed #ddd;
-
   line-height:1.45;
 }
 
 .elapsed-open{
-
   margin-top:5px;
-
   font-weight:800;
-
   color:#374151;
 }
 
 .elapsed-service{
-
   margin-top:5px;
-
   font-weight:800;
-
   color:#92400e;
 }
 
 
 /* ============================================================
-   PREVENTIVA
+   CONTROLE PREVENTIVAS 6.8
+   ============================================================ */
+
+.preventive-control-header{
+  display:flex;
+  gap:10px;
+  align-items:end;
+  flex-wrap:wrap;
+}
+
+.control-field{
+  flex:1;
+  min-width:180px;
+}
+
+.control-field label{
+  margin-top:0;
+}
+
+.control-refresh{
+  border:0;
+  background:#047857;
+  color:#fff;
+  border-radius:9px;
+  padding:11px 16px;
+  font-weight:700;
+}
+
+.control-summary{
+  display:grid;
+  grid-template-columns:
+    repeat(4,1fr);
+  gap:9px;
+  margin-top:15px;
+}
+
+.control-summary-card{
+  border:1px solid #e5e7eb;
+  background:#fff;
+  border-radius:13px;
+  padding:13px;
+  text-align:center;
+}
+
+.control-summary-card strong{
+  display:block;
+  font-size:1.4rem;
+}
+
+.control-summary-title{
+  margin-top:3px;
+  color:#6b7280;
+  font-size:.75rem;
+}
+
+.progress-box{
+  margin-top:14px;
+  background:#fff;
+  border:1px solid #e5e7eb;
+  padding:14px;
+  border-radius:13px;
+}
+
+.progress-head{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  font-weight:700;
+}
+
+.progress-track{
+  height:13px;
+  background:#e5e7eb;
+  border-radius:999px;
+  overflow:hidden;
+  margin-top:9px;
+}
+
+.progress-fill{
+  width:0;
+  height:100%;
+  background:#059669;
+  border-radius:999px;
+  transition:.3s;
+}
+
+.control-filters{
+  display:grid;
+  grid-template-columns:
+    1fr 1fr;
+  gap:10px;
+  margin-top:14px;
+}
+
+.control-tabs{
+  display:flex;
+  flex-wrap:wrap;
+  gap:7px;
+  margin-top:14px;
+}
+
+.control-tab{
+  border:1px solid #d1d5db;
+  background:#fff;
+  border-radius:999px;
+  padding:8px 12px;
+  font-weight:700;
+  font-size:.8rem;
+}
+
+.control-tab.active{
+  background:#111827;
+  color:#fff;
+  border-color:#111827;
+}
+
+.control-item.pending{
+  border-left:5px solid #dc2626;
+}
+
+.control-item.done{
+  border-left:5px solid #059669;
+}
+
+.control-head{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  align-items:flex-start;
+}
+
+.control-id{
+  font-weight:800;
+  color:#1f4e78;
+}
+
+.control-status{
+  display:inline-block;
+  border-radius:999px;
+  padding:5px 8px;
+  font-size:.75rem;
+  font-weight:800;
+}
+
+.control-status.pending{
+  background:#fee2e2;
+  color:#991b1b;
+}
+
+.control-status.done{
+  background:#dcfce7;
+  color:#166534;
+}
+
+.provider-summary{
+  margin-top:15px;
+}
+
+.provider-card{
+  padding:11px;
+  background:#fff;
+  border:1px solid #e5e7eb;
+  border-radius:11px;
+  margin-top:7px;
+}
+
+.provider-name{
+  font-weight:800;
+}
+
+.provider-data{
+  margin-top:5px;
+  font-size:.82rem;
+  color:#4b5563;
+}
+
+
+/* ============================================================
+   PREVENTIVA DA FICHA
    ============================================================ */
 
 .preventive-info{
-
   background:#ecfdf5;
-
   border:1px solid #a7f3d0;
-
   border-radius:12px;
-
   padding:12px;
-
   margin-top:12px;
 }
 
 .preventive-info-line{
-
   padding:4px 0;
-
   font-size:.9rem;
 }
 
 .preventive-header{
-
   display:flex;
-
   align-items:flex-start;
-
   justify-content:space-between;
-
   gap:10px;
 }
 
 .preventive-id{
-
   color:#047857;
-
   font-weight:800;
 }
 
 .preventive-status{
-
   background:#dcfce7;
-
   color:#166534;
-
   padding:5px 8px;
-
   border-radius:999px;
-
   font-size:.75rem;
-
   font-weight:700;
 }
 
@@ -729,106 +684,70 @@ h3{
    ============================================================ */
 
 .modal{
-
   position:fixed;
-
   inset:0;
-
   display:none;
-
   align-items:center;
-
   justify-content:center;
-
   padding:12px;
-
   background:
     rgba(0,0,0,.45);
-
   z-index:999;
 }
 
 .modal-box{
-
   width:min(
     700px,
     96vw
   );
-
   max-height:92vh;
-
   overflow:auto;
-
   background:#fff;
-
   padding:17px;
-
   border-radius:15px;
-
   box-shadow:
     0 20px 50px
     rgba(0,0,0,.2);
 }
 
 .modal-section{
-
   margin-top:18px;
-
   padding-top:14px;
-
   border-top:1px solid #e5e7eb;
 }
 
 .modal-section-title{
-
   font-weight:800;
-
   margin-bottom:7px;
-
   color:#374151;
 }
 
 .modal-section-help{
-
   color:#6b7280;
-
   font-size:.82rem;
-
   margin-bottom:10px;
 }
 
 label{
-
   display:grid;
-
   gap:5px;
-
   margin-top:12px;
-
   font-weight:600;
 }
 
 input,
 select,
 textarea{
-
   width:100%;
-
   padding:11px;
-
   border:1px solid #d1d5db;
-
   border-radius:9px;
-
   font:inherit;
-
   background:#fff;
 }
 
 input[readonly]{
-
   background:#f3f4f6;
-
   color:#4b5563;
 }
 
@@ -837,166 +756,108 @@ textarea{
 }
 
 button{
-
   cursor:pointer;
-
   font:inherit;
 }
 
 .modal-actions{
-
   display:flex;
-
   justify-content:flex-end;
-
   gap:8px;
-
   margin-top:15px;
 }
 
 .btn{
-
   border:0;
-
   border-radius:9px;
-
   padding:11px 15px;
-
   background:#111827;
-
   color:#fff;
 }
 
 .btn-green{
-
   background:#047857;
 }
 
 .btn:disabled{
-
   opacity:.55;
-
   cursor:not-allowed;
 }
 
 .btn-secondary{
-
   background:#e5e7eb;
-
   color:#111827;
 }
 
 .photo-box{
-
   margin-top:12px;
-
   padding:12px;
-
   border:1px solid #e5e7eb;
-
   border-radius:12px;
-
   background:#f9fafb;
 }
 
 .photo-preview{
-
   display:none;
-
   max-width:100%;
-
   max-height:280px;
-
   margin-top:10px;
-
   border-radius:10px;
-
   border:1px solid #e5e7eb;
 }
 
 .current-photo{
-
   display:none;
-
   margin-top:10px;
 }
 
 .current-photo a{
-
   display:inline-block;
-
   padding:8px 10px;
-
   border:1px solid #d1d5db;
-
   border-radius:8px;
-
   background:#fff;
-
   text-decoration:none;
-
   color:#1f4e78;
-
   font-weight:600;
 }
 
 .message{
-
   display:none;
-
   margin-top:10px;
-
   padding:10px;
-
   border-radius:8px;
 }
 
 .success{
-
   display:block;
-
   background:#d1fae5;
-
   color:#065f46;
 }
 
 .error{
-
   display:block;
-
   background:#fee2e2;
-
   color:#991b1b;
 }
 
 .loading{
-
   display:block;
-
   background:#fef3c7;
-
   color:#92400e;
 }
 
 .remember-info{
-
   margin-top:7px;
-
   color:#6b7280;
-
   font-size:.78rem;
 }
 
 .footer{
-
   margin-top:20px;
-
   color:#9ca3af;
-
   font-size:.72rem;
-
   text-align:center;
-
   padding-bottom:10px;
 }
 
@@ -1005,14 +866,19 @@ iframe{
 }
 
 
-@media(max-width:600px){
+@media(max-width:700px){
 
   .menu-busca{
     grid-template-columns:1fr;
   }
 
-  .pending-summary{
+  .pending-summary,
+  .control-summary{
     grid-template-columns:1fr 1fr;
+  }
+
+  .control-filters{
+    grid-template-columns:1fr;
   }
 
   .search-box{
@@ -1032,17 +898,18 @@ iframe{
   }
 
   .pending-head,
-  .preventive-header{
+  .preventive-header,
+  .control-head{
     display:block;
   }
 
   .pending-status,
-  .preventive-status{
-
+  .preventive-status,
+  .control-status{
     display:inline-block;
-
     margin-top:6px;
   }
+
 }
 
 </style>
@@ -1057,7 +924,7 @@ iframe{
 
 
 <!-- =========================================================
-     TELA EQBUSCA
+     EQBUSCA
      ========================================================= -->
 
 <div
@@ -1096,8 +963,19 @@ Gestão rápida de manutenção
 ⚠️ OCs pendentes
 </button>
 
+<button
+  id="tabPreventiveControl"
+  type="button"
+  class="menu-button preventive"
+>
+🛠️ Preventivas
+</button>
+
 </div>
 
+
+
+<!-- BUSCA -->
 
 <div id="searchArea">
 
@@ -1144,11 +1022,13 @@ A busca não diferencia letras maiúsculas de minúsculas.
   style="margin-top:15px"
 ></div>
 
-
 <div id="searchResults"></div>
 
 </div>
 
+
+
+<!-- OCs PENDENTES -->
 
 <div
   id="pendingArea"
@@ -1162,14 +1042,189 @@ A busca não diferencia letras maiúsculas de minúsculas.
 Carregando ocorrências pendentes...
 </div>
 
-
 <div
   id="pendingSummary"
   class="pending-summary hidden"
 ></div>
 
-
 <div id="pendingResults"></div>
+
+</div>
+
+
+
+<!-- =========================================================
+     CONTROLE PREVENTIVAS 6.8
+     ========================================================= -->
+
+<div
+  id="preventiveControlArea"
+  class="hidden"
+>
+
+
+<div class="card">
+
+
+<div class="preventive-control-header">
+
+
+<div class="control-field">
+
+<label>
+
+Competência
+
+<input
+  id="controlCompetence"
+  type="month"
+>
+
+</label>
+
+</div>
+
+
+<div class="control-field">
+
+<label>
+
+Prestador
+
+<select id="controlProvider">
+
+<option value="">
+Todos os prestadores
+</option>
+
+</select>
+
+</label>
+
+</div>
+
+
+<button
+  id="controlRefresh"
+  type="button"
+  class="control-refresh"
+>
+Atualizar
+</button>
+
+
+</div>
+
+
+<div
+  id="controlCompetenceTitle"
+  style="
+    margin-top:15px;
+    font-weight:800;
+    font-size:1.1rem;
+  "
+></div>
+
+
+<div
+  id="controlStatus"
+  class="muted"
+  style="margin-top:5px"
+>
+Selecione uma competência para consultar.
+</div>
+
+
+<div
+  id="controlSummary"
+  class="control-summary hidden"
+></div>
+
+
+<div
+  id="controlProgress"
+  class="progress-box hidden"
+>
+
+<div class="progress-head">
+
+<span>
+Conclusão mensal
+</span>
+
+<span id="controlProgressText">
+0%
+</span>
+
+</div>
+
+
+<div class="progress-track">
+
+<div
+  id="controlProgressFill"
+  class="progress-fill"
+></div>
+
+</div>
+
+</div>
+
+
+<div
+  id="providerSummary"
+  class="provider-summary hidden"
+>
+
+<h3>
+Resumo por Prestador
+</h3>
+
+<div id="providerSummaryResults"></div>
+
+</div>
+
+
+<div class="control-tabs">
+
+<button
+  id="controlTabAll"
+  type="button"
+  class="control-tab active"
+>
+Todos
+</button>
+
+<button
+  id="controlTabPending"
+  type="button"
+  class="control-tab"
+>
+🔴 Pendentes
+</button>
+
+<button
+  id="controlTabDone"
+  type="button"
+  class="control-tab"
+>
+✅ Realizadas
+</button>
+
+</div>
+
+
+<div
+  id="controlListStatus"
+  class="muted"
+  style="margin-top:12px"
+></div>
+
+
+<div id="controlResults"></div>
+
+
+</div>
 
 </div>
 
@@ -1179,7 +1234,7 @@ Carregando ocorrências pendentes...
 
 
 <!-- =========================================================
-     FICHA DO ATIVO
+     FICHA ATIVO
      ========================================================= -->
 
 <div
@@ -1287,7 +1342,6 @@ Gestão do Ativo
 Reportar Serviço / Anomalia / Reparo
 </button>
 
-
 <button
   id="preventiveButton"
   type="button"
@@ -1295,7 +1349,6 @@ Reportar Serviço / Anomalia / Reparo
 >
 🛠️ Registrar preventiva
 </button>
-
 
 <button
   id="searchAssetsButton"
@@ -1308,8 +1361,6 @@ Reportar Serviço / Anomalia / Reparo
 </div>
 
 
-
-<!-- HISTÓRICO DE OCs -->
 
 <div class="section">
 
@@ -1333,8 +1384,6 @@ Histórico de Manutenção
 </div>
 
 
-
-<!-- NOVO 6.7 - HISTÓRICO DE PREVENTIVAS -->
 
 <div
   id="preventiveHistorySection"
@@ -1497,12 +1546,10 @@ Foto da ocorrência
 
 </label>
 
-
 <img
   id="photoPreview"
   class="photo-preview"
 >
-
 
 <div
   id="reportMessage"
@@ -1537,7 +1584,7 @@ Gravar ocorrência
 
 
 <!-- =========================================================
-     MODAL PREVENTIVA 6.7
+     MODAL PREVENTIVA
      ========================================================= -->
 
 <div
@@ -1605,7 +1652,7 @@ Responsável pela preventiva *
 </label>
 
 <div class="remember-info">
-Seu nome fica salvo neste aparelho para os próximos registros.
+Seu nome fica salvo neste aparelho.
 </div>
 
 
@@ -1677,7 +1724,6 @@ Registrar preventiva
 
 </div>
 
-
 </div>
 
 </div>
@@ -1694,7 +1740,6 @@ Registrar preventiva
 >
 
 <div class="modal-box">
-
 
 <h2 id="manageTitle">
 Gerenciar ocorrência
@@ -1715,7 +1760,6 @@ Seu nome / Alterado por *
 <div class="remember-info">
 O último nome utilizado fica salvo neste aparelho.
 </div>
-
 
 
 <div class="modal-section">
@@ -1840,7 +1884,6 @@ Adicionar ou substituir foto
 </div>
 
 
-
 <div class="modal-section">
 
 <div class="modal-section-title">
@@ -1898,7 +1941,6 @@ Solução / Serviço realizado
 ✅ Foto após o serviço
 </div>
 
-
 <label>
 
 Adicionar ou substituir foto
@@ -1912,14 +1954,12 @@ Adicionar ou substituir foto
 
 </label>
 
-
 <img
   id="conclusionPhotoPreview"
   class="photo-preview"
 >
 
 </div>
-
 
 </div>
 
@@ -1957,7 +1997,7 @@ Salvar alterações
 
 
 <!-- =========================================================
-     FORM OC
+     FORMS
      ========================================================= -->
 
 <form
@@ -1982,11 +2022,6 @@ Salvar alterações
 </form>
 
 
-
-<!-- =========================================================
-     FORM PREVENTIVA 6.7
-     ========================================================= -->
-
 <form
   id="preventiveForm"
   method="POST"
@@ -1999,15 +2034,9 @@ Salvar alterações
   value="registerPreventive"
 >
 
-<input
-  name="token"
-  id="pr_token"
->
+<input name="token" id="pr_token">
 
-<input
-  name="id"
-  id="pr_id"
->
+<input name="id" id="pr_id">
 
 <input
   name="preventiveResponsible"
@@ -2037,11 +2066,6 @@ Salvar alterações
 </form>
 
 
-
-<!-- =========================================================
-     FORM GERENCIAMENTO OC
-     ========================================================= -->
-
 <form
   id="manageForm"
   method="POST"
@@ -2055,67 +2079,22 @@ Salvar alterações
 >
 
 <input name="token" id="m_token">
-
 <input name="ocorrencia" id="m_occurrence">
-
 <input name="status" id="m_status">
-
 <input name="responsavel" id="m_responsible">
-
 <input name="solucao" id="m_solution">
-
-<input
-  name="alteradoPor"
-  id="m_changedBy"
->
-
-<input
-  name="descricaoOcorrencia"
-  id="m_description"
->
-
-<input
-  name="categoriaOcorrenciaEdit"
-  id="m_category"
->
-
-<input
-  name="componenteAfetadoEdit"
-  id="m_component"
->
-
-<input
-  name="fotoOcorrenciaBase64"
-  id="m_occurrencePhoto"
->
-
-<input
-  name="fotoOcorrenciaNome"
-  id="m_occurrencePhotoName"
->
-
-<input
-  name="fotoOcorrenciaMime"
-  id="m_occurrencePhotoMime"
->
-
-<input
-  name="fotoConclusaoBase64"
-  id="m_photo"
->
-
-<input
-  name="fotoConclusaoNome"
-  id="m_photoName"
->
-
-<input
-  name="fotoConclusaoMime"
-  id="m_photoMime"
->
+<input name="alteradoPor" id="m_changedBy">
+<input name="descricaoOcorrencia" id="m_description">
+<input name="categoriaOcorrenciaEdit" id="m_category">
+<input name="componenteAfetadoEdit" id="m_component">
+<input name="fotoOcorrenciaBase64" id="m_occurrencePhoto">
+<input name="fotoOcorrenciaNome" id="m_occurrencePhotoName">
+<input name="fotoOcorrenciaMime" id="m_occurrencePhotoMime">
+<input name="fotoConclusaoBase64" id="m_photo">
+<input name="fotoConclusaoNome" id="m_photoName">
+<input name="fotoConclusaoMime" id="m_photoMime">
 
 </form>
-
 
 
 <iframe
@@ -2134,11 +2113,8 @@ Salvar alterações
 ></iframe>
 
 
-
 <div class="footer">
-
-QRManut • Versão 6.7
-
+QRManut • Versão 6.8
 </div>
 
 
@@ -2173,10 +2149,6 @@ const QUALITY =
 0.72;
 
 
-/*
- * Nome salvo no aparelho.
- */
-
 const RESPONSIBLE_STORAGE_KEY =
 "qrmanut_responsavel";
 
@@ -2188,46 +2160,44 @@ const RESPONSIBLE_STORAGE_KEY =
 let currentAsset =
 null;
 
-
 let history =
 [];
-
 
 let preventiveHistory =
 [];
 
-
 let selectedOccurrence =
 null;
-
 
 let photoData =
 null;
 
-
 let conclusionPhotoData =
 null;
-
 
 let occurrenceCorrectionPhotoData =
 null;
 
-
 let preventivePhotoData =
 null;
-
 
 let reportPosting =
 false;
 
-
 let managePosting =
 false;
-
 
 let preventivePosting =
 false;
 
+
+/* CONTROLE 6.8 */
+
+let preventiveControlData =
+null;
+
+let preventiveControlMode =
+"all";
 
 
 /* ============================================================
@@ -2267,17 +2237,15 @@ function normalizeId(value){
 
 function getId(){
 
-  const rawId =
+  return normalizeId(
+
     new URLSearchParams(
       location.search
     )
     .get(
       "id"
-    );
+    )
 
-
-  return normalizeId(
-    rawId
   );
 }
 
@@ -2383,24 +2351,16 @@ function competenciaAtual(){
     new Date();
 
 
-  const ano =
-    agora.getFullYear();
-
-
-  const mes =
+  return (
+    agora.getFullYear() +
+    "-" +
     String(
       agora.getMonth() + 1
     )
     .padStart(
       2,
       "0"
-    );
-
-
-  return (
-    ano +
-    "-" +
-    mes
+    )
   );
 }
 
@@ -2428,7 +2388,7 @@ function tempoDecorrido(dataInicial){
 
 
   let diff =
-    new Date().getTime() -
+    Date.now() -
     inicio.getTime();
 
 
@@ -2509,7 +2469,7 @@ function tempoDecorrido(dataInicial){
 
 
 /* ============================================================
-   RESPONSÁVEL SALVO NO APARELHO
+   RESPONSÁVEL LOCAL
    ============================================================ */
 
 function getSavedResponsible(){
@@ -2539,9 +2499,7 @@ function saveResponsible(name){
     .trim();
 
 
-  if (
-    !nome
-  ){
+  if (!nome){
 
     return;
   }
@@ -2557,7 +2515,6 @@ function saveResponsible(name){
   }catch(error){
 
     console.warn(
-      "Não foi possível salvar o responsável.",
       error
     );
   }
@@ -2570,9 +2527,7 @@ function fillSavedResponsible(){
     getSavedResponsible();
 
 
-  if (
-    !name
-  ){
+  if (!name){
 
     return;
   }
@@ -2642,8 +2597,47 @@ async function api(params){
 
 
 /* ============================================================
-   EQBUSCA
+   TABS EQBUSCA
    ============================================================ */
+
+function clearMainTabs(){
+
+  $("tabSearch")
+    .classList
+    .remove(
+      "active"
+    );
+
+
+  $("tabPending")
+    .classList
+    .remove(
+      "active"
+    );
+
+
+  $("tabPreventiveControl")
+    .classList
+    .remove(
+      "active"
+    );
+
+
+  hide(
+    "searchArea"
+  );
+
+
+  hide(
+    "pendingArea"
+  );
+
+
+  hide(
+    "preventiveControlArea"
+  );
+}
+
 
 function openSearch(){
 
@@ -2663,16 +2657,12 @@ function openSearch(){
 
 function showSearchTab(){
 
+  clearMainTabs();
+
+
   $("tabSearch")
     .classList
     .add(
-      "active"
-    );
-
-
-  $("tabPending")
-    .classList
-    .remove(
       "active"
     );
 
@@ -2680,21 +2670,12 @@ function showSearchTab(){
   show(
     "searchArea"
   );
-
-
-  hide(
-    "pendingArea"
-  );
 }
 
 
 async function showPendingTab(){
 
-  $("tabSearch")
-    .classList
-    .remove(
-      "active"
-    );
+  clearMainTabs();
 
 
   $("tabPending")
@@ -2702,11 +2683,6 @@ async function showPendingTab(){
     .add(
       "active"
     );
-
-
-  hide(
-    "searchArea"
-  );
 
 
   show(
@@ -2715,6 +2691,36 @@ async function showPendingTab(){
 
 
   await loadPending();
+}
+
+
+async function showPreventiveControlTab(){
+
+  clearMainTabs();
+
+
+  $("tabPreventiveControl")
+    .classList
+    .add(
+      "active"
+    );
+
+
+  show(
+    "preventiveControlArea"
+  );
+
+
+  if (
+    !$("controlCompetence").value
+  ){
+
+    $("controlCompetence").value =
+      competenciaAtual();
+  }
+
+
+  await loadPreventiveControl();
 }
 
 
@@ -2879,7 +2885,6 @@ function renderSearchResults(items){
             ${esc(item.tipo)}
           </span>
 
-
           <div class="search-result-data">
 
             ${
@@ -2908,7 +2913,7 @@ function renderSearchResults(items){
               item.periodicidade
                 ? `
                   <div>
-                    <b>Preventiva:</b>
+                    <b>Periodicidade:</b>
                     ${esc(item.periodicidade)}
                   </div>
                 `
@@ -2950,7 +2955,7 @@ function renderSearchResults(items){
 
 
 /* ============================================================
-   PENDENTES
+   OCs PENDENTES
    ============================================================ */
 
 async function loadPending(){
@@ -3137,7 +3142,11 @@ function renderPending(data){
               <div>
 
                 <div class="pending-occurrence">
-                  ${esc(item.ocorrencia)}
+
+                  ${esc(
+                    item.ocorrencia
+                  )}
+
                 </div>
 
                 <div
@@ -3146,9 +3155,13 @@ function renderPending(data){
                     margin-top:3px;
                   "
                 >
+
                   ${esc(item.id)}
+
                   –
+
                   ${esc(item.nome)}
+
                 </div>
 
               </div>
@@ -3160,8 +3173,10 @@ function renderPending(data){
                   ${classeStatus}
                 "
               >
+
                 ${icone}
                 ${esc(item.status)}
+
               </span>
 
             </div>
@@ -3186,6 +3201,28 @@ function renderPending(data){
                     <div>
                       <b>Localização:</b>
                       ${esc(item.localizacao)}
+                    </div>
+                  `
+                  : ""
+              }
+
+              ${
+                item.categoriaOcorrencia
+                  ? `
+                    <div>
+                      <b>Categoria:</b>
+                      ${esc(item.categoriaOcorrencia)}
+                    </div>
+                  `
+                  : ""
+              }
+
+              ${
+                item.componenteAfetado
+                  ? `
+                    <div>
+                      <b>Componente:</b>
+                      ${esc(item.componenteAfetado)}
                     </div>
                   `
                   : ""
@@ -3236,6 +3273,7 @@ function renderPending(data){
 
                     </div>
 
+
                     <div class="elapsed-service">
 
                       🛠️ Em atendimento há
@@ -3269,6 +3307,26 @@ function renderPending(data){
             </div>
 
 
+            ${
+              item.foto
+                ? `
+
+                  <div style="margin-top:9px">
+
+                    <a
+                      href="${esc(item.foto)}"
+                      target="_blank"
+                    >
+                      📷 Ver foto
+                    </a>
+
+                  </div>
+
+                `
+                : ""
+            }
+
+
             <a
               class="open-button"
               href="?id=${encodeURIComponent(
@@ -3293,7 +3351,828 @@ function renderPending(data){
 
 
 /* ============================================================
-   CARREGAMENTO DO ATIVO
+   CONTROLE MENSAL PREVENTIVAS 6.8
+   ============================================================ */
+
+async function loadPreventiveControl(){
+
+  const competencia =
+    $("controlCompetence")
+      .value;
+
+
+  if (
+    !competencia
+  ){
+
+    $("controlStatus")
+      .textContent =
+      "Selecione uma competência.";
+
+
+    return;
+  }
+
+
+  $("controlRefresh")
+    .disabled =
+    true;
+
+
+  $("controlRefresh")
+    .textContent =
+    "Carregando...";
+
+
+  $("controlStatus")
+    .textContent =
+    "Consultando preventivas...";
+
+
+  $("controlResults")
+    .innerHTML =
+    "";
+
+
+  try{
+
+
+    const result =
+      await api({
+
+        action:
+          "preventivecontrol",
+
+        competencia:
+          competencia
+
+      });
+
+
+    if (
+      !result.ok
+    ){
+
+      throw new Error(
+        result.error
+      );
+    }
+
+
+    preventiveControlData =
+      result.data;
+
+
+    renderPreventiveControl(
+      result.data
+    );
+
+
+  }catch(error){
+
+
+    console.error(
+      error
+    );
+
+
+    $("controlStatus")
+      .textContent =
+      "Não foi possível consultar o controle de preventivas.";
+
+
+  }finally{
+
+
+    $("controlRefresh")
+      .disabled =
+      false;
+
+
+    $("controlRefresh")
+      .textContent =
+      "Atualizar";
+  }
+}
+
+
+function renderPreventiveControl(data){
+
+  const s =
+    data.summary || {};
+
+
+  $("controlCompetenceTitle")
+    .textContent =
+
+    "Preventivas – " +
+
+    (
+      data.competenciaDescricao ||
+      data.competencia ||
+      ""
+    );
+
+
+  $("controlStatus")
+    .textContent =
+    "Controle de equipamentos com periodicidade mensal.";
+
+
+  $("controlSummary")
+    .innerHTML = `
+
+      <div class="control-summary-card">
+
+        <strong>
+          ${s.previstas || 0}
+        </strong>
+
+        <div class="control-summary-title">
+          Previstas
+        </div>
+
+      </div>
+
+
+      <div class="control-summary-card">
+
+        <strong>
+          ✅ ${s.realizadas || 0}
+        </strong>
+
+        <div class="control-summary-title">
+          Realizadas
+        </div>
+
+      </div>
+
+
+      <div class="control-summary-card">
+
+        <strong>
+          🔴 ${s.pendentes || 0}
+        </strong>
+
+        <div class="control-summary-title">
+          Pendentes
+        </div>
+
+      </div>
+
+
+      <div class="control-summary-card">
+
+        <strong>
+          ${s.percentual || 0}%
+        </strong>
+
+        <div class="control-summary-title">
+          Conclusão
+        </div>
+
+      </div>
+
+    `;
+
+
+  show(
+    "controlSummary"
+  );
+
+
+  show(
+    "controlProgress"
+  );
+
+
+  const percentual =
+    Math.min(
+      100,
+      Math.max(
+        0,
+        Number(
+          s.percentual ||
+          0
+        )
+      )
+    );
+
+
+  $("controlProgressText")
+    .textContent =
+    percentual +
+    "%";
+
+
+  $("controlProgressFill")
+    .style.width =
+    percentual +
+    "%";
+
+
+  populateProviderFilter(
+    data.prestadores ||
+    []
+  );
+
+
+  renderProviderSummary(
+    data.prestadores ||
+    []
+  );
+
+
+  renderPreventiveControlList();
+}
+
+
+function populateProviderFilter(items){
+
+  const current =
+    $("controlProvider")
+      .value;
+
+
+  $("controlProvider")
+    .innerHTML = `
+
+      <option value="">
+        Todos os prestadores
+      </option>
+
+      ${
+        items.map(
+          item => `
+
+            <option value="${esc(
+              item.prestador
+            )}">
+
+              ${esc(
+                item.prestador
+              )}
+
+            </option>
+
+          `
+        )
+        .join("")
+      }
+
+    `;
+
+
+  if (
+    [...$("controlProvider").options]
+      .some(
+        option =>
+          option.value === current
+      )
+  ){
+
+    $("controlProvider")
+      .value =
+      current;
+  }
+}
+
+
+function renderProviderSummary(items){
+
+  if (
+    !items.length
+  ){
+
+    hide(
+      "providerSummary"
+    );
+
+
+    return;
+  }
+
+
+  show(
+    "providerSummary"
+  );
+
+
+  $("providerSummaryResults")
+    .innerHTML =
+
+    items.map(
+      item => `
+
+        <div class="provider-card">
+
+          <div class="provider-name">
+
+            ${esc(
+              item.prestador
+            )}
+
+          </div>
+
+          <div class="provider-data">
+
+            Previstas:
+            <b>${item.previstas}</b>
+
+            &nbsp; • &nbsp;
+
+            Realizadas:
+            <b>${item.realizadas}</b>
+
+            &nbsp; • &nbsp;
+
+            Pendentes:
+            <b>${item.pendentes}</b>
+
+            &nbsp; • &nbsp;
+
+            Conclusão:
+            <b>${item.percentual}%</b>
+
+          </div>
+
+        </div>
+
+      `
+    )
+    .join("");
+}
+
+
+function setControlMode(mode){
+
+  preventiveControlMode =
+    mode;
+
+
+  [
+    "controlTabAll",
+    "controlTabPending",
+    "controlTabDone"
+  ]
+  .forEach(
+    id =>
+      $(id)
+        .classList
+        .remove(
+          "active"
+        )
+  );
+
+
+  if (
+    mode === "pending"
+  ){
+
+    $("controlTabPending")
+      .classList
+      .add(
+        "active"
+      );
+
+  }else if (
+    mode === "done"
+  ){
+
+    $("controlTabDone")
+      .classList
+      .add(
+        "active"
+      );
+
+  }else{
+
+    $("controlTabAll")
+      .classList
+      .add(
+        "active"
+      );
+  }
+
+
+  renderPreventiveControlList();
+}
+
+
+function getFilteredControlItems(){
+
+  if (
+    !preventiveControlData
+  ){
+
+    return [];
+  }
+
+
+  const provider =
+    $("controlProvider")
+      .value;
+
+
+  let items =
+    [];
+
+
+  if (
+    preventiveControlMode ===
+    "pending"
+  ){
+
+    items =
+      (
+        preventiveControlData
+          .pendentes ||
+        []
+      )
+      .map(
+        item =>
+          Object.assign(
+            {},
+            item,
+            {
+              controlStatus:
+                "pending"
+            }
+          )
+      );
+
+  }else if (
+    preventiveControlMode ===
+    "done"
+  ){
+
+    items =
+      (
+        preventiveControlData
+          .realizadas ||
+        []
+      )
+      .map(
+        item =>
+          Object.assign(
+            {},
+            item,
+            {
+              controlStatus:
+                "done"
+            }
+          )
+      );
+
+  }else{
+
+    items = [
+
+      ...(
+        preventiveControlData
+          .pendentes ||
+        []
+      )
+      .map(
+        item =>
+          Object.assign(
+            {},
+            item,
+            {
+              controlStatus:
+                "pending"
+            }
+          )
+      ),
+
+      ...(
+        preventiveControlData
+          .realizadas ||
+        []
+      )
+      .map(
+        item =>
+          Object.assign(
+            {},
+            item,
+            {
+              controlStatus:
+                "done"
+            }
+          )
+      )
+
+    ];
+  }
+
+
+  if (
+    provider
+  ){
+
+    items =
+      items.filter(
+        item =>
+          String(
+            item.prestador ||
+            ""
+          ) === provider
+      );
+  }
+
+
+  return items;
+}
+
+
+function renderPreventiveControlList(){
+
+  const items =
+    getFilteredControlItems();
+
+
+  $("controlListStatus")
+    .textContent =
+
+    items.length +
+
+    (
+      items.length === 1
+        ? " equipamento"
+        : " equipamentos"
+    );
+
+
+  if (
+    !items.length
+  ){
+
+    $("controlResults")
+      .innerHTML = `
+
+        <div class="control-item">
+
+          Nenhum equipamento encontrado para este filtro.
+
+        </div>
+
+      `;
+
+
+    return;
+  }
+
+
+  $("controlResults")
+    .innerHTML =
+
+    items.map(
+      item => {
+
+        const done =
+          item.controlStatus ===
+          "done";
+
+
+        return `
+
+          <div
+            class="
+              control-item
+              ${
+                done
+                  ? "done"
+                  : "pending"
+              }
+            "
+          >
+
+            <div class="control-head">
+
+              <div>
+
+                <div class="control-id">
+
+                  ${esc(
+                    item.id
+                  )}
+
+                </div>
+
+                <div
+                  style="
+                    font-weight:700;
+                    margin-top:3px;
+                  "
+                >
+
+                  ${esc(
+                    item.nome
+                  )}
+
+                </div>
+
+              </div>
+
+
+              <span
+                class="
+                  control-status
+                  ${
+                    done
+                      ? "done"
+                      : "pending"
+                  }
+                "
+              >
+
+                ${
+                  done
+                    ? "✅ Realizada"
+                    : "🔴 Pendente"
+                }
+
+              </span>
+
+            </div>
+
+
+            <div class="search-result-data">
+
+              ${
+                item.periodicidade
+                  ? `
+
+                    <div>
+
+                      <b>Periodicidade:</b>
+
+                      ${esc(
+                        item.periodicidade
+                      )}
+
+                    </div>
+
+                  `
+                  : ""
+              }
+
+
+              ${
+                item.prestador
+                  ? `
+
+                    <div>
+
+                      <b>Prestador:</b>
+
+                      ${esc(
+                        item.prestador
+                      )}
+
+                    </div>
+
+                  `
+                  : ""
+              }
+
+
+              ${
+                item.pavimento
+                  ? `
+
+                    <div>
+
+                      <b>Pavimento:</b>
+
+                      ${esc(
+                        item.pavimento
+                      )}
+
+                    </div>
+
+                  `
+                  : ""
+              }
+
+
+              ${
+                item.localizacao
+                  ? `
+
+                    <div>
+
+                      <b>Localização:</b>
+
+                      ${esc(
+                        item.localizacao
+                      )}
+
+                    </div>
+
+                  `
+                  : ""
+              }
+
+
+              ${
+                item.localDetalhado
+                  ? `
+
+                    <div>
+
+                      <b>Local detalhado:</b>
+
+                      ${esc(
+                        item.localDetalhado
+                      )}
+
+                    </div>
+
+                  `
+                  : ""
+              }
+
+
+              ${
+                done &&
+                item.ultimoRegistro
+                  ? `
+
+                    <div
+                      style="
+                        margin-top:7px;
+                      "
+                    >
+
+                      <b>Executada em:</b>
+
+                      ${esc(
+                        formatDate(
+                          item.ultimoRegistro.data
+                        )
+                      )}
+
+                    </div>
+
+
+                    ${
+                      item.ultimoRegistro
+                        .responsavel
+                        ? `
+
+                          <div>
+
+                            <b>Responsável:</b>
+
+                            ${esc(
+                              item.ultimoRegistro
+                                .responsavel
+                            )}
+
+                          </div>
+
+                        `
+                        : ""
+                    }
+
+                  `
+                  : ""
+              }
+
+            </div>
+
+
+            <a
+              class="open-button"
+              href="?id=${encodeURIComponent(
+                normalizeId(
+                  item.id
+                )
+              )}"
+            >
+
+              ${
+                done
+                  ? "Abrir ficha"
+                  : "Abrir ficha e registrar preventiva"
+              }
+
+            </a>
+
+          </div>
+
+        `;
+
+      }
+    )
+    .join("");
+}
+
+
+
+/* ============================================================
+   CARREGAR ATIVO
    ============================================================ */
 
 async function loadAsset(id){
@@ -3424,7 +4303,7 @@ async function loadAsset(id){
 
 
 /* ============================================================
-   RENDER DO ATIVO
+   RENDER ATIVO
    ============================================================ */
 
 function renderAsset(a){
@@ -3463,17 +4342,10 @@ function renderAsset(a){
     pairs([
 
       ["Tipo de Ativo",a.tipo_de_ativo],
-
       ["Categoria",a.categoria_do_ativo],
-
       ["Subcategoria",a.subcategoria],
-
       ["Criticidade",a.criticidade],
-
-      [
-        "Classe de Manutenção",
-        a.classe_de_manutencao
-      ]
+      ["Classe de Manutenção",a.classe_de_manutencao]
 
     ]);
 
@@ -3490,6 +4362,12 @@ function renderAsset(a){
     $("classification")
       .innerHTML =
       classification;
+
+  }else{
+
+    hide(
+      "classificationSection"
+    );
   }
 
 
@@ -3497,22 +4375,11 @@ function renderAsset(a){
     pairs([
 
       ["Área",a.area],
-
       ["Ambiente",a.ambiente],
-
-      [
-        "Componente / Elemento",
-        a.componente_elemento
-      ],
-
+      ["Componente / Elemento",a.componente_elemento],
       ["Pavimento",a.pavimento],
-
       ["Localização",a.localizacao],
-
-      [
-        "Local Detalhado",
-        a.local_detalhado
-      ]
+      ["Local Detalhado",a.local_detalhado]
 
     ]);
 
@@ -3529,6 +4396,12 @@ function renderAsset(a){
     $("location")
       .innerHTML =
       location;
+
+  }else{
+
+    hide(
+      "locationSection"
+    );
   }
 
 
@@ -3536,44 +4409,16 @@ function renderAsset(a){
     pairs([
 
       ["Fabricante",a.fabricante],
-
       ["Modelo",a.modelo],
-
-      [
-        "Número de Série",
-        a.numero_de_serie
-      ],
-
+      ["Número de Série",a.numero_de_serie],
       ["Capacidade",a.capacidade],
-
-      [
-        "Amperagem Nominal",
-        a.amperagem_nominal_fla
-      ],
-
-      [
-        "Amperagem de Partida",
-        a.amperagem_de_partida_flr
-      ],
-
-      [
-        "Amperagem Medida",
-        a.amperagem_medida
-      ],
-
+      ["Amperagem Nominal",a.amperagem_nominal_fla],
+      ["Amperagem de Partida",a.amperagem_de_partida_flr],
+      ["Amperagem Medida",a.amperagem_medida],
       ["Voltagem",a.voltagem],
-
       ["Peso",a.peso],
-
-      [
-        "Ano de Aquisição",
-        a.ano_de_aquisicao
-      ],
-
-      [
-        "Vida Útil Estimada",
-        a.vida_util_estimada
-      ]
+      ["Ano de Aquisição",a.ano_de_aquisicao],
+      ["Vida Útil Estimada",a.vida_util_estimada]
 
     ]);
 
@@ -3590,6 +4435,12 @@ function renderAsset(a){
     $("technical")
       .innerHTML =
       technical;
+
+  }else{
+
+    hide(
+      "technicalSection"
+    );
   }
 
 
@@ -3598,33 +4449,13 @@ function renderAsset(a){
 
     pairs([
 
-      [
-        "Status cadastral",
-        a.status
-      ],
-
-      [
-        "Prestador",
-        a.prestador
-      ],
-
-      [
-        "Periodicidade",
-        a.periodicidade
-      ],
-
-      [
-        "Observações",
-        a.observacoes
-      ]
+      ["Status cadastral",a.status],
+      ["Prestador",a.prestador],
+      ["Periodicidade",a.periodicidade],
+      ["Observações",a.observacoes]
 
     ]);
 
-
-  /*
-   * Só mostra Registrar preventiva
-   * se o ativo tiver periodicidade cadastrada.
-   */
 
   if (
     valueExists(
@@ -3707,7 +4538,7 @@ function renderStatus(s){
 
 
 /* ============================================================
-   HISTÓRICO DE OC
+   HISTÓRICO OC
    ============================================================ */
 
 function renderHistory(items){
@@ -3791,9 +4622,7 @@ function renderHistoryItem(index){
     history[index];
 
 
-  if (
-    !x
-  ){
+  if (!x){
 
     return;
   }
@@ -3865,7 +4694,9 @@ function renderHistoryItem(index){
 
                 <b>Responsável:</b>
 
-                ${esc(x.responsavel)}
+                ${esc(
+                  x.responsavel
+                )}
 
               </div>
 
@@ -3886,7 +4717,9 @@ function renderHistoryItem(index){
 
                 <br>
 
-                ${esc(x.solucao)}
+                ${esc(
+                  x.solucao
+                )}
 
               </div>
 
@@ -4003,13 +4836,29 @@ function renderHistoryItem(index){
 
 
 /* ============================================================
-   HISTÓRICO DE PREVENTIVA 6.7
+   HISTÓRICO PREVENTIVA
    ============================================================ */
 
 function renderPreventiveHistory(items){
 
   preventiveHistory =
     items;
+
+
+  if (
+    !currentAsset ||
+    !valueExists(
+      currentAsset.periodicidade
+    )
+  ){
+
+    hide(
+      "preventiveHistorySection"
+    );
+
+
+    return;
+  }
 
 
   show(
@@ -4098,7 +4947,9 @@ function renderPreventiveHistory(items){
             <span class="tag tag-preventive">
 
               Competência:
-              ${esc(item.competencia)}
+              ${esc(
+                item.competencia
+              )}
 
             </span>
 
@@ -4129,7 +4980,9 @@ function renderPreventiveHistory(items){
 
                   <b>Prestador:</b>
 
-                  ${esc(item.prestador)}
+                  ${esc(
+                    item.prestador
+                  )}
 
                 </div>
 
@@ -4212,7 +5065,7 @@ function renderPreventiveHistory(items){
 
 
 /* ============================================================
-   FOTOS
+   FOTO
    ============================================================ */
 
 function processPhoto(file){
@@ -4470,10 +5323,6 @@ function sendReport(){
   }
 
 
-  /*
-   * Salva o nome no aparelho.
-   */
-
   saveResponsible(
     reporter
   );
@@ -4573,7 +5422,7 @@ function sendReport(){
 
 
 /* ============================================================
-   PREVENTIVA 6.7
+   PREVENTIVA
    ============================================================ */
 
 function openPreventive(){
@@ -4603,11 +5452,6 @@ function openPreventive(){
   $("preventiveMessage")
     .className =
     "message";
-
-
-  $("preventiveMessage")
-    .textContent =
-    "";
 
 
   $("preventiveAsset")
@@ -4641,13 +5485,9 @@ function openPreventive(){
     competenciaAtual();
 
 
-  const saved =
-    getSavedResponsible();
-
-
   $("preventiveResponsible")
     .value =
-    saved || "";
+    getSavedResponsible();
 
 
   $("preventiveObservation")
@@ -4699,10 +5539,6 @@ function savePreventive(){
     $("savePreventive");
 
 
-  /*
-   * Evita clique duplo.
-   */
-
   if (
     preventivePosting
   ){
@@ -4726,26 +5562,6 @@ function savePreventive(){
     return;
   }
 
-
-  if (
-    !currentAsset
-  ){
-
-    msg.className =
-      "message error";
-
-
-    msg.textContent =
-      "Ativo não carregado.";
-
-
-    return;
-  }
-
-
-  /*
-   * Nome lembrado no aparelho.
-   */
 
   saveResponsible(
     responsible
@@ -4855,13 +5671,9 @@ function openManage(index){
     null;
 
 
-  const saved =
-    getSavedResponsible();
-
-
   $("manageChangedBy")
     .value =
-    saved || "";
+    getSavedResponsible();
 
 
   $("manageCategory")
@@ -5341,6 +6153,11 @@ $("tabPending")
   showPendingTab;
 
 
+$("tabPreventiveControl")
+  .onclick =
+  showPreventiveControlTab;
+
+
 $("searchButton")
   .onclick =
   searchAssets;
@@ -5364,6 +6181,51 @@ $("searchInput")
       }
     }
   );
+
+
+$("controlRefresh")
+  .onclick =
+  loadPreventiveControl;
+
+
+$("controlCompetence")
+  .onchange =
+  loadPreventiveControl;
+
+
+$("controlProvider")
+  .onchange =
+  renderPreventiveControlList;
+
+
+$("controlTabAll")
+  .onclick =
+  function(){
+
+    setControlMode(
+      "all"
+    );
+  };
+
+
+$("controlTabPending")
+  .onclick =
+  function(){
+
+    setControlMode(
+      "pending"
+    );
+  };
+
+
+$("controlTabDone")
+  .onclick =
+  function(){
+
+    setControlMode(
+      "done"
+    );
+  };
 
 
 $("searchAssetsButton")
@@ -5521,6 +6383,11 @@ $("manageOccurrencePhotoInput")
         null;
 
 
+      $("manageOccurrencePhotoPreview")
+        .style.display =
+        "none";
+
+
       return;
     }
 
@@ -5555,6 +6422,11 @@ $("conclusionPhotoInput")
         null;
 
 
+      $("conclusionPhotoPreview")
+        .style.display =
+        "none";
+
+
       return;
     }
 
@@ -5567,8 +6439,7 @@ $("conclusionPhotoInput")
 
     $("conclusionPhotoPreview")
       .src =
-      conclusionPhotoData
-        .dataUrl;
+      conclusionPhotoData.dataUrl;
 
 
     $("conclusionPhotoPreview")
@@ -5666,10 +6537,6 @@ $("reportFrame")
         photoData =
           null;
 
-
-        /*
-         * Mantém o nome salvo.
-         */
 
         $("reporterName").value =
           getSavedResponsible();
@@ -5849,12 +6716,12 @@ $("manageFrame")
 
 async function main(){
 
-  /*
-   * Já tenta preencher os campos com
-   * o responsável salvo no aparelho.
-   */
-
   fillSavedResponsible();
+
+
+  $("controlCompetence")
+    .value =
+    competenciaAtual();
 
 
   const id =
