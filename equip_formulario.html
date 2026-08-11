@@ -130,6 +130,17 @@ h3{
   border-bottom:0;
 }
 
+.actions{
+
+  display:flex;
+
+  flex-wrap:wrap;
+
+  gap:9px;
+
+  margin-top:18px;
+}
+
 .chip{
 
   display:inline-block;
@@ -147,6 +158,29 @@ h3{
   cursor:pointer;
 
   text-decoration:none;
+
+  border:0;
+}
+
+.btn-preventive{
+
+  display:inline-block;
+
+  padding:11px 15px;
+
+  border-radius:999px;
+
+  background:#047857;
+
+  color:#fff;
+
+  font-weight:700;
+
+  cursor:pointer;
+
+  text-decoration:none;
+
+  border:0;
 }
 
 .btn-search{
@@ -168,17 +202,6 @@ h3{
   text-decoration:none;
 
   cursor:pointer;
-}
-
-.actions{
-
-  display:flex;
-
-  flex-wrap:wrap;
-
-  gap:9px;
-
-  margin-top:18px;
 }
 
 
@@ -246,7 +269,8 @@ h3{
    HISTÓRICO
    ============================================================ */
 
-.history-card{
+.history-card,
+.preventive-card{
 
   margin-top:12px;
 
@@ -257,6 +281,13 @@ h3{
   border:1px solid #e5e7eb;
 
   border-radius:12px;
+}
+
+.preventive-card{
+
+  background:#f0fdf4;
+
+  border-color:#bbf7d0;
 }
 
 .tag{
@@ -276,6 +307,15 @@ h3{
   font-size:.75rem;
 
   border:1px solid #c7d2fe;
+}
+
+.tag-preventive{
+
+  background:#dcfce7;
+
+  color:#166534;
+
+  border-color:#bbf7d0;
 }
 
 .audit-box{
@@ -412,6 +452,13 @@ h3{
   font-weight:700;
 }
 
+.search-box button:disabled{
+
+  opacity:.55;
+
+  cursor:not-allowed;
+}
+
 .search-help{
 
   margin-top:9px;
@@ -491,7 +538,7 @@ h3{
 
 
 /* ============================================================
-   OCs PENDENTES
+   PENDÊNCIAS
    ============================================================ */
 
 .pending-summary{
@@ -620,6 +667,64 @@ h3{
 
 
 /* ============================================================
+   PREVENTIVA
+   ============================================================ */
+
+.preventive-info{
+
+  background:#ecfdf5;
+
+  border:1px solid #a7f3d0;
+
+  border-radius:12px;
+
+  padding:12px;
+
+  margin-top:12px;
+}
+
+.preventive-info-line{
+
+  padding:4px 0;
+
+  font-size:.9rem;
+}
+
+.preventive-header{
+
+  display:flex;
+
+  align-items:flex-start;
+
+  justify-content:space-between;
+
+  gap:10px;
+}
+
+.preventive-id{
+
+  color:#047857;
+
+  font-weight:800;
+}
+
+.preventive-status{
+
+  background:#dcfce7;
+
+  color:#166534;
+
+  padding:5px 8px;
+
+  border-radius:999px;
+
+  font-size:.75rem;
+
+  font-weight:700;
+}
+
+
+/* ============================================================
    MODAIS
    ============================================================ */
 
@@ -720,6 +825,13 @@ textarea{
   background:#fff;
 }
 
+input[readonly]{
+
+  background:#f3f4f6;
+
+  color:#4b5563;
+}
+
 textarea{
   resize:vertical;
 }
@@ -755,8 +867,10 @@ button{
   color:#fff;
 }
 
+.btn-green{
 
-/* NOVO 6.6.1 */
+  background:#047857;
+}
 
 .btn:disabled{
 
@@ -764,7 +878,6 @@ button{
 
   cursor:not-allowed;
 }
-
 
 .btn-secondary{
 
@@ -865,6 +978,15 @@ button{
   color:#92400e;
 }
 
+.remember-info{
+
+  margin-top:7px;
+
+  color:#6b7280;
+
+  font-size:.78rem;
+}
+
 .footer{
 
   margin-top:20px;
@@ -909,11 +1031,13 @@ iframe{
     width:100%;
   }
 
-  .pending-head{
+  .pending-head,
+  .preventive-header{
     display:block;
   }
 
-  .pending-status{
+  .pending-status,
+  .preventive-status{
 
     display:inline-block;
 
@@ -1055,7 +1179,7 @@ Carregando ocorrências pendentes...
 
 
 <!-- =========================================================
-     FICHA
+     FICHA DO ATIVO
      ========================================================= -->
 
 <div
@@ -1155,22 +1279,37 @@ Gestão do Ativo
 
 <div class="actions">
 
-<a
+<button
   id="reportButton"
+  type="button"
   class="chip"
 >
 Reportar Serviço / Anomalia / Reparo
-</a>
+</button>
 
-<a
+
+<button
+  id="preventiveButton"
+  type="button"
+  class="btn-preventive hidden"
+>
+🛠️ Registrar preventiva
+</button>
+
+
+<button
   id="searchAssetsButton"
+  type="button"
   class="btn-search"
 >
 🔎 Buscar ativos
-</a>
+</button>
 
 </div>
 
+
+
+<!-- HISTÓRICO DE OCs -->
 
 <div class="section">
 
@@ -1190,6 +1329,28 @@ Histórico de Manutenção
 ></select>
 
 <div id="historyDetail"></div>
+
+</div>
+
+
+
+<!-- NOVO 6.7 - HISTÓRICO DE PREVENTIVAS -->
+
+<div
+  id="preventiveHistorySection"
+  class="section hidden"
+>
+
+<h3>
+🛠️ Histórico de Preventivas
+</h3>
+
+<div
+  id="preventiveHistoryStatus"
+  class="muted"
+></div>
+
+<div id="preventiveHistory"></div>
 
 </div>
 
@@ -1223,9 +1384,14 @@ Seu nome *
 <input
   id="reporterName"
   type="text"
+  autocomplete="name"
 >
 
 </label>
+
+<div class="remember-info">
+O sistema lembrará este nome neste aparelho.
+</div>
 
 
 <label>
@@ -1371,7 +1537,155 @@ Gravar ocorrência
 
 
 <!-- =========================================================
-     MODAL GERENCIAMENTO
+     MODAL PREVENTIVA 6.7
+     ========================================================= -->
+
+<div
+  id="preventiveModal"
+  class="modal"
+>
+
+<div class="modal-box">
+
+<h2>
+🛠️ Registrar Manutenção Preventiva
+</h2>
+
+
+<div class="preventive-info">
+
+<div class="preventive-info-line">
+
+<b>Ativo:</b>
+
+<span id="preventiveAsset"></span>
+
+</div>
+
+
+<div class="preventive-info-line">
+
+<b>Periodicidade:</b>
+
+<span id="preventivePeriodicity"></span>
+
+</div>
+
+
+<div class="preventive-info-line">
+
+<b>Prestador:</b>
+
+<span id="preventiveProvider"></span>
+
+</div>
+
+
+<div class="preventive-info-line">
+
+<b>Competência:</b>
+
+<span id="preventiveCompetence"></span>
+
+</div>
+
+</div>
+
+
+<label>
+
+Responsável pela preventiva *
+
+<input
+  id="preventiveResponsible"
+  type="text"
+  autocomplete="name"
+>
+
+</label>
+
+<div class="remember-info">
+Seu nome fica salvo neste aparelho para os próximos registros.
+</div>
+
+
+<label>
+
+Observação
+
+<textarea
+  id="preventiveObservation"
+  rows="5"
+  placeholder="Ex.: Preventiva mensal realizada. Equipamento funcionando normalmente."
+></textarea>
+
+</label>
+
+
+<div class="photo-box">
+
+<div style="font-weight:700">
+📷 Foto / evidência da preventiva
+</div>
+
+
+<label>
+
+Tirar ou selecionar foto
+
+<input
+  id="preventivePhotoInput"
+  type="file"
+  accept="image/*"
+  capture="environment"
+>
+
+</label>
+
+
+<img
+  id="preventivePhotoPreview"
+  class="photo-preview"
+>
+
+</div>
+
+
+<div
+  id="preventiveMessage"
+  class="message"
+></div>
+
+
+<div class="modal-actions">
+
+<button
+  id="cancelPreventive"
+  type="button"
+  class="btn btn-secondary"
+>
+Cancelar
+</button>
+
+<button
+  id="savePreventive"
+  type="button"
+  class="btn btn-green"
+>
+Registrar preventiva
+</button>
+
+</div>
+
+
+</div>
+
+</div>
+
+
+
+<!-- =========================================================
+     MODAL GERENCIAMENTO OC
      ========================================================= -->
 
 <div
@@ -1394,10 +1708,13 @@ Seu nome / Alterado por *
 <input
   id="manageChangedBy"
   type="text"
-  placeholder="Informe quem está realizando esta alteração"
 >
 
 </label>
+
+<div class="remember-info">
+O último nome utilizado fica salvo neste aparelho.
+</div>
 
 
 
@@ -1405,10 +1722,6 @@ Seu nome / Alterado por *
 
 <div class="modal-section-title">
 Dados da abertura
-</div>
-
-<div class="modal-section-help">
-Você pode corrigir os dados informados originalmente na OC.
 </div>
 
 
@@ -1472,7 +1785,7 @@ Componente afetado *
 
 <label>
 
-Descrição da ocorrência *
+Descrição *
 
 <textarea
   id="manageDescription"
@@ -1523,7 +1836,6 @@ Adicionar ou substituir foto
 >
 
 </div>
-
 
 </div>
 
@@ -1587,24 +1899,9 @@ Solução / Serviço realizado
 </div>
 
 
-<div
-  id="currentConclusionPhoto"
-  class="current-photo"
->
-
-<a
-  id="currentConclusionPhotoLink"
-  target="_blank"
->
-Ver foto de conclusão atual
-</a>
-
-</div>
-
-
 <label>
 
-Adicionar ou substituir foto de conclusão
+Adicionar ou substituir foto
 
 <input
   id="conclusionPhotoInput"
@@ -1653,7 +1950,6 @@ Salvar alterações
 
 </div>
 
-
 </div>
 
 </div>
@@ -1661,7 +1957,7 @@ Salvar alterações
 
 
 <!-- =========================================================
-     FORMS
+     FORM OC
      ========================================================= -->
 
 <form
@@ -1686,6 +1982,65 @@ Salvar alterações
 </form>
 
 
+
+<!-- =========================================================
+     FORM PREVENTIVA 6.7
+     ========================================================= -->
+
+<form
+  id="preventiveForm"
+  method="POST"
+  target="preventiveFrame"
+  style="display:none"
+>
+
+<input
+  name="action"
+  value="registerPreventive"
+>
+
+<input
+  name="token"
+  id="pr_token"
+>
+
+<input
+  name="id"
+  id="pr_id"
+>
+
+<input
+  name="preventiveResponsible"
+  id="pr_responsible"
+>
+
+<input
+  name="preventiveObservation"
+  id="pr_observation"
+>
+
+<input
+  name="preventivePhotoBase64"
+  id="pr_photo"
+>
+
+<input
+  name="preventivePhotoName"
+  id="pr_photoName"
+>
+
+<input
+  name="preventivePhotoMime"
+  id="pr_photoMime"
+>
+
+</form>
+
+
+
+<!-- =========================================================
+     FORM GERENCIAMENTO OC
+     ========================================================= -->
 
 <form
   id="manageForm"
@@ -1762,11 +2117,16 @@ Salvar alterações
 </form>
 
 
+
 <iframe
   id="reportFrame"
   name="reportFrame"
 ></iframe>
 
+<iframe
+  id="preventiveFrame"
+  name="preventiveFrame"
+></iframe>
 
 <iframe
   id="manageFrame"
@@ -1777,7 +2137,7 @@ Salvar alterações
 
 <div class="footer">
 
-QRManut • Versão 6.6.1
+QRManut • Versão 6.7
 
 </div>
 
@@ -1788,6 +2148,10 @@ QRManut • Versão 6.6.1
 
 <script>
 
+
+/* ============================================================
+   CONFIGURAÇÃO
+   ============================================================ */
 
 const API_URL =
 "https://script.google.com/macros/s/AKfycbx4tpC42Q6WdkNhTUTAGoZWvG5M24zwlNscnwbDP5B3Q5pWo8B32-Lf0rQ2Xtua1AFMAQ/exec";
@@ -1809,11 +2173,27 @@ const QUALITY =
 0.72;
 
 
+/*
+ * Nome salvo no aparelho.
+ */
+
+const RESPONSIBLE_STORAGE_KEY =
+"qrmanut_responsavel";
+
+
+/* ============================================================
+   ESTADO
+   ============================================================ */
+
 let currentAsset =
 null;
 
 
 let history =
+[];
+
+
+let preventiveHistory =
 [];
 
 
@@ -1833,11 +2213,19 @@ let occurrenceCorrectionPhotoData =
 null;
 
 
+let preventivePhotoData =
+null;
+
+
 let reportPosting =
 false;
 
 
 let managePosting =
+false;
+
+
+let preventivePosting =
 false;
 
 
@@ -1989,6 +2377,34 @@ function formatDate(value){
 }
 
 
+function competenciaAtual(){
+
+  const agora =
+    new Date();
+
+
+  const ano =
+    agora.getFullYear();
+
+
+  const mes =
+    String(
+      agora.getMonth() + 1
+    )
+    .padStart(
+      2,
+      "0"
+    );
+
+
+  return (
+    ano +
+    "-" +
+    mes
+  );
+}
+
+
 function tempoDecorrido(dataInicial){
 
   if (!dataInicial){
@@ -2011,12 +2427,8 @@ function tempoDecorrido(dataInicial){
   }
 
 
-  const agora =
-    new Date();
-
-
   let diff =
-    agora.getTime() -
+    new Date().getTime() -
     inicio.getTime();
 
 
@@ -2092,6 +2504,90 @@ function tempoDecorrido(dataInicial){
         : " dias"
     )
   );
+}
+
+
+
+/* ============================================================
+   RESPONSÁVEL SALVO NO APARELHO
+   ============================================================ */
+
+function getSavedResponsible(){
+
+  try{
+
+    return String(
+      localStorage.getItem(
+        RESPONSIBLE_STORAGE_KEY
+      ) || ""
+    )
+    .trim();
+
+  }catch(error){
+
+    return "";
+  }
+}
+
+
+function saveResponsible(name){
+
+  const nome =
+    String(
+      name || ""
+    )
+    .trim();
+
+
+  if (
+    !nome
+  ){
+
+    return;
+  }
+
+
+  try{
+
+    localStorage.setItem(
+      RESPONSIBLE_STORAGE_KEY,
+      nome
+    );
+
+  }catch(error){
+
+    console.warn(
+      "Não foi possível salvar o responsável.",
+      error
+    );
+  }
+}
+
+
+function fillSavedResponsible(){
+
+  const name =
+    getSavedResponsible();
+
+
+  if (
+    !name
+  ){
+
+    return;
+  }
+
+
+  $("reporterName").value =
+    name;
+
+
+  $("preventiveResponsible").value =
+    name;
+
+
+  $("manageChangedBy").value =
+    name;
 }
 
 
@@ -2250,7 +2746,9 @@ async function searchAssets(){
 
   if (
     /^[a-z0-9_-]+$/i
-      .test(q)
+      .test(
+        q
+      )
   ){
 
     q =
@@ -2270,6 +2768,11 @@ async function searchAssets(){
     "";
 
 
+  $("searchButton")
+    .disabled =
+    true;
+
+
   try{
 
 
@@ -2283,6 +2786,16 @@ async function searchAssets(){
       });
 
 
+    if (
+      !data.ok
+    ){
+
+      throw new Error(
+        data.error
+      );
+    }
+
+
     renderSearchResults(
       data.results ||
       []
@@ -2292,9 +2805,22 @@ async function searchAssets(){
   }catch(error){
 
 
+    console.error(
+      error
+    );
+
+
     $("searchStatus")
       .textContent =
       "Erro ao realizar busca.";
+
+
+  }finally{
+
+
+    $("searchButton")
+      .disabled =
+      false;
   }
 }
 
@@ -2311,6 +2837,26 @@ function renderSearchResults(items){
         ? " resultado encontrado"
         : " resultados encontrados"
     );
+
+
+  if (
+    !items.length
+  ){
+
+    $("searchResults")
+      .innerHTML = `
+
+        <div class="search-result">
+
+          Nenhum ativo encontrado.
+
+        </div>
+
+      `;
+
+
+    return;
+  }
 
 
   $("searchResults")
@@ -2332,6 +2878,7 @@ function renderSearchResults(items){
           <span class="tag">
             ${esc(item.tipo)}
           </span>
+
 
           <div class="search-result-data">
 
@@ -2357,7 +2904,30 @@ function renderSearchResults(items){
                 : ""
             }
 
+            ${
+              item.periodicidade
+                ? `
+                  <div>
+                    <b>Preventiva:</b>
+                    ${esc(item.periodicidade)}
+                  </div>
+                `
+                : ""
+            }
+
+            ${
+              item.prestador
+                ? `
+                  <div>
+                    <b>Prestador:</b>
+                    ${esc(item.prestador)}
+                  </div>
+                `
+                : ""
+            }
+
           </div>
+
 
           <a
             class="open-button"
@@ -2390,15 +2960,47 @@ async function loadPending(){
     "Carregando ocorrências pendentes...";
 
 
-  const data =
-    await api({
-      action:"pending"
-    });
+  $("pendingResults")
+    .innerHTML =
+    "";
 
 
-  renderPending(
-    data
-  );
+  try{
+
+
+    const data =
+      await api({
+        action:"pending"
+      });
+
+
+    if (
+      !data.ok
+    ){
+
+      throw new Error(
+        data.error
+      );
+    }
+
+
+    renderPending(
+      data
+    );
+
+
+  }catch(error){
+
+
+    console.error(
+      error
+    );
+
+
+    $("pendingStatus")
+      .textContent =
+      "Não foi possível carregar as ocorrências pendentes.";
+  }
 }
 
 
@@ -2535,11 +3137,7 @@ function renderPending(data){
               <div>
 
                 <div class="pending-occurrence">
-
-                  ${esc(
-                    item.ocorrencia
-                  )}
-
+                  ${esc(item.ocorrencia)}
                 </div>
 
                 <div
@@ -2548,16 +3146,13 @@ function renderPending(data){
                     margin-top:3px;
                   "
                 >
-
                   ${esc(item.id)}
-
                   –
-
                   ${esc(item.nome)}
-
                 </div>
 
               </div>
+
 
               <span
                 class="
@@ -2565,11 +3160,8 @@ function renderPending(data){
                   ${classeStatus}
                 "
               >
-
                 ${icone}
-
                 ${esc(item.status)}
-
               </span>
 
             </div>
@@ -2577,11 +3169,32 @@ function renderPending(data){
 
             <div class="search-result-data">
 
+              ${
+                item.pavimento
+                  ? `
+                    <div>
+                      <b>Pavimento:</b>
+                      ${esc(item.pavimento)}
+                    </div>
+                  `
+                  : ""
+              }
+
+              ${
+                item.localizacao
+                  ? `
+                    <div>
+                      <b>Localização:</b>
+                      ${esc(item.localizacao)}
+                    </div>
+                  `
+                  : ""
+              }
+
+
               <div>
 
-                <b>
-                  Aberta em:
-                </b>
+                <b>Aberta em:</b>
 
                 ${esc(
                   formatDate(
@@ -2590,6 +3203,7 @@ function renderPending(data){
                 )}
 
               </div>
+
 
               <div class="elapsed-open">
 
@@ -2603,14 +3217,47 @@ function renderPending(data){
 
               </div>
 
+
+              ${
+                item.dataInicio
+                  ? `
+
+                    <div style="margin-top:6px">
+
+                      <b>
+                        Atendimento iniciado:
+                      </b>
+
+                      ${esc(
+                        formatDate(
+                          item.dataInicio
+                        )
+                      )}
+
+                    </div>
+
+                    <div class="elapsed-service">
+
+                      🛠️ Em atendimento há
+
+                      ${esc(
+                        tempoDecorrido(
+                          item.dataInicio
+                        )
+                      )}
+
+                    </div>
+
+                  `
+                  : ""
+              }
+
             </div>
 
 
             <div class="pending-description">
 
-              <b>
-                Descrição:
-              </b>
+              <b>Descrição:</b>
 
               <br>
 
@@ -2630,9 +3277,7 @@ function renderPending(data){
                 )
               )}"
             >
-
               Abrir ficha e gerenciar
-
             </a>
 
           </div>
@@ -2648,7 +3293,7 @@ function renderPending(data){
 
 
 /* ============================================================
-   FICHA
+   CARREGAMENTO DO ATIVO
    ============================================================ */
 
 async function loadAsset(id){
@@ -2663,53 +3308,124 @@ async function loadAsset(id){
   );
 
 
-  const [
-    asset,
-    status,
-    hist
-  ] =
-    await Promise.all([
-
-      api({
-        id:
-          normalizeId(id)
-      }),
-
-      api({
-        action:"status",
-        id:
-          normalizeId(id)
-      }),
-
-      api({
-        action:"history",
-        id:
-          normalizeId(id)
-      })
-
-    ]);
+  try{
 
 
-  currentAsset =
-    asset.data;
+    const [
+      asset,
+      status,
+      hist,
+      preventiveHist
+    ] =
+      await Promise.all([
+
+        api({
+          id:
+            normalizeId(
+              id
+            )
+        }),
+
+        api({
+          action:"status",
+          id:
+            normalizeId(
+              id
+            )
+        }),
+
+        api({
+          action:"history",
+          id:
+            normalizeId(
+              id
+            )
+        }),
+
+        api({
+          action:"preventivehistory",
+          id:
+            normalizeId(
+              id
+            )
+        })
+
+      ]);
 
 
-  renderAsset(
-    asset.data
-  );
+    if (
+      !asset.ok
+    ){
+
+      $("titulo")
+        .textContent =
+        "Ativo não encontrado";
 
 
-  renderStatus(
-    status.data
-  );
+      return;
+    }
 
 
-  renderHistory(
-    hist.history ||
-    []
-  );
+    currentAsset =
+      asset.data;
+
+
+    renderAsset(
+      currentAsset
+    );
+
+
+    if (
+      status.ok
+    ){
+
+      renderStatus(
+        status.data
+      );
+    }
+
+
+    if (
+      hist.ok
+    ){
+
+      renderHistory(
+        hist.history ||
+        []
+      );
+    }
+
+
+    if (
+      preventiveHist.ok
+    ){
+
+      renderPreventiveHistory(
+        preventiveHist.preventives ||
+        []
+      );
+    }
+
+
+  }catch(error){
+
+
+    console.error(
+      error
+    );
+
+
+    $("titulo")
+      .textContent =
+      "Erro ao carregar ativo";
+  }
 }
 
+
+
+/* ============================================================
+   RENDER DO ATIVO
+   ============================================================ */
 
 function renderAsset(a){
 
@@ -2793,7 +3509,10 @@ function renderAsset(a){
 
       ["Localização",a.localizacao],
 
-      ["Local Detalhado",a.local_detalhado]
+      [
+        "Local Detalhado",
+        a.local_detalhado
+      ]
 
     ]);
 
@@ -2820,23 +3539,41 @@ function renderAsset(a){
 
       ["Modelo",a.modelo],
 
-      ["Número de Série",a.numero_de_serie],
+      [
+        "Número de Série",
+        a.numero_de_serie
+      ],
 
       ["Capacidade",a.capacidade],
 
-      ["Amperagem Nominal",a.amperagem_nominal_fla],
+      [
+        "Amperagem Nominal",
+        a.amperagem_nominal_fla
+      ],
 
-      ["Amperagem de Partida",a.amperagem_de_partida_flr],
+      [
+        "Amperagem de Partida",
+        a.amperagem_de_partida_flr
+      ],
 
-      ["Amperagem Medida",a.amperagem_medida],
+      [
+        "Amperagem Medida",
+        a.amperagem_medida
+      ],
 
       ["Voltagem",a.voltagem],
 
       ["Peso",a.peso],
 
-      ["Ano de Aquisição",a.ano_de_aquisicao],
+      [
+        "Ano de Aquisição",
+        a.ano_de_aquisicao
+      ],
 
-      ["Vida Útil Estimada",a.vida_util_estimada]
+      [
+        "Vida Útil Estimada",
+        a.vida_util_estimada
+      ]
 
     ]);
 
@@ -2861,17 +3598,67 @@ function renderAsset(a){
 
     pairs([
 
-      ["Status cadastral",a.status],
+      [
+        "Status cadastral",
+        a.status
+      ],
 
-      ["Prestador",a.prestador],
+      [
+        "Prestador",
+        a.prestador
+      ],
 
-      ["Periodicidade",a.periodicidade],
+      [
+        "Periodicidade",
+        a.periodicidade
+      ],
 
-      ["Observações",a.observacoes]
+      [
+        "Observações",
+        a.observacoes
+      ]
 
     ]);
+
+
+  /*
+   * Só mostra Registrar preventiva
+   * se o ativo tiver periodicidade cadastrada.
+   */
+
+  if (
+    valueExists(
+      a.periodicidade
+    )
+  ){
+
+    show(
+      "preventiveButton"
+    );
+
+
+    show(
+      "preventiveHistorySection"
+    );
+
+  }else{
+
+    hide(
+      "preventiveButton"
+    );
+
+
+    hide(
+      "preventiveHistorySection"
+    );
+  }
 }
 
+
+
+/* ============================================================
+   STATUS
+   ============================================================ */
 
 function renderStatus(s){
 
@@ -2920,7 +3707,7 @@ function renderStatus(s){
 
 
 /* ============================================================
-   HISTÓRICO
+   HISTÓRICO DE OC
    ============================================================ */
 
 function renderHistory(items){
@@ -2938,6 +3725,16 @@ function renderHistory(items){
       "Nenhum histórico registrado.";
 
 
+    hide(
+      "historySelect"
+    );
+
+
+    $("historyDetail")
+      .innerHTML =
+      "";
+
+
     return;
   }
 
@@ -2946,7 +3743,12 @@ function renderHistory(items){
     .textContent =
 
     history.length +
-    " registro(s)";
+
+    (
+      history.length === 1
+        ? " registro"
+        : " registros"
+    );
 
 
   show(
@@ -2989,6 +3791,14 @@ function renderHistoryItem(index){
     history[index];
 
 
+  if (
+    !x
+  ){
+
+    return;
+  }
+
+
   selectedOccurrence =
     x;
 
@@ -3010,6 +3820,7 @@ function renderHistoryItem(index){
           ${esc(x.status)}
         </span>
 
+
         ${
           x.categoriaOcorrencia
             ? `
@@ -3019,6 +3830,7 @@ function renderHistoryItem(index){
             `
             : ""
         }
+
 
         ${
           x.componenteAfetado
@@ -3033,9 +3845,7 @@ function renderHistoryItem(index){
 
         <div style="margin-top:10px">
 
-          <b>
-            Descrição:
-          </b>
+          <b>Descrição:</b>
 
           <br>
 
@@ -3050,17 +3860,15 @@ function renderHistoryItem(index){
         ${
           x.responsavel
             ? `
+
               <div style="margin-top:8px">
 
-                <b>
-                  Responsável:
-                </b>
+                <b>Responsável:</b>
 
-                ${esc(
-                  x.responsavel
-                )}
+                ${esc(x.responsavel)}
 
               </div>
+
             `
             : ""
         }
@@ -3069,6 +3877,7 @@ function renderHistoryItem(index){
         ${
           x.solucao
             ? `
+
               <div style="margin-top:10px">
 
                 <b>
@@ -3077,11 +3886,10 @@ function renderHistoryItem(index){
 
                 <br>
 
-                ${esc(
-                  x.solucao
-                )}
+                ${esc(x.solucao)}
 
               </div>
+
             `
             : ""
         }
@@ -3090,6 +3898,7 @@ function renderHistoryItem(index){
         ${
           x.foto
             ? `
+
               <div style="margin-top:10px">
 
                 <a
@@ -3100,6 +3909,7 @@ function renderHistoryItem(index){
                 </a>
 
               </div>
+
             `
             : ""
         }
@@ -3108,6 +3918,7 @@ function renderHistoryItem(index){
         ${
           x.fotoConclusao
             ? `
+
               <div style="margin-top:8px">
 
                 <a
@@ -3120,6 +3931,7 @@ function renderHistoryItem(index){
                 </a>
 
               </div>
+
             `
             : ""
         }
@@ -3178,7 +3990,9 @@ function renderHistoryItem(index){
             )
           "
         >
+
           Gerenciar ocorrência
+
         </button>
 
       </div>
@@ -3189,14 +4003,226 @@ function renderHistoryItem(index){
 
 
 /* ============================================================
-   FOTO
+   HISTÓRICO DE PREVENTIVA 6.7
+   ============================================================ */
+
+function renderPreventiveHistory(items){
+
+  preventiveHistory =
+    items;
+
+
+  show(
+    "preventiveHistorySection"
+  );
+
+
+  if (
+    !items.length
+  ){
+
+    $("preventiveHistoryStatus")
+      .textContent =
+      "Nenhuma preventiva registrada para este ativo.";
+
+
+    $("preventiveHistory")
+      .innerHTML =
+      "";
+
+
+    return;
+  }
+
+
+  $("preventiveHistoryStatus")
+    .textContent =
+
+    items.length +
+
+    (
+      items.length === 1
+        ? " preventiva registrada"
+        : " preventivas registradas"
+    );
+
+
+  $("preventiveHistory")
+    .innerHTML =
+
+    items.map(
+
+      item => `
+
+        <div class="preventive-card">
+
+          <div class="preventive-header">
+
+            <div>
+
+              <div class="preventive-id">
+
+                ${esc(
+                  item.registro
+                )}
+
+              </div>
+
+              <div class="muted">
+
+                ${esc(
+                  formatDate(
+                    item.data
+                  )
+                )}
+
+              </div>
+
+            </div>
+
+
+            <span class="preventive-status">
+
+              ✅ ${esc(
+                item.status ||
+                "Realizada"
+              )}
+
+            </span>
+
+          </div>
+
+
+          <div style="margin-top:9px">
+
+            <span class="tag tag-preventive">
+
+              Competência:
+              ${esc(item.competencia)}
+
+            </span>
+
+            ${
+              item.periodicidade
+                ? `
+
+                  <span class="tag tag-preventive">
+
+                    ${esc(
+                      item.periodicidade
+                    )}
+
+                  </span>
+
+                `
+                : ""
+            }
+
+          </div>
+
+
+          ${
+            item.prestador
+              ? `
+
+                <div style="margin-top:8px">
+
+                  <b>Prestador:</b>
+
+                  ${esc(item.prestador)}
+
+                </div>
+
+              `
+              : ""
+          }
+
+
+          ${
+            item.responsavel
+              ? `
+
+                <div style="margin-top:6px">
+
+                  <b>Responsável:</b>
+
+                  ${esc(
+                    item.responsavel
+                  )}
+
+                </div>
+
+              `
+              : ""
+          }
+
+
+          ${
+            item.observacao
+              ? `
+
+                <div style="margin-top:9px">
+
+                  <b>Observação:</b>
+
+                  <br>
+
+                  ${esc(
+                    item.observacao
+                  )}
+
+                </div>
+
+              `
+              : ""
+          }
+
+
+          ${
+            item.foto
+              ? `
+
+                <div style="margin-top:9px">
+
+                  <a
+                    href="${esc(
+                      item.foto
+                    )}"
+                    target="_blank"
+                  >
+
+                    📷 Ver evidência da preventiva
+
+                  </a>
+
+                </div>
+
+              `
+              : ""
+          }
+
+        </div>
+
+      `
+
+    )
+    .join("");
+}
+
+
+
+/* ============================================================
+   FOTOS
    ============================================================ */
 
 function processPhoto(file){
 
   return new Promise(
 
-    function(resolve,reject){
+    function(
+      resolve,
+      reject
+    ){
 
 
       const reader =
@@ -3233,7 +4259,6 @@ function processPhoto(file){
                   w > h
                 ){
 
-
                   h =
                     Math.round(
                       h *
@@ -3245,9 +4270,7 @@ function processPhoto(file){
                   w =
                     MAX_DIM;
 
-
                 }else{
-
 
                   w =
                     Math.round(
@@ -3342,6 +4365,30 @@ function processPhoto(file){
 
 function openReport(){
 
+  $("reportMessage")
+    .className =
+    "message";
+
+
+  $("reportMessage")
+    .textContent =
+    "";
+
+
+  const saved =
+    getSavedResponsible();
+
+
+  if (
+    saved
+  ){
+
+    $("reporterName")
+      .value =
+      saved;
+  }
+
+
   $("reportModal")
     .style.display =
     "flex";
@@ -3396,10 +4443,6 @@ function sendReport(){
     $("sendReport");
 
 
-  /*
-   * PROTEÇÃO DUPLO CLIQUE
-   */
-
   if (
     reportPosting
   ){
@@ -3425,6 +4468,15 @@ function sendReport(){
 
     return;
   }
+
+
+  /*
+   * Salva o nome no aparelho.
+   */
+
+  saveResponsible(
+    reporter
+  );
 
 
   reportPosting =
@@ -3466,8 +4518,7 @@ function sendReport(){
 
 
   $("p_contact").value =
-    $("reporterContact")
-      .value;
+    $("reporterContact").value;
 
 
   $("p_category").value =
@@ -3515,45 +4566,285 @@ function sendReport(){
     API_URL;
 
 
-  try{
-
-    $("reportForm")
-      .submit();
-
-  }catch(error){
+  $("reportForm")
+    .submit();
+}
 
 
-    reportPosting =
-      false;
+
+/* ============================================================
+   PREVENTIVA 6.7
+   ============================================================ */
+
+function openPreventive(){
+
+  if (
+    !currentAsset
+  ){
+
+    return;
+  }
 
 
-    btn.disabled =
-      false;
+  preventivePhotoData =
+    null;
 
 
-    btn.textContent =
-      "Gravar ocorrência";
+  $("preventivePhotoInput")
+    .value =
+    "";
 
+
+  $("preventivePhotoPreview")
+    .style.display =
+    "none";
+
+
+  $("preventiveMessage")
+    .className =
+    "message";
+
+
+  $("preventiveMessage")
+    .textContent =
+    "";
+
+
+  $("preventiveAsset")
+    .textContent =
+
+    currentAsset.id +
+
+    " – " +
+
+    currentAsset.nome_do_equipamento;
+
+
+  $("preventivePeriodicity")
+    .textContent =
+
+    currentAsset.periodicidade ||
+
+    "Não informada";
+
+
+  $("preventiveProvider")
+    .textContent =
+
+    currentAsset.prestador ||
+
+    "Não informado";
+
+
+  $("preventiveCompetence")
+    .textContent =
+    competenciaAtual();
+
+
+  const saved =
+    getSavedResponsible();
+
+
+  $("preventiveResponsible")
+    .value =
+    saved || "";
+
+
+  $("preventiveObservation")
+    .value =
+    "";
+
+
+  $("preventiveModal")
+    .style.display =
+    "flex";
+}
+
+
+function closePreventive(){
+
+  if (
+    preventivePosting
+  ){
+
+    return;
+  }
+
+
+  $("preventiveModal")
+    .style.display =
+    "none";
+}
+
+
+function savePreventive(){
+
+  const responsible =
+    $("preventiveResponsible")
+      .value
+      .trim();
+
+
+  const observation =
+    $("preventiveObservation")
+      .value
+      .trim();
+
+
+  const msg =
+    $("preventiveMessage");
+
+
+  const btn =
+    $("savePreventive");
+
+
+  /*
+   * Evita clique duplo.
+   */
+
+  if (
+    preventivePosting
+  ){
+
+    return;
+  }
+
+
+  if (
+    !responsible
+  ){
 
     msg.className =
       "message error";
 
 
     msg.textContent =
-      "Não foi possível enviar a ocorrência.";
+      "Informe o responsável pela preventiva.";
+
+
+    return;
   }
+
+
+  if (
+    !currentAsset
+  ){
+
+    msg.className =
+      "message error";
+
+
+    msg.textContent =
+      "Ativo não carregado.";
+
+
+    return;
+  }
+
+
+  /*
+   * Nome lembrado no aparelho.
+   */
+
+  saveResponsible(
+    responsible
+  );
+
+
+  preventivePosting =
+    true;
+
+
+  btn.disabled =
+    true;
+
+
+  btn.textContent =
+    "Registrando...";
+
+
+  msg.className =
+    "message loading";
+
+
+  msg.textContent =
+    "Registrando manutenção preventiva...";
+
+
+  $("pr_token").value =
+    TOKEN;
+
+
+  $("pr_id").value =
+    normalizeId(
+      currentAsset.id
+    );
+
+
+  $("pr_responsible").value =
+    responsible;
+
+
+  $("pr_observation").value =
+    observation;
+
+
+  if (
+    preventivePhotoData
+  ){
+
+    $("pr_photo").value =
+      preventivePhotoData.base64;
+
+
+    $("pr_photoName").value =
+      preventivePhotoData.name;
+
+
+    $("pr_photoMime").value =
+      preventivePhotoData.mime;
+
+  }else{
+
+    $("pr_photo").value =
+      "";
+
+    $("pr_photoName").value =
+      "";
+
+    $("pr_photoMime").value =
+      "";
+  }
+
+
+  $("preventiveForm")
+    .action =
+    API_URL;
+
+
+  $("preventiveForm")
+    .submit();
 }
 
 
 
 /* ============================================================
-   GERENCIAMENTO
+   GERENCIAMENTO OC
    ============================================================ */
 
 function openManage(index){
 
   selectedOccurrence =
     history[index];
+
+
+  if (
+    !selectedOccurrence
+  ){
+
+    return;
+  }
 
 
   occurrenceCorrectionPhotoData =
@@ -3564,43 +4855,78 @@ function openManage(index){
     null;
 
 
-  $("manageChangedBy").value =
-    "";
+  const saved =
+    getSavedResponsible();
 
 
-  $("manageCategory").value =
+  $("manageChangedBy")
+    .value =
+    saved || "";
+
+
+  $("manageCategory")
+    .value =
+
     selectedOccurrence
-      .categoriaOcorrencia ||
+      .categoriaOcorrencia
+
+    ||
+
     "Outros";
 
 
-  $("manageComponent").value =
+  $("manageComponent")
+    .value =
+
     selectedOccurrence
-      .componenteAfetado ||
+      .componenteAfetado
+
+    ||
+
     "Geral";
 
 
-  $("manageDescription").value =
+  $("manageDescription")
+    .value =
+
     selectedOccurrence
-      .descricao ||
+      .descricao
+
+    ||
+
     "";
 
 
-  $("manageStatus").value =
+  $("manageStatus")
+    .value =
+
     selectedOccurrence
-      .status ||
+      .status
+
+    ||
+
     "Aberta";
 
 
-  $("manageResponsible").value =
+  $("manageResponsible")
+    .value =
+
     selectedOccurrence
-      .responsavel ||
+      .responsavel
+
+    ||
+
     "";
 
 
-  $("manageSolution").value =
+  $("manageSolution")
+    .value =
+
     selectedOccurrence
-      .solucao ||
+      .solucao
+
+    ||
+
     "";
 
 
@@ -3637,8 +4963,7 @@ function openManage(index){
 function toggleConclusionPhoto(){
 
   if (
-    $("manageStatus")
-      .value ===
+    $("manageStatus").value ===
     "Concluída"
   ){
 
@@ -3686,18 +5011,15 @@ function saveManage(){
 
 
   const category =
-    $("manageCategory")
-      .value;
+    $("manageCategory").value;
 
 
   const component =
-    $("manageComponent")
-      .value;
+    $("manageComponent").value;
 
 
   const status =
-    $("manageStatus")
-      .value;
+    $("manageStatus").value;
 
 
   const solution =
@@ -3747,7 +5069,7 @@ function saveManage(){
 
     $("manageMessage")
       .textContent =
-      "A descrição da ocorrência não pode ficar vazia.";
+      "A descrição não pode ficar vazia.";
 
 
     return;
@@ -3755,7 +5077,11 @@ function saveManage(){
 
 
   if (
-    status === "Concluída" &&
+    status ===
+      "Concluída"
+
+    &&
+
     !solution
   ){
 
@@ -3771,6 +5097,11 @@ function saveManage(){
 
     return;
   }
+
+
+  saveResponsible(
+    changedBy
+  );
 
 
   managePosting =
@@ -3824,8 +5155,7 @@ function saveManage(){
 
 
   $("m_responsible").value =
-    $("manageResponsible")
-      .value;
+    $("manageResponsible").value;
 
 
   $("m_solution").value =
@@ -3837,18 +5167,15 @@ function saveManage(){
   ){
 
     $("m_occurrencePhoto").value =
-      occurrenceCorrectionPhotoData
-        .base64;
+      occurrenceCorrectionPhotoData.base64;
 
 
     $("m_occurrencePhotoName").value =
-      occurrenceCorrectionPhotoData
-        .name;
+      occurrenceCorrectionPhotoData.name;
 
 
     $("m_occurrencePhotoMime").value =
-      occurrenceCorrectionPhotoData
-        .mime;
+      occurrenceCorrectionPhotoData.mime;
 
   }else{
 
@@ -3896,41 +5223,14 @@ function saveManage(){
     API_URL;
 
 
-  try{
-
-    $("manageForm")
-      .submit();
-
-  }catch(error){
-
-
-    managePosting =
-      false;
-
-
-    btn.disabled =
-      false;
-
-
-    btn.textContent =
-      "Salvar alterações";
-
-
-    $("manageMessage")
-      .className =
-      "message error";
-
-
-    $("manageMessage")
-      .textContent =
-      "Não foi possível salvar as alterações.";
-  }
+  $("manageForm")
+    .submit();
 }
 
 
 
 /* ============================================================
-   RELOAD
+   RECARREGAMENTOS
    ============================================================ */
 
 async function reloadOperations(){
@@ -3968,15 +5268,61 @@ async function reloadOperations(){
     ]);
 
 
-  renderStatus(
-    status.data
-  );
+  if (
+    status.ok
+  ){
+
+    renderStatus(
+      status.data
+    );
+  }
 
 
-  renderHistory(
-    hist.history ||
-    []
-  );
+  if (
+    hist.ok
+  ){
+
+    renderHistory(
+      hist.history ||
+      []
+    );
+  }
+}
+
+
+async function reloadPreventiveHistory(){
+
+  if (
+    !currentAsset
+  ){
+
+    return;
+  }
+
+
+  const data =
+    await api({
+
+      action:
+        "preventivehistory",
+
+      id:
+        normalizeId(
+          currentAsset.id
+        )
+
+    });
+
+
+  if (
+    data.ok
+  ){
+
+    renderPreventiveHistory(
+      data.preventives ||
+      []
+    );
+  }
 }
 
 
@@ -4008,7 +5354,8 @@ $("searchInput")
     function(event){
 
       if (
-        event.key === "Enter"
+        event.key ===
+        "Enter"
       ){
 
         event.preventDefault();
@@ -4029,6 +5376,11 @@ $("reportButton")
   openReport;
 
 
+$("preventiveButton")
+  .onclick =
+  openPreventive;
+
+
 $("cancelReport")
   .onclick =
   closeReport;
@@ -4037,6 +5389,16 @@ $("cancelReport")
 $("sendReport")
   .onclick =
   sendReport;
+
+
+$("cancelPreventive")
+  .onclick =
+  closePreventive;
+
+
+$("savePreventive")
+  .onclick =
+  savePreventive;
 
 
 $("historySelect")
@@ -4067,6 +5429,10 @@ $("manageStatus")
 
 
 
+/* ============================================================
+   FOTOS
+   ============================================================ */
+
 $("photoInput")
   .onchange =
   async function(){
@@ -4074,6 +5440,15 @@ $("photoInput")
     if (
       !this.files[0]
     ){
+
+      photoData =
+        null;
+
+
+      $("photoPreview")
+        .style.display =
+        "none";
+
 
       return;
     }
@@ -4096,6 +5471,44 @@ $("photoInput")
   };
 
 
+$("preventivePhotoInput")
+  .onchange =
+  async function(){
+
+    if (
+      !this.files[0]
+    ){
+
+      preventivePhotoData =
+        null;
+
+
+      $("preventivePhotoPreview")
+        .style.display =
+        "none";
+
+
+      return;
+    }
+
+
+    preventivePhotoData =
+      await processPhoto(
+        this.files[0]
+      );
+
+
+    $("preventivePhotoPreview")
+      .src =
+      preventivePhotoData.dataUrl;
+
+
+    $("preventivePhotoPreview")
+      .style.display =
+      "block";
+  };
+
+
 $("manageOccurrencePhotoInput")
   .onchange =
   async function(){
@@ -4103,6 +5516,10 @@ $("manageOccurrencePhotoInput")
     if (
       !this.files[0]
     ){
+
+      occurrenceCorrectionPhotoData =
+        null;
+
 
       return;
     }
@@ -4134,6 +5551,10 @@ $("conclusionPhotoInput")
       !this.files[0]
     ){
 
+      conclusionPhotoData =
+        null;
+
+
       return;
     }
 
@@ -4146,7 +5567,8 @@ $("conclusionPhotoInput")
 
     $("conclusionPhotoPreview")
       .src =
-      conclusionPhotoData.dataUrl;
+      conclusionPhotoData
+        .dataUrl;
 
 
     $("conclusionPhotoPreview")
@@ -4157,7 +5579,7 @@ $("conclusionPhotoInput")
 
 
 /* ============================================================
-   RETORNO NOVA OC
+   RETORNO OC
    ============================================================ */
 
 $("reportFrame")
@@ -4205,7 +5627,6 @@ $("reportFrame")
 
       function(){
 
-
         closeReport();
 
 
@@ -4215,10 +5636,6 @@ $("reportFrame")
 
         btn.textContent =
           "Gravar ocorrência";
-
-
-        $("reporterName").value =
-          "";
 
 
         $("reporterContact").value =
@@ -4250,9 +5667,108 @@ $("reportFrame")
           null;
 
 
+        /*
+         * Mantém o nome salvo.
+         */
+
+        $("reporterName").value =
+          getSavedResponsible();
+
       },
 
       1000
+
+    );
+  };
+
+
+
+/* ============================================================
+   RETORNO PREVENTIVA
+   ============================================================ */
+
+$("preventiveFrame")
+  .onload =
+  async function(){
+
+    if (
+      !preventivePosting
+    ){
+
+      return;
+    }
+
+
+    preventivePosting =
+      false;
+
+
+    const btn =
+      $("savePreventive");
+
+
+    btn.disabled =
+      true;
+
+
+    btn.textContent =
+      "Preventiva registrada";
+
+
+    $("preventiveMessage")
+      .className =
+      "message success";
+
+
+    $("preventiveMessage")
+      .textContent =
+      "Manutenção preventiva registrada com sucesso.";
+
+
+    await reloadPreventiveHistory();
+
+
+    setTimeout(
+
+      function(){
+
+        closePreventive();
+
+
+        btn.disabled =
+          false;
+
+
+        btn.textContent =
+          "Registrar preventiva";
+
+
+        $("preventiveObservation")
+          .value =
+          "";
+
+
+        $("preventivePhotoInput")
+          .value =
+          "";
+
+
+        $("preventivePhotoPreview")
+          .style.display =
+          "none";
+
+
+        preventivePhotoData =
+          null;
+
+
+        $("preventiveResponsible")
+          .value =
+          getSavedResponsible();
+
+      },
+
+      1100
 
     );
   };
@@ -4308,7 +5824,6 @@ $("manageFrame")
 
       function(){
 
-
         closeManage();
 
 
@@ -4318,7 +5833,6 @@ $("manageFrame")
 
         btn.textContent =
           "Salvar alterações";
-
 
       },
 
@@ -4334,6 +5848,14 @@ $("manageFrame")
    ============================================================ */
 
 async function main(){
+
+  /*
+   * Já tenta preencher os campos com
+   * o responsável salvo no aparelho.
+   */
+
+  fillSavedResponsible();
+
 
   const id =
     getId();
