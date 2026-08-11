@@ -755,6 +755,17 @@ button{
   color:#fff;
 }
 
+
+/* NOVO 6.6.1 */
+
+.btn:disabled{
+
+  opacity:.55;
+
+  cursor:not-allowed;
+}
+
+
 .btn-secondary{
 
   background:#e5e7eb;
@@ -1348,7 +1359,7 @@ Cancelar
   type="button"
   class="btn"
 >
-Enviar
+Gravar ocorrência
 </button>
 
 </div>
@@ -1360,7 +1371,7 @@ Enviar
 
 
 <!-- =========================================================
-     MODAL GERENCIAMENTO 6.6
+     MODAL GERENCIAMENTO
      ========================================================= -->
 
 <div
@@ -1376,8 +1387,6 @@ Gerenciar ocorrência
 </h2>
 
 
-<!-- QUEM ESTÁ ALTERANDO -->
-
 <label>
 
 Seu nome / Alterado por *
@@ -1391,10 +1400,6 @@ Seu nome / Alterado por *
 </label>
 
 
-
-<!-- =======================================================
-     DADOS DA ABERTURA
-     ======================================================= -->
 
 <div class="modal-section">
 
@@ -1523,10 +1528,6 @@ Adicionar ou substituir foto
 </div>
 
 
-
-<!-- =======================================================
-     TRATAMENTO
-     ======================================================= -->
 
 <div class="modal-section">
 
@@ -1708,9 +1709,6 @@ Salvar alterações
 
 <input name="solucao" id="m_solution">
 
-
-<!-- NOVOS 6.6 -->
-
 <input
   name="alteradoPor"
   id="m_changedBy"
@@ -1746,9 +1744,6 @@ Salvar alterações
   id="m_occurrencePhotoMime"
 >
 
-
-<!-- FOTO CONCLUSÃO -->
-
 <input
   name="fotoConclusaoBase64"
   id="m_photo"
@@ -1782,7 +1777,7 @@ Salvar alterações
 
 <div class="footer">
 
-QRManut • Versão 6.6
+QRManut • Versão 6.6.1
 
 </div>
 
@@ -1793,10 +1788,6 @@ QRManut • Versão 6.6
 
 <script>
 
-
-/* ============================================================
-   CONFIGURAÇÃO
-   ============================================================ */
 
 const API_URL =
 "https://script.google.com/macros/s/AKfycbx4tpC42Q6WdkNhTUTAGoZWvG5M24zwlNscnwbDP5B3Q5pWo8B32-Lf0rQ2Xtua1AFMAQ/exec";
@@ -1818,11 +1809,6 @@ const QUALITY =
 0.72;
 
 
-
-/* ============================================================
-   ESTADO
-   ============================================================ */
-
 let currentAsset =
 null;
 
@@ -1842,8 +1828,6 @@ null;
 let conclusionPhotoData =
 null;
 
-
-/* NOVO 6.6 */
 
 let occurrenceCorrectionPhotoData =
 null;
@@ -2005,11 +1989,6 @@ function formatDate(value){
 }
 
 
-
-/* ============================================================
-   TEMPO DECORRIDO 6.5
-   ============================================================ */
-
 function tempoDecorrido(dataInicial){
 
   if (!dataInicial){
@@ -2167,7 +2146,7 @@ async function api(params){
 
 
 /* ============================================================
-   TELA EQBUSCA
+   EQBUSCA
    ============================================================ */
 
 function openSearch(){
@@ -2209,17 +2188,6 @@ function showSearchTab(){
 
   hide(
     "pendingArea"
-  );
-
-
-  setTimeout(
-    function(){
-
-      $("searchInput")
-        .focus();
-
-    },
-    50
   );
 }
 
@@ -2280,15 +2248,9 @@ async function searchAssets(){
   }
 
 
-  const pareceId =
-    /^[a-z0-9_-]+$/i
-      .test(
-        q
-      );
-
-
   if (
-    pareceId
+    /^[a-z0-9_-]+$/i
+      .test(q)
   ){
 
     q =
@@ -2308,11 +2270,6 @@ async function searchAssets(){
     "";
 
 
-  $("searchButton")
-    .disabled =
-    true;
-
-
   try{
 
 
@@ -2326,16 +2283,6 @@ async function searchAssets(){
       });
 
 
-    if (
-      !data.ok
-    ){
-
-      throw new Error(
-        data.error
-      );
-    }
-
-
     renderSearchResults(
       data.results ||
       []
@@ -2345,22 +2292,9 @@ async function searchAssets(){
   }catch(error){
 
 
-    console.error(
-      error
-    );
-
-
     $("searchStatus")
       .textContent =
       "Erro ao realizar busca.";
-
-
-  }finally{
-
-
-    $("searchButton")
-      .disabled =
-      false;
   }
 }
 
@@ -2377,26 +2311,6 @@ function renderSearchResults(items){
         ? " resultado encontrado"
         : " resultados encontrados"
     );
-
-
-  if (
-    !items.length
-  ){
-
-    $("searchResults")
-      .innerHTML = `
-
-        <div class="search-result">
-
-          Nenhum ativo encontrado.
-
-        </div>
-
-      `;
-
-
-    return;
-  }
 
 
   $("searchResults")
@@ -2443,28 +2357,6 @@ function renderSearchResults(items){
                 : ""
             }
 
-            ${
-              item.fabricante
-                ? `
-                  <div>
-                    <b>Fabricante:</b>
-                    ${esc(item.fabricante)}
-                  </div>
-                `
-                : ""
-            }
-
-            ${
-              item.modelo
-                ? `
-                  <div>
-                    <b>Modelo:</b>
-                    ${esc(item.modelo)}
-                  </div>
-                `
-                : ""
-            }
-
           </div>
 
           <a
@@ -2498,52 +2390,15 @@ async function loadPending(){
     "Carregando ocorrências pendentes...";
 
 
-  $("pendingResults")
-    .innerHTML =
-    "";
+  const data =
+    await api({
+      action:"pending"
+    });
 
 
-  hide(
-    "pendingSummary"
+  renderPending(
+    data
   );
-
-
-  try{
-
-
-    const data =
-      await api({
-        action:"pending"
-      });
-
-
-    if (
-      !data.ok
-    ){
-
-      throw new Error(
-        data.error
-      );
-    }
-
-
-    renderPending(
-      data
-    );
-
-
-  }catch(error){
-
-
-    console.error(
-      error
-    );
-
-
-    $("pendingStatus")
-      .textContent =
-      "Não foi possível carregar as ocorrências pendentes.";
-  }
 }
 
 
@@ -2638,24 +2493,11 @@ function renderPending(data){
 
 
         let classeStatus =
-          "";
+          "st-aberta";
 
 
         let icone =
-          "";
-
-
-        if (
-          item.status ===
-          "Aberta"
-        ){
-
-          classeStatus =
-            "st-aberta";
-
-          icone =
-            "🔴";
-        }
+          "🔴";
 
 
         if (
@@ -2688,7 +2530,6 @@ function renderPending(data){
 
           <div class="pending-card">
 
-
             <div class="pending-head">
 
               <div>
@@ -2708,20 +2549,15 @@ function renderPending(data){
                   "
                 >
 
-                  ${esc(
-                    item.id
-                  )}
+                  ${esc(item.id)}
 
                   –
 
-                  ${esc(
-                    item.nome
-                  )}
+                  ${esc(item.nome)}
 
                 </div>
 
               </div>
-
 
               <span
                 class="
@@ -2732,9 +2568,7 @@ function renderPending(data){
 
                 ${icone}
 
-                ${esc(
-                  item.status
-                )}
+                ${esc(item.status)}
 
               </span>
 
@@ -2742,50 +2576,6 @@ function renderPending(data){
 
 
             <div class="search-result-data">
-
-              ${
-                item.pavimento
-                  ? `
-                    <div>
-                      <b>Pavimento:</b>
-                      ${esc(item.pavimento)}
-                    </div>
-                  `
-                  : ""
-              }
-
-              ${
-                item.localizacao
-                  ? `
-                    <div>
-                      <b>Localização:</b>
-                      ${esc(item.localizacao)}
-                    </div>
-                  `
-                  : ""
-              }
-
-              ${
-                item.categoriaOcorrencia
-                  ? `
-                    <div>
-                      <b>Categoria:</b>
-                      ${esc(item.categoriaOcorrencia)}
-                    </div>
-                  `
-                  : ""
-              }
-
-              ${
-                item.componenteAfetado
-                  ? `
-                    <div>
-                      <b>Componente:</b>
-                      ${esc(item.componenteAfetado)}
-                    </div>
-                  `
-                  : ""
-              }
 
               <div>
 
@@ -2801,7 +2591,6 @@ function renderPending(data){
 
               </div>
 
-
               <div class="elapsed-open">
 
                 ⏱️ Aberta há
@@ -2813,64 +2602,6 @@ function renderPending(data){
                 )}
 
               </div>
-
-
-              ${
-                item.dataInicio
-                  ? `
-
-                    <div
-                      style="
-                        margin-top:6px;
-                      "
-                    >
-
-                      <b>
-                        Atendimento iniciado:
-                      </b>
-
-                      ${esc(
-                        formatDate(
-                          item.dataInicio
-                        )
-                      )}
-
-                    </div>
-
-                    <div class="elapsed-service">
-
-                      🛠️ Em atendimento há
-
-                      ${esc(
-                        tempoDecorrido(
-                          item.dataInicio
-                        )
-                      )}
-
-                    </div>
-
-                  `
-                  : ""
-              }
-
-
-              ${
-                item.responsavel
-                  ? `
-                    <div style="margin-top:6px">
-
-                      <b>
-                        Responsável:
-                      </b>
-
-                      ${esc(
-                        item.responsavel
-                      )}
-
-                    </div>
-                  `
-                  : ""
-              }
 
             </div>
 
@@ -2889,47 +2620,6 @@ function renderPending(data){
               )}
 
             </div>
-
-
-            ${
-              item.ultimaAlteracao
-                ? `
-
-                  <div class="audit-box">
-
-                    <b>
-                      Última alteração:
-                    </b>
-
-                    ${esc(
-                      formatDate(
-                        item.ultimaAlteracao
-                      )
-                    )}
-
-                    ${
-                      item.ultimaAlteracaoPor
-                        ? `
-
-                          <br>
-
-                          <b>
-                            Alterado por:
-                          </b>
-
-                          ${esc(
-                            item.ultimaAlteracaoPor
-                          )}
-
-                        `
-                        : ""
-                    }
-
-                  </div>
-
-                `
-                : ""
-            }
 
 
             <a
@@ -2973,97 +2663,51 @@ async function loadAsset(id){
   );
 
 
-  try{
+  const [
+    asset,
+    status,
+    hist
+  ] =
+    await Promise.all([
+
+      api({
+        id:
+          normalizeId(id)
+      }),
+
+      api({
+        action:"status",
+        id:
+          normalizeId(id)
+      }),
+
+      api({
+        action:"history",
+        id:
+          normalizeId(id)
+      })
+
+    ]);
 
 
-    const [
-      asset,
-      status,
-      hist
-    ] =
-      await Promise.all([
-
-        api({
-          id:
-            normalizeId(
-              id
-            )
-        }),
-
-        api({
-          action:"status",
-          id:
-            normalizeId(
-              id
-            )
-        }),
-
-        api({
-          action:"history",
-          id:
-            normalizeId(
-              id
-            )
-        })
-
-      ]);
+  currentAsset =
+    asset.data;
 
 
-    if (
-      !asset.ok
-    ){
-
-      $("titulo")
-        .textContent =
-        "Ativo não encontrado";
+  renderAsset(
+    asset.data
+  );
 
 
-      return;
-    }
+  renderStatus(
+    status.data
+  );
 
 
-    currentAsset =
-      asset.data;
-
-
-    renderAsset(
-      asset.data
-    );
-
-
-    if (
-      status.ok
-    ){
-
-      renderStatus(
-        status.data
-      );
-    }
-
-
-    if (
-      hist.ok
-    ){
-
-      renderHistory(
-        hist.history ||
-        []
-      );
-    }
-
-
-  }catch(error){
-
-
-    console.error(
-      error
-    );
-
-
-    $("titulo")
-      .textContent =
-      "Erro ao carregar ativo";
-  }
+  renderHistory(
+    hist.history ||
+    []
+  );
 }
 
 
@@ -3102,25 +2746,13 @@ function renderAsset(a){
   const classification =
     pairs([
 
-      [
-        "Tipo de Ativo",
-        a.tipo_de_ativo
-      ],
+      ["Tipo de Ativo",a.tipo_de_ativo],
 
-      [
-        "Categoria",
-        a.categoria_do_ativo
-      ],
+      ["Categoria",a.categoria_do_ativo],
 
-      [
-        "Subcategoria",
-        a.subcategoria
-      ],
+      ["Subcategoria",a.subcategoria],
 
-      [
-        "Criticidade",
-        a.criticidade
-      ],
+      ["Criticidade",a.criticidade],
 
       [
         "Classe de Manutenção",
@@ -3161,10 +2793,7 @@ function renderAsset(a){
 
       ["Localização",a.localizacao],
 
-      [
-        "Local Detalhado",
-        a.local_detalhado
-      ]
+      ["Local Detalhado",a.local_detalhado]
 
     ]);
 
@@ -3191,41 +2820,23 @@ function renderAsset(a){
 
       ["Modelo",a.modelo],
 
-      [
-        "Número de Série",
-        a.numero_de_serie
-      ],
+      ["Número de Série",a.numero_de_serie],
 
       ["Capacidade",a.capacidade],
 
-      [
-        "Amperagem Nominal",
-        a.amperagem_nominal_fla
-      ],
+      ["Amperagem Nominal",a.amperagem_nominal_fla],
 
-      [
-        "Amperagem de Partida",
-        a.amperagem_de_partida_flr
-      ],
+      ["Amperagem de Partida",a.amperagem_de_partida_flr],
 
-      [
-        "Amperagem Medida",
-        a.amperagem_medida
-      ],
+      ["Amperagem Medida",a.amperagem_medida],
 
       ["Voltagem",a.voltagem],
 
       ["Peso",a.peso],
 
-      [
-        "Ano de Aquisição",
-        a.ano_de_aquisicao
-      ],
+      ["Ano de Aquisição",a.ano_de_aquisicao],
 
-      [
-        "Vida Útil Estimada",
-        a.vida_util_estimada
-      ]
+      ["Vida Útil Estimada",a.vida_util_estimada]
 
     ]);
 
@@ -3250,31 +2861,15 @@ function renderAsset(a){
 
     pairs([
 
-      [
-        "Status cadastral",
-        a.status
-      ],
+      ["Status cadastral",a.status],
 
-      [
-        "Prestador",
-        a.prestador
-      ],
+      ["Prestador",a.prestador],
 
-      [
-        "Periodicidade",
-        a.periodicidade
-      ],
+      ["Periodicidade",a.periodicidade],
 
-      [
-        "Observações",
-        a.observacoes
-      ]
+      ["Observações",a.observacoes]
 
-    ])
-
-    ||
-
-    "<span class='muted'>Sem informações adicionais.</span>";
+    ]);
 }
 
 
@@ -3307,7 +2902,7 @@ function renderStatus(s){
 
     (
       s.situacao ||
-      "Situação indisponível"
+      ""
     );
 
 
@@ -3343,16 +2938,6 @@ function renderHistory(items){
       "Nenhum histórico registrado.";
 
 
-    hide(
-      "historySelect"
-    );
-
-
-    $("historyDetail")
-      .innerHTML =
-      "";
-
-
     return;
   }
 
@@ -3361,12 +2946,7 @@ function renderHistory(items){
     .textContent =
 
     history.length +
-
-    (
-      history.length === 1
-        ? " registro"
-        : " registros"
-    );
+    " registro(s)";
 
 
   show(
@@ -3383,15 +2963,11 @@ function renderHistory(items){
 
         <option value="${i}">
 
-          ${esc(
-            x.ocorrencia
-          )}
+          ${esc(x.ocorrencia)}
 
           |
 
-          ${esc(
-            x.status
-          )}
+          ${esc(x.status)}
 
         </option>
 
@@ -3413,12 +2989,6 @@ function renderHistoryItem(index){
     history[index];
 
 
-  if (!x){
-
-    return;
-  }
-
-
   selectedOccurrence =
     x;
 
@@ -3428,65 +2998,34 @@ function renderHistoryItem(index){
 
       <div class="history-card">
 
-
         <b>
-
-          ${esc(
-            x.ocorrencia
-          )}
-
+          ${esc(x.ocorrencia)}
         </b>
 
-
         <div class="muted">
-
-          ${esc(
-            formatDate(
-              x.data
-            )
-          )}
-
+          ${esc(formatDate(x.data))}
         </div>
 
-
         <span class="tag">
-
-          ${esc(
-            x.status
-          )}
-
+          ${esc(x.status)}
         </span>
-
 
         ${
           x.categoriaOcorrencia
             ? `
-
               <span class="tag">
-
-                ${esc(
-                  x.categoriaOcorrencia
-                )}
-
+                ${esc(x.categoriaOcorrencia)}
               </span>
-
             `
             : ""
         }
 
-
         ${
           x.componenteAfetado
             ? `
-
               <span class="tag">
-
-                ${esc(
-                  x.componenteAfetado
-                )}
-
+                ${esc(x.componenteAfetado)}
               </span>
-
             `
             : ""
         }
@@ -3511,7 +3050,6 @@ function renderHistoryItem(index){
         ${
           x.responsavel
             ? `
-
               <div style="margin-top:8px">
 
                 <b>
@@ -3523,7 +3061,6 @@ function renderHistoryItem(index){
                 )}
 
               </div>
-
             `
             : ""
         }
@@ -3532,7 +3069,6 @@ function renderHistoryItem(index){
         ${
           x.solucao
             ? `
-
               <div style="margin-top:10px">
 
                 <b>
@@ -3546,7 +3082,6 @@ function renderHistoryItem(index){
                 )}
 
               </div>
-
             `
             : ""
         }
@@ -3555,22 +3090,16 @@ function renderHistoryItem(index){
         ${
           x.foto
             ? `
-
               <div style="margin-top:10px">
 
                 <a
-                  href="${esc(
-                    x.foto
-                  )}"
+                  href="${esc(x.foto)}"
                   target="_blank"
                 >
-
                   📷 Foto da ocorrência
-
                 </a>
 
               </div>
-
             `
             : ""
         }
@@ -3579,7 +3108,6 @@ function renderHistoryItem(index){
         ${
           x.fotoConclusao
             ? `
-
               <div style="margin-top:8px">
 
                 <a
@@ -3588,13 +3116,10 @@ function renderHistoryItem(index){
                   )}"
                   target="_blank"
                 >
-
                   ✅ Foto após o serviço
-
                 </a>
 
               </div>
-
             `
             : ""
         }
@@ -3653,11 +3178,8 @@ function renderHistoryItem(index){
             )
           "
         >
-
           Gerenciar ocorrência
-
         </button>
-
 
       </div>
 
@@ -3674,10 +3196,7 @@ function processPhoto(file){
 
   return new Promise(
 
-    function(
-      resolve,
-      reject
-    ){
+    function(resolve,reject){
 
 
       const reader =
@@ -3823,11 +3342,6 @@ function processPhoto(file){
 
 function openReport(){
 
-  $("reportMessage")
-    .className =
-    "message";
-
-
   $("reportModal")
     .style.display =
     "flex";
@@ -3878,6 +3392,22 @@ function sendReport(){
     $("reportMessage");
 
 
+  const btn =
+    $("sendReport");
+
+
+  /*
+   * PROTEÇÃO DUPLO CLIQUE
+   */
+
+  if (
+    reportPosting
+  ){
+
+    return;
+  }
+
+
   if (
     !reporter ||
     !category ||
@@ -3895,6 +3425,26 @@ function sendReport(){
 
     return;
   }
+
+
+  reportPosting =
+    true;
+
+
+  btn.disabled =
+    true;
+
+
+  btn.textContent =
+    "Gravando...";
+
+
+  msg.className =
+    "message loading";
+
+
+  msg.textContent =
+    "Registrando ocorrência...";
 
 
   $("p_token").value =
@@ -3949,11 +3499,14 @@ function sendReport(){
 
   }else{
 
-    $("p_photo").value = "";
+    $("p_photo").value =
+      "";
 
-    $("p_photoName").value = "";
+    $("p_photoName").value =
+      "";
 
-    $("p_photoMime").value = "";
+    $("p_photoMime").value =
+      "";
   }
 
 
@@ -3962,40 +3515,45 @@ function sendReport(){
     API_URL;
 
 
-  reportPosting =
-    true;
+  try{
+
+    $("reportForm")
+      .submit();
+
+  }catch(error){
 
 
-  msg.className =
-    "message loading";
+    reportPosting =
+      false;
 
 
-  msg.textContent =
-    "Registrando ocorrência...";
+    btn.disabled =
+      false;
 
 
-  $("reportForm")
-    .submit();
+    btn.textContent =
+      "Gravar ocorrência";
+
+
+    msg.className =
+      "message error";
+
+
+    msg.textContent =
+      "Não foi possível enviar a ocorrência.";
+  }
 }
 
 
 
 /* ============================================================
-   GERENCIAMENTO 6.6
+   GERENCIAMENTO
    ============================================================ */
 
 function openManage(index){
 
   selectedOccurrence =
     history[index];
-
-
-  if (
-    !selectedOccurrence
-  ){
-
-    return;
-  }
 
 
   occurrenceCorrectionPhotoData =
@@ -4006,122 +3564,45 @@ function openManage(index){
     null;
 
 
-  $("manageOccurrencePhotoInput")
-    .value =
+  $("manageChangedBy").value =
     "";
 
 
-  $("manageOccurrencePhotoPreview")
-    .style.display =
-    "none";
-
-
-  $("conclusionPhotoInput")
-    .value =
-    "";
-
-
-  $("conclusionPhotoPreview")
-    .style.display =
-    "none";
-
-
-  $("manageMessage")
-    .className =
-    "message";
-
-
-  $("manageMessage")
-    .textContent =
-    "";
-
-
-  $("manageTitle")
-    .textContent =
-
-    "Gerenciar " +
-
-    selectedOccurrence.ocorrencia;
-
-
-  /*
-   * O campo fica vazio para exigir
-   * identificação em cada alteração.
-   */
-
-  $("manageChangedBy")
-    .value =
-    "";
-
-
-  $("manageCategory")
-    .value =
-
+  $("manageCategory").value =
     selectedOccurrence
-      .categoriaOcorrencia
-
-    ||
-
+      .categoriaOcorrencia ||
     "Outros";
 
 
-  $("manageComponent")
-    .value =
-
+  $("manageComponent").value =
     selectedOccurrence
-      .componenteAfetado
-
-    ||
-
+      .componenteAfetado ||
     "Geral";
 
 
-  $("manageDescription")
-    .value =
-
+  $("manageDescription").value =
     selectedOccurrence
-      .descricao
-
-    ||
-
+      .descricao ||
     "";
 
 
-  $("manageStatus")
-    .value =
-
-    selectedOccurrence.status
-
-    ||
-
+  $("manageStatus").value =
+    selectedOccurrence
+      .status ||
     "Aberta";
 
 
-  $("manageResponsible")
-    .value =
-
+  $("manageResponsible").value =
     selectedOccurrence
-      .responsavel
-
-    ||
-
+      .responsavel ||
     "";
 
 
-  $("manageSolution")
-    .value =
-
+  $("manageSolution").value =
     selectedOccurrence
-      .solucao
-
-    ||
-
+      .solucao ||
     "";
 
-
-  /*
-   * FOTO ORIGINAL ATUAL
-   */
 
   if (
     selectedOccurrence.foto
@@ -4144,33 +3625,6 @@ function openManage(index){
   }
 
 
-  /*
-   * FOTO CONCLUSÃO ATUAL
-   */
-
-  if (
-    selectedOccurrence
-      .fotoConclusao
-  ){
-
-    $("currentConclusionPhoto")
-      .style.display =
-      "block";
-
-
-    $("currentConclusionPhotoLink")
-      .href =
-      selectedOccurrence
-        .fotoConclusao;
-
-  }else{
-
-    $("currentConclusionPhoto")
-      .style.display =
-      "none";
-  }
-
-
   toggleConclusionPhoto();
 
 
@@ -4185,7 +3639,7 @@ function toggleConclusionPhoto(){
   if (
     $("manageStatus")
       .value ===
-      "Concluída"
+    "Concluída"
   ){
 
     show(
@@ -4252,6 +3706,18 @@ function saveManage(){
       .trim();
 
 
+  const btn =
+    $("saveManage");
+
+
+  if (
+    managePosting
+  ){
+
+    return;
+  }
+
+
   if (
     !changedBy
   ){
@@ -4289,30 +3755,7 @@ function saveManage(){
 
 
   if (
-    !category ||
-    !component
-  ){
-
-    $("manageMessage")
-      .className =
-      "message error";
-
-
-    $("manageMessage")
-      .textContent =
-      "Informe categoria e componente afetado.";
-
-
-    return;
-  }
-
-
-  if (
-    status ===
-      "Concluída"
-
-    &&
-
+    status === "Concluída" &&
     !solution
   ){
 
@@ -4328,6 +3771,28 @@ function saveManage(){
 
     return;
   }
+
+
+  managePosting =
+    true;
+
+
+  btn.disabled =
+    true;
+
+
+  btn.textContent =
+    "Salvando...";
+
+
+  $("manageMessage")
+    .className =
+    "message loading";
+
+
+  $("manageMessage")
+    .textContent =
+    "Salvando alterações...";
 
 
   $("m_token").value =
@@ -4367,10 +3832,6 @@ function saveManage(){
     solution;
 
 
-  /*
-   * FOTO ORIGINAL CORRIGIDA
-   */
-
   if (
     occurrenceCorrectionPhotoData
   ){
@@ -4394,47 +3855,36 @@ function saveManage(){
     $("m_occurrencePhoto").value =
       "";
 
-
     $("m_occurrencePhotoName").value =
       "";
-
 
     $("m_occurrencePhotoMime").value =
       "";
   }
 
 
-  /*
-   * FOTO DE CONCLUSÃO
-   */
-
   if (
     conclusionPhotoData
   ){
 
     $("m_photo").value =
-      conclusionPhotoData
-        .base64;
+      conclusionPhotoData.base64;
 
 
     $("m_photoName").value =
-      conclusionPhotoData
-        .name;
+      conclusionPhotoData.name;
 
 
     $("m_photoMime").value =
-      conclusionPhotoData
-        .mime;
+      conclusionPhotoData.mime;
 
   }else{
 
     $("m_photo").value =
       "";
 
-
     $("m_photoName").value =
       "";
-
 
     $("m_photoMime").value =
       "";
@@ -4446,22 +3896,35 @@ function saveManage(){
     API_URL;
 
 
-  managePosting =
-    true;
+  try{
+
+    $("manageForm")
+      .submit();
+
+  }catch(error){
 
 
-  $("manageMessage")
-    .className =
-    "message loading";
+    managePosting =
+      false;
 
 
-  $("manageMessage")
-    .textContent =
-    "Salvando alterações...";
+    btn.disabled =
+      false;
 
 
-  $("manageForm")
-    .submit();
+    btn.textContent =
+      "Salvar alterações";
+
+
+    $("manageMessage")
+      .className =
+      "message error";
+
+
+    $("manageMessage")
+      .textContent =
+      "Não foi possível salvar as alterações.";
+  }
 }
 
 
@@ -4505,25 +3968,15 @@ async function reloadOperations(){
     ]);
 
 
-  if (
-    status.ok
-  ){
-
-    renderStatus(
-      status.data
-    );
-  }
+  renderStatus(
+    status.data
+  );
 
 
-  if (
-    hist.ok
-  ){
-
-    renderHistory(
-      hist.history ||
-      []
-    );
-  }
+  renderHistory(
+    hist.history ||
+    []
+  );
 }
 
 
@@ -4555,8 +4008,7 @@ $("searchInput")
     function(event){
 
       if (
-        event.key ===
-        "Enter"
+        event.key === "Enter"
       ){
 
         event.preventDefault();
@@ -4615,10 +4067,6 @@ $("manageStatus")
 
 
 
-/* ============================================================
-   FOTO ABERTURA
-   ============================================================ */
-
 $("photoInput")
   .onchange =
   async function(){
@@ -4626,15 +4074,6 @@ $("photoInput")
     if (
       !this.files[0]
     ){
-
-      photoData =
-        null;
-
-
-      $("photoPreview")
-        .style.display =
-        "none";
-
 
       return;
     }
@@ -4657,11 +4096,6 @@ $("photoInput")
   };
 
 
-
-/* ============================================================
-   FOTO CORREÇÃO 6.6
-   ============================================================ */
-
 $("manageOccurrencePhotoInput")
   .onchange =
   async function(){
@@ -4669,15 +4103,6 @@ $("manageOccurrencePhotoInput")
     if (
       !this.files[0]
     ){
-
-      occurrenceCorrectionPhotoData =
-        null;
-
-
-      $("manageOccurrencePhotoPreview")
-        .style.display =
-        "none";
-
 
       return;
     }
@@ -4701,11 +4126,6 @@ $("manageOccurrencePhotoInput")
   };
 
 
-
-/* ============================================================
-   FOTO CONCLUSÃO
-   ============================================================ */
-
 $("conclusionPhotoInput")
   .onchange =
   async function(){
@@ -4713,15 +4133,6 @@ $("conclusionPhotoInput")
     if (
       !this.files[0]
     ){
-
-      conclusionPhotoData =
-        null;
-
-
-      $("conclusionPhotoPreview")
-        .style.display =
-        "none";
-
 
       return;
     }
@@ -4735,8 +4146,7 @@ $("conclusionPhotoInput")
 
     $("conclusionPhotoPreview")
       .src =
-      conclusionPhotoData
-        .dataUrl;
+      conclusionPhotoData.dataUrl;
 
 
     $("conclusionPhotoPreview")
@@ -4766,6 +4176,18 @@ $("reportFrame")
       false;
 
 
+    const btn =
+      $("sendReport");
+
+
+    btn.disabled =
+      true;
+
+
+    btn.textContent =
+      "Ocorrência gravada";
+
+
     $("reportMessage")
       .className =
       "message success";
@@ -4783,11 +4205,54 @@ $("reportFrame")
 
       function(){
 
+
         closeReport();
+
+
+        btn.disabled =
+          false;
+
+
+        btn.textContent =
+          "Gravar ocorrência";
+
+
+        $("reporterName").value =
+          "";
+
+
+        $("reporterContact").value =
+          "";
+
+
+        $("category").value =
+          "";
+
+
+        $("component").value =
+          "";
+
+
+        $("description").value =
+          "";
+
+
+        $("photoInput").value =
+          "";
+
+
+        $("photoPreview")
+          .style.display =
+          "none";
+
+
+        photoData =
+          null;
+
 
       },
 
-      900
+      1000
 
     );
   };
@@ -4814,6 +4279,18 @@ $("manageFrame")
       false;
 
 
+    const btn =
+      $("saveManage");
+
+
+    btn.disabled =
+      true;
+
+
+    btn.textContent =
+      "Alterações salvas";
+
+
     $("manageMessage")
       .className =
       "message success";
@@ -4831,7 +4308,17 @@ $("manageFrame")
 
       function(){
 
+
         closeManage();
+
+
+        btn.disabled =
+          false;
+
+
+        btn.textContent =
+          "Salvar alterações";
+
 
       },
 
