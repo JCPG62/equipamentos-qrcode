@@ -43,8 +43,7 @@ body{
   border-radius:16px;
   padding:16px;
   box-shadow:
-    0 5px 15px
-    rgba(0,0,0,.05);
+    0 5px 15px rgba(0,0,0,.05);
 }
 
 h1{
@@ -53,8 +52,8 @@ h1{
 }
 
 h2{
-  font-size:1.05rem;
   margin-top:0;
+  font-size:1.1rem;
 }
 
 h3{
@@ -62,12 +61,12 @@ h3{
   margin-top:18px;
 }
 
-.muted{
-  color:#6b7280;
-}
-
 .hidden{
   display:none !important;
+}
+
+.muted{
+  color:#6b7280;
 }
 
 .badge{
@@ -89,89 +88,86 @@ h3{
 
 .pair{
   padding:7px 0;
-  border-bottom:
-    1px dashed #eee;
-  line-height:1.45;
+  border-bottom:1px dashed #eee;
 }
 
 .pair:last-child{
   border-bottom:0;
 }
 
+
+/* ==========================================================
+   BOTÕES DA FICHA CENTRALIZADOS
+   ========================================================== */
+
 .actions{
   display:flex;
   flex-wrap:wrap;
-  gap:9px;
-  margin-top:18px;
+  justify-content:center;
+  align-items:center;
+  gap:10px;
+  margin-top:20px;
 }
 
-.chip{
-  display:inline-block;
-  padding:11px 15px;
+.chip,
+.btn-preventive,
+.btn-search{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  min-height:44px;
+  padding:11px 17px;
   border-radius:999px;
-  background:#dc2626;
-  color:#fff;
   font-weight:700;
   cursor:pointer;
   text-decoration:none;
+}
+
+.chip{
+  background:#dc2626;
+  color:white;
   border:0;
 }
 
 .btn-preventive{
-  display:inline-block;
-  padding:11px 15px;
-  border-radius:999px;
   background:#047857;
-  color:#fff;
-  font-weight:700;
-  cursor:pointer;
-  text-decoration:none;
+  color:white;
   border:0;
 }
 
 .btn-search{
-  display:inline-block;
-  padding:11px 15px;
-  border-radius:999px;
-  border:1px solid #1f4e78;
+  background:white;
   color:#1f4e78;
-  background:#fff;
-  font-weight:700;
-  text-decoration:none;
-  cursor:pointer;
+  border:1px solid #1f4e78;
 }
 
 
-/* ============================================================
+/* ==========================================================
    STATUS
-   ============================================================ */
+   ========================================================== */
 
 .status-card{
   margin-top:16px;
   border-radius:13px;
   padding:13px;
   border:1px solid #e5e7eb;
-  background:#f9fafb;
 }
 
 .status-card.ok{
   background:#ecfdf5;
-  border-color:#a7f3d0;
 }
 
 .status-card.critico{
   background:#fef2f2;
-  border-color:#fecaca;
 }
 
 .status-card.atendimento{
   background:#fffbeb;
-  border-color:#fde68a;
 }
 
 .status-card.aguardando{
   background:#fff7ed;
-  border-color:#fed7aa;
 }
 
 .status-title{
@@ -179,65 +175,15 @@ h3{
 }
 
 .status-info{
-  font-size:.86rem;
   margin-top:5px;
+  font-size:.86rem;
   color:#6b7280;
 }
 
 
-/* ============================================================
-   HISTÓRICO
-   ============================================================ */
-
-.history-card,
-.preventive-card{
-  margin-top:12px;
-  padding:13px;
-  background:#fafafa;
-  border:1px solid #e5e7eb;
-  border-radius:12px;
-}
-
-.preventive-card{
-  background:#f0fdf4;
-  border-color:#bbf7d0;
-}
-
-.tag{
-  display:inline-block;
-  margin:5px 4px 5px 0;
-  padding:4px 8px;
-  background:#eef2ff;
-  color:#3730a3;
-  border-radius:999px;
-  font-size:.75rem;
-  border:1px solid #c7d2fe;
-}
-
-.tag-preventive{
-  background:#dcfce7;
-  color:#166534;
-  border-color:#bbf7d0;
-}
-
-.audit-box{
-  margin-top:12px;
-  padding:10px;
-  border-radius:10px;
-  background:#f3f4f6;
-  color:#4b5563;
-  font-size:.82rem;
-  line-height:1.5;
-}
-
-
-/* ============================================================
+/* ==========================================================
    EQBUSCA
-   ============================================================ */
-
-.search-header{
-  margin-bottom:18px;
-}
+   ========================================================== */
 
 .search-title{
   color:#1f4e78;
@@ -247,40 +193,23 @@ h3{
 
 .menu-busca{
   display:grid;
-  grid-template-columns:
-    repeat(3,1fr);
+  grid-template-columns:repeat(3,1fr);
   gap:10px;
-  margin-bottom:16px;
+  margin:18px 0;
 }
 
 .menu-button{
   border:1px solid #d1d5db;
-  background:#fff;
+  background:white;
   border-radius:12px;
   padding:13px;
-  font-size:.9rem;
   font-weight:700;
-  color:#374151;
   cursor:pointer;
-  transition:.15s;
-}
-
-.menu-button:hover{
-  border-color:#1f4e78;
 }
 
 .menu-button.active{
   background:#1f4e78;
-  color:#fff;
-  border-color:#1f4e78;
-}
-
-.menu-button.pending{
-  border-color:#f59e0b;
-}
-
-.menu-button.preventive{
-  border-color:#059669;
+  color:white;
 }
 
 .menu-button.preventive.active{
@@ -295,182 +224,104 @@ h3{
 
 .search-box input{
   flex:1;
-  min-width:0;
-  border:1px solid #d1d5db;
-  border-radius:11px;
-  padding:13px;
-  font-size:1rem;
-  outline:none;
-}
-
-.search-box input:focus{
-  border-color:#1f4e78;
-  box-shadow:
-    0 0 0 2px
-    rgba(31,78,120,.1);
 }
 
 .search-box button{
-  border:0;
   background:#1f4e78;
   color:#fff;
-  border-radius:11px;
-  padding:0 20px;
-  font-weight:700;
-}
-
-.search-box button:disabled{
-  opacity:.55;
-  cursor:not-allowed;
-}
-
-.search-help{
-  margin-top:9px;
-  font-size:.83rem;
-  color:#6b7280;
-  line-height:1.5;
+  border:0;
+  border-radius:9px;
+  padding:0 18px;
 }
 
 .search-result,
 .pending-card,
-.control-item{
+.control-item,
+.history-card,
+.preventive-card{
   margin-top:11px;
   padding:14px;
   border:1px solid #e5e7eb;
   border-radius:13px;
-  background:#fff;
-  box-shadow:
-    0 2px 5px
-    rgba(0,0,0,.03);
+  background:white;
 }
 
 .search-result-id{
-  font-size:.78rem;
-  font-weight:800;
   color:#1f4e78;
+  font-weight:800;
+  font-size:.8rem;
 }
 
 .search-result-name{
   font-weight:700;
-  margin-top:2px;
 }
 
 .search-result-data{
   margin-top:8px;
-  font-size:.86rem;
-  color:#4b5563;
   line-height:1.55;
+  color:#4b5563;
+  font-size:.86rem;
 }
 
 .open-button{
   display:block;
-  margin-top:11px;
+  margin-top:10px;
   padding:10px;
+  border-radius:9px;
   background:#1f4e78;
-  color:#fff;
+  color:white;
   text-align:center;
   text-decoration:none;
   font-weight:700;
-  border-radius:9px;
 }
 
 
-/* ============================================================
-   OCs PENDENTES
-   ============================================================ */
+/* ==========================================================
+   PENDÊNCIAS OC
+   ========================================================== */
 
-.pending-summary{
+.pending-summary,
+.control-summary{
   display:grid;
-  grid-template-columns:
-    repeat(4,1fr);
+  grid-template-columns:repeat(4,1fr);
   gap:8px;
-  margin-top:14px;
-  margin-bottom:14px;
+  margin:14px 0;
 }
 
-.pending-number{
-  background:#fff;
+.pending-number,
+.control-summary-card{
+  background:white;
   border:1px solid #e5e7eb;
   border-radius:12px;
-  padding:10px;
+  padding:11px;
   text-align:center;
 }
 
-.pending-number strong{
+.pending-number strong,
+.control-summary-card strong{
   display:block;
-  font-size:1.25rem;
+  font-size:1.3rem;
 }
 
-.pending-label{
-  font-size:.72rem;
-  color:#6b7280;
-  margin-top:3px;
+
+/* ==========================================================
+   CONTROLE PREVENTIVAS
+   ========================================================== */
+
+.preventive-login-info{
+  margin-bottom:13px;
+  padding:10px;
+  background:#ecfdf5;
+  border-radius:10px;
+  color:#065f46;
+  font-size:.85rem;
 }
 
-.pending-head{
+.control-header{
   display:flex;
-  justify-content:space-between;
-  gap:10px;
-  align-items:flex-start;
-}
-
-.pending-occurrence{
-  font-weight:800;
-  color:#1f4e78;
-}
-
-.pending-status{
-  border-radius:999px;
-  padding:5px 8px;
-  font-size:.75rem;
-  font-weight:700;
-  white-space:nowrap;
-}
-
-.st-aberta{
-  background:#fee2e2;
-  color:#991b1b;
-}
-
-.st-atendimento{
-  background:#fef3c7;
-  color:#92400e;
-}
-
-.st-aguardando{
-  background:#ffedd5;
-  color:#9a3412;
-}
-
-.pending-description{
-  margin-top:11px;
-  padding-top:9px;
-  border-top:1px dashed #ddd;
-  line-height:1.45;
-}
-
-.elapsed-open{
-  margin-top:5px;
-  font-weight:800;
-  color:#374151;
-}
-
-.elapsed-service{
-  margin-top:5px;
-  font-weight:800;
-  color:#92400e;
-}
-
-
-/* ============================================================
-   CONTROLE PREVENTIVAS 6.8
-   ============================================================ */
-
-.preventive-control-header{
-  display:flex;
+  flex-wrap:wrap;
   gap:10px;
   align-items:end;
-  flex-wrap:wrap;
 }
 
 .control-field{
@@ -478,105 +329,52 @@ h3{
   min-width:180px;
 }
 
-.control-field label{
-  margin-top:0;
-}
-
-.control-refresh{
-  border:0;
-  background:#047857;
-  color:#fff;
-  border-radius:9px;
-  padding:11px 16px;
-  font-weight:700;
-}
-
-.control-summary{
-  display:grid;
-  grid-template-columns:
-    repeat(4,1fr);
-  gap:9px;
-  margin-top:15px;
-}
-
-.control-summary-card{
-  border:1px solid #e5e7eb;
-  background:#fff;
-  border-radius:13px;
-  padding:13px;
-  text-align:center;
-}
-
-.control-summary-card strong{
-  display:block;
-  font-size:1.4rem;
-}
-
-.control-summary-title{
-  margin-top:3px;
-  color:#6b7280;
-  font-size:.75rem;
-}
-
 .progress-box{
   margin-top:14px;
-  background:#fff;
+  padding:13px;
   border:1px solid #e5e7eb;
-  padding:14px;
-  border-radius:13px;
+  border-radius:12px;
+  background:white;
 }
 
 .progress-head{
   display:flex;
   justify-content:space-between;
-  gap:10px;
   font-weight:700;
 }
 
 .progress-track{
+  margin-top:8px;
   height:13px;
-  background:#e5e7eb;
   border-radius:999px;
   overflow:hidden;
-  margin-top:9px;
+  background:#e5e7eb;
 }
 
 .progress-fill{
-  width:0;
   height:100%;
+  width:0;
   background:#059669;
-  border-radius:999px;
-  transition:.3s;
-}
-
-.control-filters{
-  display:grid;
-  grid-template-columns:
-    1fr 1fr;
-  gap:10px;
-  margin-top:14px;
 }
 
 .control-tabs{
   display:flex;
   flex-wrap:wrap;
-  gap:7px;
-  margin-top:14px;
+  gap:8px;
+  margin-top:15px;
 }
 
 .control-tab{
-  border:1px solid #d1d5db;
-  background:#fff;
-  border-radius:999px;
   padding:8px 12px;
+  border:1px solid #d1d5db;
+  border-radius:999px;
+  background:white;
   font-weight:700;
-  font-size:.8rem;
 }
 
 .control-tab.active{
   background:#111827;
-  color:#fff;
-  border-color:#111827;
+  color:white;
 }
 
 .control-item.pending{
@@ -587,22 +385,10 @@ h3{
   border-left:5px solid #059669;
 }
 
-.control-head{
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
-  align-items:flex-start;
-}
-
-.control-id{
-  font-weight:800;
-  color:#1f4e78;
-}
-
 .control-status{
   display:inline-block;
-  border-radius:999px;
   padding:5px 8px;
+  border-radius:999px;
   font-size:.75rem;
   font-weight:800;
 }
@@ -617,116 +403,23 @@ h3{
   color:#166534;
 }
 
-.provider-summary{
-  margin-top:15px;
-}
-
-.provider-card{
-  padding:11px;
-  background:#fff;
-  border:1px solid #e5e7eb;
-  border-radius:11px;
-  margin-top:7px;
-}
-
-.provider-name{
-  font-weight:800;
-}
-
-.provider-data{
-  margin-top:5px;
-  font-size:.82rem;
-  color:#4b5563;
-}
-
-
-/* ============================================================
-   PREVENTIVA DA FICHA
-   ============================================================ */
-
-.preventive-info{
-  background:#ecfdf5;
-  border:1px solid #a7f3d0;
-  border-radius:12px;
-  padding:12px;
-  margin-top:12px;
-}
-
-.preventive-info-line{
-  padding:4px 0;
-  font-size:.9rem;
-}
-
-.preventive-header{
+.control-head{
   display:flex;
-  align-items:flex-start;
   justify-content:space-between;
   gap:10px;
 }
 
-.preventive-id{
-  color:#047857;
-  font-weight:800;
-}
-
-.preventive-status{
-  background:#dcfce7;
-  color:#166534;
-  padding:5px 8px;
-  border-radius:999px;
-  font-size:.75rem;
-  font-weight:700;
+.provider-card{
+  margin-top:8px;
+  padding:10px;
+  border:1px solid #e5e7eb;
+  border-radius:10px;
 }
 
 
-/* ============================================================
-   MODAIS
-   ============================================================ */
-
-.modal{
-  position:fixed;
-  inset:0;
-  display:none;
-  align-items:center;
-  justify-content:center;
-  padding:12px;
-  background:
-    rgba(0,0,0,.45);
-  z-index:999;
-}
-
-.modal-box{
-  width:min(
-    700px,
-    96vw
-  );
-  max-height:92vh;
-  overflow:auto;
-  background:#fff;
-  padding:17px;
-  border-radius:15px;
-  box-shadow:
-    0 20px 50px
-    rgba(0,0,0,.2);
-}
-
-.modal-section{
-  margin-top:18px;
-  padding-top:14px;
-  border-top:1px solid #e5e7eb;
-}
-
-.modal-section-title{
-  font-weight:800;
-  margin-bottom:7px;
-  color:#374151;
-}
-
-.modal-section-help{
-  color:#6b7280;
-  font-size:.82rem;
-  margin-bottom:10px;
-}
+/* ==========================================================
+   FORMULÁRIOS
+   ========================================================== */
 
 label{
   display:grid;
@@ -743,12 +436,6 @@ textarea{
   border:1px solid #d1d5db;
   border-radius:9px;
   font:inherit;
-  background:#fff;
-}
-
-input[readonly]{
-  background:#f3f4f6;
-  color:#4b5563;
 }
 
 textarea{
@@ -756,15 +443,7 @@ textarea{
 }
 
 button{
-  cursor:pointer;
   font:inherit;
-}
-
-.modal-actions{
-  display:flex;
-  justify-content:flex-end;
-  gap:8px;
-  margin-top:15px;
 }
 
 .btn{
@@ -772,16 +451,12 @@ button{
   border-radius:9px;
   padding:11px 15px;
   background:#111827;
-  color:#fff;
+  color:white;
+  cursor:pointer;
 }
 
 .btn-green{
   background:#047857;
-}
-
-.btn:disabled{
-  opacity:.55;
-  cursor:not-allowed;
 }
 
 .btn-secondary{
@@ -789,12 +464,42 @@ button{
   color:#111827;
 }
 
-.photo-box{
-  margin-top:12px;
+.btn:disabled,
+button:disabled{
+  opacity:.55;
+  cursor:not-allowed;
+}
+
+
+/* ==========================================================
+   MODAL
+   ========================================================== */
+
+.modal{
+  position:fixed;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
   padding:12px;
-  border:1px solid #e5e7eb;
-  border-radius:12px;
-  background:#f9fafb;
+  background:rgba(0,0,0,.45);
+  z-index:999;
+}
+
+.modal-box{
+  width:min(700px,96vw);
+  max-height:92vh;
+  overflow:auto;
+  background:white;
+  border-radius:15px;
+  padding:17px;
+}
+
+.modal-actions{
+  display:flex;
+  justify-content:flex-end;
+  gap:8px;
+  margin-top:16px;
 }
 
 .photo-preview{
@@ -802,63 +507,75 @@ button{
   max-width:100%;
   max-height:280px;
   margin-top:10px;
-  border-radius:10px;
-  border:1px solid #e5e7eb;
 }
 
 .current-photo{
   display:none;
-  margin-top:10px;
-}
-
-.current-photo a{
-  display:inline-block;
-  padding:8px 10px;
-  border:1px solid #d1d5db;
-  border-radius:8px;
-  background:#fff;
-  text-decoration:none;
-  color:#1f4e78;
-  font-weight:600;
 }
 
 .message{
   display:none;
-  margin-top:10px;
+  margin-top:12px;
   padding:10px;
   border-radius:8px;
 }
 
-.success{
-  display:block;
-  background:#d1fae5;
-  color:#065f46;
-}
-
-.error{
+.message.error{
   display:block;
   background:#fee2e2;
   color:#991b1b;
 }
 
-.loading{
+.message.loading{
   display:block;
   background:#fef3c7;
   color:#92400e;
 }
 
-.remember-info{
-  margin-top:7px;
-  color:#6b7280;
-  font-size:.78rem;
+.message.success{
+  display:block;
+  background:#d1fae5;
+  color:#065f46;
+}
+
+.preventive-info{
+  padding:11px;
+  border:1px solid #a7f3d0;
+  border-radius:10px;
+  background:#ecfdf5;
+}
+
+.tag{
+  display:inline-block;
+  margin:5px 4px 5px 0;
+  padding:4px 8px;
+  background:#eef2ff;
+  border-radius:999px;
+  font-size:.75rem;
+}
+
+.preventive-card{
+  background:#f0fdf4;
+}
+
+.preventive-id{
+  color:#047857;
+  font-weight:800;
+}
+
+.audit-box{
+  margin-top:10px;
+  padding:9px;
+  background:#f3f4f6;
+  border-radius:8px;
+  font-size:.82rem;
 }
 
 .footer{
   margin-top:20px;
+  text-align:center;
   color:#9ca3af;
   font-size:.72rem;
-  text-align:center;
-  padding-bottom:10px;
 }
 
 iframe{
@@ -877,10 +594,6 @@ iframe{
     grid-template-columns:1fr 1fr;
   }
 
-  .control-filters{
-    grid-template-columns:1fr;
-  }
-
   .search-box{
     display:grid;
   }
@@ -889,25 +602,23 @@ iframe{
     padding:12px;
   }
 
+  .actions{
+    flex-direction:column;
+    align-items:center;
+  }
+
+  .chip,
+  .btn-preventive,
+  .btn-search{
+    width:min(100%,360px);
+  }
+
   .modal-actions{
     flex-direction:column-reverse;
   }
 
   .modal-actions button{
     width:100%;
-  }
-
-  .pending-head,
-  .preventive-header,
-  .control-head{
-    display:block;
-  }
-
-  .pending-status,
-  .preventive-status,
-  .control-status{
-    display:inline-block;
-    margin-top:6px;
   }
 
 }
@@ -919,20 +630,17 @@ iframe{
 
 <body>
 
-
 <div class="container">
 
 
-<!-- =========================================================
+<!-- ========================================================
      EQBUSCA
-     ========================================================= -->
+     ======================================================== -->
 
 <div
   id="searchScreen"
   class="hidden"
 >
-
-<div class="search-header">
 
 <div class="search-title">
 QRManut
@@ -942,14 +650,11 @@ QRManut
 Gestão rápida de manutenção
 </div>
 
-</div>
-
 
 <div class="menu-busca">
 
 <button
   id="tabSearch"
-  type="button"
   class="menu-button active"
 >
 🔎 Buscar ativos
@@ -957,22 +662,19 @@ Gestão rápida de manutenção
 
 <button
   id="tabPending"
-  type="button"
-  class="menu-button pending"
+  class="menu-button"
 >
 ⚠️ OCs pendentes
 </button>
 
 <button
-  id="tabPreventiveControl"
-  type="button"
+  id="tabPreventive"
   class="menu-button preventive"
 >
 🛠️ Preventivas
 </button>
 
 </div>
-
 
 
 <!-- BUSCA -->
@@ -985,41 +687,21 @@ Gestão rápida de manutenção
 
 <input
   id="searchInput"
-  type="search"
-  placeholder="ID, equipamento, ambiente, pavimento ou localização..."
-  autocomplete="off"
+  placeholder="ID, equipamento, ambiente, localização..."
 >
 
-<button
-  id="searchButton"
-  type="button"
->
+<button id="searchButton">
 Buscar
 </button>
 
 </div>
 
-
-<div class="search-help">
-
-Você pode pesquisar por
-<strong>
-ID, equipamento, fabricante, modelo, ambiente, pavimento ou localização.
-</strong>
-
-<br>
-
-A busca não diferencia letras maiúsculas de minúsculas.
-
 </div>
-
-</div>
-
 
 <div
   id="searchStatus"
   class="muted"
-  style="margin-top:15px"
+  style="margin-top:12px"
 ></div>
 
 <div id="searchResults"></div>
@@ -1027,24 +709,18 @@ A busca não diferencia letras maiúsculas de minúsculas.
 </div>
 
 
-
-<!-- OCs PENDENTES -->
+<!-- OC PENDENTES -->
 
 <div
   id="pendingArea"
   class="hidden"
 >
 
-<div
-  id="pendingStatus"
-  class="muted"
->
-Carregando ocorrências pendentes...
-</div>
+<div id="pendingStatus"></div>
 
 <div
   id="pendingSummary"
-  class="pending-summary hidden"
+  class="pending-summary"
 ></div>
 
 <div id="pendingResults"></div>
@@ -1052,27 +728,27 @@ Carregando ocorrências pendentes...
 </div>
 
 
-
-<!-- =========================================================
-     CONTROLE PREVENTIVAS 6.8
-     ========================================================= -->
+<!-- CONTROLE PREVENTIVA -->
 
 <div
   id="preventiveControlArea"
   class="hidden"
 >
 
-
 <div class="card">
 
 
-<div class="preventive-control-header">
+<div
+  id="preventiveLoggedInfo"
+  class="preventive-login-info"
+></div>
 
+
+<div class="control-header">
 
 <div class="control-field">
 
 <label>
-
 Competência
 
 <input
@@ -1088,13 +764,12 @@ Competência
 <div class="control-field">
 
 <label>
-
 Prestador
 
 <select id="controlProvider">
 
 <option value="">
-Todos os prestadores
+Todos
 </option>
 
 </select>
@@ -1106,45 +781,32 @@ Todos os prestadores
 
 <button
   id="controlRefresh"
-  type="button"
-  class="control-refresh"
+  class="btn btn-green"
 >
 Atualizar
 </button>
 
 
-</div>
-
-
-<div
-  id="controlCompetenceTitle"
-  style="
-    margin-top:15px;
-    font-weight:800;
-    font-size:1.1rem;
-  "
-></div>
-
-
-<div
-  id="controlStatus"
-  class="muted"
-  style="margin-top:5px"
+<button
+  id="preventiveLogout"
+  class="btn btn-secondary"
 >
-Selecione uma competência para consultar.
+Sair
+</button>
+
 </div>
+
+
+<h3 id="controlTitle"></h3>
 
 
 <div
   id="controlSummary"
-  class="control-summary hidden"
+  class="control-summary"
 ></div>
 
 
-<div
-  id="controlProgress"
-  class="progress-box hidden"
->
+<div class="progress-box">
 
 <div class="progress-head">
 
@@ -1152,17 +814,16 @@ Selecione uma competência para consultar.
 Conclusão mensal
 </span>
 
-<span id="controlProgressText">
+<span id="progressText">
 0%
 </span>
 
 </div>
 
-
 <div class="progress-track">
 
 <div
-  id="controlProgressFill"
+  id="progressFill"
   class="progress-fill"
 ></div>
 
@@ -1173,39 +834,27 @@ Conclusão mensal
 
 <div
   id="providerSummary"
-  class="provider-summary hidden"
->
-
-<h3>
-Resumo por Prestador
-</h3>
-
-<div id="providerSummaryResults"></div>
-
-</div>
+></div>
 
 
 <div class="control-tabs">
 
 <button
-  id="controlTabAll"
-  type="button"
+  id="controlAll"
   class="control-tab active"
 >
 Todos
 </button>
 
 <button
-  id="controlTabPending"
-  type="button"
+  id="controlPending"
   class="control-tab"
 >
 🔴 Pendentes
 </button>
 
 <button
-  id="controlTabDone"
-  type="button"
+  id="controlDone"
   class="control-tab"
 >
 ✅ Realizadas
@@ -1220,7 +869,6 @@ Todos
   style="margin-top:12px"
 ></div>
 
-
 <div id="controlResults"></div>
 
 
@@ -1233,9 +881,9 @@ Todos
 
 
 
-<!-- =========================================================
-     FICHA ATIVO
-     ========================================================= -->
+<!-- ========================================================
+     FICHA
+     ======================================================== -->
 
 <div
   id="assetScreen"
@@ -1267,9 +915,7 @@ Carregando...
 <div
   id="statusTitle"
   class="status-title"
->
-Carregando situação...
-</div>
+></div>
 
 <div
   id="statusInfo"
@@ -1332,11 +978,12 @@ Gestão do Ativo
 </div>
 
 
+<!-- BOTÕES CENTRALIZADOS -->
+
 <div class="actions">
 
 <button
   id="reportButton"
-  type="button"
   class="chip"
 >
 Reportar Serviço / Anomalia / Reparo
@@ -1344,22 +991,19 @@ Reportar Serviço / Anomalia / Reparo
 
 <button
   id="preventiveButton"
-  type="button"
   class="btn-preventive hidden"
 >
-🛠️ Registrar preventiva
+🛠️ Registrar Preventiva
 </button>
 
 <button
   id="searchAssetsButton"
-  type="button"
   class="btn-search"
 >
-🔎 Buscar ativos
+🔎 Buscar Ativos
 </button>
 
 </div>
-
 
 
 <div class="section">
@@ -1376,13 +1020,11 @@ Histórico de Manutenção
 <select
   id="historySelect"
   class="hidden"
-  style="margin-top:10px"
 ></select>
 
 <div id="historyDetail"></div>
 
 </div>
-
 
 
 <div
@@ -1397,7 +1039,9 @@ Histórico de Manutenção
 <div
   id="preventiveHistoryStatus"
   class="muted"
-></div>
+>
+Login necessário para visualizar.
+</div>
 
 <div id="preventiveHistory"></div>
 
@@ -1410,149 +1054,55 @@ Histórico de Manutenção
 
 
 
-<!-- =========================================================
-     MODAL NOVA OC
-     ========================================================= -->
+<!-- ========================================================
+     LOGIN PREVENTIVA
+     ======================================================== -->
 
 <div
-  id="reportModal"
+  id="preventiveLoginModal"
   class="modal"
 >
 
 <div class="modal-box">
 
 <h2>
-Reportar Serviço / Anomalia / Reparo
+🔐 Acesso às Preventivas
 </h2>
 
 
+<div
+  id="loginProviderInfo"
+  class="preventive-info hidden"
+></div>
+
+
 <label>
 
-Seu nome *
+Usuário
 
 <input
-  id="reporterName"
-  type="text"
-  autocomplete="name"
+  id="preventiveUsername"
+  autocomplete="username"
 >
 
 </label>
 
-<div class="remember-info">
-O sistema lembrará este nome neste aparelho.
-</div>
-
 
 <label>
 
-Contato
+Senha
 
 <input
-  id="reporterContact"
-  type="text"
+  id="preventivePassword"
+  type="password"
+  autocomplete="current-password"
 >
 
 </label>
 
-
-<label>
-
-Categoria da ocorrência *
-
-<select id="category">
-
-<option value="">
-Selecione...
-</option>
-
-<option value="Civil">Civil</option>
-<option value="Sanitário">Sanitário</option>
-<option value="Elétrica">Elétrica</option>
-<option value="Hidráulica">Hidráulica</option>
-<option value="Climatização">Climatização</option>
-<option value="Refrigeração">Refrigeração</option>
-<option value="Utilidades">Utilidades</option>
-<option value="Segurança">Segurança</option>
-<option value="Mobiliário">Mobiliário</option>
-<option value="Equipamento">Equipamento</option>
-<option value="Outros">Outros</option>
-
-</select>
-
-</label>
-
-
-<label>
-
-Componente afetado *
-
-<select id="component">
-
-<option value="">
-Selecione...
-</option>
-
-<option value="Geral">Geral</option>
-<option value="Piso">Piso</option>
-<option value="Parede">Parede</option>
-<option value="Teto">Teto</option>
-<option value="Porta">Porta</option>
-<option value="Janela">Janela</option>
-<option value="Vaso Sanitário">Vaso Sanitário</option>
-<option value="Pia">Pia</option>
-<option value="Torneira">Torneira</option>
-<option value="Descarga">Descarga</option>
-<option value="Mictório">Mictório</option>
-<option value="Ralo">Ralo</option>
-<option value="Luminária">Luminária</option>
-<option value="Tomada">Tomada</option>
-<option value="Interruptor">Interruptor</option>
-<option value="Tubulação">Tubulação</option>
-<option value="Registro">Registro</option>
-<option value="Bomba">Bomba</option>
-<option value="Motor">Motor</option>
-<option value="Painel">Painel</option>
-<option value="Ar-condicionado">Ar-condicionado</option>
-<option value="Mobiliário">Mobiliário</option>
-<option value="Outro">Outro</option>
-
-</select>
-
-</label>
-
-
-<label>
-
-Descrição *
-
-<textarea
-  id="description"
-  rows="5"
-></textarea>
-
-</label>
-
-
-<label>
-
-Foto da ocorrência
-
-<input
-  id="photoInput"
-  type="file"
-  accept="image/*"
-  capture="environment"
->
-
-</label>
-
-<img
-  id="photoPreview"
-  class="photo-preview"
->
 
 <div
-  id="reportMessage"
+  id="loginMessage"
   class="message"
 ></div>
 
@@ -1560,19 +1110,17 @@ Foto da ocorrência
 <div class="modal-actions">
 
 <button
-  id="cancelReport"
-  type="button"
+  id="cancelLogin"
   class="btn btn-secondary"
 >
 Cancelar
 </button>
 
 <button
-  id="sendReport"
-  type="button"
-  class="btn"
+  id="sendLogin"
+  class="btn btn-green"
 >
-Gravar ocorrência
+Entrar
 </button>
 
 </div>
@@ -1583,9 +1131,9 @@ Gravar ocorrência
 
 
 
-<!-- =========================================================
+<!-- ========================================================
      MODAL PREVENTIVA
-     ========================================================= -->
+     ======================================================== -->
 
 <div
   id="preventiveModal"
@@ -1601,39 +1149,24 @@ Gravar ocorrência
 
 <div class="preventive-info">
 
-<div class="preventive-info-line">
-
+<div>
 <b>Ativo:</b>
-
 <span id="preventiveAsset"></span>
-
 </div>
 
-
-<div class="preventive-info-line">
-
+<div>
 <b>Periodicidade:</b>
-
 <span id="preventivePeriodicity"></span>
-
 </div>
 
-
-<div class="preventive-info-line">
-
+<div>
 <b>Prestador:</b>
-
 <span id="preventiveProvider"></span>
-
 </div>
 
-
-<div class="preventive-info-line">
-
+<div>
 <b>Competência:</b>
-
 <span id="preventiveCompetence"></span>
-
 </div>
 
 </div>
@@ -1645,15 +1178,9 @@ Responsável pela preventiva *
 
 <input
   id="preventiveResponsible"
-  type="text"
-  autocomplete="name"
 >
 
 </label>
-
-<div class="remember-info">
-Seu nome fica salvo neste aparelho.
-</div>
 
 
 <label>
@@ -1663,22 +1190,14 @@ Observação
 <textarea
   id="preventiveObservation"
   rows="5"
-  placeholder="Ex.: Preventiva mensal realizada. Equipamento funcionando normalmente."
 ></textarea>
 
 </label>
 
 
-<div class="photo-box">
-
-<div style="font-weight:700">
-📷 Foto / evidência da preventiva
-</div>
-
-
 <label>
 
-Tirar ou selecionar foto
+Foto / evidência
 
 <input
   id="preventivePhotoInput"
@@ -1695,8 +1214,6 @@ Tirar ou selecionar foto
   class="photo-preview"
 >
 
-</div>
-
 
 <div
   id="preventiveMessage"
@@ -1708,7 +1225,6 @@ Tirar ou selecionar foto
 
 <button
   id="cancelPreventive"
-  type="button"
   class="btn btn-secondary"
 >
 Cancelar
@@ -1716,7 +1232,6 @@ Cancelar
 
 <button
   id="savePreventive"
-  type="button"
   class="btn btn-green"
 >
 Registrar preventiva
@@ -1730,9 +1245,157 @@ Registrar preventiva
 
 
 
-<!-- =========================================================
-     MODAL GERENCIAMENTO OC
-     ========================================================= -->
+<!-- ========================================================
+     MODAL OC
+     ======================================================== -->
+
+<div
+  id="reportModal"
+  class="modal"
+>
+
+<div class="modal-box">
+
+<h2>
+Reportar Serviço / Anomalia / Reparo
+</h2>
+
+
+<label>
+Seu nome *
+
+<input id="reporterName">
+</label>
+
+
+<label>
+Contato
+
+<input id="reporterContact">
+</label>
+
+
+<label>
+Categoria *
+
+<select id="category">
+
+<option value="">Selecione...</option>
+<option>Civil</option>
+<option>Sanitário</option>
+<option>Elétrica</option>
+<option>Hidráulica</option>
+<option>Climatização</option>
+<option>Refrigeração</option>
+<option>Utilidades</option>
+<option>Segurança</option>
+<option>Mobiliário</option>
+<option>Equipamento</option>
+<option>Outros</option>
+
+</select>
+
+</label>
+
+
+<label>
+Componente *
+
+<select id="component">
+
+<option value="">Selecione...</option>
+<option>Geral</option>
+<option>Piso</option>
+<option>Parede</option>
+<option>Teto</option>
+<option>Porta</option>
+<option>Janela</option>
+<option>Vaso Sanitário</option>
+<option>Pia</option>
+<option>Torneira</option>
+<option>Descarga</option>
+<option>Mictório</option>
+<option>Ralo</option>
+<option>Luminária</option>
+<option>Tomada</option>
+<option>Interruptor</option>
+<option>Tubulação</option>
+<option>Registro</option>
+<option>Bomba</option>
+<option>Motor</option>
+<option>Painel</option>
+<option>Ar-condicionado</option>
+<option>Mobiliário</option>
+<option>Outro</option>
+
+</select>
+
+</label>
+
+
+<label>
+Descrição *
+
+<textarea
+  id="description"
+  rows="5"
+></textarea>
+
+</label>
+
+
+<label>
+Foto
+
+<input
+  id="photoInput"
+  type="file"
+  accept="image/*"
+  capture="environment"
+>
+
+</label>
+
+
+<img
+  id="photoPreview"
+  class="photo-preview"
+>
+
+
+<div
+  id="reportMessage"
+  class="message"
+></div>
+
+
+<div class="modal-actions">
+
+<button
+  id="cancelReport"
+  class="btn btn-secondary"
+>
+Cancelar
+</button>
+
+<button
+  id="sendReport"
+  class="btn"
+>
+Gravar ocorrência
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<!-- ========================================================
+     GERENCIAR OC
+     ======================================================== -->
 
 <div
   id="manageModal"
@@ -1747,128 +1410,78 @@ Gerenciar ocorrência
 
 
 <label>
+Alterado por *
 
-Seu nome / Alterado por *
-
-<input
-  id="manageChangedBy"
-  type="text"
->
-
-</label>
-
-<div class="remember-info">
-O último nome utilizado fica salvo neste aparelho.
-</div>
-
-
-<div class="modal-section">
-
-<div class="modal-section-title">
-Dados da abertura
-</div>
-
-
-<label>
-
-Categoria da ocorrência *
-
-<select id="manageCategory">
-
-<option value="Civil">Civil</option>
-<option value="Sanitário">Sanitário</option>
-<option value="Elétrica">Elétrica</option>
-<option value="Hidráulica">Hidráulica</option>
-<option value="Climatização">Climatização</option>
-<option value="Refrigeração">Refrigeração</option>
-<option value="Utilidades">Utilidades</option>
-<option value="Segurança">Segurança</option>
-<option value="Mobiliário">Mobiliário</option>
-<option value="Equipamento">Equipamento</option>
-<option value="Outros">Outros</option>
-
-</select>
-
+<input id="manageChangedBy">
 </label>
 
 
 <label>
+Categoria
 
-Componente afetado *
-
-<select id="manageComponent">
-
-<option value="Geral">Geral</option>
-<option value="Piso">Piso</option>
-<option value="Parede">Parede</option>
-<option value="Teto">Teto</option>
-<option value="Porta">Porta</option>
-<option value="Janela">Janela</option>
-<option value="Vaso Sanitário">Vaso Sanitário</option>
-<option value="Pia">Pia</option>
-<option value="Torneira">Torneira</option>
-<option value="Descarga">Descarga</option>
-<option value="Mictório">Mictório</option>
-<option value="Ralo">Ralo</option>
-<option value="Luminária">Luminária</option>
-<option value="Tomada">Tomada</option>
-<option value="Interruptor">Interruptor</option>
-<option value="Tubulação">Tubulação</option>
-<option value="Registro">Registro</option>
-<option value="Bomba">Bomba</option>
-<option value="Motor">Motor</option>
-<option value="Painel">Painel</option>
-<option value="Ar-condicionado">Ar-condicionado</option>
-<option value="Mobiliário">Mobiliário</option>
-<option value="Outro">Outro</option>
-
-</select>
-
+<select id="manageCategory"></select>
 </label>
 
 
 <label>
+Componente
 
-Descrição *
+<select id="manageComponent"></select>
+</label>
+
+
+<label>
+Descrição
 
 <textarea
   id="manageDescription"
-  rows="5"
+  rows="4"
 ></textarea>
 
 </label>
 
 
-<div class="photo-box">
+<label>
+Status
 
-<div style="font-weight:700">
-📷 Foto da ocorrência
-</div>
+<select id="manageStatus">
 
-<div
-  id="currentOccurrencePhoto"
-  class="current-photo"
->
+<option>Aberta</option>
+<option>Em atendimento</option>
+<option>Aguardando peça</option>
+<option>Concluída</option>
+<option>Cancelada</option>
 
-<a
-  id="currentOccurrencePhotoLink"
-  target="_blank"
->
-Ver foto atual
-</a>
+</select>
 
-</div>
+</label>
 
 
 <label>
+Responsável
 
-Adicionar ou substituir foto
+<input id="manageResponsible">
+</label>
+
+
+<label>
+Solução
+
+<textarea
+  id="manageSolution"
+  rows="4"
+></textarea>
+
+</label>
+
+
+<label>
+Foto da ocorrência
 
 <input
   id="manageOccurrencePhotoInput"
   type="file"
   accept="image/*"
-  capture="environment"
 >
 
 </label>
@@ -1879,77 +1492,19 @@ Adicionar ou substituir foto
   class="photo-preview"
 >
 
-</div>
-
-</div>
-
-
-<div class="modal-section">
-
-<div class="modal-section-title">
-Tratamento da ocorrência
-</div>
-
-
-<label>
-
-Status
-
-<select id="manageStatus">
-
-<option value="Aberta">Aberta</option>
-<option value="Em atendimento">Em atendimento</option>
-<option value="Aguardando peça">Aguardando peça</option>
-<option value="Concluída">Concluída</option>
-<option value="Cancelada">Cancelada</option>
-
-</select>
-
-</label>
-
-
-<label>
-
-Responsável
-
-<input
-  id="manageResponsible"
-  type="text"
->
-
-</label>
-
-
-<label>
-
-Solução / Serviço realizado
-
-<textarea
-  id="manageSolution"
-  rows="5"
-></textarea>
-
-</label>
-
 
 <div
   id="conclusionPhotoArea"
-  class="hidden photo-box"
+  class="hidden"
 >
 
-<div style="font-weight:700">
-✅ Foto após o serviço
-</div>
-
 <label>
-
-Adicionar ou substituir foto
+Foto da conclusão
 
 <input
   id="conclusionPhotoInput"
   type="file"
   accept="image/*"
-  capture="environment"
 >
 
 </label>
@@ -1958,8 +1513,6 @@ Adicionar ou substituir foto
   id="conclusionPhotoPreview"
   class="photo-preview"
 >
-
-</div>
 
 </div>
 
@@ -1974,7 +1527,6 @@ Adicionar ou substituir foto
 
 <button
   id="cancelManage"
-  type="button"
   class="btn btn-secondary"
 >
 Cancelar
@@ -1982,10 +1534,9 @@ Cancelar
 
 <button
   id="saveManage"
-  type="button"
   class="btn"
 >
-Salvar alterações
+Salvar
 </button>
 
 </div>
@@ -1996,9 +1547,9 @@ Salvar alterações
 
 
 
-<!-- =========================================================
+<!-- ========================================================
      FORMS
-     ========================================================= -->
+     ======================================================== -->
 
 <form
   id="reportForm"
@@ -2009,7 +1560,6 @@ Salvar alterações
 
 <input name="token" id="p_token">
 <input name="id" id="p_id">
-<input name="nomeEquipamento" id="p_name">
 <input name="reportadoPor" id="p_reporter">
 <input name="contato" id="p_contact">
 <input name="categoriaOcorrencia" id="p_category">
@@ -2035,8 +1585,12 @@ Salvar alterações
 >
 
 <input name="token" id="pr_token">
-
 <input name="id" id="pr_id">
+
+<input
+  name="preventiveSessionToken"
+  id="pr_session"
+>
 
 <input
   name="preventiveResponsible"
@@ -2073,11 +1627,7 @@ Salvar alterações
   style="display:none"
 >
 
-<input
-  name="action"
-  value="updateOccurrence"
->
-
+<input name="action" value="updateOccurrence">
 <input name="token" id="m_token">
 <input name="ocorrencia" id="m_occurrence">
 <input name="status" id="m_status">
@@ -2114,20 +1664,19 @@ Salvar alterações
 
 
 <div class="footer">
-QRManut • Versão 6.8
+QRManut • Versão 6.9
 </div>
 
 
 </div>
-
 
 
 <script>
 
 
-/* ============================================================
-   CONFIGURAÇÃO
-   ============================================================ */
+/* ==========================================================
+   CONFIG
+   ========================================================== */
 
 const API_URL =
 "https://script.google.com/macros/s/AKfycbx4tpC42Q6WdkNhTUTAGoZWvG5M24zwlNscnwbDP5B3Q5pWo8B32-Lf0rQ2Xtua1AFMAQ/exec";
@@ -2137,8 +1686,12 @@ const TOKEN =
 "pncqalpha123";
 
 
-const SEARCH_ID =
-"EQBUSCA";
+const RESPONSIBLE_KEY =
+"qrmanut_responsavel";
+
+
+const PREVENTIVE_SESSION_KEY =
+"qrmanut_preventive_session";
 
 
 const MAX_DIM =
@@ -2149,73 +1702,100 @@ const QUALITY =
 0.72;
 
 
-const RESPONSIBLE_STORAGE_KEY =
-"qrmanut_responsavel";
-
-
-/* ============================================================
+/* ==========================================================
    ESTADO
-   ============================================================ */
+   ========================================================== */
 
 let currentAsset =
 null;
 
+
 let history =
 [];
 
-let preventiveHistory =
-[];
 
 let selectedOccurrence =
 null;
 
-let photoData =
-null;
-
-let conclusionPhotoData =
-null;
-
-let occurrenceCorrectionPhotoData =
-null;
-
-let preventivePhotoData =
-null;
-
-let reportPosting =
-false;
-
-let managePosting =
-false;
-
-let preventivePosting =
-false;
-
-
-/* CONTROLE 6.8 */
 
 let preventiveControlData =
 null;
+
 
 let preventiveControlMode =
 "all";
 
 
-/* ============================================================
+let preventiveSession =
+null;
+
+
+let loginNextAction =
+null;
+
+
+let photoData =
+null;
+
+
+let preventivePhotoData =
+null;
+
+
+let correctionPhotoData =
+null;
+
+
+let conclusionPhotoData =
+null;
+
+
+let reportPosting =
+false;
+
+
+let preventivePosting =
+false;
+
+
+let managePosting =
+false;
+
+
+/* ==========================================================
    HELPERS
-   ============================================================ */
+   ========================================================== */
 
 function $(id){
 
-  return document.getElementById(
-    id
-  );
+  return document.getElementById(id);
 }
 
 
-function esc(s){
+function show(id){
+
+  $(id)
+    .classList
+    .remove(
+      "hidden"
+    );
+}
+
+
+function hide(id){
+
+  $(id)
+    .classList
+    .add(
+      "hidden"
+    );
+}
+
+
+function esc(value){
 
   return String(
-    s ?? ""
+    value ?? ""
   )
   .replace(/&/g,"&amp;")
   .replace(/</g,"&lt;")
@@ -2242,69 +1822,9 @@ function getId(){
     new URLSearchParams(
       location.search
     )
-    .get(
-      "id"
-    )
+    .get("id")
 
   );
-}
-
-
-function show(id){
-
-  $(id)
-    .classList
-    .remove(
-      "hidden"
-    );
-}
-
-
-function hide(id){
-
-  $(id)
-    .classList
-    .add(
-      "hidden"
-    );
-}
-
-
-function valueExists(v){
-
-  return (
-    v !== null &&
-    v !== undefined &&
-    String(v).trim() !== ""
-  );
-}
-
-
-function pairs(items){
-
-  return items
-    .filter(
-      item =>
-        valueExists(
-          item[1]
-        )
-    )
-    .map(
-      item => `
-
-        <div class="pair">
-
-          <b>
-            ${esc(item[0])}:
-          </b>
-
-          ${esc(item[1])}
-
-        </div>
-
-      `
-    )
-    .join("");
 }
 
 
@@ -2317,45 +1837,34 @@ function formatDate(value){
 
 
   const d =
-    new Date(
-      value
-    );
+    new Date(value);
 
 
   if (
     isNaN(d)
   ){
 
-    return String(
-      value
-    );
+    return value;
   }
 
 
   return d.toLocaleString(
-    "pt-BR",
-    {
-      day:"2-digit",
-      month:"2-digit",
-      year:"numeric",
-      hour:"2-digit",
-      minute:"2-digit"
-    }
+    "pt-BR"
   );
 }
 
 
-function competenciaAtual(){
+function currentCompetence(){
 
-  const agora =
+  const d =
     new Date();
 
 
   return (
-    agora.getFullYear() +
+    d.getFullYear() +
     "-" +
     String(
-      agora.getMonth() + 1
+      d.getMonth() + 1
     )
     .padStart(
       2,
@@ -2365,123 +1874,45 @@ function competenciaAtual(){
 }
 
 
-function tempoDecorrido(dataInicial){
+function pairs(items){
 
-  if (!dataInicial){
-
-    return "";
-  }
-
-
-  const inicio =
-    new Date(
-      dataInicial
-    );
-
-
-  if (
-    isNaN(inicio)
-  ){
-
-    return "";
-  }
-
-
-  let diff =
-    Date.now() -
-    inicio.getTime();
-
-
-  if (
-    diff < 0
-  ){
-
-    diff = 0;
-  }
-
-
-  const minutos =
-    Math.floor(
-      diff / 60000
-    );
-
-
-  const horas =
-    Math.floor(
-      diff / 3600000
-    );
-
-
-  const dias =
-    Math.floor(
-      diff / 86400000
-    );
-
-
-  if (
-    minutos < 1
-  ){
-
-    return "menos de 1 minuto";
-  }
-
-
-  if (
-    minutos < 60
-  ){
-
-    return (
-      minutos +
-      (
-        minutos === 1
-          ? " minuto"
-          : " minutos"
-      )
-    );
-  }
-
-
-  if (
-    horas < 24
-  ){
-
-    return (
-      horas +
-      (
-        horas === 1
-          ? " hora"
-          : " horas"
-      )
-    );
-  }
-
-
-  return (
-    dias +
-    (
-      dias === 1
-        ? " dia"
-        : " dias"
+  return items
+    .filter(
+      item =>
+        item[1] !== "" &&
+        item[1] !== null &&
+        item[1] !== undefined
     )
-  );
+    .map(
+      item => `
+
+        <div class="pair">
+
+          <b>${esc(item[0])}:</b>
+
+          ${esc(item[1])}
+
+        </div>
+
+      `
+    )
+    .join("");
 }
 
 
-
-/* ============================================================
+/* ==========================================================
    RESPONSÁVEL LOCAL
-   ============================================================ */
+   ========================================================== */
 
 function getSavedResponsible(){
 
   try{
 
-    return String(
+    return (
       localStorage.getItem(
-        RESPONSIBLE_STORAGE_KEY
+        RESPONSIBLE_KEY
       ) || ""
-    )
-    .trim();
+    );
 
   }catch(error){
 
@@ -2492,14 +1923,7 @@ function getSavedResponsible(){
 
 function saveResponsible(name){
 
-  const nome =
-    String(
-      name || ""
-    )
-    .trim();
-
-
-  if (!nome){
+  if (!name){
 
     return;
   }
@@ -2508,903 +1932,349 @@ function saveResponsible(name){
   try{
 
     localStorage.setItem(
-      RESPONSIBLE_STORAGE_KEY,
-      nome
+      RESPONSIBLE_KEY,
+      name
     );
+
+  }catch(error){}
+}
+
+
+/* ==========================================================
+   SESSÃO PREVENTIVA
+   ========================================================== */
+
+function savePreventiveSession(data){
+
+  preventiveSession =
+    data;
+
+
+  sessionStorage.setItem(
+    PREVENTIVE_SESSION_KEY,
+    JSON.stringify(
+      data
+    )
+  );
+}
+
+
+function readPreventiveSession(){
+
+  try{
+
+    const raw =
+      sessionStorage.getItem(
+        PREVENTIVE_SESSION_KEY
+      );
+
+
+    preventiveSession =
+      raw
+        ? JSON.parse(raw)
+        : null;
 
   }catch(error){
 
-    console.warn(
-      error
-    );
+    preventiveSession =
+      null;
   }
 }
 
 
-function fillSavedResponsible(){
+function clearPreventiveSession(){
 
-  const name =
-    getSavedResponsible();
-
-
-  if (!name){
-
-    return;
-  }
+  preventiveSession =
+    null;
 
 
-  $("reporterName").value =
-    name;
-
-
-  $("preventiveResponsible").value =
-    name;
-
-
-  $("manageChangedBy").value =
-    name;
+  sessionStorage.removeItem(
+    PREVENTIVE_SESSION_KEY
+  );
 }
 
 
-
-/* ============================================================
-   API
-   ============================================================ */
+/* ==========================================================
+   API GET
+   ========================================================== */
 
 async function api(params){
 
-  const url =
-
-    API_URL +
-
-    "?" +
-
-    new URLSearchParams(
-
-      Object.assign(
-
-        {
-          token:TOKEN
-        },
-
-        params
-
-      )
-
-    ).toString();
-
-
   const response =
     await fetch(
-      url
+
+      API_URL +
+
+      "?" +
+
+      new URLSearchParams({
+
+        token:TOKEN,
+
+        ...params
+
+      })
+
     );
-
-
-  if (
-    !response.ok
-  ){
-
-    throw new Error(
-      "Erro HTTP " +
-      response.status
-    );
-  }
 
 
   return response.json();
 }
 
 
+/* ==========================================================
+   API POST
+   ========================================================== */
 
-/* ============================================================
-   TABS EQBUSCA
-   ============================================================ */
+async function apiPost(params){
 
-function clearMainTabs(){
+  const body =
+    new URLSearchParams({
 
-  $("tabSearch")
-    .classList
-    .remove(
-      "active"
+      token:TOKEN,
+
+      ...params
+
+    });
+
+
+  const response =
+    await fetch(
+      API_URL,
+      {
+        method:"POST",
+
+        headers:{
+          "Content-Type":
+            "application/x-www-form-urlencoded;charset=UTF-8"
+        },
+
+        body:
+          body.toString()
+      }
     );
 
 
-  $("tabPending")
-    .classList
-    .remove(
-      "active"
-    );
-
-
-  $("tabPreventiveControl")
-    .classList
-    .remove(
-      "active"
-    );
-
-
-  hide(
-    "searchArea"
-  );
-
-
-  hide(
-    "pendingArea"
-  );
-
-
-  hide(
-    "preventiveControlArea"
-  );
+  return response.json();
 }
 
 
-function openSearch(){
+/* ==========================================================
+   VALIDAR SESSÃO
+   ========================================================== */
 
-  hide(
-    "assetScreen"
-  );
-
-
-  show(
-    "searchScreen"
-  );
-
-
-  showSearchTab();
-}
-
-
-function showSearchTab(){
-
-  clearMainTabs();
-
-
-  $("tabSearch")
-    .classList
-    .add(
-      "active"
-    );
-
-
-  show(
-    "searchArea"
-  );
-}
-
-
-async function showPendingTab(){
-
-  clearMainTabs();
-
-
-  $("tabPending")
-    .classList
-    .add(
-      "active"
-    );
-
-
-  show(
-    "pendingArea"
-  );
-
-
-  await loadPending();
-}
-
-
-async function showPreventiveControlTab(){
-
-  clearMainTabs();
-
-
-  $("tabPreventiveControl")
-    .classList
-    .add(
-      "active"
-    );
-
-
-  show(
-    "preventiveControlArea"
-  );
-
+async function sessionIsValid(){
 
   if (
-    !$("controlCompetence").value
+    !preventiveSession ||
+    !preventiveSession.sessionToken
   ){
 
-    $("controlCompetence").value =
-      competenciaAtual();
+    return false;
   }
 
 
-  await loadPreventiveControl();
+  try{
+
+    const result =
+      await api({
+
+        action:
+          "preventivesession",
+
+        session:
+          preventiveSession.sessionToken
+
+      });
+
+
+    if (
+      !result.ok
+    ){
+
+      clearPreventiveSession();
+
+      return false;
+    }
+
+
+    return true;
+
+  }catch(error){
+
+    clearPreventiveSession();
+
+    return false;
+  }
 }
 
 
+/* ==========================================================
+   LOGIN
+   ========================================================== */
 
-/* ============================================================
-   BUSCA
-   ============================================================ */
+async function requirePreventiveLogin(
+  nextAction,
+  provider
+){
 
-async function searchAssets(){
+  const valid =
+    await sessionIsValid();
 
-  let q =
-    $("searchInput")
+
+  if (valid){
+
+    /*
+     * MASTER pode acessar qualquer prestador.
+     */
+
+    if (
+      preventiveSession.perfil ===
+      "MASTER"
+    ){
+
+      nextAction();
+
+      return;
+    }
+
+
+    /*
+     * Prestador deve coincidir.
+     */
+
+    if (
+      !provider ||
+      String(
+        preventiveSession.prestador
+      )
+      .trim()
+      .toLowerCase() ===
+      String(provider)
+      .trim()
+      .toLowerCase()
+    ){
+
+      nextAction();
+
+      return;
+    }
+  }
+
+
+  loginNextAction =
+    nextAction;
+
+
+  $("preventiveUsername")
+    .value =
+    "";
+
+
+  $("preventivePassword")
+    .value =
+    "";
+
+
+  $("loginMessage")
+    .className =
+    "message";
+
+
+  if (provider){
+
+    show(
+      "loginProviderInfo"
+    );
+
+
+    $("loginProviderInfo")
+      .innerHTML =
+
+      "<b>Prestador do ativo:</b> " +
+
+      esc(provider);
+
+  }else{
+
+    hide(
+      "loginProviderInfo"
+    );
+  }
+
+
+  $("preventiveLoginModal")
+    .style.display =
+    "flex";
+}
+
+
+async function doPreventiveLogin(){
+
+  const user =
+    $("preventiveUsername")
       .value
       .trim();
 
 
-  if (
-    q.length < 2
-  ){
-
-    $("searchStatus")
-      .textContent =
-      "Digite pelo menos 2 caracteres.";
-
-
-    return;
-  }
-
-
-  if (
-    /^[a-z0-9_-]+$/i
-      .test(
-        q
-      )
-  ){
-
-    q =
-      normalizeId(
-        q
-      );
-  }
-
-
-  $("searchStatus")
-    .textContent =
-    "Buscando...";
-
-
-  $("searchResults")
-    .innerHTML =
-    "";
-
-
-  $("searchButton")
-    .disabled =
-    true;
-
-
-  try{
-
-
-    const data =
-      await api({
-
-        action:"search",
-
-        q:q
-
-      });
-
-
-    if (
-      !data.ok
-    ){
-
-      throw new Error(
-        data.error
-      );
-    }
-
-
-    renderSearchResults(
-      data.results ||
-      []
-    );
-
-
-  }catch(error){
-
-
-    console.error(
-      error
-    );
-
-
-    $("searchStatus")
-      .textContent =
-      "Erro ao realizar busca.";
-
-
-  }finally{
-
-
-    $("searchButton")
-      .disabled =
-      false;
-  }
-}
-
-
-function renderSearchResults(items){
-
-  $("searchStatus")
-    .textContent =
-
-    items.length +
-
-    (
-      items.length === 1
-        ? " resultado encontrado"
-        : " resultados encontrados"
-    );
-
-
-  if (
-    !items.length
-  ){
-
-    $("searchResults")
-      .innerHTML = `
-
-        <div class="search-result">
-
-          Nenhum ativo encontrado.
-
-        </div>
-
-      `;
-
-
-    return;
-  }
-
-
-  $("searchResults")
-    .innerHTML =
-
-    items.map(
-      item => `
-
-        <div class="search-result">
-
-          <div class="search-result-id">
-            ${esc(item.id)}
-          </div>
-
-          <div class="search-result-name">
-            ${esc(item.nome)}
-          </div>
-
-          <span class="tag">
-            ${esc(item.tipo)}
-          </span>
-
-          <div class="search-result-data">
-
-            ${
-              item.pavimento
-                ? `
-                  <div>
-                    <b>Pavimento:</b>
-                    ${esc(item.pavimento)}
-                  </div>
-                `
-                : ""
-            }
-
-            ${
-              item.localizacao
-                ? `
-                  <div>
-                    <b>Localização:</b>
-                    ${esc(item.localizacao)}
-                  </div>
-                `
-                : ""
-            }
-
-            ${
-              item.periodicidade
-                ? `
-                  <div>
-                    <b>Periodicidade:</b>
-                    ${esc(item.periodicidade)}
-                  </div>
-                `
-                : ""
-            }
-
-            ${
-              item.prestador
-                ? `
-                  <div>
-                    <b>Prestador:</b>
-                    ${esc(item.prestador)}
-                  </div>
-                `
-                : ""
-            }
-
-          </div>
-
-
-          <a
-            class="open-button"
-            href="?id=${encodeURIComponent(
-              normalizeId(
-                item.id
-              )
-            )}"
-          >
-            Abrir ficha
-          </a>
-
-        </div>
-
-      `
-    )
-    .join("");
-}
-
-
-
-/* ============================================================
-   OCs PENDENTES
-   ============================================================ */
-
-async function loadPending(){
-
-  $("pendingStatus")
-    .textContent =
-    "Carregando ocorrências pendentes...";
-
-
-  $("pendingResults")
-    .innerHTML =
-    "";
-
-
-  try{
-
-
-    const data =
-      await api({
-        action:"pending"
-      });
-
-
-    if (
-      !data.ok
-    ){
-
-      throw new Error(
-        data.error
-      );
-    }
-
-
-    renderPending(
-      data
-    );
-
-
-  }catch(error){
-
-
-    console.error(
-      error
-    );
-
-
-    $("pendingStatus")
-      .textContent =
-      "Não foi possível carregar as ocorrências pendentes.";
-  }
-}
-
-
-function renderPending(data){
-
-  const summary =
-    data.summary || {};
-
-
-  const items =
-    data.occurrences || [];
-
-
-  $("pendingStatus")
-    .textContent =
-
-    items.length
-
-      ? "Ocorrências que ainda precisam de tratamento."
-
-      : "Nenhuma ocorrência pendente.";
-
-
-  $("pendingSummary")
-    .innerHTML = `
-
-      <div class="pending-number">
-
-        <strong>
-          ${summary.total || 0}
-        </strong>
-
-        <div class="pending-label">
-          Total
-        </div>
-
-      </div>
-
-
-      <div class="pending-number">
-
-        <strong>
-          🔴 ${summary.abertas || 0}
-        </strong>
-
-        <div class="pending-label">
-          Abertas
-        </div>
-
-      </div>
-
-
-      <div class="pending-number">
-
-        <strong>
-          🟡 ${summary.emAtendimento || 0}
-        </strong>
-
-        <div class="pending-label">
-          Em atendimento
-        </div>
-
-      </div>
-
-
-      <div class="pending-number">
-
-        <strong>
-          🟠 ${summary.aguardandoPeca || 0}
-        </strong>
-
-        <div class="pending-label">
-          Aguardando peça
-        </div>
-
-      </div>
-
-    `;
-
-
-  show(
-    "pendingSummary"
-  );
-
-
-  $("pendingResults")
-    .innerHTML =
-
-    items.map(
-
-      function(item){
-
-
-        let classeStatus =
-          "st-aberta";
-
-
-        let icone =
-          "🔴";
-
-
-        if (
-          item.status ===
-          "Em atendimento"
-        ){
-
-          classeStatus =
-            "st-atendimento";
-
-          icone =
-            "🟡";
-        }
-
-
-        if (
-          item.status ===
-          "Aguardando peça"
-        ){
-
-          classeStatus =
-            "st-aguardando";
-
-          icone =
-            "🟠";
-        }
-
-
-        return `
-
-          <div class="pending-card">
-
-            <div class="pending-head">
-
-              <div>
-
-                <div class="pending-occurrence">
-
-                  ${esc(
-                    item.ocorrencia
-                  )}
-
-                </div>
-
-                <div
-                  style="
-                    font-weight:700;
-                    margin-top:3px;
-                  "
-                >
-
-                  ${esc(item.id)}
-
-                  –
-
-                  ${esc(item.nome)}
-
-                </div>
-
-              </div>
-
-
-              <span
-                class="
-                  pending-status
-                  ${classeStatus}
-                "
-              >
-
-                ${icone}
-                ${esc(item.status)}
-
-              </span>
-
-            </div>
-
-
-            <div class="search-result-data">
-
-              ${
-                item.pavimento
-                  ? `
-                    <div>
-                      <b>Pavimento:</b>
-                      ${esc(item.pavimento)}
-                    </div>
-                  `
-                  : ""
-              }
-
-              ${
-                item.localizacao
-                  ? `
-                    <div>
-                      <b>Localização:</b>
-                      ${esc(item.localizacao)}
-                    </div>
-                  `
-                  : ""
-              }
-
-              ${
-                item.categoriaOcorrencia
-                  ? `
-                    <div>
-                      <b>Categoria:</b>
-                      ${esc(item.categoriaOcorrencia)}
-                    </div>
-                  `
-                  : ""
-              }
-
-              ${
-                item.componenteAfetado
-                  ? `
-                    <div>
-                      <b>Componente:</b>
-                      ${esc(item.componenteAfetado)}
-                    </div>
-                  `
-                  : ""
-              }
-
-
-              <div>
-
-                <b>Aberta em:</b>
-
-                ${esc(
-                  formatDate(
-                    item.data
-                  )
-                )}
-
-              </div>
-
-
-              <div class="elapsed-open">
-
-                ⏱️ Aberta há
-
-                ${esc(
-                  tempoDecorrido(
-                    item.data
-                  )
-                )}
-
-              </div>
-
-
-              ${
-                item.dataInicio
-                  ? `
-
-                    <div style="margin-top:6px">
-
-                      <b>
-                        Atendimento iniciado:
-                      </b>
-
-                      ${esc(
-                        formatDate(
-                          item.dataInicio
-                        )
-                      )}
-
-                    </div>
-
-
-                    <div class="elapsed-service">
-
-                      🛠️ Em atendimento há
-
-                      ${esc(
-                        tempoDecorrido(
-                          item.dataInicio
-                        )
-                      )}
-
-                    </div>
-
-                  `
-                  : ""
-              }
-
-            </div>
-
-
-            <div class="pending-description">
-
-              <b>Descrição:</b>
-
-              <br>
-
-              ${esc(
-                item.descricao ||
-                ""
-              )}
-
-            </div>
-
-
-            ${
-              item.foto
-                ? `
-
-                  <div style="margin-top:9px">
-
-                    <a
-                      href="${esc(item.foto)}"
-                      target="_blank"
-                    >
-                      📷 Ver foto
-                    </a>
-
-                  </div>
-
-                `
-                : ""
-            }
-
-
-            <a
-              class="open-button"
-              href="?id=${encodeURIComponent(
-                normalizeId(
-                  item.id
-                )
-              )}"
-            >
-              Abrir ficha e gerenciar
-            </a>
-
-          </div>
-
-        `;
-
-      }
-
-    )
-    .join("");
-}
-
-
-
-/* ============================================================
-   CONTROLE MENSAL PREVENTIVAS 6.8
-   ============================================================ */
-
-async function loadPreventiveControl(){
-
-  const competencia =
-    $("controlCompetence")
+  const password =
+    $("preventivePassword")
       .value;
 
 
   if (
-    !competencia
+    !user ||
+    !password
   ){
 
-    $("controlStatus")
+    $("loginMessage")
+      .className =
+      "message error";
+
+
+    $("loginMessage")
       .textContent =
-      "Selecione uma competência.";
+      "Informe usuário e senha.";
 
 
     return;
   }
 
 
-  $("controlRefresh")
+  $("sendLogin")
     .disabled =
     true;
 
 
-  $("controlRefresh")
+  $("sendLogin")
     .textContent =
-    "Carregando...";
+    "Entrando...";
 
 
-  $("controlStatus")
+  $("loginMessage")
+    .className =
+    "message loading";
+
+
+  $("loginMessage")
     .textContent =
-    "Consultando preventivas...";
-
-
-  $("controlResults")
-    .innerHTML =
-    "";
+    "Validando acesso...";
 
 
   try{
 
 
     const result =
-      await api({
+      await apiPost({
 
         action:
-          "preventivecontrol",
+          "preventiveLogin",
 
-        competencia:
-          competencia
+        username:
+          user,
+
+        password:
+          password
 
       });
 
@@ -3414,1668 +2284,75 @@ async function loadPreventiveControl(){
     ){
 
       throw new Error(
-        result.error
+        result.detail ||
+        "Login inválido."
       );
     }
 
 
-    preventiveControlData =
-      result.data;
-
-
-    renderPreventiveControl(
-      result.data
+    savePreventiveSession(
+      result
     );
+
+
+    $("preventiveLoginModal")
+      .style.display =
+      "none";
+
+
+    if (
+      loginNextAction
+    ){
+
+      const fn =
+        loginNextAction;
+
+
+      loginNextAction =
+        null;
+
+
+      fn();
+    }
 
 
   }catch(error){
 
 
-    console.error(
-      error
-    );
+    $("loginMessage")
+      .className =
+      "message error";
 
 
-    $("controlStatus")
+    $("loginMessage")
       .textContent =
-      "Não foi possível consultar o controle de preventivas.";
+      error.message;
 
 
   }finally{
 
 
-    $("controlRefresh")
+    $("sendLogin")
       .disabled =
       false;
 
 
-    $("controlRefresh")
+    $("sendLogin")
       .textContent =
-      "Atualizar";
+      "Entrar";
   }
 }
 
 
-function renderPreventiveControl(data){
-
-  const s =
-    data.summary || {};
-
-
-  $("controlCompetenceTitle")
-    .textContent =
-
-    "Preventivas – " +
-
-    (
-      data.competenciaDescricao ||
-      data.competencia ||
-      ""
-    );
-
-
-  $("controlStatus")
-    .textContent =
-    "Controle de equipamentos com periodicidade mensal.";
-
-
-  $("controlSummary")
-    .innerHTML = `
-
-      <div class="control-summary-card">
-
-        <strong>
-          ${s.previstas || 0}
-        </strong>
-
-        <div class="control-summary-title">
-          Previstas
-        </div>
-
-      </div>
-
-
-      <div class="control-summary-card">
-
-        <strong>
-          ✅ ${s.realizadas || 0}
-        </strong>
-
-        <div class="control-summary-title">
-          Realizadas
-        </div>
-
-      </div>
-
-
-      <div class="control-summary-card">
-
-        <strong>
-          🔴 ${s.pendentes || 0}
-        </strong>
-
-        <div class="control-summary-title">
-          Pendentes
-        </div>
-
-      </div>
-
-
-      <div class="control-summary-card">
-
-        <strong>
-          ${s.percentual || 0}%
-        </strong>
-
-        <div class="control-summary-title">
-          Conclusão
-        </div>
-
-      </div>
-
-    `;
-
-
-  show(
-    "controlSummary"
-  );
-
-
-  show(
-    "controlProgress"
-  );
-
-
-  const percentual =
-    Math.min(
-      100,
-      Math.max(
-        0,
-        Number(
-          s.percentual ||
-          0
-        )
-      )
-    );
-
-
-  $("controlProgressText")
-    .textContent =
-    percentual +
-    "%";
-
-
-  $("controlProgressFill")
-    .style.width =
-    percentual +
-    "%";
-
-
-  populateProviderFilter(
-    data.prestadores ||
-    []
-  );
-
-
-  renderProviderSummary(
-    data.prestadores ||
-    []
-  );
-
-
-  renderPreventiveControlList();
-}
-
-
-function populateProviderFilter(items){
-
-  const current =
-    $("controlProvider")
-      .value;
-
-
-  $("controlProvider")
-    .innerHTML = `
-
-      <option value="">
-        Todos os prestadores
-      </option>
-
-      ${
-        items.map(
-          item => `
-
-            <option value="${esc(
-              item.prestador
-            )}">
-
-              ${esc(
-                item.prestador
-              )}
-
-            </option>
-
-          `
-        )
-        .join("")
-      }
-
-    `;
-
-
-  if (
-    [...$("controlProvider").options]
-      .some(
-        option =>
-          option.value === current
-      )
-  ){
-
-    $("controlProvider")
-      .value =
-      current;
-  }
-}
-
-
-function renderProviderSummary(items){
-
-  if (
-    !items.length
-  ){
-
-    hide(
-      "providerSummary"
-    );
-
-
-    return;
-  }
-
-
-  show(
-    "providerSummary"
-  );
-
-
-  $("providerSummaryResults")
-    .innerHTML =
-
-    items.map(
-      item => `
-
-        <div class="provider-card">
-
-          <div class="provider-name">
-
-            ${esc(
-              item.prestador
-            )}
-
-          </div>
-
-          <div class="provider-data">
-
-            Previstas:
-            <b>${item.previstas}</b>
-
-            &nbsp; • &nbsp;
-
-            Realizadas:
-            <b>${item.realizadas}</b>
-
-            &nbsp; • &nbsp;
-
-            Pendentes:
-            <b>${item.pendentes}</b>
-
-            &nbsp; • &nbsp;
-
-            Conclusão:
-            <b>${item.percentual}%</b>
-
-          </div>
-
-        </div>
-
-      `
-    )
-    .join("");
-}
-
-
-function setControlMode(mode){
-
-  preventiveControlMode =
-    mode;
-
-
-  [
-    "controlTabAll",
-    "controlTabPending",
-    "controlTabDone"
-  ]
-  .forEach(
-    id =>
-      $(id)
-        .classList
-        .remove(
-          "active"
-        )
-  );
-
-
-  if (
-    mode === "pending"
-  ){
-
-    $("controlTabPending")
-      .classList
-      .add(
-        "active"
-      );
-
-  }else if (
-    mode === "done"
-  ){
-
-    $("controlTabDone")
-      .classList
-      .add(
-        "active"
-      );
-
-  }else{
-
-    $("controlTabAll")
-      .classList
-      .add(
-        "active"
-      );
-  }
-
-
-  renderPreventiveControlList();
-}
-
-
-function getFilteredControlItems(){
-
-  if (
-    !preventiveControlData
-  ){
-
-    return [];
-  }
-
-
-  const provider =
-    $("controlProvider")
-      .value;
-
-
-  let items =
-    [];
-
-
-  if (
-    preventiveControlMode ===
-    "pending"
-  ){
-
-    items =
-      (
-        preventiveControlData
-          .pendentes ||
-        []
-      )
-      .map(
-        item =>
-          Object.assign(
-            {},
-            item,
-            {
-              controlStatus:
-                "pending"
-            }
-          )
-      );
-
-  }else if (
-    preventiveControlMode ===
-    "done"
-  ){
-
-    items =
-      (
-        preventiveControlData
-          .realizadas ||
-        []
-      )
-      .map(
-        item =>
-          Object.assign(
-            {},
-            item,
-            {
-              controlStatus:
-                "done"
-            }
-          )
-      );
-
-  }else{
-
-    items = [
-
-      ...(
-        preventiveControlData
-          .pendentes ||
-        []
-      )
-      .map(
-        item =>
-          Object.assign(
-            {},
-            item,
-            {
-              controlStatus:
-                "pending"
-            }
-          )
-      ),
-
-      ...(
-        preventiveControlData
-          .realizadas ||
-        []
-      )
-      .map(
-        item =>
-          Object.assign(
-            {},
-            item,
-            {
-              controlStatus:
-                "done"
-            }
-          )
-      )
-
-    ];
-  }
-
-
-  if (
-    provider
-  ){
-
-    items =
-      items.filter(
-        item =>
-          String(
-            item.prestador ||
-            ""
-          ) === provider
-      );
-  }
-
-
-  return items;
-}
-
-
-function renderPreventiveControlList(){
-
-  const items =
-    getFilteredControlItems();
-
-
-  $("controlListStatus")
-    .textContent =
-
-    items.length +
-
-    (
-      items.length === 1
-        ? " equipamento"
-        : " equipamentos"
-    );
-
-
-  if (
-    !items.length
-  ){
-
-    $("controlResults")
-      .innerHTML = `
-
-        <div class="control-item">
-
-          Nenhum equipamento encontrado para este filtro.
-
-        </div>
-
-      `;
-
-
-    return;
-  }
-
-
-  $("controlResults")
-    .innerHTML =
-
-    items.map(
-      item => {
-
-        const done =
-          item.controlStatus ===
-          "done";
-
-
-        return `
-
-          <div
-            class="
-              control-item
-              ${
-                done
-                  ? "done"
-                  : "pending"
-              }
-            "
-          >
-
-            <div class="control-head">
-
-              <div>
-
-                <div class="control-id">
-
-                  ${esc(
-                    item.id
-                  )}
-
-                </div>
-
-                <div
-                  style="
-                    font-weight:700;
-                    margin-top:3px;
-                  "
-                >
-
-                  ${esc(
-                    item.nome
-                  )}
-
-                </div>
-
-              </div>
-
-
-              <span
-                class="
-                  control-status
-                  ${
-                    done
-                      ? "done"
-                      : "pending"
-                  }
-                "
-              >
-
-                ${
-                  done
-                    ? "✅ Realizada"
-                    : "🔴 Pendente"
-                }
-
-              </span>
-
-            </div>
-
-
-            <div class="search-result-data">
-
-              ${
-                item.periodicidade
-                  ? `
-
-                    <div>
-
-                      <b>Periodicidade:</b>
-
-                      ${esc(
-                        item.periodicidade
-                      )}
-
-                    </div>
-
-                  `
-                  : ""
-              }
-
-
-              ${
-                item.prestador
-                  ? `
-
-                    <div>
-
-                      <b>Prestador:</b>
-
-                      ${esc(
-                        item.prestador
-                      )}
-
-                    </div>
-
-                  `
-                  : ""
-              }
-
-
-              ${
-                item.pavimento
-                  ? `
-
-                    <div>
-
-                      <b>Pavimento:</b>
-
-                      ${esc(
-                        item.pavimento
-                      )}
-
-                    </div>
-
-                  `
-                  : ""
-              }
-
-
-              ${
-                item.localizacao
-                  ? `
-
-                    <div>
-
-                      <b>Localização:</b>
-
-                      ${esc(
-                        item.localizacao
-                      )}
-
-                    </div>
-
-                  `
-                  : ""
-              }
-
-
-              ${
-                item.localDetalhado
-                  ? `
-
-                    <div>
-
-                      <b>Local detalhado:</b>
-
-                      ${esc(
-                        item.localDetalhado
-                      )}
-
-                    </div>
-
-                  `
-                  : ""
-              }
-
-
-              ${
-                done &&
-                item.ultimoRegistro
-                  ? `
-
-                    <div
-                      style="
-                        margin-top:7px;
-                      "
-                    >
-
-                      <b>Executada em:</b>
-
-                      ${esc(
-                        formatDate(
-                          item.ultimoRegistro.data
-                        )
-                      )}
-
-                    </div>
-
-
-                    ${
-                      item.ultimoRegistro
-                        .responsavel
-                        ? `
-
-                          <div>
-
-                            <b>Responsável:</b>
-
-                            ${esc(
-                              item.ultimoRegistro
-                                .responsavel
-                            )}
-
-                          </div>
-
-                        `
-                        : ""
-                    }
-
-                  `
-                  : ""
-              }
-
-            </div>
-
-
-            <a
-              class="open-button"
-              href="?id=${encodeURIComponent(
-                normalizeId(
-                  item.id
-                )
-              )}"
-            >
-
-              ${
-                done
-                  ? "Abrir ficha"
-                  : "Abrir ficha e registrar preventiva"
-              }
-
-            </a>
-
-          </div>
-
-        `;
-
-      }
-    )
-    .join("");
-}
-
-
-
-/* ============================================================
-   CARREGAR ATIVO
-   ============================================================ */
-
-async function loadAsset(id){
-
-  hide(
-    "searchScreen"
-  );
-
-
-  show(
-    "assetScreen"
-  );
-
-
-  try{
-
-
-    const [
-      asset,
-      status,
-      hist,
-      preventiveHist
-    ] =
-      await Promise.all([
-
-        api({
-          id:
-            normalizeId(
-              id
-            )
-        }),
-
-        api({
-          action:"status",
-          id:
-            normalizeId(
-              id
-            )
-        }),
-
-        api({
-          action:"history",
-          id:
-            normalizeId(
-              id
-            )
-        }),
-
-        api({
-          action:"preventivehistory",
-          id:
-            normalizeId(
-              id
-            )
-        })
-
-      ]);
-
-
-    if (
-      !asset.ok
-    ){
-
-      $("titulo")
-        .textContent =
-        "Ativo não encontrado";
-
-
-      return;
-    }
-
-
-    currentAsset =
-      asset.data;
-
-
-    renderAsset(
-      currentAsset
-    );
-
-
-    if (
-      status.ok
-    ){
-
-      renderStatus(
-        status.data
-      );
-    }
-
-
-    if (
-      hist.ok
-    ){
-
-      renderHistory(
-        hist.history ||
-        []
-      );
-    }
-
-
-    if (
-      preventiveHist.ok
-    ){
-
-      renderPreventiveHistory(
-        preventiveHist.preventives ||
-        []
-      );
-    }
-
-
-  }catch(error){
-
-
-    console.error(
-      error
-    );
-
-
-    $("titulo")
-      .textContent =
-      "Erro ao carregar ativo";
-  }
-}
-
-
-
-/* ============================================================
-   RENDER ATIVO
-   ============================================================ */
-
-function renderAsset(a){
-
-  $("titulo")
-    .textContent =
-
-    a.id +
-
-    " – " +
-
-    a.nome_do_equipamento;
-
-
-  $("meta")
-    .textContent =
-
-    a.local_detalhado ||
-
-    a.localizacao ||
-
-    a.pavimento ||
-
-    "";
-
-
-  $("tipoBadge")
-    .textContent =
-
-    a.tipo_de_ativo ||
-
-    "Equipamento";
-
-
-  const classification =
-    pairs([
-
-      ["Tipo de Ativo",a.tipo_de_ativo],
-      ["Categoria",a.categoria_do_ativo],
-      ["Subcategoria",a.subcategoria],
-      ["Criticidade",a.criticidade],
-      ["Classe de Manutenção",a.classe_de_manutencao]
-
-    ]);
-
-
-  if (
-    classification
-  ){
-
-    show(
-      "classificationSection"
-    );
-
-
-    $("classification")
-      .innerHTML =
-      classification;
-
-  }else{
-
-    hide(
-      "classificationSection"
-    );
-  }
-
-
-  const location =
-    pairs([
-
-      ["Área",a.area],
-      ["Ambiente",a.ambiente],
-      ["Componente / Elemento",a.componente_elemento],
-      ["Pavimento",a.pavimento],
-      ["Localização",a.localizacao],
-      ["Local Detalhado",a.local_detalhado]
-
-    ]);
-
-
-  if (
-    location
-  ){
-
-    show(
-      "locationSection"
-    );
-
-
-    $("location")
-      .innerHTML =
-      location;
-
-  }else{
-
-    hide(
-      "locationSection"
-    );
-  }
-
-
-  const technical =
-    pairs([
-
-      ["Fabricante",a.fabricante],
-      ["Modelo",a.modelo],
-      ["Número de Série",a.numero_de_serie],
-      ["Capacidade",a.capacidade],
-      ["Amperagem Nominal",a.amperagem_nominal_fla],
-      ["Amperagem de Partida",a.amperagem_de_partida_flr],
-      ["Amperagem Medida",a.amperagem_medida],
-      ["Voltagem",a.voltagem],
-      ["Peso",a.peso],
-      ["Ano de Aquisição",a.ano_de_aquisicao],
-      ["Vida Útil Estimada",a.vida_util_estimada]
-
-    ]);
-
-
-  if (
-    technical
-  ){
-
-    show(
-      "technicalSection"
-    );
-
-
-    $("technical")
-      .innerHTML =
-      technical;
-
-  }else{
-
-    hide(
-      "technicalSection"
-    );
-  }
-
-
-  $("management")
-    .innerHTML =
-
-    pairs([
-
-      ["Status cadastral",a.status],
-      ["Prestador",a.prestador],
-      ["Periodicidade",a.periodicidade],
-      ["Observações",a.observacoes]
-
-    ]);
-
-
-  if (
-    valueExists(
-      a.periodicidade
-    )
-  ){
-
-    show(
-      "preventiveButton"
-    );
-
-
-    show(
-      "preventiveHistorySection"
-    );
-
-  }else{
-
-    hide(
-      "preventiveButton"
-    );
-
-
-    hide(
-      "preventiveHistorySection"
-    );
-  }
-}
-
-
-
-/* ============================================================
-   STATUS
-   ============================================================ */
-
-function renderStatus(s){
-
-  $("statusCard")
-    .className =
-
-    "status-card " +
-
-    (
-      s.nivel ||
-      ""
-    );
-
-
-  $("statusTitle")
-    .textContent =
-
-    (
-      s.icone ||
-      ""
-    )
-
-    +
-
-    " "
-
-    +
-
-    (
-      s.situacao ||
-      ""
-    );
-
-
-  $("statusInfo")
-    .textContent =
-
-    s.totalAtivas
-
-      ? s.totalAtivas +
-        " ocorrência(s) ativa(s)"
-
-      : "Nenhuma ocorrência ativa.";
-}
-
-
-
-/* ============================================================
-   HISTÓRICO OC
-   ============================================================ */
-
-function renderHistory(items){
-
-  history =
-    items;
-
-
-  if (
-    !history.length
-  ){
-
-    $("historyStatus")
-      .textContent =
-      "Nenhum histórico registrado.";
-
-
-    hide(
-      "historySelect"
-    );
-
-
-    $("historyDetail")
-      .innerHTML =
-      "";
-
-
-    return;
-  }
-
-
-  $("historyStatus")
-    .textContent =
-
-    history.length +
-
-    (
-      history.length === 1
-        ? " registro"
-        : " registros"
-    );
-
-
-  show(
-    "historySelect"
-  );
-
-
-  $("historySelect")
-    .innerHTML =
-
-    history.map(
-
-      (x,i) => `
-
-        <option value="${i}">
-
-          ${esc(x.ocorrencia)}
-
-          |
-
-          ${esc(x.status)}
-
-        </option>
-
-      `
-
-    )
-    .join("");
-
-
-  renderHistoryItem(
-    0
-  );
-}
-
-
-function renderHistoryItem(index){
-
-  const x =
-    history[index];
-
-
-  if (!x){
-
-    return;
-  }
-
-
-  selectedOccurrence =
-    x;
-
-
-  $("historyDetail")
-    .innerHTML = `
-
-      <div class="history-card">
-
-        <b>
-          ${esc(x.ocorrencia)}
-        </b>
-
-        <div class="muted">
-          ${esc(formatDate(x.data))}
-        </div>
-
-        <span class="tag">
-          ${esc(x.status)}
-        </span>
-
-
-        ${
-          x.categoriaOcorrencia
-            ? `
-              <span class="tag">
-                ${esc(x.categoriaOcorrencia)}
-              </span>
-            `
-            : ""
-        }
-
-
-        ${
-          x.componenteAfetado
-            ? `
-              <span class="tag">
-                ${esc(x.componenteAfetado)}
-              </span>
-            `
-            : ""
-        }
-
-
-        <div style="margin-top:10px">
-
-          <b>Descrição:</b>
-
-          <br>
-
-          ${esc(
-            x.descricao ||
-            ""
-          )}
-
-        </div>
-
-
-        ${
-          x.responsavel
-            ? `
-
-              <div style="margin-top:8px">
-
-                <b>Responsável:</b>
-
-                ${esc(
-                  x.responsavel
-                )}
-
-              </div>
-
-            `
-            : ""
-        }
-
-
-        ${
-          x.solucao
-            ? `
-
-              <div style="margin-top:10px">
-
-                <b>
-                  Solução / Serviço realizado:
-                </b>
-
-                <br>
-
-                ${esc(
-                  x.solucao
-                )}
-
-              </div>
-
-            `
-            : ""
-        }
-
-
-        ${
-          x.foto
-            ? `
-
-              <div style="margin-top:10px">
-
-                <a
-                  href="${esc(x.foto)}"
-                  target="_blank"
-                >
-                  📷 Foto da ocorrência
-                </a>
-
-              </div>
-
-            `
-            : ""
-        }
-
-
-        ${
-          x.fotoConclusao
-            ? `
-
-              <div style="margin-top:8px">
-
-                <a
-                  href="${esc(
-                    x.fotoConclusao
-                  )}"
-                  target="_blank"
-                >
-                  ✅ Foto após o serviço
-                </a>
-
-              </div>
-
-            `
-            : ""
-        }
-
-
-        ${
-          x.ultimaAlteracao
-            ? `
-
-              <div class="audit-box">
-
-                <b>
-                  Última alteração:
-                </b>
-
-                ${esc(
-                  formatDate(
-                    x.ultimaAlteracao
-                  )
-                )}
-
-                ${
-                  x.ultimaAlteracaoPor
-                    ? `
-
-                      <br>
-
-                      <b>
-                        Alterado por:
-                      </b>
-
-                      ${esc(
-                        x.ultimaAlteracaoPor
-                      )}
-
-                    `
-                    : ""
-                }
-
-              </div>
-
-            `
-            : ""
-        }
-
-
-        <button
-          class="btn"
-          style="
-            width:100%;
-            margin-top:12px;
-          "
-          onclick="
-            openManage(
-              ${index}
-            )
-          "
-        >
-
-          Gerenciar ocorrência
-
-        </button>
-
-      </div>
-
-    `;
-}
-
-
-
-/* ============================================================
-   HISTÓRICO PREVENTIVA
-   ============================================================ */
-
-function renderPreventiveHistory(items){
-
-  preventiveHistory =
-    items;
-
-
-  if (
-    !currentAsset ||
-    !valueExists(
-      currentAsset.periodicidade
-    )
-  ){
-
-    hide(
-      "preventiveHistorySection"
-    );
-
-
-    return;
-  }
-
-
-  show(
-    "preventiveHistorySection"
-  );
-
-
-  if (
-    !items.length
-  ){
-
-    $("preventiveHistoryStatus")
-      .textContent =
-      "Nenhuma preventiva registrada para este ativo.";
-
-
-    $("preventiveHistory")
-      .innerHTML =
-      "";
-
-
-    return;
-  }
-
-
-  $("preventiveHistoryStatus")
-    .textContent =
-
-    items.length +
-
-    (
-      items.length === 1
-        ? " preventiva registrada"
-        : " preventivas registradas"
-    );
-
-
-  $("preventiveHistory")
-    .innerHTML =
-
-    items.map(
-
-      item => `
-
-        <div class="preventive-card">
-
-          <div class="preventive-header">
-
-            <div>
-
-              <div class="preventive-id">
-
-                ${esc(
-                  item.registro
-                )}
-
-              </div>
-
-              <div class="muted">
-
-                ${esc(
-                  formatDate(
-                    item.data
-                  )
-                )}
-
-              </div>
-
-            </div>
-
-
-            <span class="preventive-status">
-
-              ✅ ${esc(
-                item.status ||
-                "Realizada"
-              )}
-
-            </span>
-
-          </div>
-
-
-          <div style="margin-top:9px">
-
-            <span class="tag tag-preventive">
-
-              Competência:
-              ${esc(
-                item.competencia
-              )}
-
-            </span>
-
-            ${
-              item.periodicidade
-                ? `
-
-                  <span class="tag tag-preventive">
-
-                    ${esc(
-                      item.periodicidade
-                    )}
-
-                  </span>
-
-                `
-                : ""
-            }
-
-          </div>
-
-
-          ${
-            item.prestador
-              ? `
-
-                <div style="margin-top:8px">
-
-                  <b>Prestador:</b>
-
-                  ${esc(
-                    item.prestador
-                  )}
-
-                </div>
-
-              `
-              : ""
-          }
-
-
-          ${
-            item.responsavel
-              ? `
-
-                <div style="margin-top:6px">
-
-                  <b>Responsável:</b>
-
-                  ${esc(
-                    item.responsavel
-                  )}
-
-                </div>
-
-              `
-              : ""
-          }
-
-
-          ${
-            item.observacao
-              ? `
-
-                <div style="margin-top:9px">
-
-                  <b>Observação:</b>
-
-                  <br>
-
-                  ${esc(
-                    item.observacao
-                  )}
-
-                </div>
-
-              `
-              : ""
-          }
-
-
-          ${
-            item.foto
-              ? `
-
-                <div style="margin-top:9px">
-
-                  <a
-                    href="${esc(
-                      item.foto
-                    )}"
-                    target="_blank"
-                  >
-
-                    📷 Ver evidência da preventiva
-
-                  </a>
-
-                </div>
-
-              `
-              : ""
-          }
-
-        </div>
-
-      `
-
-    )
-    .join("");
-}
-
-
-
-/* ============================================================
+/* ==========================================================
    FOTO
-   ============================================================ */
+   ========================================================== */
 
 function processPhoto(file){
 
   return new Promise(
 
-    function(
-      resolve,
-      reject
-    ){
+    function(resolve,reject){
 
 
       const reader =
@@ -5083,7 +2360,7 @@ function processPhoto(file){
 
 
       reader.onload =
-        function(event){
+        function(e){
 
 
           const img =
@@ -5154,9 +2431,7 @@ function processPhoto(file){
 
 
               canvas
-                .getContext(
-                  "2d"
-                )
+                .getContext("2d")
                 .drawImage(
                   img,
                   0,
@@ -5166,7 +2441,7 @@ function processPhoto(file){
                 );
 
 
-              const dataUrl =
+              const url =
                 canvas.toDataURL(
                   "image/jpeg",
                   QUALITY
@@ -5176,11 +2451,10 @@ function processPhoto(file){
               resolve({
 
                 base64:
-                  dataUrl
-                    .split(",")[1],
+                  url.split(",")[1],
 
                 dataUrl:
-                  dataUrl,
+                  url,
 
                 mime:
                   "image/jpeg",
@@ -5195,7 +2469,7 @@ function processPhoto(file){
 
 
           img.src =
-            event.target.result;
+            e.target.result;
         };
 
 
@@ -5211,278 +2485,1348 @@ function processPhoto(file){
 }
 
 
+/* ==========================================================
+   TABS
+   ========================================================== */
 
-/* ============================================================
-   NOVA OC
-   ============================================================ */
+function showOnly(area){
 
-function openReport(){
-
-  $("reportMessage")
-    .className =
-    "message";
-
-
-  $("reportMessage")
-    .textContent =
-    "";
-
-
-  const saved =
-    getSavedResponsible();
-
-
-  if (
-    saved
-  ){
-
-    $("reporterName")
-      .value =
-      saved;
-  }
-
-
-  $("reportModal")
-    .style.display =
-    "flex";
-}
-
-
-function closeReport(){
-
-  if (
-    reportPosting
-  ){
-
-    return;
-  }
-
-
-  $("reportModal")
-    .style.display =
-    "none";
-}
-
-
-function sendReport(){
-
-  const reporter =
-    $("reporterName")
-      .value
-      .trim();
-
-
-  const category =
-    $("category")
-      .value;
-
-
-  const component =
-    $("component")
-      .value;
-
-
-  const description =
-    $("description")
-      .value
-      .trim();
-
-
-  const msg =
-    $("reportMessage");
-
-
-  const btn =
-    $("sendReport");
-
-
-  if (
-    reportPosting
-  ){
-
-    return;
-  }
-
-
-  if (
-    !reporter ||
-    !category ||
-    !component ||
-    !description
-  ){
-
-    msg.className =
-      "message error";
-
-
-    msg.textContent =
-      "Preencha todos os campos obrigatórios.";
-
-
-    return;
-  }
-
-
-  saveResponsible(
-    reporter
+  [
+    "searchArea",
+    "pendingArea",
+    "preventiveControlArea"
+  ]
+  .forEach(
+    id =>
+      hide(id)
   );
 
 
-  reportPosting =
-    true;
-
-
-  btn.disabled =
-    true;
-
-
-  btn.textContent =
-    "Gravando...";
-
-
-  msg.className =
-    "message loading";
-
-
-  msg.textContent =
-    "Registrando ocorrência...";
-
-
-  $("p_token").value =
-    TOKEN;
-
-
-  $("p_id").value =
-    normalizeId(
-      currentAsset.id
-    );
-
-
-  $("p_name").value =
-    currentAsset.nome_do_equipamento;
-
-
-  $("p_reporter").value =
-    reporter;
-
-
-  $("p_contact").value =
-    $("reporterContact").value;
-
-
-  $("p_category").value =
-    category;
-
-
-  $("p_component").value =
-    component;
-
-
-  $("p_description").value =
-    description;
-
-
-  if (
-    photoData
-  ){
-
-    $("p_photo").value =
-      photoData.base64;
-
-
-    $("p_photoName").value =
-      photoData.name;
-
-
-    $("p_photoMime").value =
-      photoData.mime;
-
-  }else{
-
-    $("p_photo").value =
-      "";
-
-    $("p_photoName").value =
-      "";
-
-    $("p_photoMime").value =
-      "";
-  }
-
-
-  $("reportForm")
-    .action =
-    API_URL;
-
-
-  $("reportForm")
-    .submit();
+  show(area);
 }
 
 
+function clearTabs(){
 
-/* ============================================================
-   PREVENTIVA
-   ============================================================ */
+  [
+    "tabSearch",
+    "tabPending",
+    "tabPreventive"
+  ]
+  .forEach(
+    id =>
+      $(id)
+        .classList
+        .remove("active")
+  );
+}
 
-function openPreventive(){
+
+function showSearchTab(){
+
+  clearTabs();
+
+  $("tabSearch")
+    .classList
+    .add("active");
+
+  showOnly(
+    "searchArea"
+  );
+}
+
+
+async function showPendingTab(){
+
+  clearTabs();
+
+  $("tabPending")
+    .classList
+    .add("active");
+
+  showOnly(
+    "pendingArea"
+  );
+
+  await loadPending();
+}
+
+
+function showPreventiveTab(){
+
+  requirePreventiveLogin(
+
+    function(){
+
+      clearTabs();
+
+      $("tabPreventive")
+        .classList
+        .add("active");
+
+      showOnly(
+        "preventiveControlArea"
+      );
+
+      loadPreventiveControl();
+
+    },
+
+    null
+
+  );
+}
+
+
+/* ==========================================================
+   BUSCA
+   ========================================================== */
+
+async function searchAssets(){
+
+  let q =
+    $("searchInput")
+      .value
+      .trim();
+
 
   if (
-    !currentAsset
+    q.length < 2
   ){
 
     return;
   }
 
+
+  if (
+    /^[a-z0-9_-]+$/i.test(q)
+  ){
+
+    q =
+      normalizeId(q);
+  }
+
+
+  $("searchStatus")
+    .textContent =
+    "Buscando...";
+
+
+  const data =
+    await api({
+
+      action:"search",
+
+      q:q
+
+    });
+
+
+  const items =
+    data.results || [];
+
+
+  $("searchStatus")
+    .textContent =
+    items.length +
+    " resultado(s)";
+
+
+  $("searchResults")
+    .innerHTML =
+
+    items.map(
+      item => `
+
+        <div class="search-result">
+
+          <div class="search-result-id">
+            ${esc(item.id)}
+          </div>
+
+          <div class="search-result-name">
+            ${esc(item.nome)}
+          </div>
+
+          <div class="search-result-data">
+
+            ${
+              item.pavimento
+                ? `<div><b>Pavimento:</b> ${esc(item.pavimento)}</div>`
+                : ""
+            }
+
+            ${
+              item.localizacao
+                ? `<div><b>Localização:</b> ${esc(item.localizacao)}</div>`
+                : ""
+            }
+
+            ${
+              item.prestador
+                ? `<div><b>Prestador:</b> ${esc(item.prestador)}</div>`
+                : ""
+            }
+
+            ${
+              item.periodicidade
+                ? `<div><b>Periodicidade:</b> ${esc(item.periodicidade)}</div>`
+                : ""
+            }
+
+          </div>
+
+          <a
+            class="open-button"
+            href="?id=${encodeURIComponent(
+              normalizeId(item.id)
+            )}"
+          >
+            Abrir ficha
+          </a>
+
+        </div>
+
+      `
+    )
+    .join("");
+}
+
+
+/* ==========================================================
+   PENDENTES
+   ========================================================== */
+
+async function loadPending(){
+
+  const data =
+    await api({
+      action:"pending"
+    });
+
+
+  const s =
+    data.summary || {};
+
+
+  $("pendingSummary")
+    .innerHTML = `
+
+      <div class="pending-number">
+        <strong>${s.total || 0}</strong>
+        Total
+      </div>
+
+      <div class="pending-number">
+        <strong>🔴 ${s.abertas || 0}</strong>
+        Abertas
+      </div>
+
+      <div class="pending-number">
+        <strong>🟡 ${s.emAtendimento || 0}</strong>
+        Atendimento
+      </div>
+
+      <div class="pending-number">
+        <strong>🟠 ${s.aguardandoPeca || 0}</strong>
+        Peça
+      </div>
+
+    `;
+
+
+  $("pendingResults")
+    .innerHTML =
+
+    (data.occurrences || [])
+      .map(
+        item => `
+
+          <div class="pending-card">
+
+            <b>
+              ${esc(item.ocorrencia)}
+            </b>
+
+            <div>
+              ${esc(item.id)}
+              –
+              ${esc(item.nome)}
+            </div>
+
+            <div class="search-result-data">
+
+              <b>Status:</b>
+              ${esc(item.status)}
+
+              <br>
+
+              <b>Descrição:</b>
+              ${esc(item.descricao)}
+
+            </div>
+
+            <a
+              class="open-button"
+              href="?id=${encodeURIComponent(
+                normalizeId(item.id)
+              )}"
+            >
+              Abrir ficha
+            </a>
+
+          </div>
+
+        `
+      )
+      .join("");
+}
+
+
+/* ==========================================================
+   CONTROLE PREVENTIVAS
+   ========================================================== */
+
+async function loadPreventiveControl(){
+
+  if (
+    !$("controlCompetence").value
+  ){
+
+    $("controlCompetence").value =
+      currentCompetence();
+  }
+
+
+  const result =
+    await api({
+
+      action:
+        "preventivecontrol",
+
+      competencia:
+        $("controlCompetence").value,
+
+      session:
+        preventiveSession.sessionToken
+
+    });
+
+
+  if (
+    !result.ok
+  ){
+
+    clearPreventiveSession();
+
+    showPreventiveTab();
+
+    return;
+  }
+
+
+  preventiveControlData =
+    result.data;
+
+
+  renderPreventiveControl();
+}
+
+
+function renderPreventiveControl(){
+
+  const data =
+    preventiveControlData;
+
+
+  const s =
+    data.summary;
+
+
+  $("preventiveLoggedInfo")
+    .innerHTML =
+
+    "Acesso: <b>" +
+
+    esc(
+      preventiveSession.usuario
+    ) +
+
+    "</b> • Perfil: <b>" +
+
+    esc(
+      preventiveSession.perfil
+    ) +
+
+    "</b> • Prestador: <b>" +
+
+    esc(
+      preventiveSession.prestador
+    ) +
+
+    "</b>";
+
+
+  $("controlTitle")
+    .textContent =
+
+    "Preventivas – " +
+    data.competenciaDescricao;
+
+
+  $("controlSummary")
+    .innerHTML = `
+
+      <div class="control-summary-card">
+        <strong>${s.previstas}</strong>
+        Previstas
+      </div>
+
+      <div class="control-summary-card">
+        <strong>✅ ${s.realizadas}</strong>
+        Realizadas
+      </div>
+
+      <div class="control-summary-card">
+        <strong>🔴 ${s.pendentes}</strong>
+        Pendentes
+      </div>
+
+      <div class="control-summary-card">
+        <strong>${s.percentual}%</strong>
+        Conclusão
+      </div>
+
+    `;
+
+
+  $("progressText")
+    .textContent =
+    s.percentual +
+    "%";
+
+
+  $("progressFill")
+    .style.width =
+    s.percentual +
+    "%";
+
+
+  if (
+    preventiveSession.perfil ===
+    "MASTER"
+  ){
+
+    $("controlProvider")
+      .disabled =
+      false;
+
+
+    $("controlProvider")
+      .innerHTML =
+
+      `<option value="">Todos</option>` +
+
+      data.prestadores.map(
+        x => `
+
+          <option value="${esc(x.prestador)}">
+
+            ${esc(x.prestador)}
+
+          </option>
+
+        `
+      )
+      .join("");
+
+  }else{
+
+    $("controlProvider")
+      .innerHTML = `
+
+        <option value="${esc(
+          preventiveSession.prestador
+        )}">
+
+          ${esc(
+            preventiveSession.prestador
+          )}
+
+        </option>
+
+      `;
+
+
+    $("controlProvider")
+      .disabled =
+      true;
+  }
+
+
+  $("providerSummary")
+    .innerHTML =
+
+    data.prestadores.map(
+      p => `
+
+        <div class="provider-card">
+
+          <b>
+            ${esc(p.prestador)}
+          </b>
+
+          <br>
+
+          Previstas:
+          ${p.previstas}
+
+          • Realizadas:
+          ${p.realizadas}
+
+          • Pendentes:
+          ${p.pendentes}
+
+          • ${p.percentual}%
+
+        </div>
+
+      `
+    )
+    .join("");
+
+
+  renderControlList();
+}
+
+
+function renderControlList(){
+
+  if (
+    !preventiveControlData
+  ){
+
+    return;
+  }
+
+
+  const provider =
+    $("controlProvider")
+      .value;
+
+
+  let items = [];
+
+
+  if (
+    preventiveControlMode ===
+    "pending"
+  ){
+
+    items =
+      preventiveControlData
+        .pendentes
+        .map(
+          x => ({
+            ...x,
+            state:"pending"
+          })
+        );
+
+  }else if (
+    preventiveControlMode ===
+    "done"
+  ){
+
+    items =
+      preventiveControlData
+        .realizadas
+        .map(
+          x => ({
+            ...x,
+            state:"done"
+          })
+        );
+
+  }else{
+
+    items = [
+
+      ...preventiveControlData
+        .pendentes
+        .map(
+          x => ({
+            ...x,
+            state:"pending"
+          })
+        ),
+
+      ...preventiveControlData
+        .realizadas
+        .map(
+          x => ({
+            ...x,
+            state:"done"
+          })
+        )
+
+    ];
+  }
+
+
+  if (provider){
+
+    items =
+      items.filter(
+        x =>
+          x.prestador ===
+          provider
+      );
+  }
+
+
+  $("controlListStatus")
+    .textContent =
+    items.length +
+    " equipamento(s)";
+
+
+  $("controlResults")
+    .innerHTML =
+
+    items.map(
+      item => `
+
+        <div
+          class="
+            control-item
+            ${item.state}
+          "
+        >
+
+          <div class="control-head">
+
+            <div>
+
+              <b>
+                ${esc(item.id)}
+              </b>
+
+              <div>
+                ${esc(item.nome)}
+              </div>
+
+            </div>
+
+            <span
+              class="
+                control-status
+                ${item.state}
+              "
+            >
+
+              ${
+                item.state === "done"
+                  ? "✅ Realizada"
+                  : "🔴 Pendente"
+              }
+
+            </span>
+
+          </div>
+
+          <div class="search-result-data">
+
+            <b>Prestador:</b>
+            ${esc(item.prestador)}
+
+            <br>
+
+            <b>Pavimento:</b>
+            ${esc(item.pavimento)}
+
+            <br>
+
+            <b>Localização:</b>
+            ${esc(item.localizacao)}
+
+            ${
+              item.ultimoRegistro
+                ? `
+
+                  <br>
+
+                  <b>Executada:</b>
+
+                  ${esc(
+                    formatDate(
+                      item.ultimoRegistro.data
+                    )
+                  )}
+
+                  <br>
+
+                  <b>Responsável:</b>
+
+                  ${esc(
+                    item.ultimoRegistro.responsavel
+                  )}
+
+                `
+                : ""
+            }
+
+          </div>
+
+          <a
+            class="open-button"
+            href="?id=${encodeURIComponent(
+              normalizeId(item.id)
+            )}"
+          >
+            Abrir ficha
+          </a>
+
+        </div>
+
+      `
+    )
+    .join("");
+}
+
+
+/* ==========================================================
+   CARREGAR FICHA
+   ========================================================== */
+
+async function loadAsset(id){
+
+  hide(
+    "searchScreen"
+  );
+
+
+  show(
+    "assetScreen"
+  );
+
+
+  const [
+    asset,
+    status,
+    hist
+  ] =
+    await Promise.all([
+
+      api({
+        id:id
+      }),
+
+      api({
+        action:"status",
+        id:id
+      }),
+
+      api({
+        action:"history",
+        id:id
+      })
+
+    ]);
+
+
+  if (
+    !asset.ok
+  ){
+
+    $("titulo")
+      .textContent =
+      "Ativo não encontrado";
+
+    return;
+  }
+
+
+  currentAsset =
+    asset.data;
+
+
+  renderAsset(
+    currentAsset
+  );
+
+
+  renderStatus(
+    status.data
+  );
+
+
+  renderHistory(
+    hist.history ||
+    []
+  );
+
+
+  /*
+   * Histórico preventivo só se houver sessão válida.
+   */
+
+  if (
+    await sessionIsValid()
+  ){
+
+    if (
+      preventiveSession.perfil === "MASTER" ||
+      String(
+        preventiveSession.prestador
+      )
+      .toLowerCase() ===
+      String(
+        currentAsset.prestador
+      )
+      .toLowerCase()
+    ){
+
+      loadPreventiveHistory();
+    }
+  }
+}
+
+
+/* ==========================================================
+   RENDER FICHA
+   ========================================================== */
+
+function renderAsset(a){
+
+  $("titulo")
+    .textContent =
+    a.id +
+    " – " +
+    a.nome_do_equipamento;
+
+
+  $("meta")
+    .textContent =
+    a.local_detalhado ||
+    a.localizacao ||
+    a.pavimento ||
+    "";
+
+
+  $("tipoBadge")
+    .textContent =
+    a.tipo_de_ativo ||
+    "Equipamento";
+
+
+  const classification =
+    pairs([
+
+      ["Tipo de Ativo",a.tipo_de_ativo],
+      ["Categoria",a.categoria_do_ativo],
+      ["Subcategoria",a.subcategoria],
+      ["Criticidade",a.criticidade],
+      ["Classe de Manutenção",a.classe_de_manutencao]
+
+    ]);
+
+
+  if (
+    classification
+  ){
+
+    show(
+      "classificationSection"
+    );
+
+    $("classification")
+      .innerHTML =
+      classification;
+  }
+
+
+  const location =
+    pairs([
+
+      ["Área",a.area],
+      ["Ambiente",a.ambiente],
+      ["Componente / Elemento",a.componente_elemento],
+      ["Pavimento",a.pavimento],
+      ["Localização",a.localizacao],
+      ["Local Detalhado",a.local_detalhado]
+
+    ]);
+
+
+  if (
+    location
+  ){
+
+    show(
+      "locationSection"
+    );
+
+    $("location")
+      .innerHTML =
+      location;
+  }
+
+
+  const technical =
+    pairs([
+
+      ["Fabricante",a.fabricante],
+      ["Modelo",a.modelo],
+      ["Número de Série",a.numero_de_serie],
+      ["Capacidade",a.capacidade],
+      ["Amperagem Nominal",a.amperagem_nominal_fla],
+      ["Amperagem de Partida",a.amperagem_de_partida_flr],
+      ["Amperagem Medida",a.amperagem_medida],
+      ["Voltagem",a.voltagem],
+      ["Peso",a.peso],
+      ["Ano de Aquisição",a.ano_de_aquisicao],
+      ["Vida Útil Estimada",a.vida_util_estimada]
+
+    ]);
+
+
+  if (
+    technical
+  ){
+
+    show(
+      "technicalSection"
+    );
+
+    $("technical")
+      .innerHTML =
+      technical;
+  }
+
+
+  $("management")
+    .innerHTML =
+
+    pairs([
+
+      ["Status cadastral",a.status],
+      ["Prestador",a.prestador],
+      ["Periodicidade",a.periodicidade],
+      ["Observações",a.observacoes]
+
+    ]);
+
+
+  if (
+    a.periodicidade
+  ){
+
+    show(
+      "preventiveButton"
+    );
+
+    show(
+      "preventiveHistorySection"
+    );
+
+  }else{
+
+    hide(
+      "preventiveButton"
+    );
+
+    hide(
+      "preventiveHistorySection"
+    );
+  }
+}
+
+
+function renderStatus(s){
+
+  $("statusCard")
+    .className =
+    "status-card " +
+    (s.nivel || "");
+
+
+  $("statusTitle")
+    .textContent =
+    (s.icone || "") +
+    " " +
+    (s.situacao || "");
+
+
+  $("statusInfo")
+    .textContent =
+    s.totalAtivas
+      ? s.totalAtivas +
+        " ocorrência(s) ativa(s)"
+      : "Nenhuma ocorrência ativa.";
+}
+
+
+/* ==========================================================
+   HISTÓRICO OC
+   ========================================================== */
+
+function renderHistory(items){
+
+  history =
+    items;
+
+
+  if (
+    !items.length
+  ){
+
+    $("historyStatus")
+      .textContent =
+      "Nenhum histórico registrado.";
+
+    return;
+  }
+
+
+  show(
+    "historySelect"
+  );
+
+
+  $("historyStatus")
+    .textContent =
+    items.length +
+    " registro(s)";
+
+
+  $("historySelect")
+    .innerHTML =
+
+    items.map(
+      (x,i) => `
+
+        <option value="${i}">
+
+          ${esc(x.ocorrencia)}
+          |
+          ${esc(x.status)}
+
+        </option>
+
+      `
+    )
+    .join("");
+
+
+  renderHistoryItem(
+    0
+  );
+}
+
+
+function renderHistoryItem(index){
+
+  const x =
+    history[index];
+
+
+  selectedOccurrence =
+    x;
+
+
+  $("historyDetail")
+    .innerHTML = `
+
+      <div class="history-card">
+
+        <b>
+          ${esc(x.ocorrencia)}
+        </b>
+
+        <div class="muted">
+          ${esc(formatDate(x.data))}
+        </div>
+
+        <span class="tag">
+          ${esc(x.status)}
+        </span>
+
+        <div style="margin-top:8px">
+
+          <b>Descrição:</b>
+
+          <br>
+
+          ${esc(x.descricao)}
+
+        </div>
+
+        ${
+          x.foto
+            ? `
+
+              <div style="margin-top:8px">
+
+                <a
+                  href="${esc(x.foto)}"
+                  target="_blank"
+                >
+                  📷 Ver foto
+                </a>
+
+              </div>
+
+            `
+            : ""
+        }
+
+        ${
+          x.solucao
+            ? `
+
+              <div style="margin-top:8px">
+
+                <b>Solução:</b>
+
+                <br>
+
+                ${esc(x.solucao)}
+
+              </div>
+
+            `
+            : ""
+        }
+
+        ${
+          x.ultimaAlteracao
+            ? `
+
+              <div class="audit-box">
+
+                Última alteração:
+                ${esc(
+                  formatDate(
+                    x.ultimaAlteracao
+                  )
+                )}
+
+                ${
+                  x.ultimaAlteracaoPor
+                    ? " • " +
+                      esc(
+                        x.ultimaAlteracaoPor
+                      )
+                    : ""
+                }
+
+              </div>
+
+            `
+            : ""
+        }
+
+        <button
+          class="btn"
+          style="
+            width:100%;
+            margin-top:12px
+          "
+          onclick="
+            openManage(${index})
+          "
+        >
+          Gerenciar ocorrência
+        </button>
+
+      </div>
+
+    `;
+}
+
+
+/* ==========================================================
+   HISTÓRICO PREVENTIVA
+   ========================================================== */
+
+async function loadPreventiveHistory(){
+
+  const result =
+    await api({
+
+      action:
+        "preventivehistory",
+
+      id:
+        currentAsset.id,
+
+      session:
+        preventiveSession.sessionToken
+
+    });
+
+
+  if (
+    !result.ok
+  ){
+
+    return;
+  }
+
+
+  const items =
+    result.preventives || [];
+
+
+  $("preventiveHistoryStatus")
+    .textContent =
+    items.length
+      ? items.length +
+        " preventiva(s) registrada(s)"
+      : "Nenhuma preventiva registrada.";
+
+
+  $("preventiveHistory")
+    .innerHTML =
+
+    items.map(
+      item => `
+
+        <div class="preventive-card">
+
+          <div class="preventive-id">
+
+            ${esc(
+              item.registro
+            )}
+
+          </div>
+
+          <div class="muted">
+
+            ${esc(
+              formatDate(
+                item.data
+              )
+            )}
+
+          </div>
+
+          <div style="margin-top:7px">
+
+            <b>Competência:</b>
+            ${esc(item.competencia)}
+
+            <br>
+
+            <b>Prestador:</b>
+            ${esc(item.prestador)}
+
+            <br>
+
+            <b>Responsável:</b>
+            ${esc(item.responsavel)}
+
+          </div>
+
+          ${
+            item.observacao
+              ? `
+
+                <div style="margin-top:8px">
+
+                  <b>Observação:</b>
+
+                  <br>
+
+                  ${esc(
+                    item.observacao
+                  )}
+
+                </div>
+
+              `
+              : ""
+          }
+
+          ${
+            item.foto
+              ? `
+
+                <div style="margin-top:8px">
+
+                  <a
+                    href="${esc(
+                      item.foto
+                    )}"
+                    target="_blank"
+                  >
+                    📷 Ver evidência
+                  </a>
+
+                </div>
+
+              `
+              : ""
+          }
+
+        </div>
+
+      `
+    )
+    .join("");
+}
+
+
+/* ==========================================================
+   ABRIR PREVENTIVA
+   ========================================================== */
+
+function requestPreventive(){
+
+  requirePreventiveLogin(
+
+    function(){
+
+      openPreventive();
+
+      loadPreventiveHistory();
+
+    },
+
+    currentAsset.prestador
+
+  );
+}
+
+
+function openPreventive(){
 
   preventivePhotoData =
     null;
 
 
-  $("preventivePhotoInput")
-    .value =
-    "";
-
-
-  $("preventivePhotoPreview")
-    .style.display =
-    "none";
-
-
-  $("preventiveMessage")
-    .className =
-    "message";
-
-
   $("preventiveAsset")
     .textContent =
-
     currentAsset.id +
-
     " – " +
-
     currentAsset.nome_do_equipamento;
 
 
   $("preventivePeriodicity")
     .textContent =
-
-    currentAsset.periodicidade ||
-
-    "Não informada";
+    currentAsset.periodicidade;
 
 
   $("preventiveProvider")
     .textContent =
-
-    currentAsset.prestador ||
-
-    "Não informado";
+    currentAsset.prestador;
 
 
   $("preventiveCompetence")
     .textContent =
-    competenciaAtual();
+    currentCompetence();
 
 
   $("preventiveResponsible")
@@ -5501,7 +3845,11 @@ function openPreventive(){
 }
 
 
-function closePreventive(){
+/* ==========================================================
+   SALVAR PREVENTIVA
+   ========================================================== */
+
+function savePreventive(){
 
   if (
     preventivePosting
@@ -5510,14 +3858,6 @@ function closePreventive(){
     return;
   }
 
-
-  $("preventiveModal")
-    .style.display =
-    "none";
-}
-
-
-function savePreventive(){
 
   const responsible =
     $("preventiveResponsible")
@@ -5525,39 +3865,16 @@ function savePreventive(){
       .trim();
 
 
-  const observation =
-    $("preventiveObservation")
-      .value
-      .trim();
+  if (!responsible){
 
-
-  const msg =
-    $("preventiveMessage");
-
-
-  const btn =
-    $("savePreventive");
-
-
-  if (
-    preventivePosting
-  ){
-
-    return;
-  }
-
-
-  if (
-    !responsible
-  ){
-
-    msg.className =
+    $("preventiveMessage")
+      .className =
       "message error";
 
 
-    msg.textContent =
-      "Informe o responsável pela preventiva.";
-
+    $("preventiveMessage")
+      .textContent =
+      "Informe o responsável.";
 
     return;
   }
@@ -5572,20 +3889,14 @@ function savePreventive(){
     true;
 
 
-  btn.disabled =
+  $("savePreventive")
+    .disabled =
     true;
 
 
-  btn.textContent =
+  $("savePreventive")
+    .textContent =
     "Registrando...";
-
-
-  msg.className =
-    "message loading";
-
-
-  msg.textContent =
-    "Registrando manutenção preventiva...";
 
 
   $("pr_token").value =
@@ -5593,9 +3904,11 @@ function savePreventive(){
 
 
   $("pr_id").value =
-    normalizeId(
-      currentAsset.id
-    );
+    currentAsset.id;
+
+
+  $("pr_session").value =
+    preventiveSession.sessionToken;
 
 
   $("pr_responsible").value =
@@ -5603,7 +3916,7 @@ function savePreventive(){
 
 
   $("pr_observation").value =
-    observation;
+    $("preventiveObservation").value;
 
 
   if (
@@ -5613,24 +3926,17 @@ function savePreventive(){
     $("pr_photo").value =
       preventivePhotoData.base64;
 
-
     $("pr_photoName").value =
       preventivePhotoData.name;
-
 
     $("pr_photoMime").value =
       preventivePhotoData.mime;
 
   }else{
 
-    $("pr_photo").value =
-      "";
-
-    $("pr_photoName").value =
-      "";
-
-    $("pr_photoMime").value =
-      "";
+    $("pr_photo").value = "";
+    $("pr_photoName").value = "";
+    $("pr_photoMime").value = "";
   }
 
 
@@ -5644,31 +3950,198 @@ function savePreventive(){
 }
 
 
+/* ==========================================================
+   OC
+   ========================================================== */
 
-/* ============================================================
-   GERENCIAMENTO OC
-   ============================================================ */
+function openReport(){
 
-function openManage(index){
+  $("reporterName")
+    .value =
+    getSavedResponsible();
 
-  selectedOccurrence =
-    history[index];
 
+  $("reportModal")
+    .style.display =
+    "flex";
+}
+
+
+function sendReport(){
 
   if (
-    !selectedOccurrence
+    reportPosting
   ){
 
     return;
   }
 
 
-  occurrenceCorrectionPhotoData =
-    null;
+  const name =
+    $("reporterName")
+      .value
+      .trim();
 
 
-  conclusionPhotoData =
-    null;
+  if (
+    !name ||
+    !$("category").value ||
+    !$("component").value ||
+    !$("description").value.trim()
+  ){
+
+    $("reportMessage")
+      .className =
+      "message error";
+
+
+    $("reportMessage")
+      .textContent =
+      "Preencha os campos obrigatórios.";
+
+    return;
+  }
+
+
+  saveResponsible(
+    name
+  );
+
+
+  reportPosting =
+    true;
+
+
+  $("sendReport")
+    .disabled =
+    true;
+
+
+  $("sendReport")
+    .textContent =
+    "Gravando...";
+
+
+  $("p_token").value =
+    TOKEN;
+
+  $("p_id").value =
+    currentAsset.id;
+
+  $("p_reporter").value =
+    name;
+
+  $("p_contact").value =
+    $("reporterContact").value;
+
+  $("p_category").value =
+    $("category").value;
+
+  $("p_component").value =
+    $("component").value;
+
+  $("p_description").value =
+    $("description").value;
+
+
+  if (
+    photoData
+  ){
+
+    $("p_photo").value =
+      photoData.base64;
+
+    $("p_photoName").value =
+      photoData.name;
+
+    $("p_photoMime").value =
+      photoData.mime;
+  }
+
+
+  $("reportForm")
+    .action =
+    API_URL;
+
+
+  $("reportForm")
+    .submit();
+}
+
+
+/* ==========================================================
+   GERENCIAR
+   ========================================================== */
+
+const CATEGORIES = [
+  "Civil",
+  "Sanitário",
+  "Elétrica",
+  "Hidráulica",
+  "Climatização",
+  "Refrigeração",
+  "Utilidades",
+  "Segurança",
+  "Mobiliário",
+  "Equipamento",
+  "Outros"
+];
+
+
+const COMPONENTS = [
+  "Geral",
+  "Piso",
+  "Parede",
+  "Teto",
+  "Porta",
+  "Janela",
+  "Vaso Sanitário",
+  "Pia",
+  "Torneira",
+  "Descarga",
+  "Mictório",
+  "Ralo",
+  "Luminária",
+  "Tomada",
+  "Interruptor",
+  "Tubulação",
+  "Registro",
+  "Bomba",
+  "Motor",
+  "Painel",
+  "Ar-condicionado",
+  "Mobiliário",
+  "Outro"
+];
+
+
+function buildManageDropdowns(){
+
+  $("manageCategory")
+    .innerHTML =
+    CATEGORIES
+      .map(
+        x =>
+          `<option>${esc(x)}</option>`
+      )
+      .join("");
+
+
+  $("manageComponent")
+    .innerHTML =
+    COMPONENTS
+      .map(
+        x =>
+          `<option>${esc(x)}</option>`
+      )
+      .join("");
+}
+
+
+function openManage(index){
+
+  selectedOccurrence =
+    history[index];
 
 
   $("manageChangedBy")
@@ -5678,92 +4151,41 @@ function openManage(index){
 
   $("manageCategory")
     .value =
-
     selectedOccurrence
-      .categoriaOcorrencia
-
-    ||
-
-    "Outros";
+      .categoriaOcorrencia;
 
 
   $("manageComponent")
     .value =
-
     selectedOccurrence
-      .componenteAfetado
-
-    ||
-
-    "Geral";
+      .componenteAfetado;
 
 
   $("manageDescription")
     .value =
-
     selectedOccurrence
-      .descricao
-
-    ||
-
-    "";
+      .descricao;
 
 
   $("manageStatus")
     .value =
-
     selectedOccurrence
-      .status
-
-    ||
-
-    "Aberta";
+      .status;
 
 
   $("manageResponsible")
     .value =
-
     selectedOccurrence
-      .responsavel
-
-    ||
-
-    "";
+      .responsavel;
 
 
   $("manageSolution")
     .value =
-
     selectedOccurrence
-      .solucao
-
-    ||
-
-    "";
+      .solucao;
 
 
-  if (
-    selectedOccurrence.foto
-  ){
-
-    $("currentOccurrencePhoto")
-      .style.display =
-      "block";
-
-
-    $("currentOccurrencePhotoLink")
-      .href =
-      selectedOccurrence.foto;
-
-  }else{
-
-    $("currentOccurrencePhoto")
-      .style.display =
-      "none";
-  }
-
-
-  toggleConclusionPhoto();
+  toggleConclusion();
 
 
   $("manageModal")
@@ -5772,7 +4194,7 @@ function openManage(index){
 }
 
 
-function toggleConclusionPhoto(){
+function toggleConclusion(){
 
   if (
     $("manageStatus").value ===
@@ -5792,7 +4214,7 @@ function toggleConclusionPhoto(){
 }
 
 
-function closeManage(){
+function saveManage(){
 
   if (
     managePosting
@@ -5801,14 +4223,6 @@ function closeManage(){
     return;
   }
 
-
-  $("manageModal")
-    .style.display =
-    "none";
-}
-
-
-function saveManage(){
 
   const changedBy =
     $("manageChangedBy")
@@ -5816,96 +4230,7 @@ function saveManage(){
       .trim();
 
 
-  const description =
-    $("manageDescription")
-      .value
-      .trim();
-
-
-  const category =
-    $("manageCategory").value;
-
-
-  const component =
-    $("manageComponent").value;
-
-
-  const status =
-    $("manageStatus").value;
-
-
-  const solution =
-    $("manageSolution")
-      .value
-      .trim();
-
-
-  const btn =
-    $("saveManage");
-
-
-  if (
-    managePosting
-  ){
-
-    return;
-  }
-
-
-  if (
-    !changedBy
-  ){
-
-    $("manageMessage")
-      .className =
-      "message error";
-
-
-    $("manageMessage")
-      .textContent =
-      "Informe seu nome no campo Alterado por.";
-
-
-    return;
-  }
-
-
-  if (
-    !description
-  ){
-
-    $("manageMessage")
-      .className =
-      "message error";
-
-
-    $("manageMessage")
-      .textContent =
-      "A descrição não pode ficar vazia.";
-
-
-    return;
-  }
-
-
-  if (
-    status ===
-      "Concluída"
-
-    &&
-
-    !solution
-  ){
-
-    $("manageMessage")
-      .className =
-      "message error";
-
-
-    $("manageMessage")
-      .textContent =
-      "Informe a solução antes de concluir.";
-
+  if (!changedBy){
 
     return;
   }
@@ -5920,85 +4245,56 @@ function saveManage(){
     true;
 
 
-  btn.disabled =
+  $("saveManage")
+    .disabled =
     true;
 
 
-  btn.textContent =
-    "Salvando...";
-
-
-  $("manageMessage")
-    .className =
-    "message loading";
-
-
-  $("manageMessage")
+  $("saveManage")
     .textContent =
-    "Salvando alterações...";
+    "Salvando...";
 
 
   $("m_token").value =
     TOKEN;
 
-
   $("m_occurrence").value =
     selectedOccurrence.ocorrencia;
 
-
-  $("m_changedBy").value =
-    changedBy;
-
-
-  $("m_description").value =
-    description;
-
-
-  $("m_category").value =
-    category;
-
-
-  $("m_component").value =
-    component;
-
-
   $("m_status").value =
-    status;
-
+    $("manageStatus").value;
 
   $("m_responsible").value =
     $("manageResponsible").value;
 
-
   $("m_solution").value =
-    solution;
+    $("manageSolution").value;
+
+  $("m_changedBy").value =
+    changedBy;
+
+  $("m_description").value =
+    $("manageDescription").value;
+
+  $("m_category").value =
+    $("manageCategory").value;
+
+  $("m_component").value =
+    $("manageComponent").value;
 
 
   if (
-    occurrenceCorrectionPhotoData
+    correctionPhotoData
   ){
 
     $("m_occurrencePhoto").value =
-      occurrenceCorrectionPhotoData.base64;
-
-
-    $("m_occurrencePhotoName").value =
-      occurrenceCorrectionPhotoData.name;
-
-
-    $("m_occurrencePhotoMime").value =
-      occurrenceCorrectionPhotoData.mime;
-
-  }else{
-
-    $("m_occurrencePhoto").value =
-      "";
+      correctionPhotoData.base64;
 
     $("m_occurrencePhotoName").value =
-      "";
+      correctionPhotoData.name;
 
     $("m_occurrencePhotoMime").value =
-      "";
+      correctionPhotoData.mime;
   }
 
 
@@ -6009,24 +4305,11 @@ function saveManage(){
     $("m_photo").value =
       conclusionPhotoData.base64;
 
-
     $("m_photoName").value =
       conclusionPhotoData.name;
 
-
     $("m_photoMime").value =
       conclusionPhotoData.mime;
-
-  }else{
-
-    $("m_photo").value =
-      "";
-
-    $("m_photoName").value =
-      "";
-
-    $("m_photoMime").value =
-      "";
   }
 
 
@@ -6040,688 +4323,402 @@ function saveManage(){
 }
 
 
+/* ==========================================================
+   EVENTOS FOTO
+   ========================================================== */
 
-/* ============================================================
-   RECARREGAMENTOS
-   ============================================================ */
+$("photoInput").onchange =
+async function(){
 
-async function reloadOperations(){
+  if (!this.files[0]) return;
 
-  if (
-    !currentAsset
-  ){
-
-    return;
-  }
-
-
-  const id =
-    normalizeId(
-      currentAsset.id
+  photoData =
+    await processPhoto(
+      this.files[0]
     );
 
+  $("photoPreview").src =
+    photoData.dataUrl;
 
-  const [
-    status,
-    hist
-  ] =
-    await Promise.all([
-
-      api({
-        action:"status",
-        id:id
-      }),
-
-      api({
-        action:"history",
-        id:id
-      })
-
-    ]);
+  $("photoPreview").style.display =
+    "block";
+};
 
 
-  if (
-    status.ok
-  ){
+$("preventivePhotoInput").onchange =
+async function(){
 
-    renderStatus(
-      status.data
+  if (!this.files[0]) return;
+
+  preventivePhotoData =
+    await processPhoto(
+      this.files[0]
     );
-  }
+
+  $("preventivePhotoPreview").src =
+    preventivePhotoData.dataUrl;
+
+  $("preventivePhotoPreview").style.display =
+    "block";
+};
 
 
-  if (
-    hist.ok
-  ){
+$("manageOccurrencePhotoInput").onchange =
+async function(){
 
-    renderHistory(
-      hist.history ||
-      []
+  if (!this.files[0]) return;
+
+  correctionPhotoData =
+    await processPhoto(
+      this.files[0]
     );
-  }
-}
+
+  $("manageOccurrencePhotoPreview").src =
+    correctionPhotoData.dataUrl;
+
+  $("manageOccurrencePhotoPreview").style.display =
+    "block";
+};
 
 
-async function reloadPreventiveHistory(){
+$("conclusionPhotoInput").onchange =
+async function(){
 
-  if (
-    !currentAsset
-  ){
+  if (!this.files[0]) return;
 
-    return;
-  }
-
-
-  const data =
-    await api({
-
-      action:
-        "preventivehistory",
-
-      id:
-        normalizeId(
-          currentAsset.id
-        )
-
-    });
-
-
-  if (
-    data.ok
-  ){
-
-    renderPreventiveHistory(
-      data.preventives ||
-      []
+  conclusionPhotoData =
+    await processPhoto(
+      this.files[0]
     );
-  }
-}
+
+  $("conclusionPhotoPreview").src =
+    conclusionPhotoData.dataUrl;
+
+  $("conclusionPhotoPreview").style.display =
+    "block";
+};
 
 
+/* ==========================================================
+   IFRAME RETORNOS
+   ========================================================== */
 
-/* ============================================================
+$("reportFrame").onload =
+async function(){
+
+  if (!reportPosting) return;
+
+  reportPosting =
+    false;
+
+  $("sendReport").disabled =
+    true;
+
+  $("sendReport").textContent =
+    "Ocorrência gravada";
+
+  setTimeout(
+    function(){
+
+      $("reportModal").style.display =
+        "none";
+
+      $("sendReport").disabled =
+        false;
+
+      $("sendReport").textContent =
+        "Gravar ocorrência";
+
+      location.reload();
+
+    },
+    800
+  );
+};
+
+
+$("preventiveFrame").onload =
+async function(){
+
+  if (!preventivePosting) return;
+
+  preventivePosting =
+    false;
+
+  $("savePreventive").disabled =
+    true;
+
+  $("savePreventive").textContent =
+    "Preventiva registrada";
+
+  $("preventiveMessage").className =
+    "message success";
+
+  $("preventiveMessage").textContent =
+    "Preventiva registrada com sucesso.";
+
+  await loadPreventiveHistory();
+
+  setTimeout(
+    function(){
+
+      $("preventiveModal").style.display =
+        "none";
+
+      $("savePreventive").disabled =
+        false;
+
+      $("savePreventive").textContent =
+        "Registrar preventiva";
+
+    },
+    900
+  );
+};
+
+
+$("manageFrame").onload =
+function(){
+
+  if (!managePosting) return;
+
+  managePosting =
+    false;
+
+  $("manageModal").style.display =
+    "none";
+
+  location.reload();
+};
+
+
+/* ==========================================================
    EVENTOS
-   ============================================================ */
+   ========================================================== */
 
-$("tabSearch")
-  .onclick =
-  showSearchTab;
-
-
-$("tabPending")
-  .onclick =
-  showPendingTab;
+$("tabSearch").onclick =
+showSearchTab;
 
 
-$("tabPreventiveControl")
-  .onclick =
-  showPreventiveControlTab;
+$("tabPending").onclick =
+showPendingTab;
 
 
-$("searchButton")
-  .onclick =
-  searchAssets;
+$("tabPreventive").onclick =
+showPreventiveTab;
 
 
-$("searchInput")
-  .addEventListener(
+$("searchButton").onclick =
+searchAssets;
 
-    "keydown",
 
-    function(event){
+$("searchInput").onkeydown =
+function(e){
 
-      if (
-        event.key ===
-        "Enter"
-      ){
+  if (
+    e.key === "Enter"
+  ){
 
-        event.preventDefault();
+    searchAssets();
+  }
+};
 
-        searchAssets();
-      }
-    }
+
+$("reportButton").onclick =
+openReport;
+
+
+$("preventiveButton").onclick =
+requestPreventive;
+
+
+$("searchAssetsButton").onclick =
+function(){
+
+  hide(
+    "assetScreen"
   );
 
+  show(
+    "searchScreen"
+  );
 
-$("controlRefresh")
-  .onclick =
-  loadPreventiveControl;
+  showSearchTab();
+};
 
 
-$("controlCompetence")
-  .onchange =
-  loadPreventiveControl;
+$("sendLogin").onclick =
+doPreventiveLogin;
 
 
-$("controlProvider")
-  .onchange =
-  renderPreventiveControlList;
+$("cancelLogin").onclick =
+function(){
 
+  loginNextAction =
+    null;
 
-$("controlTabAll")
-  .onclick =
-  function(){
+  $("preventiveLoginModal").style.display =
+    "none";
+};
 
-    setControlMode(
-      "all"
-    );
-  };
 
+$("preventivePassword").onkeydown =
+function(e){
 
-$("controlTabPending")
-  .onclick =
-  function(){
+  if (
+    e.key === "Enter"
+  ){
 
-    setControlMode(
-      "pending"
-    );
-  };
+    doPreventiveLogin();
+  }
+};
 
 
-$("controlTabDone")
-  .onclick =
-  function(){
+$("controlRefresh").onclick =
+loadPreventiveControl;
 
-    setControlMode(
-      "done"
-    );
-  };
 
+$("controlCompetence").onchange =
+loadPreventiveControl;
 
-$("searchAssetsButton")
-  .onclick =
-  openSearch;
 
+$("controlProvider").onchange =
+renderControlList;
 
-$("reportButton")
-  .onclick =
-  openReport;
 
+$("controlAll").onclick =
+function(){
 
-$("preventiveButton")
-  .onclick =
-  openPreventive;
+  preventiveControlMode =
+    "all";
 
+  renderControlList();
+};
 
-$("cancelReport")
-  .onclick =
-  closeReport;
 
+$("controlPending").onclick =
+function(){
 
-$("sendReport")
-  .onclick =
-  sendReport;
+  preventiveControlMode =
+    "pending";
 
+  renderControlList();
+};
 
-$("cancelPreventive")
-  .onclick =
-  closePreventive;
 
+$("controlDone").onclick =
+function(){
 
-$("savePreventive")
-  .onclick =
-  savePreventive;
+  preventiveControlMode =
+    "done";
 
+  renderControlList();
+};
 
-$("historySelect")
-  .onchange =
-  function(){
 
-    renderHistoryItem(
-      Number(
-        this.value
-      )
-    );
-  };
+$("preventiveLogout").onclick =
+async function(){
 
+  if (
+    preventiveSession
+  ){
 
-$("cancelManage")
-  .onclick =
-  closeManage;
+    try{
 
+      await apiPost({
 
-$("saveManage")
-  .onclick =
-  saveManage;
+        action:
+          "preventiveLogout",
 
+        preventiveSessionToken:
+          preventiveSession.sessionToken
 
-$("manageStatus")
-  .onchange =
-  toggleConclusionPhoto;
+      });
 
+    }catch(error){}
+  }
 
 
-/* ============================================================
-   FOTOS
-   ============================================================ */
+  clearPreventiveSession();
 
-$("photoInput")
-  .onchange =
-  async function(){
+  showSearchTab();
+};
 
-    if (
-      !this.files[0]
-    ){
 
-      photoData =
-        null;
+$("cancelPreventive").onclick =
+function(){
 
+  if (!preventivePosting){
 
-      $("photoPreview")
-        .style.display =
-        "none";
+    $("preventiveModal").style.display =
+      "none";
+  }
+};
 
 
-      return;
-    }
+$("savePreventive").onclick =
+savePreventive;
 
 
-    photoData =
-      await processPhoto(
-        this.files[0]
-      );
+$("cancelReport").onclick =
+function(){
 
+  if (!reportPosting){
 
-    $("photoPreview")
-      .src =
-      photoData.dataUrl;
+    $("reportModal").style.display =
+      "none";
+  }
+};
 
 
-    $("photoPreview")
-      .style.display =
-      "block";
-  };
+$("sendReport").onclick =
+sendReport;
 
 
-$("preventivePhotoInput")
-  .onchange =
-  async function(){
+$("historySelect").onchange =
+function(){
 
-    if (
-      !this.files[0]
-    ){
+  renderHistoryItem(
+    Number(
+      this.value
+    )
+  );
+};
 
-      preventivePhotoData =
-        null;
 
+$("manageStatus").onchange =
+toggleConclusion;
 
-      $("preventivePhotoPreview")
-        .style.display =
-        "none";
 
+$("cancelManage").onclick =
+function(){
 
-      return;
-    }
+  if (!managePosting){
 
+    $("manageModal").style.display =
+      "none";
+  }
+};
 
-    preventivePhotoData =
-      await processPhoto(
-        this.files[0]
-      );
 
+$("saveManage").onclick =
+saveManage;
 
-    $("preventivePhotoPreview")
-      .src =
-      preventivePhotoData.dataUrl;
 
-
-    $("preventivePhotoPreview")
-      .style.display =
-      "block";
-  };
-
-
-$("manageOccurrencePhotoInput")
-  .onchange =
-  async function(){
-
-    if (
-      !this.files[0]
-    ){
-
-      occurrenceCorrectionPhotoData =
-        null;
-
-
-      $("manageOccurrencePhotoPreview")
-        .style.display =
-        "none";
-
-
-      return;
-    }
-
-
-    occurrenceCorrectionPhotoData =
-      await processPhoto(
-        this.files[0]
-      );
-
-
-    $("manageOccurrencePhotoPreview")
-      .src =
-      occurrenceCorrectionPhotoData
-        .dataUrl;
-
-
-    $("manageOccurrencePhotoPreview")
-      .style.display =
-      "block";
-  };
-
-
-$("conclusionPhotoInput")
-  .onchange =
-  async function(){
-
-    if (
-      !this.files[0]
-    ){
-
-      conclusionPhotoData =
-        null;
-
-
-      $("conclusionPhotoPreview")
-        .style.display =
-        "none";
-
-
-      return;
-    }
-
-
-    conclusionPhotoData =
-      await processPhoto(
-        this.files[0]
-      );
-
-
-    $("conclusionPhotoPreview")
-      .src =
-      conclusionPhotoData.dataUrl;
-
-
-    $("conclusionPhotoPreview")
-      .style.display =
-      "block";
-  };
-
-
-
-/* ============================================================
-   RETORNO OC
-   ============================================================ */
-
-$("reportFrame")
-  .onload =
-  async function(){
-
-    if (
-      !reportPosting
-    ){
-
-      return;
-    }
-
-
-    reportPosting =
-      false;
-
-
-    const btn =
-      $("sendReport");
-
-
-    btn.disabled =
-      true;
-
-
-    btn.textContent =
-      "Ocorrência gravada";
-
-
-    $("reportMessage")
-      .className =
-      "message success";
-
-
-    $("reportMessage")
-      .textContent =
-      "Ocorrência registrada com sucesso.";
-
-
-    await reloadOperations();
-
-
-    setTimeout(
-
-      function(){
-
-        closeReport();
-
-
-        btn.disabled =
-          false;
-
-
-        btn.textContent =
-          "Gravar ocorrência";
-
-
-        $("reporterContact").value =
-          "";
-
-
-        $("category").value =
-          "";
-
-
-        $("component").value =
-          "";
-
-
-        $("description").value =
-          "";
-
-
-        $("photoInput").value =
-          "";
-
-
-        $("photoPreview")
-          .style.display =
-          "none";
-
-
-        photoData =
-          null;
-
-
-        $("reporterName").value =
-          getSavedResponsible();
-
-      },
-
-      1000
-
-    );
-  };
-
-
-
-/* ============================================================
-   RETORNO PREVENTIVA
-   ============================================================ */
-
-$("preventiveFrame")
-  .onload =
-  async function(){
-
-    if (
-      !preventivePosting
-    ){
-
-      return;
-    }
-
-
-    preventivePosting =
-      false;
-
-
-    const btn =
-      $("savePreventive");
-
-
-    btn.disabled =
-      true;
-
-
-    btn.textContent =
-      "Preventiva registrada";
-
-
-    $("preventiveMessage")
-      .className =
-      "message success";
-
-
-    $("preventiveMessage")
-      .textContent =
-      "Manutenção preventiva registrada com sucesso.";
-
-
-    await reloadPreventiveHistory();
-
-
-    setTimeout(
-
-      function(){
-
-        closePreventive();
-
-
-        btn.disabled =
-          false;
-
-
-        btn.textContent =
-          "Registrar preventiva";
-
-
-        $("preventiveObservation")
-          .value =
-          "";
-
-
-        $("preventivePhotoInput")
-          .value =
-          "";
-
-
-        $("preventivePhotoPreview")
-          .style.display =
-          "none";
-
-
-        preventivePhotoData =
-          null;
-
-
-        $("preventiveResponsible")
-          .value =
-          getSavedResponsible();
-
-      },
-
-      1100
-
-    );
-  };
-
-
-
-/* ============================================================
-   RETORNO GERENCIAMENTO
-   ============================================================ */
-
-$("manageFrame")
-  .onload =
-  async function(){
-
-    if (
-      !managePosting
-    ){
-
-      return;
-    }
-
-
-    managePosting =
-      false;
-
-
-    const btn =
-      $("saveManage");
-
-
-    btn.disabled =
-      true;
-
-
-    btn.textContent =
-      "Alterações salvas";
-
-
-    $("manageMessage")
-      .className =
-      "message success";
-
-
-    $("manageMessage")
-      .textContent =
-      "Ocorrência atualizada com sucesso.";
-
-
-    await reloadOperations();
-
-
-    setTimeout(
-
-      function(){
-
-        closeManage();
-
-
-        btn.disabled =
-          false;
-
-
-        btn.textContent =
-          "Salvar alterações";
-
-      },
-
-      1000
-
-    );
-  };
-
-
-
-/* ============================================================
-   INICIALIZAÇÃO
-   ============================================================ */
+/* ==========================================================
+   MAIN
+   ========================================================== */
 
 async function main(){
 
-  fillSavedResponsible();
+  buildManageDropdowns();
 
 
-  $("controlCompetence")
-    .value =
-    competenciaAtual();
+  readPreventiveSession();
+
+
+  $("controlCompetence").value =
+    currentCompetence();
 
 
   const id =
@@ -6729,21 +4726,15 @@ async function main(){
 
 
   if (
-    !id
+    !id ||
+    id === "EQBUSCA"
   ){
 
-    openSearch();
+    show(
+      "searchScreen"
+    );
 
-    return;
-  }
-
-
-  if (
-    id ===
-    SEARCH_ID
-  ){
-
-    openSearch();
+    showSearchTab();
 
     return;
   }
@@ -6756,7 +4747,6 @@ async function main(){
 
 
 main();
-
 
 </script>
 
