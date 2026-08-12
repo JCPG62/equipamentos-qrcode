@@ -1,4 +1,5 @@
 <!doctype html>
+
 <html lang="pt-br">
 
 <head>
@@ -42,8 +43,7 @@ body{
   border:1px solid #e5e7eb;
   border-radius:16px;
   padding:16px;
-  box-shadow:
-    0 5px 15px rgba(0,0,0,.05);
+  box-shadow:0 5px 15px rgba(0,0,0,.05);
 }
 
 h1{
@@ -89,6 +89,7 @@ h3{
 .pair{
   padding:7px 0;
   border-bottom:1px dashed #eee;
+  line-height:1.45;
 }
 
 .pair:last-child{
@@ -96,9 +97,9 @@ h3{
 }
 
 
-/* ==========================================================
-   BOTÕES DA FICHA CENTRALIZADOS
-   ========================================================== */
+/* ============================================================
+   BOTÕES CENTRALIZADOS
+   ============================================================ */
 
 .actions{
   display:flex;
@@ -121,31 +122,30 @@ h3{
   border-radius:999px;
   font-weight:700;
   cursor:pointer;
-  text-decoration:none;
 }
 
 .chip{
   background:#dc2626;
-  color:white;
+  color:#fff;
   border:0;
 }
 
 .btn-preventive{
   background:#047857;
-  color:white;
+  color:#fff;
   border:0;
 }
 
 .btn-search{
-  background:white;
+  background:#fff;
   color:#1f4e78;
   border:1px solid #1f4e78;
 }
 
 
-/* ==========================================================
+/* ============================================================
    STATUS
-   ========================================================== */
+   ============================================================ */
 
 .status-card{
   margin-top:16px;
@@ -181,9 +181,9 @@ h3{
 }
 
 
-/* ==========================================================
+/* ============================================================
    EQBUSCA
-   ========================================================== */
+   ============================================================ */
 
 .search-title{
   color:#1f4e78;
@@ -200,7 +200,7 @@ h3{
 
 .menu-button{
   border:1px solid #d1d5db;
-  background:white;
+  background:#fff;
   border-radius:12px;
   padding:13px;
   font-weight:700;
@@ -209,7 +209,7 @@ h3{
 
 .menu-button.active{
   background:#1f4e78;
-  color:white;
+  color:#fff;
 }
 
 .menu-button.preventive.active{
@@ -227,9 +227,9 @@ h3{
 }
 
 .search-box button{
-  background:#1f4e78;
-  color:#fff;
   border:0;
+  background:#1f4e78;
+  color:white;
   border-radius:9px;
   padding:0 18px;
 }
@@ -243,13 +243,13 @@ h3{
   padding:14px;
   border:1px solid #e5e7eb;
   border-radius:13px;
-  background:white;
+  background:#fff;
 }
 
 .search-result-id{
-  color:#1f4e78;
-  font-weight:800;
   font-size:.8rem;
+  font-weight:800;
+  color:#1f4e78;
 }
 
 .search-result-name{
@@ -276,9 +276,9 @@ h3{
 }
 
 
-/* ==========================================================
-   PENDÊNCIAS OC
-   ========================================================== */
+/* ============================================================
+   RESUMOS
+   ============================================================ */
 
 .pending-summary,
 .control-summary{
@@ -290,7 +290,7 @@ h3{
 
 .pending-number,
 .control-summary-card{
-  background:white;
+  background:#fff;
   border:1px solid #e5e7eb;
   border-radius:12px;
   padding:11px;
@@ -304,9 +304,9 @@ h3{
 }
 
 
-/* ==========================================================
+/* ============================================================
    CONTROLE PREVENTIVAS
-   ========================================================== */
+   ============================================================ */
 
 .preventive-login-info{
   margin-bottom:13px;
@@ -334,7 +334,6 @@ h3{
   padding:13px;
   border:1px solid #e5e7eb;
   border-radius:12px;
-  background:white;
 }
 
 .progress-head{
@@ -347,8 +346,8 @@ h3{
   margin-top:8px;
   height:13px;
   border-radius:999px;
-  overflow:hidden;
   background:#e5e7eb;
+  overflow:hidden;
 }
 
 .progress-fill{
@@ -359,22 +358,22 @@ h3{
 
 .control-tabs{
   display:flex;
-  flex-wrap:wrap;
   gap:8px;
+  flex-wrap:wrap;
   margin-top:15px;
 }
 
 .control-tab{
   padding:8px 12px;
+  background:#fff;
   border:1px solid #d1d5db;
   border-radius:999px;
-  background:white;
   font-weight:700;
 }
 
 .control-tab.active{
   background:#111827;
-  color:white;
+  color:#fff;
 }
 
 .control-item.pending{
@@ -385,8 +384,13 @@ h3{
   border-left:5px solid #059669;
 }
 
+.control-head{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+}
+
 .control-status{
-  display:inline-block;
   padding:5px 8px;
   border-radius:999px;
   font-size:.75rem;
@@ -403,12 +407,6 @@ h3{
   color:#166534;
 }
 
-.control-head{
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
-}
-
 .provider-card{
   margin-top:8px;
   padding:10px;
@@ -417,9 +415,9 @@ h3{
 }
 
 
-/* ==========================================================
-   FORMULÁRIOS
-   ========================================================== */
+/* ============================================================
+   FORM
+   ============================================================ */
 
 label{
   display:grid;
@@ -464,16 +462,87 @@ button{
   color:#111827;
 }
 
-.btn:disabled,
 button:disabled{
   opacity:.55;
   cursor:not-allowed;
 }
 
 
-/* ==========================================================
+/* ============================================================
+   REQUISITOS
+   ============================================================ */
+
+.requirements-box{
+  margin-top:13px;
+  padding:11px;
+  border-radius:11px;
+  background:#f9fafb;
+  border:1px solid #e5e7eb;
+}
+
+.requirement{
+  margin:5px 0;
+  font-size:.85rem;
+}
+
+.required-yes{
+  color:#991b1b;
+  font-weight:700;
+}
+
+.required-no{
+  color:#047857;
+}
+
+
+/* ============================================================
+   ASSINATURA
+   ============================================================ */
+
+.signature-box{
+  margin-top:14px;
+  padding:12px;
+  border:1px solid #d1d5db;
+  border-radius:12px;
+  background:#f9fafb;
+}
+
+.signature-title{
+  font-weight:800;
+}
+
+.signature-help{
+  margin-top:3px;
+  font-size:.8rem;
+  color:#6b7280;
+}
+
+.signature-canvas-wrap{
+  margin-top:10px;
+  border:2px dashed #9ca3af;
+  background:white;
+  border-radius:9px;
+  overflow:hidden;
+}
+
+#signatureCanvas{
+  display:block;
+  width:100%;
+  height:180px;
+  touch-action:none;
+  cursor:crosshair;
+}
+
+.signature-actions{
+  margin-top:8px;
+  display:flex;
+  justify-content:flex-end;
+}
+
+
+/* ============================================================
    MODAL
-   ========================================================== */
+   ============================================================ */
 
 .modal{
   position:fixed;
@@ -490,9 +559,9 @@ button:disabled{
   width:min(700px,96vw);
   max-height:92vh;
   overflow:auto;
+  padding:17px;
   background:white;
   border-radius:15px;
-  padding:17px;
 }
 
 .modal-actions{
@@ -507,10 +576,7 @@ button:disabled{
   max-width:100%;
   max-height:280px;
   margin-top:10px;
-}
-
-.current-photo{
-  display:none;
+  border-radius:9px;
 }
 
 .message{
@@ -543,14 +609,15 @@ button:disabled{
   border:1px solid #a7f3d0;
   border-radius:10px;
   background:#ecfdf5;
+  line-height:1.6;
 }
 
 .tag{
   display:inline-block;
-  margin:5px 4px 5px 0;
   padding:4px 8px;
-  background:#eef2ff;
+  margin:5px 4px 5px 0;
   border-radius:999px;
+  background:#eef2ff;
   font-size:.75rem;
 }
 
@@ -604,13 +671,12 @@ iframe{
 
   .actions{
     flex-direction:column;
-    align-items:center;
   }
 
   .chip,
   .btn-preventive,
   .btn-search{
-    width:min(100%,360px);
+    width:min(100%,380px);
   }
 
   .modal-actions{
@@ -633,9 +699,9 @@ iframe{
 <div class="container">
 
 
-<!-- ========================================================
+<!-- =========================================================
      EQBUSCA
-     ======================================================== -->
+     ========================================================= -->
 
 <div
   id="searchScreen"
@@ -677,8 +743,6 @@ Gestão rápida de manutenção
 </div>
 
 
-<!-- BUSCA -->
-
 <div id="searchArea">
 
 <div class="card">
@@ -709,14 +773,10 @@ Buscar
 </div>
 
 
-<!-- OC PENDENTES -->
-
 <div
   id="pendingArea"
   class="hidden"
 >
-
-<div id="pendingStatus"></div>
 
 <div
   id="pendingSummary"
@@ -728,15 +788,12 @@ Buscar
 </div>
 
 
-<!-- CONTROLE PREVENTIVA -->
-
 <div
   id="preventiveControlArea"
   class="hidden"
 >
 
 <div class="card">
-
 
 <div
   id="preventiveLoggedInfo"
@@ -820,6 +877,7 @@ Conclusão mensal
 
 </div>
 
+
 <div class="progress-track">
 
 <div
@@ -832,9 +890,7 @@ Conclusão mensal
 </div>
 
 
-<div
-  id="providerSummary"
-></div>
+<div id="providerSummary"></div>
 
 
 <div class="control-tabs">
@@ -876,14 +932,13 @@ Todos
 
 </div>
 
-
 </div>
 
 
 
-<!-- ========================================================
+<!-- =========================================================
      FICHA
-     ======================================================== -->
+     ========================================================= -->
 
 <div
   id="assetScreen"
@@ -978,8 +1033,6 @@ Gestão do Ativo
 </div>
 
 
-<!-- BOTÕES CENTRALIZADOS -->
-
 <div class="actions">
 
 <button
@@ -1054,9 +1107,9 @@ Login necessário para visualizar.
 
 
 
-<!-- ========================================================
+<!-- =========================================================
      LOGIN PREVENTIVA
-     ======================================================== -->
+     ========================================================= -->
 
 <div
   id="preventiveLoginModal"
@@ -1131,9 +1184,9 @@ Entrar
 
 
 
-<!-- ========================================================
-     MODAL PREVENTIVA
-     ======================================================== -->
+<!-- =========================================================
+     PREVENTIVA
+     ========================================================= -->
 
 <div
   id="preventiveModal"
@@ -1172,30 +1225,35 @@ Entrar
 </div>
 
 
+<div
+  id="preventiveRequirements"
+  class="requirements-box"
+></div>
+
+
 <label>
 
 Responsável pela preventiva *
 
-<input
-  id="preventiveResponsible"
->
+<input id="preventiveResponsible">
 
 </label>
 
 
-<label>
+<label id="preventiveObservationLabel">
 
 Observação
 
 <textarea
   id="preventiveObservation"
   rows="5"
+  placeholder="Descreva a preventiva realizada..."
 ></textarea>
 
 </label>
 
 
-<label>
+<label id="preventivePhotoLabel">
 
 Foto / evidência
 
@@ -1213,6 +1271,49 @@ Foto / evidência
   id="preventivePhotoPreview"
   class="photo-preview"
 >
+
+
+<div
+  id="signatureBox"
+  class="signature-box hidden"
+>
+
+<div class="signature-title">
+
+✍️ Assinatura do responsável
+
+<span
+  id="signatureRequiredText"
+  class="required-yes"
+></span>
+
+</div>
+
+<div class="signature-help">
+Assine no quadro abaixo usando o dedo ou o mouse.
+</div>
+
+
+<div class="signature-canvas-wrap">
+
+<canvas id="signatureCanvas"></canvas>
+
+</div>
+
+
+<div class="signature-actions">
+
+<button
+  id="clearSignature"
+  type="button"
+  class="btn btn-secondary"
+>
+Limpar assinatura
+</button>
+
+</div>
+
+</div>
 
 
 <div
@@ -1234,7 +1335,7 @@ Cancelar
   id="savePreventive"
   class="btn btn-green"
 >
-Registrar preventiva
+Registrar Preventiva
 </button>
 
 </div>
@@ -1245,9 +1346,9 @@ Registrar preventiva
 
 
 
-<!-- ========================================================
-     MODAL OC
-     ======================================================== -->
+<!-- =========================================================
+     NOVA OC
+     ========================================================= -->
 
 <div
   id="reportModal"
@@ -1393,9 +1494,9 @@ Gravar ocorrência
 
 
 
-<!-- ========================================================
+<!-- =========================================================
      GERENCIAR OC
-     ======================================================== -->
+     ========================================================= -->
 
 <div
   id="manageModal"
@@ -1404,7 +1505,7 @@ Gravar ocorrência
 
 <div class="modal-box">
 
-<h2 id="manageTitle">
+<h2>
 Gerenciar ocorrência
 </h2>
 
@@ -1509,6 +1610,7 @@ Foto da conclusão
 
 </label>
 
+
 <img
   id="conclusionPhotoPreview"
   class="photo-preview"
@@ -1536,7 +1638,7 @@ Cancelar
   id="saveManage"
   class="btn"
 >
-Salvar
+Salvar alterações
 </button>
 
 </div>
@@ -1547,9 +1649,9 @@ Salvar
 
 
 
-<!-- ========================================================
-     FORMS
-     ======================================================== -->
+<!-- =========================================================
+     FORMS OC / GERENCIAMENTO
+     ========================================================= -->
 
 <form
   id="reportForm"
@@ -1558,6 +1660,7 @@ Salvar
   style="display:none"
 >
 
+<input name="action" value="reportOccurrence">
 <input name="token" id="p_token">
 <input name="id" id="p_id">
 <input name="reportadoPor" id="p_reporter">
@@ -1568,54 +1671,6 @@ Salvar
 <input name="fotoBase64" id="p_photo">
 <input name="fotoNome" id="p_photoName">
 <input name="fotoMime" id="p_photoMime">
-
-</form>
-
-
-<form
-  id="preventiveForm"
-  method="POST"
-  target="preventiveFrame"
-  style="display:none"
->
-
-<input
-  name="action"
-  value="registerPreventive"
->
-
-<input name="token" id="pr_token">
-<input name="id" id="pr_id">
-
-<input
-  name="preventiveSessionToken"
-  id="pr_session"
->
-
-<input
-  name="preventiveResponsible"
-  id="pr_responsible"
->
-
-<input
-  name="preventiveObservation"
-  id="pr_observation"
->
-
-<input
-  name="preventivePhotoBase64"
-  id="pr_photo"
->
-
-<input
-  name="preventivePhotoName"
-  id="pr_photoName"
->
-
-<input
-  name="preventivePhotoMime"
-  id="pr_photoMime"
->
 
 </form>
 
@@ -1653,18 +1708,13 @@ Salvar
 ></iframe>
 
 <iframe
-  id="preventiveFrame"
-  name="preventiveFrame"
-></iframe>
-
-<iframe
   id="manageFrame"
   name="manageFrame"
 ></iframe>
 
 
 <div class="footer">
-QRManut • Versão 6.9
+QRManut • Versão 7.0
 </div>
 
 
@@ -1674,9 +1724,9 @@ QRManut • Versão 6.9
 <script>
 
 
-/* ==========================================================
+/* ============================================================
    CONFIG
-   ========================================================== */
+   ============================================================ */
 
 const API_URL =
 "https://script.google.com/macros/s/AKfycbx4tpC42Q6WdkNhTUTAGoZWvG5M24zwlNscnwbDP5B3Q5pWo8B32-Lf0rQ2Xtua1AFMAQ/exec";
@@ -1702,155 +1752,110 @@ const QUALITY =
 0.72;
 
 
-/* ==========================================================
+/* ============================================================
    ESTADO
-   ========================================================== */
+   ============================================================ */
 
-let currentAsset =
-null;
+let currentAsset = null;
 
+let history = [];
 
-let history =
-[];
+let selectedOccurrence = null;
 
+let preventiveControlData = null;
 
-let selectedOccurrence =
-null;
+let preventiveControlMode = "all";
 
+let preventiveSession = null;
 
-let preventiveControlData =
-null;
+let preventiveRequirements = null;
 
+let loginNextAction = null;
 
-let preventiveControlMode =
-"all";
+let photoData = null;
 
+let preventivePhotoData = null;
 
-let preventiveSession =
-null;
+let correctionPhotoData = null;
 
+let conclusionPhotoData = null;
 
-let loginNextAction =
-null;
+let reportPosting = false;
 
+let preventivePosting = false;
 
-let photoData =
-null;
+let managePosting = false;
 
+let signatureDirty = false;
 
-let preventivePhotoData =
-null;
+let signatureDrawing = false;
 
-
-let correctionPhotoData =
-null;
+let signatureCtx = null;
 
 
-let conclusionPhotoData =
-null;
-
-
-let reportPosting =
-false;
-
-
-let preventivePosting =
-false;
-
-
-let managePosting =
-false;
-
-
-/* ==========================================================
+/* ============================================================
    HELPERS
-   ========================================================== */
+   ============================================================ */
 
 function $(id){
-
   return document.getElementById(id);
 }
 
 
 function show(id){
-
-  $(id)
-    .classList
-    .remove(
-      "hidden"
-    );
+  $(id).classList.remove("hidden");
 }
 
 
 function hide(id){
-
-  $(id)
-    .classList
-    .add(
-      "hidden"
-    );
+  $(id).classList.add("hidden");
 }
 
 
 function esc(value){
 
-  return String(
-    value ?? ""
-  )
-  .replace(/&/g,"&amp;")
-  .replace(/</g,"&lt;")
-  .replace(/>/g,"&gt;")
-  .replace(/"/g,"&quot;")
-  .replace(/'/g,"&#039;");
+  return String(value ?? "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
 }
 
 
 function normalizeId(value){
 
-  return String(
-    value || ""
-  )
-  .trim()
-  .toUpperCase();
+  return String(value || "")
+    .trim()
+    .toUpperCase();
 }
 
 
 function getId(){
 
   return normalizeId(
-
     new URLSearchParams(
       location.search
-    )
-    .get("id")
-
+    ).get("id")
   );
 }
 
 
 function formatDate(value){
 
-  if (!value){
-
-    return "";
-  }
+  if (!value) return "";
 
 
   const d =
     new Date(value);
 
 
-  if (
-    isNaN(d)
-  ){
-
+  if (isNaN(d)) {
     return value;
   }
 
 
-  return d.toLocaleString(
-    "pt-BR"
-  );
+  return d.toLocaleString("pt-BR");
 }
 
 
@@ -1865,11 +1870,7 @@ function currentCompetence(){
     "-" +
     String(
       d.getMonth() + 1
-    )
-    .padStart(
-      2,
-      "0"
-    )
+    ).padStart(2,"0")
   );
 }
 
@@ -1900,13 +1901,13 @@ function pairs(items){
 }
 
 
-/* ==========================================================
-   RESPONSÁVEL LOCAL
-   ========================================================== */
+/* ============================================================
+   LOCAL STORAGE
+   ============================================================ */
 
 function getSavedResponsible(){
 
-  try{
+  try {
 
     return (
       localStorage.getItem(
@@ -1914,8 +1915,8 @@ function getSavedResponsible(){
       ) || ""
     );
 
-  }catch(error){
-
+  }
+  catch(error) {
     return "";
   }
 }
@@ -1923,26 +1924,24 @@ function getSavedResponsible(){
 
 function saveResponsible(name){
 
-  if (!name){
-
-    return;
-  }
+  if (!name) return;
 
 
-  try{
+  try {
 
     localStorage.setItem(
       RESPONSIBLE_KEY,
       name
     );
 
-  }catch(error){}
+  }
+  catch(error){}
 }
 
 
-/* ==========================================================
-   SESSÃO PREVENTIVA
-   ========================================================== */
+/* ============================================================
+   SESSÃO
+   ============================================================ */
 
 function savePreventiveSession(data){
 
@@ -1952,16 +1951,14 @@ function savePreventiveSession(data){
 
   sessionStorage.setItem(
     PREVENTIVE_SESSION_KEY,
-    JSON.stringify(
-      data
-    )
+    JSON.stringify(data)
   );
 }
 
 
 function readPreventiveSession(){
 
-  try{
+  try {
 
     const raw =
       sessionStorage.getItem(
@@ -1974,19 +1971,17 @@ function readPreventiveSession(){
         ? JSON.parse(raw)
         : null;
 
-  }catch(error){
+  }
+  catch(error) {
 
-    preventiveSession =
-      null;
+    preventiveSession = null;
   }
 }
 
 
 function clearPreventiveSession(){
 
-  preventiveSession =
-    null;
-
+  preventiveSession = null;
 
   sessionStorage.removeItem(
     PREVENTIVE_SESSION_KEY
@@ -1994,9 +1989,9 @@ function clearPreventiveSession(){
 }
 
 
-/* ==========================================================
-   API GET
-   ========================================================== */
+/* ============================================================
+   API
+   ============================================================ */
 
 async function api(params){
 
@@ -2022,10 +2017,6 @@ async function api(params){
 }
 
 
-/* ==========================================================
-   API POST
-   ========================================================== */
-
 async function apiPost(params){
 
   const body =
@@ -2040,7 +2031,9 @@ async function apiPost(params){
 
   const response =
     await fetch(
+
       API_URL,
+
       {
         method:"POST",
 
@@ -2052,6 +2045,7 @@ async function apiPost(params){
         body:
           body.toString()
       }
+
     );
 
 
@@ -2059,28 +2053,26 @@ async function apiPost(params){
 }
 
 
-/* ==========================================================
-   VALIDAR SESSÃO
-   ========================================================== */
+/* ============================================================
+   SESSÃO VÁLIDA
+   ============================================================ */
 
 async function sessionIsValid(){
 
   if (
     !preventiveSession ||
     !preventiveSession.sessionToken
-  ){
-
+  ) {
     return false;
   }
 
 
-  try{
+  try {
 
     const result =
       await api({
 
-        action:
-          "preventivesession",
+        action:"preventivesession",
 
         session:
           preventiveSession.sessionToken
@@ -2088,9 +2080,7 @@ async function sessionIsValid(){
       });
 
 
-    if (
-      !result.ok
-    ){
+    if (!result.ok) {
 
       clearPreventiveSession();
 
@@ -2100,7 +2090,8 @@ async function sessionIsValid(){
 
     return true;
 
-  }catch(error){
+  }
+  catch(error) {
 
     clearPreventiveSession();
 
@@ -2109,9 +2100,9 @@ async function sessionIsValid(){
 }
 
 
-/* ==========================================================
+/* ============================================================
    LOGIN
-   ========================================================== */
+   ============================================================ */
 
 async function requirePreventiveLogin(
   nextAction,
@@ -2122,26 +2113,18 @@ async function requirePreventiveLogin(
     await sessionIsValid();
 
 
-  if (valid){
-
-    /*
-     * MASTER pode acessar qualquer prestador.
-     */
+  if (valid) {
 
     if (
       preventiveSession.perfil ===
       "MASTER"
-    ){
+    ) {
 
       nextAction();
 
       return;
     }
 
-
-    /*
-     * Prestador deve coincidir.
-     */
 
     if (
       !provider ||
@@ -2153,7 +2136,7 @@ async function requirePreventiveLogin(
       String(provider)
       .trim()
       .toLowerCase()
-    ){
+    ) {
 
       nextAction();
 
@@ -2166,40 +2149,29 @@ async function requirePreventiveLogin(
     nextAction;
 
 
-  $("preventiveUsername")
-    .value =
-    "";
+  $("preventiveUsername").value = "";
 
+  $("preventivePassword").value = "";
 
-  $("preventivePassword")
-    .value =
-    "";
-
-
-  $("loginMessage")
-    .className =
+  $("loginMessage").className =
     "message";
 
 
-  if (provider){
+  if (provider) {
 
-    show(
-      "loginProviderInfo"
-    );
+    show("loginProviderInfo");
 
 
-    $("loginProviderInfo")
-      .innerHTML =
+    $("loginProviderInfo").innerHTML =
 
       "<b>Prestador do ativo:</b> " +
 
       esc(provider);
 
-  }else{
+  }
+  else {
 
-    hide(
-      "loginProviderInfo"
-    );
+    hide("loginProviderInfo");
   }
 
 
@@ -2218,22 +2190,16 @@ async function doPreventiveLogin(){
 
 
   const password =
-    $("preventivePassword")
-      .value;
+    $("preventivePassword").value;
 
 
-  if (
-    !user ||
-    !password
-  ){
+  if (!user || !password) {
 
-    $("loginMessage")
-      .className =
+    $("loginMessage").className =
       "message error";
 
 
-    $("loginMessage")
-      .textContent =
+    $("loginMessage").textContent =
       "Informe usuário e senha.";
 
 
@@ -2241,58 +2207,36 @@ async function doPreventiveLogin(){
   }
 
 
-  $("sendLogin")
-    .disabled =
-    true;
+  $("sendLogin").disabled = true;
 
-
-  $("sendLogin")
-    .textContent =
+  $("sendLogin").textContent =
     "Entrando...";
 
 
-  $("loginMessage")
-    .className =
-    "message loading";
-
-
-  $("loginMessage")
-    .textContent =
-    "Validando acesso...";
-
-
-  try{
-
+  try {
 
     const result =
       await apiPost({
 
-        action:
-          "preventiveLogin",
+        action:"preventiveLogin",
 
-        username:
-          user,
+        username:user,
 
-        password:
-          password
+        password:password
 
       });
 
 
-    if (
-      !result.ok
-    ){
+    if (!result.ok) {
 
       throw new Error(
         result.detail ||
-        "Login inválido."
+        "Usuário ou senha inválidos."
       );
     }
 
 
-    savePreventiveSession(
-      result
-    );
+    savePreventiveSession(result);
 
 
     $("preventiveLoginModal")
@@ -2300,60 +2244,47 @@ async function doPreventiveLogin(){
       "none";
 
 
-    if (
-      loginNextAction
-    ){
+    if (loginNextAction) {
 
       const fn =
         loginNextAction;
 
 
-      loginNextAction =
-        null;
+      loginNextAction = null;
 
 
       fn();
     }
 
+  }
+  catch(error) {
 
-  }catch(error){
-
-
-    $("loginMessage")
-      .className =
+    $("loginMessage").className =
       "message error";
 
 
-    $("loginMessage")
-      .textContent =
+    $("loginMessage").textContent =
       error.message;
+  }
+  finally {
 
+    $("sendLogin").disabled = false;
 
-  }finally{
-
-
-    $("sendLogin")
-      .disabled =
-      false;
-
-
-    $("sendLogin")
-      .textContent =
+    $("sendLogin").textContent =
       "Entrar";
   }
 }
 
 
-/* ==========================================================
+/* ============================================================
    FOTO
-   ========================================================== */
+   ============================================================ */
 
 function processPhoto(file){
 
   return new Promise(
 
     function(resolve,reject){
-
 
       const reader =
         new FileReader();
@@ -2362,7 +2293,6 @@ function processPhoto(file){
       reader.onload =
         function(e){
 
-
           const img =
             new Image();
 
@@ -2370,48 +2300,32 @@ function processPhoto(file){
           img.onload =
             function(){
 
-
-              let w =
-                img.width;
-
-
-              let h =
-                img.height;
+              let w = img.width;
+              let h = img.height;
 
 
               if (
                 w > MAX_DIM ||
                 h > MAX_DIM
-              ){
+              ) {
 
-
-                if (
-                  w > h
-                ){
+                if (w > h) {
 
                   h =
                     Math.round(
-                      h *
-                      MAX_DIM /
-                      w
+                      h * MAX_DIM / w
                     );
 
-
-                  w =
-                    MAX_DIM;
-
-                }else{
+                  w = MAX_DIM;
+                }
+                else {
 
                   w =
                     Math.round(
-                      w *
-                      MAX_DIM /
-                      h
+                      w * MAX_DIM / h
                     );
 
-
-                  h =
-                    MAX_DIM;
+                  h = MAX_DIM;
                 }
               }
 
@@ -2422,12 +2336,8 @@ function processPhoto(file){
                 );
 
 
-              canvas.width =
-                w;
-
-
-              canvas.height =
-                h;
+              canvas.width = w;
+              canvas.height = h;
 
 
               canvas
@@ -2477,17 +2387,227 @@ function processPhoto(file){
         reject;
 
 
-      reader.readAsDataURL(
-        file
-      );
+      reader.readAsDataURL(file);
     }
   );
 }
 
 
-/* ==========================================================
+/* ============================================================
+   ASSINATURA
+   ============================================================ */
+
+function setupSignatureCanvas(){
+
+  const canvas =
+    $("signatureCanvas");
+
+
+  const rect =
+    canvas.getBoundingClientRect();
+
+
+  const ratio =
+    window.devicePixelRatio || 1;
+
+
+  canvas.width =
+    Math.max(
+      1,
+      Math.floor(
+        rect.width * ratio
+      )
+    );
+
+
+  canvas.height =
+    Math.max(
+      1,
+      Math.floor(
+        180 * ratio
+      )
+    );
+
+
+  signatureCtx =
+    canvas.getContext("2d");
+
+
+  signatureCtx.scale(
+    ratio,
+    ratio
+  );
+
+
+  signatureCtx.lineWidth = 2;
+
+  signatureCtx.lineCap =
+    "round";
+
+  signatureCtx.lineJoin =
+    "round";
+
+
+  clearSignatureCanvas();
+}
+
+
+function clearSignatureCanvas(){
+
+  const canvas =
+    $("signatureCanvas");
+
+
+  if (!signatureCtx) {
+    return;
+  }
+
+
+  /*
+   * Como existe scale no contexto,
+   * usamos dimensões CSS.
+   */
+
+  signatureCtx.save();
+
+  signatureCtx.setTransform(
+    1,0,0,1,0,0
+  );
+
+  signatureCtx.clearRect(
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
+
+  signatureCtx.fillStyle =
+    "#ffffff";
+
+  signatureCtx.fillRect(
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
+
+  signatureCtx.restore();
+
+
+  signatureDirty = false;
+}
+
+
+function signaturePoint(event){
+
+  const canvas =
+    $("signatureCanvas");
+
+
+  const rect =
+    canvas.getBoundingClientRect();
+
+
+  return {
+
+    x:
+      event.clientX -
+      rect.left,
+
+    y:
+      event.clientY -
+      rect.top
+
+  };
+}
+
+
+function signatureStart(event){
+
+  event.preventDefault();
+
+
+  signatureDrawing = true;
+
+
+  const p =
+    signaturePoint(event);
+
+
+  signatureCtx.beginPath();
+
+  signatureCtx.moveTo(
+    p.x,
+    p.y
+  );
+
+
+  signatureDirty = true;
+}
+
+
+function signatureMove(event){
+
+  if (!signatureDrawing) {
+    return;
+  }
+
+
+  event.preventDefault();
+
+
+  const p =
+    signaturePoint(event);
+
+
+  signatureCtx.lineTo(
+    p.x,
+    p.y
+  );
+
+
+  signatureCtx.stroke();
+}
+
+
+function signatureEnd(event){
+
+  if (event) {
+    event.preventDefault();
+  }
+
+
+  signatureDrawing = false;
+}
+
+
+function getSignatureData(){
+
+  if (!signatureDirty) {
+    return null;
+  }
+
+
+  const dataUrl =
+    $("signatureCanvas")
+      .toDataURL("image/png");
+
+
+  return {
+
+    base64:
+      dataUrl.split(",")[1],
+
+    mime:
+      "image/png"
+
+  };
+}
+
+
+/* ============================================================
    TABS
-   ========================================================== */
+   ============================================================ */
 
 function showOnly(area){
 
@@ -2496,10 +2616,7 @@ function showOnly(area){
     "pendingArea",
     "preventiveControlArea"
   ]
-  .forEach(
-    id =>
-      hide(id)
-  );
+  .forEach(hide);
 
 
   show(area);
@@ -2530,9 +2647,7 @@ function showSearchTab(){
     .classList
     .add("active");
 
-  showOnly(
-    "searchArea"
-  );
+  showOnly("searchArea");
 }
 
 
@@ -2544,9 +2659,7 @@ async function showPendingTab(){
     .classList
     .add("active");
 
-  showOnly(
-    "pendingArea"
-  );
+  showOnly("pendingArea");
 
   await loadPending();
 }
@@ -2578,9 +2691,9 @@ function showPreventiveTab(){
 }
 
 
-/* ==========================================================
+/* ============================================================
    BUSCA
-   ========================================================== */
+   ============================================================ */
 
 async function searchAssets(){
 
@@ -2590,9 +2703,11 @@ async function searchAssets(){
       .trim();
 
 
-  if (
-    q.length < 2
-  ){
+  if (q.length < 2) {
+
+    $("searchStatus")
+      .textContent =
+      "Digite pelo menos 2 caracteres.";
 
     return;
   }
@@ -2600,7 +2715,7 @@ async function searchAssets(){
 
   if (
     /^[a-z0-9_-]+$/i.test(q)
-  ){
+  ) {
 
     q =
       normalizeId(q);
@@ -2626,14 +2741,12 @@ async function searchAssets(){
     data.results || [];
 
 
-  $("searchStatus")
-    .textContent =
+  $("searchStatus").textContent =
     items.length +
     " resultado(s)";
 
 
-  $("searchResults")
-    .innerHTML =
+  $("searchResults").innerHTML =
 
     items.map(
       item => `
@@ -2693,9 +2806,9 @@ async function searchAssets(){
 }
 
 
-/* ==========================================================
-   PENDENTES
-   ========================================================== */
+/* ============================================================
+   OCs PENDENTES
+   ============================================================ */
 
 async function loadPending(){
 
@@ -2709,34 +2822,32 @@ async function loadPending(){
     data.summary || {};
 
 
-  $("pendingSummary")
-    .innerHTML = `
+  $("pendingSummary").innerHTML = `
 
-      <div class="pending-number">
-        <strong>${s.total || 0}</strong>
-        Total
-      </div>
+    <div class="pending-number">
+      <strong>${s.total || 0}</strong>
+      Total
+    </div>
 
-      <div class="pending-number">
-        <strong>🔴 ${s.abertas || 0}</strong>
-        Abertas
-      </div>
+    <div class="pending-number">
+      <strong>🔴 ${s.abertas || 0}</strong>
+      Abertas
+    </div>
 
-      <div class="pending-number">
-        <strong>🟡 ${s.emAtendimento || 0}</strong>
-        Atendimento
-      </div>
+    <div class="pending-number">
+      <strong>🟡 ${s.emAtendimento || 0}</strong>
+      Atendimento
+    </div>
 
-      <div class="pending-number">
-        <strong>🟠 ${s.aguardandoPeca || 0}</strong>
-        Peça
-      </div>
+    <div class="pending-number">
+      <strong>🟠 ${s.aguardandoPeca || 0}</strong>
+      Aguardando peça
+    </div>
 
-    `;
+  `;
 
 
-  $("pendingResults")
-    .innerHTML =
+  $("pendingResults").innerHTML =
 
     (data.occurrences || [])
       .map(
@@ -2783,15 +2894,15 @@ async function loadPending(){
 }
 
 
-/* ==========================================================
+/* ============================================================
    CONTROLE PREVENTIVAS
-   ========================================================== */
+   ============================================================ */
 
 async function loadPreventiveControl(){
 
   if (
     !$("controlCompetence").value
-  ){
+  ) {
 
     $("controlCompetence").value =
       currentCompetence();
@@ -2813,9 +2924,7 @@ async function loadPreventiveControl(){
     });
 
 
-  if (
-    !result.ok
-  ){
+  if (!result.ok) {
 
     clearPreventiveSession();
 
@@ -2843,157 +2952,182 @@ function renderPreventiveControl(){
     data.summary;
 
 
-  $("preventiveLoggedInfo")
-    .innerHTML =
+  $("preventiveLoggedInfo").innerHTML =
 
     "Acesso: <b>" +
-
-    esc(
-      preventiveSession.usuario
-    ) +
+    esc(preventiveSession.usuario) +
 
     "</b> • Perfil: <b>" +
-
-    esc(
-      preventiveSession.perfil
-    ) +
+    esc(preventiveSession.perfil) +
 
     "</b> • Prestador: <b>" +
-
-    esc(
-      preventiveSession.prestador
-    ) +
+    esc(preventiveSession.prestador) +
 
     "</b>";
 
 
-  $("controlTitle")
-    .textContent =
+  $("controlTitle").textContent =
 
     "Preventivas – " +
     data.competenciaDescricao;
 
 
-  $("controlSummary")
-    .innerHTML = `
+  $("controlSummary").innerHTML = `
 
-      <div class="control-summary-card">
-        <strong>${s.previstas}</strong>
-        Previstas
-      </div>
+    <div class="control-summary-card">
+      <strong>${s.previstas}</strong>
+      Previstas
+    </div>
 
-      <div class="control-summary-card">
-        <strong>✅ ${s.realizadas}</strong>
-        Realizadas
-      </div>
+    <div class="control-summary-card">
+      <strong>✅ ${s.realizadas}</strong>
+      Realizadas
+    </div>
 
-      <div class="control-summary-card">
-        <strong>🔴 ${s.pendentes}</strong>
-        Pendentes
-      </div>
+    <div class="control-summary-card">
+      <strong>🔴 ${s.pendentes}</strong>
+      Pendentes
+    </div>
 
-      <div class="control-summary-card">
-        <strong>${s.percentual}%</strong>
-        Conclusão
-      </div>
+    <div class="control-summary-card">
+      <strong>${s.percentual}%</strong>
+      Conclusão
+    </div>
 
-    `;
-
-
-  $("progressText")
-    .textContent =
-    s.percentual +
-    "%";
+  `;
 
 
-  $("progressFill")
-    .style.width =
-    s.percentual +
-    "%";
+  $("progressText").textContent =
+    s.percentual + "%";
+
+
+  $("progressFill").style.width =
+    s.percentual + "%";
 
 
   if (
     preventiveSession.perfil ===
     "MASTER"
-  ){
+  ) {
 
-    $("controlProvider")
-      .disabled =
+    $("controlProvider").disabled =
       false;
 
 
-    $("controlProvider")
-      .innerHTML =
+    $("controlProvider").innerHTML =
 
       `<option value="">Todos</option>` +
 
-      data.prestadores.map(
-        x => `
+      data.prestadores
+        .map(
+          p => `
 
-          <option value="${esc(x.prestador)}">
+            <option value="${esc(p.prestador)}">
 
-            ${esc(x.prestador)}
+              ${esc(p.prestador)}
 
-          </option>
+            </option>
+
+          `
+        )
+        .join("");
+
+  }
+  else {
+
+    $("controlProvider").innerHTML = `
+
+      <option value="${esc(
+        preventiveSession.prestador
+      )}">
+
+        ${esc(
+          preventiveSession.prestador
+        )}
+
+      </option>
+
+    `;
+
+
+    $("controlProvider").disabled =
+      true;
+  }
+
+
+  $("providerSummary").innerHTML =
+
+    data.prestadores
+      .map(
+        p => `
+
+          <div class="provider-card">
+
+            <b>
+              ${esc(p.prestador)}
+            </b>
+
+            <br>
+
+            Previstas:
+            ${p.previstas}
+
+            • Realizadas:
+            ${p.realizadas}
+
+            • Pendentes:
+            ${p.pendentes}
+
+            • ${p.percentual}%
+
+          </div>
 
         `
       )
       .join("");
 
-  }else{
 
-    $("controlProvider")
-      .innerHTML = `
-
-        <option value="${esc(
-          preventiveSession.prestador
-        )}">
-
-          ${esc(
-            preventiveSession.prestador
-          )}
-
-        </option>
-
-      `;
+  renderControlList();
+}
 
 
-    $("controlProvider")
-      .disabled =
-      true;
+function setControlMode(mode){
+
+  preventiveControlMode =
+    mode;
+
+
+  [
+    "controlAll",
+    "controlPending",
+    "controlDone"
+  ]
+  .forEach(
+    id =>
+      $(id)
+        .classList
+        .remove("active")
+  );
+
+
+  if (mode === "pending") {
+
+    $("controlPending")
+      .classList
+      .add("active");
   }
+  else if (mode === "done") {
 
+    $("controlDone")
+      .classList
+      .add("active");
+  }
+  else {
 
-  $("providerSummary")
-    .innerHTML =
-
-    data.prestadores.map(
-      p => `
-
-        <div class="provider-card">
-
-          <b>
-            ${esc(p.prestador)}
-          </b>
-
-          <br>
-
-          Previstas:
-          ${p.previstas}
-
-          • Realizadas:
-          ${p.realizadas}
-
-          • Pendentes:
-          ${p.pendentes}
-
-          • ${p.percentual}%
-
-        </div>
-
-      `
-    )
-    .join("");
+    $("controlAll")
+      .classList
+      .add("active");
+  }
 
 
   renderControlList();
@@ -3002,17 +3136,13 @@ function renderPreventiveControl(){
 
 function renderControlList(){
 
-  if (
-    !preventiveControlData
-  ){
-
+  if (!preventiveControlData) {
     return;
   }
 
 
   const provider =
-    $("controlProvider")
-      .value;
+    $("controlProvider").value;
 
 
   let items = [];
@@ -3021,7 +3151,7 @@ function renderControlList(){
   if (
     preventiveControlMode ===
     "pending"
-  ){
+  ) {
 
     items =
       preventiveControlData
@@ -3033,10 +3163,11 @@ function renderControlList(){
           })
         );
 
-  }else if (
+  }
+  else if (
     preventiveControlMode ===
     "done"
-  ){
+  ) {
 
     items =
       preventiveControlData
@@ -3048,7 +3179,8 @@ function renderControlList(){
           })
         );
 
-  }else{
+  }
+  else {
 
     items = [
 
@@ -3074,7 +3206,7 @@ function renderControlList(){
   }
 
 
-  if (provider){
+  if (provider) {
 
     items =
       items.filter(
@@ -3085,14 +3217,12 @@ function renderControlList(){
   }
 
 
-  $("controlListStatus")
-    .textContent =
+  $("controlListStatus").textContent =
     items.length +
     " equipamento(s)";
 
 
-  $("controlResults")
-    .innerHTML =
+  $("controlResults").innerHTML =
 
     items.map(
       item => `
@@ -3195,20 +3325,15 @@ function renderControlList(){
 }
 
 
-/* ==========================================================
-   CARREGAR FICHA
-   ========================================================== */
+/* ============================================================
+   FICHA
+   ============================================================ */
 
 async function loadAsset(id){
 
-  hide(
-    "searchScreen"
-  );
+  hide("searchScreen");
 
-
-  show(
-    "assetScreen"
-  );
+  show("assetScreen");
 
 
   const [
@@ -3235,12 +3360,9 @@ async function loadAsset(id){
     ]);
 
 
-  if (
-    !asset.ok
-  ){
+  if (!asset.ok) {
 
-    $("titulo")
-      .textContent =
+    $("titulo").textContent =
       "Ativo não encontrado";
 
     return;
@@ -3256,36 +3378,31 @@ async function loadAsset(id){
   );
 
 
-  renderStatus(
-    status.data
-  );
+  if (status.ok) {
+    renderStatus(status.data);
+  }
 
 
-  renderHistory(
-    hist.history ||
-    []
-  );
+  if (hist.ok) {
+    renderHistory(hist.history || []);
+  }
 
-
-  /*
-   * Histórico preventivo só se houver sessão válida.
-   */
 
   if (
     await sessionIsValid()
-  ){
+  ) {
 
     if (
-      preventiveSession.perfil === "MASTER" ||
+      preventiveSession.perfil ===
+      "MASTER" ||
+
       String(
         preventiveSession.prestador
-      )
-      .toLowerCase() ===
+      ).toLowerCase() ===
       String(
         currentAsset.prestador
-      )
-      .toLowerCase()
-    ){
+      ).toLowerCase()
+    ) {
 
       loadPreventiveHistory();
     }
@@ -3293,29 +3410,22 @@ async function loadAsset(id){
 }
 
 
-/* ==========================================================
-   RENDER FICHA
-   ========================================================== */
-
 function renderAsset(a){
 
-  $("titulo")
-    .textContent =
+  $("titulo").textContent =
     a.id +
     " – " +
     a.nome_do_equipamento;
 
 
-  $("meta")
-    .textContent =
+  $("meta").textContent =
     a.local_detalhado ||
     a.localizacao ||
     a.pavimento ||
     "";
 
 
-  $("tipoBadge")
-    .textContent =
+  $("tipoBadge").textContent =
     a.tipo_de_ativo ||
     "Equipamento";
 
@@ -3332,16 +3442,11 @@ function renderAsset(a){
     ]);
 
 
-  if (
-    classification
-  ){
+  if (classification) {
 
-    show(
-      "classificationSection"
-    );
+    show("classificationSection");
 
-    $("classification")
-      .innerHTML =
+    $("classification").innerHTML =
       classification;
   }
 
@@ -3359,16 +3464,11 @@ function renderAsset(a){
     ]);
 
 
-  if (
-    location
-  ){
+  if (location) {
 
-    show(
-      "locationSection"
-    );
+    show("locationSection");
 
-    $("location")
-      .innerHTML =
+    $("location").innerHTML =
       location;
   }
 
@@ -3391,22 +3491,16 @@ function renderAsset(a){
     ]);
 
 
-  if (
-    technical
-  ){
+  if (technical) {
 
-    show(
-      "technicalSection"
-    );
+    show("technicalSection");
 
-    $("technical")
-      .innerHTML =
+    $("technical").innerHTML =
       technical;
   }
 
 
-  $("management")
-    .innerHTML =
+  $("management").innerHTML =
 
     pairs([
 
@@ -3418,48 +3512,35 @@ function renderAsset(a){
     ]);
 
 
-  if (
-    a.periodicidade
-  ){
+  if (a.periodicidade) {
 
-    show(
-      "preventiveButton"
-    );
+    show("preventiveButton");
 
-    show(
-      "preventiveHistorySection"
-    );
+    show("preventiveHistorySection");
+  }
+  else {
 
-  }else{
+    hide("preventiveButton");
 
-    hide(
-      "preventiveButton"
-    );
-
-    hide(
-      "preventiveHistorySection"
-    );
+    hide("preventiveHistorySection");
   }
 }
 
 
 function renderStatus(s){
 
-  $("statusCard")
-    .className =
+  $("statusCard").className =
     "status-card " +
     (s.nivel || "");
 
 
-  $("statusTitle")
-    .textContent =
+  $("statusTitle").textContent =
     (s.icone || "") +
     " " +
     (s.situacao || "");
 
 
-  $("statusInfo")
-    .textContent =
+  $("statusInfo").textContent =
     s.totalAtivas
       ? s.totalAtivas +
         " ocorrência(s) ativa(s)"
@@ -3467,9 +3548,9 @@ function renderStatus(s){
 }
 
 
-/* ==========================================================
+/* ============================================================
    HISTÓRICO OC
-   ========================================================== */
+   ============================================================ */
 
 function renderHistory(items){
 
@@ -3477,31 +3558,24 @@ function renderHistory(items){
     items;
 
 
-  if (
-    !items.length
-  ){
+  if (!items.length) {
 
-    $("historyStatus")
-      .textContent =
+    $("historyStatus").textContent =
       "Nenhum histórico registrado.";
 
     return;
   }
 
 
-  show(
-    "historySelect"
-  );
+  show("historySelect");
 
 
-  $("historyStatus")
-    .textContent =
+  $("historyStatus").textContent =
     items.length +
     " registro(s)";
 
 
-  $("historySelect")
-    .innerHTML =
+  $("historySelect").innerHTML =
 
     items.map(
       (x,i) => `
@@ -3519,9 +3593,7 @@ function renderHistory(items){
     .join("");
 
 
-  renderHistoryItem(
-    0
-  );
+  renderHistoryItem(0);
 }
 
 
@@ -3531,124 +3603,134 @@ function renderHistoryItem(index){
     history[index];
 
 
+  if (!x) return;
+
+
   selectedOccurrence =
     x;
 
 
-  $("historyDetail")
-    .innerHTML = `
+  $("historyDetail").innerHTML = `
 
-      <div class="history-card">
+    <div class="history-card">
 
-        <b>
-          ${esc(x.ocorrencia)}
-        </b>
+      <b>
+        ${esc(x.ocorrencia)}
+      </b>
 
-        <div class="muted">
-          ${esc(formatDate(x.data))}
-        </div>
+      <div class="muted">
+        ${esc(formatDate(x.data))}
+      </div>
 
-        <span class="tag">
-          ${esc(x.status)}
-        </span>
+      <span class="tag">
+        ${esc(x.status)}
+      </span>
 
-        <div style="margin-top:8px">
+      ${
+        x.categoriaOcorrencia
+          ? `<span class="tag">${esc(x.categoriaOcorrencia)}</span>`
+          : ""
+      }
 
-          <b>Descrição:</b>
+      ${
+        x.componenteAfetado
+          ? `<span class="tag">${esc(x.componenteAfetado)}</span>`
+          : ""
+      }
 
-          <br>
+      <div style="margin-top:8px">
 
-          ${esc(x.descricao)}
+        <b>Descrição:</b>
 
-        </div>
+        <br>
 
-        ${
-          x.foto
-            ? `
-
-              <div style="margin-top:8px">
-
-                <a
-                  href="${esc(x.foto)}"
-                  target="_blank"
-                >
-                  📷 Ver foto
-                </a>
-
-              </div>
-
-            `
-            : ""
-        }
-
-        ${
-          x.solucao
-            ? `
-
-              <div style="margin-top:8px">
-
-                <b>Solução:</b>
-
-                <br>
-
-                ${esc(x.solucao)}
-
-              </div>
-
-            `
-            : ""
-        }
-
-        ${
-          x.ultimaAlteracao
-            ? `
-
-              <div class="audit-box">
-
-                Última alteração:
-                ${esc(
-                  formatDate(
-                    x.ultimaAlteracao
-                  )
-                )}
-
-                ${
-                  x.ultimaAlteracaoPor
-                    ? " • " +
-                      esc(
-                        x.ultimaAlteracaoPor
-                      )
-                    : ""
-                }
-
-              </div>
-
-            `
-            : ""
-        }
-
-        <button
-          class="btn"
-          style="
-            width:100%;
-            margin-top:12px
-          "
-          onclick="
-            openManage(${index})
-          "
-        >
-          Gerenciar ocorrência
-        </button>
+        ${esc(x.descricao)}
 
       </div>
 
-    `;
+      ${
+        x.foto
+          ? `
+
+            <div style="margin-top:8px">
+
+              <a
+                href="${esc(x.foto)}"
+                target="_blank"
+              >
+                📷 Ver foto
+              </a>
+
+            </div>
+
+          `
+          : ""
+      }
+
+      ${
+        x.solucao
+          ? `
+
+            <div style="margin-top:8px">
+
+              <b>Solução:</b>
+
+              <br>
+
+              ${esc(x.solucao)}
+
+            </div>
+
+          `
+          : ""
+      }
+
+      ${
+        x.ultimaAlteracao
+          ? `
+
+            <div class="audit-box">
+
+              Última alteração:
+              ${esc(
+                formatDate(
+                  x.ultimaAlteracao
+                )
+              )}
+
+              ${
+                x.ultimaAlteracaoPor
+                  ? " • " +
+                    esc(x.ultimaAlteracaoPor)
+                  : ""
+              }
+
+            </div>
+
+          `
+          : ""
+      }
+
+      <button
+        class="btn"
+        style="
+          width:100%;
+          margin-top:12px;
+        "
+        onclick="openManage(${index})"
+      >
+        Gerenciar ocorrência
+      </button>
+
+    </div>
+
+  `;
 }
 
 
-/* ==========================================================
+/* ============================================================
    HISTÓRICO PREVENTIVA
-   ========================================================== */
+   ============================================================ */
 
 async function loadPreventiveHistory(){
 
@@ -3667,10 +3749,7 @@ async function loadPreventiveHistory(){
     });
 
 
-  if (
-    !result.ok
-  ){
-
+  if (!result.ok) {
     return;
   }
 
@@ -3681,14 +3760,14 @@ async function loadPreventiveHistory(){
 
   $("preventiveHistoryStatus")
     .textContent =
+
     items.length
       ? items.length +
         " preventiva(s) registrada(s)"
       : "Nenhuma preventiva registrada.";
 
 
-  $("preventiveHistory")
-    .innerHTML =
+  $("preventiveHistory").innerHTML =
 
     items.map(
       item => `
@@ -3697,9 +3776,7 @@ async function loadPreventiveHistory(){
 
           <div class="preventive-id">
 
-            ${esc(
-              item.registro
-            )}
+            ${esc(item.registro)}
 
           </div>
 
@@ -3728,6 +3805,22 @@ async function loadPreventiveHistory(){
             <b>Responsável:</b>
             ${esc(item.responsavel)}
 
+            ${
+              item.usuarioAcesso
+                ? `
+
+                  <br>
+
+                  <b>Usuário de acesso:</b>
+
+                  ${esc(
+                    item.usuarioAcesso
+                  )}
+
+                `
+                : ""
+            }
+
           </div>
 
           ${
@@ -3740,9 +3833,7 @@ async function loadPreventiveHistory(){
 
                   <br>
 
-                  ${esc(
-                    item.observacao
-                  )}
+                  ${esc(item.observacao)}
 
                 </div>
 
@@ -3757,12 +3848,29 @@ async function loadPreventiveHistory(){
                 <div style="margin-top:8px">
 
                   <a
-                    href="${esc(
-                      item.foto
-                    )}"
+                    href="${esc(item.foto)}"
                     target="_blank"
                   >
                     📷 Ver evidência
+                  </a>
+
+                </div>
+
+              `
+              : ""
+          }
+
+          ${
+            item.assinatura
+              ? `
+
+                <div style="margin-top:8px">
+
+                  <a
+                    href="${esc(item.assinatura)}"
+                    target="_blank"
+                  >
+                    ✍️ Ver assinatura
                   </a>
 
                 </div>
@@ -3779,17 +3887,17 @@ async function loadPreventiveHistory(){
 }
 
 
-/* ==========================================================
+/* ============================================================
    ABRIR PREVENTIVA
-   ========================================================== */
+   ============================================================ */
 
 function requestPreventive(){
 
   requirePreventiveLogin(
 
-    function(){
+    async function(){
 
-      openPreventive();
+      await openPreventive();
 
       loadPreventiveHistory();
 
@@ -3801,60 +3909,228 @@ function requestPreventive(){
 }
 
 
-function openPreventive(){
+async function openPreventive(){
 
-  preventivePhotoData =
-    null;
+  preventivePhotoData = null;
+
+  signatureDirty = false;
 
 
-  $("preventiveAsset")
-    .textContent =
+  $("preventivePhotoInput").value = "";
+
+  $("preventivePhotoPreview")
+    .style.display =
+    "none";
+
+
+  $("preventiveMessage").className =
+    "message";
+
+
+  $("preventiveAsset").textContent =
     currentAsset.id +
     " – " +
     currentAsset.nome_do_equipamento;
 
 
-  $("preventivePeriodicity")
-    .textContent =
-    currentAsset.periodicidade;
+  $("preventivePeriodicity").textContent =
+    currentAsset.periodicidade ||
+    "Não informada";
 
 
-  $("preventiveProvider")
-    .textContent =
-    currentAsset.prestador;
+  $("preventiveProvider").textContent =
+    currentAsset.prestador ||
+    "Não informado";
 
 
-  $("preventiveCompetence")
-    .textContent =
+  $("preventiveCompetence").textContent =
     currentCompetence();
 
 
-  $("preventiveResponsible")
-    .value =
+  $("preventiveResponsible").value =
     getSavedResponsible();
 
 
-  $("preventiveObservation")
-    .value =
+  $("preventiveObservation").value =
     "";
+
+
+  const rules =
+    await api({
+
+      action:
+        "preventiverequirements",
+
+      id:
+        currentAsset.id,
+
+      session:
+        preventiveSession.sessionToken
+
+    });
+
+
+  if (!rules.ok) {
+
+    alert(
+      rules.detail ||
+      "Não foi possível carregar as regras."
+    );
+
+    return;
+  }
+
+
+  preventiveRequirements =
+    rules.data;
+
+
+  renderPreventiveRequirements();
 
 
   $("preventiveModal")
     .style.display =
     "flex";
+
+
+  /*
+   * Canvas precisa ser inicializado
+   * depois de ficar visível.
+   */
+
+  if (
+    !$("signatureBox")
+      .classList
+      .contains("hidden")
+  ) {
+
+    requestAnimationFrame(
+      setupSignatureCanvas
+    );
+  }
 }
 
 
-/* ==========================================================
+function renderPreventiveRequirements(){
+
+  const r =
+    preventiveRequirements;
+
+
+  $("preventiveRequirements")
+    .innerHTML = `
+
+      <b>Requisitos deste registro</b>
+
+      <div
+        class="
+          requirement
+          ${
+            r.exigirAssinatura
+              ? "required-yes"
+              : "required-no"
+          }
+        "
+      >
+
+        ${
+          r.exigirAssinatura
+            ? "● Assinatura obrigatória"
+            : "✓ Assinatura não obrigatória"
+        }
+
+      </div>
+
+      <div
+        class="
+          requirement
+          ${
+            r.fotoObrigatoria
+              ? "required-yes"
+              : "required-no"
+          }
+        "
+      >
+
+        ${
+          r.fotoObrigatoria
+            ? "● Foto obrigatória"
+            : "✓ Foto opcional"
+        }
+
+      </div>
+
+      <div
+        class="
+          requirement
+          ${
+            r.observacaoObrigatoria
+              ? "required-yes"
+              : "required-no"
+          }
+        "
+      >
+
+        ${
+          r.observacaoObrigatoria
+            ? "● Observação obrigatória"
+            : "✓ Observação opcional"
+        }
+
+      </div>
+
+    `;
+
+
+  /*
+   * Assinatura:
+   * se obrigatória mostra.
+   *
+   * Para MASTER ela não será obrigatória.
+   * Mantemos oculta para simplificar.
+   */
+
+  if (r.exigirAssinatura) {
+
+    show("signatureBox");
+
+    $("signatureRequiredText")
+      .textContent =
+      " * obrigatório";
+
+  }
+  else {
+
+    hide("signatureBox");
+  }
+
+
+  $("preventiveObservationLabel")
+    .childNodes[0]
+    .textContent =
+
+    r.observacaoObrigatoria
+      ? "Observação *"
+      : "Observação";
+
+
+  $("preventivePhotoLabel")
+    .childNodes[0]
+    .textContent =
+
+    r.fotoObrigatoria
+      ? "Foto / evidência *"
+      : "Foto / evidência";
+}
+
+
+/* ============================================================
    SALVAR PREVENTIVA
-   ========================================================== */
+   ============================================================ */
 
-function savePreventive(){
+async function savePreventive(){
 
-  if (
-    preventivePosting
-  ){
-
+  if (preventivePosting) {
     return;
   }
 
@@ -3865,100 +4141,228 @@ function savePreventive(){
       .trim();
 
 
-  if (!responsible){
+  const observation =
+    $("preventiveObservation")
+      .value
+      .trim();
 
-    $("preventiveMessage")
-      .className =
-      "message error";
 
+  if (!responsible) {
 
-    $("preventiveMessage")
-      .textContent =
-      "Informe o responsável.";
+    showPreventiveError(
+      "Informe o responsável pela preventiva."
+    );
 
     return;
   }
 
 
-  saveResponsible(
-    responsible
-  );
-
-
-  preventivePosting =
-    true;
-
-
-  $("savePreventive")
-    .disabled =
-    true;
-
-
-  $("savePreventive")
-    .textContent =
-    "Registrando...";
-
-
-  $("pr_token").value =
-    TOKEN;
-
-
-  $("pr_id").value =
-    currentAsset.id;
-
-
-  $("pr_session").value =
-    preventiveSession.sessionToken;
-
-
-  $("pr_responsible").value =
-    responsible;
-
-
-  $("pr_observation").value =
-    $("preventiveObservation").value;
-
-
   if (
-    preventivePhotoData
-  ){
+    preventiveRequirements
+      .observacaoObrigatoria &&
+    !observation
+  ) {
 
-    $("pr_photo").value =
-      preventivePhotoData.base64;
+    showPreventiveError(
+      "A observação é obrigatória."
+    );
 
-    $("pr_photoName").value =
-      preventivePhotoData.name;
-
-    $("pr_photoMime").value =
-      preventivePhotoData.mime;
-
-  }else{
-
-    $("pr_photo").value = "";
-    $("pr_photoName").value = "";
-    $("pr_photoMime").value = "";
+    return;
   }
 
 
-  $("preventiveForm")
-    .action =
-    API_URL;
+  if (
+    preventiveRequirements
+      .fotoObrigatoria &&
+    !preventivePhotoData
+  ) {
+
+    showPreventiveError(
+      "A foto é obrigatória."
+    );
+
+    return;
+  }
 
 
-  $("preventiveForm")
-    .submit();
+  if (
+    preventiveRequirements
+      .exigirAssinatura &&
+    !signatureDirty
+  ) {
+
+    showPreventiveError(
+      "A assinatura é obrigatória."
+    );
+
+    return;
+  }
+
+
+  saveResponsible(responsible);
+
+
+  const signature =
+    getSignatureData();
+
+
+  preventivePosting = true;
+
+
+  $("savePreventive").disabled =
+    true;
+
+
+  $("savePreventive").textContent =
+    "Registrando...";
+
+
+  $("preventiveMessage").className =
+    "message loading";
+
+
+  $("preventiveMessage").textContent =
+    "Registrando preventiva...";
+
+
+  try {
+
+    const result =
+      await apiPost({
+
+        action:
+          "registerPreventive",
+
+        id:
+          currentAsset.id,
+
+        preventiveSessionToken:
+          preventiveSession.sessionToken,
+
+        preventiveResponsible:
+          responsible,
+
+        preventiveObservation:
+          observation,
+
+        preventivePhotoBase64:
+          preventivePhotoData
+            ? preventivePhotoData.base64
+            : "",
+
+        preventivePhotoName:
+          preventivePhotoData
+            ? preventivePhotoData.name
+            : "",
+
+        preventivePhotoMime:
+          preventivePhotoData
+            ? preventivePhotoData.mime
+            : "",
+
+        preventiveSignatureBase64:
+          signature
+            ? signature.base64
+            : "",
+
+        preventiveSignatureMime:
+          signature
+            ? signature.mime
+            : ""
+
+      });
+
+
+    if (!result.ok) {
+
+      throw new Error(
+        result.detail ||
+        "Não foi possível registrar a preventiva."
+      );
+    }
+
+
+    $("preventiveMessage").className =
+      "message success";
+
+
+    $("preventiveMessage").textContent =
+      "Preventiva registrada com sucesso.";
+
+
+    $("savePreventive").textContent =
+      "Preventiva registrada";
+
+
+    await loadPreventiveHistory();
+
+
+    setTimeout(
+      function(){
+
+        $("preventiveModal")
+          .style.display =
+          "none";
+
+
+        $("savePreventive").disabled =
+          false;
+
+
+        $("savePreventive").textContent =
+          "Registrar Preventiva";
+
+
+        preventivePosting = false;
+
+      },
+      900
+    );
+
+  }
+  catch(error) {
+
+    preventivePosting = false;
+
+
+    $("savePreventive").disabled =
+      false;
+
+
+    $("savePreventive").textContent =
+      "Registrar Preventiva";
+
+
+    showPreventiveError(
+      error.message
+    );
+  }
 }
 
 
-/* ==========================================================
+function showPreventiveError(message){
+
+  $("preventiveMessage").className =
+    "message error";
+
+
+  $("preventiveMessage").textContent =
+    message;
+}
+
+
+/* ============================================================
    OC
-   ========================================================== */
+   ============================================================ */
 
 function openReport(){
 
-  $("reporterName")
-    .value =
+  $("reporterName").value =
     getSavedResponsible();
+
+
+  $("reportMessage").className =
+    "message";
 
 
   $("reportModal")
@@ -3969,12 +4373,7 @@ function openReport(){
 
 function sendReport(){
 
-  if (
-    reportPosting
-  ){
-
-    return;
-  }
+  if (reportPosting) return;
 
 
   const name =
@@ -3988,42 +4387,32 @@ function sendReport(){
     !$("category").value ||
     !$("component").value ||
     !$("description").value.trim()
-  ){
+  ) {
 
-    $("reportMessage")
-      .className =
+    $("reportMessage").className =
       "message error";
 
 
-    $("reportMessage")
-      .textContent =
+    $("reportMessage").textContent =
       "Preencha os campos obrigatórios.";
 
     return;
   }
 
 
-  saveResponsible(
-    name
-  );
+  saveResponsible(name);
 
 
-  reportPosting =
-    true;
+  reportPosting = true;
 
 
-  $("sendReport")
-    .disabled =
-    true;
+  $("sendReport").disabled = true;
 
-
-  $("sendReport")
-    .textContent =
+  $("sendReport").textContent =
     "Gravando...";
 
 
-  $("p_token").value =
-    TOKEN;
+  $("p_token").value = TOKEN;
 
   $("p_id").value =
     currentAsset.id;
@@ -4044,9 +4433,7 @@ function sendReport(){
     $("description").value;
 
 
-  if (
-    photoData
-  ){
+  if (photoData) {
 
     $("p_photo").value =
       photoData.base64;
@@ -4057,21 +4444,25 @@ function sendReport(){
     $("p_photoMime").value =
       photoData.mime;
   }
+  else {
+
+    $("p_photo").value = "";
+    $("p_photoName").value = "";
+    $("p_photoMime").value = "";
+  }
 
 
-  $("reportForm")
-    .action =
+  $("reportForm").action =
     API_URL;
 
 
-  $("reportForm")
-    .submit();
+  $("reportForm").submit();
 }
 
 
-/* ==========================================================
-   GERENCIAR
-   ========================================================== */
+/* ============================================================
+   GERENCIAR OC
+   ============================================================ */
 
 const CATEGORIES = [
   "Civil",
@@ -4117,8 +4508,7 @@ const COMPONENTS = [
 
 function buildManageDropdowns(){
 
-  $("manageCategory")
-    .innerHTML =
+  $("manageCategory").innerHTML =
     CATEGORIES
       .map(
         x =>
@@ -4127,8 +4517,7 @@ function buildManageDropdowns(){
       .join("");
 
 
-  $("manageComponent")
-    .innerHTML =
+  $("manageComponent").innerHTML =
     COMPONENTS
       .map(
         x =>
@@ -4144,45 +4533,41 @@ function openManage(index){
     history[index];
 
 
-  $("manageChangedBy")
-    .value =
+  correctionPhotoData = null;
+
+  conclusionPhotoData = null;
+
+
+  $("manageChangedBy").value =
     getSavedResponsible();
 
 
-  $("manageCategory")
-    .value =
+  $("manageCategory").value =
     selectedOccurrence
-      .categoriaOcorrencia;
+      .categoriaOcorrencia ||
+    "Outros";
 
 
-  $("manageComponent")
-    .value =
+  $("manageComponent").value =
     selectedOccurrence
-      .componenteAfetado;
+      .componenteAfetado ||
+    "Geral";
 
 
-  $("manageDescription")
-    .value =
-    selectedOccurrence
-      .descricao;
+  $("manageDescription").value =
+    selectedOccurrence.descricao || "";
 
 
-  $("manageStatus")
-    .value =
-    selectedOccurrence
-      .status;
+  $("manageStatus").value =
+    selectedOccurrence.status || "Aberta";
 
 
-  $("manageResponsible")
-    .value =
-    selectedOccurrence
-      .responsavel;
+  $("manageResponsible").value =
+    selectedOccurrence.responsavel || "";
 
 
-  $("manageSolution")
-    .value =
-    selectedOccurrence
-      .solucao;
+  $("manageSolution").value =
+    selectedOccurrence.solucao || "";
 
 
   toggleConclusion();
@@ -4199,29 +4584,20 @@ function toggleConclusion(){
   if (
     $("manageStatus").value ===
     "Concluída"
-  ){
+  ) {
 
-    show(
-      "conclusionPhotoArea"
-    );
+    show("conclusionPhotoArea");
+  }
+  else {
 
-  }else{
-
-    hide(
-      "conclusionPhotoArea"
-    );
+    hide("conclusionPhotoArea");
   }
 }
 
 
 function saveManage(){
 
-  if (
-    managePosting
-  ){
-
-    return;
-  }
+  if (managePosting) return;
 
 
   const changedBy =
@@ -4230,33 +4606,32 @@ function saveManage(){
       .trim();
 
 
-  if (!changedBy){
+  if (!changedBy) {
+
+    $("manageMessage").className =
+      "message error";
+
+
+    $("manageMessage").textContent =
+      "Informe quem está realizando a alteração.";
 
     return;
   }
 
 
-  saveResponsible(
-    changedBy
-  );
+  saveResponsible(changedBy);
 
 
-  managePosting =
-    true;
+  managePosting = true;
 
 
-  $("saveManage")
-    .disabled =
-    true;
+  $("saveManage").disabled = true;
 
-
-  $("saveManage")
-    .textContent =
+  $("saveManage").textContent =
     "Salvando...";
 
 
-  $("m_token").value =
-    TOKEN;
+  $("m_token").value = TOKEN;
 
   $("m_occurrence").value =
     selectedOccurrence.ocorrencia;
@@ -4283,9 +4658,7 @@ function saveManage(){
     $("manageComponent").value;
 
 
-  if (
-    correctionPhotoData
-  ){
+  if (correctionPhotoData) {
 
     $("m_occurrencePhoto").value =
       correctionPhotoData.base64;
@@ -4296,11 +4669,15 @@ function saveManage(){
     $("m_occurrencePhotoMime").value =
       correctionPhotoData.mime;
   }
+  else {
+
+    $("m_occurrencePhoto").value = "";
+    $("m_occurrencePhotoName").value = "";
+    $("m_occurrencePhotoMime").value = "";
+  }
 
 
-  if (
-    conclusionPhotoData
-  ){
+  if (conclusionPhotoData) {
 
     $("m_photo").value =
       conclusionPhotoData.base64;
@@ -4311,34 +4688,41 @@ function saveManage(){
     $("m_photoMime").value =
       conclusionPhotoData.mime;
   }
+  else {
+
+    $("m_photo").value = "";
+    $("m_photoName").value = "";
+    $("m_photoMime").value = "";
+  }
 
 
-  $("manageForm")
-    .action =
+  $("manageForm").action =
     API_URL;
 
 
-  $("manageForm")
-    .submit();
+  $("manageForm").submit();
 }
 
 
-/* ==========================================================
-   EVENTOS FOTO
-   ========================================================== */
+/* ============================================================
+   FOTOS
+   ============================================================ */
 
 $("photoInput").onchange =
 async function(){
 
   if (!this.files[0]) return;
 
+
   photoData =
     await processPhoto(
       this.files[0]
     );
 
+
   $("photoPreview").src =
     photoData.dataUrl;
+
 
   $("photoPreview").style.display =
     "block";
@@ -4348,17 +4732,30 @@ async function(){
 $("preventivePhotoInput").onchange =
 async function(){
 
-  if (!this.files[0]) return;
+  if (!this.files[0]) {
+
+    preventivePhotoData = null;
+
+    $("preventivePhotoPreview")
+      .style.display =
+      "none";
+
+    return;
+  }
+
 
   preventivePhotoData =
     await processPhoto(
       this.files[0]
     );
 
+
   $("preventivePhotoPreview").src =
     preventivePhotoData.dataUrl;
 
-  $("preventivePhotoPreview").style.display =
+
+  $("preventivePhotoPreview")
+    .style.display =
     "block";
 };
 
@@ -4368,15 +4765,19 @@ async function(){
 
   if (!this.files[0]) return;
 
+
   correctionPhotoData =
     await processPhoto(
       this.files[0]
     );
 
+
   $("manageOccurrencePhotoPreview").src =
     correctionPhotoData.dataUrl;
 
-  $("manageOccurrencePhotoPreview").style.display =
+
+  $("manageOccurrencePhotoPreview")
+    .style.display =
     "block";
 };
 
@@ -4386,48 +4787,59 @@ async function(){
 
   if (!this.files[0]) return;
 
+
   conclusionPhotoData =
     await processPhoto(
       this.files[0]
     );
 
+
   $("conclusionPhotoPreview").src =
     conclusionPhotoData.dataUrl;
 
-  $("conclusionPhotoPreview").style.display =
+
+  $("conclusionPhotoPreview")
+    .style.display =
     "block";
 };
 
 
-/* ==========================================================
-   IFRAME RETORNOS
-   ========================================================== */
+/* ============================================================
+   IFRAME OC
+   ============================================================ */
 
 $("reportFrame").onload =
-async function(){
+function(){
 
   if (!reportPosting) return;
 
-  reportPosting =
-    false;
+
+  reportPosting = false;
+
 
   $("sendReport").disabled =
     true;
 
+
   $("sendReport").textContent =
     "Ocorrência gravada";
+
 
   setTimeout(
     function(){
 
-      $("reportModal").style.display =
+      $("reportModal")
+        .style.display =
         "none";
+
 
       $("sendReport").disabled =
         false;
 
+
       $("sendReport").textContent =
         "Gravar ocorrência";
+
 
       location.reload();
 
@@ -4437,64 +4849,27 @@ async function(){
 };
 
 
-$("preventiveFrame").onload =
-async function(){
-
-  if (!preventivePosting) return;
-
-  preventivePosting =
-    false;
-
-  $("savePreventive").disabled =
-    true;
-
-  $("savePreventive").textContent =
-    "Preventiva registrada";
-
-  $("preventiveMessage").className =
-    "message success";
-
-  $("preventiveMessage").textContent =
-    "Preventiva registrada com sucesso.";
-
-  await loadPreventiveHistory();
-
-  setTimeout(
-    function(){
-
-      $("preventiveModal").style.display =
-        "none";
-
-      $("savePreventive").disabled =
-        false;
-
-      $("savePreventive").textContent =
-        "Registrar preventiva";
-
-    },
-    900
-  );
-};
-
-
 $("manageFrame").onload =
 function(){
 
   if (!managePosting) return;
 
-  managePosting =
-    false;
 
-  $("manageModal").style.display =
+  managePosting = false;
+
+
+  $("manageModal")
+    .style.display =
     "none";
+
 
   location.reload();
 };
 
 
-/* ==========================================================
+/* ============================================================
    EVENTOS
-   ========================================================== */
+   ============================================================ */
 
 $("tabSearch").onclick =
 showSearchTab;
@@ -4515,9 +4890,9 @@ searchAssets;
 $("searchInput").onkeydown =
 function(e){
 
-  if (
-    e.key === "Enter"
-  ){
+  if (e.key === "Enter") {
+
+    e.preventDefault();
 
     searchAssets();
   }
@@ -4535,13 +4910,9 @@ requestPreventive;
 $("searchAssetsButton").onclick =
 function(){
 
-  hide(
-    "assetScreen"
-  );
+  hide("assetScreen");
 
-  show(
-    "searchScreen"
-  );
+  show("searchScreen");
 
   showSearchTab();
 };
@@ -4551,26 +4922,24 @@ $("sendLogin").onclick =
 doPreventiveLogin;
 
 
-$("cancelLogin").onclick =
-function(){
-
-  loginNextAction =
-    null;
-
-  $("preventiveLoginModal").style.display =
-    "none";
-};
-
-
 $("preventivePassword").onkeydown =
 function(e){
 
-  if (
-    e.key === "Enter"
-  ){
+  if (e.key === "Enter") {
 
     doPreventiveLogin();
   }
+};
+
+
+$("cancelLogin").onclick =
+function(){
+
+  loginNextAction = null;
+
+  $("preventiveLoginModal")
+    .style.display =
+    "none";
 };
 
 
@@ -4588,54 +4957,40 @@ renderControlList;
 
 $("controlAll").onclick =
 function(){
-
-  preventiveControlMode =
-    "all";
-
-  renderControlList();
+  setControlMode("all");
 };
 
 
 $("controlPending").onclick =
 function(){
-
-  preventiveControlMode =
-    "pending";
-
-  renderControlList();
+  setControlMode("pending");
 };
 
 
 $("controlDone").onclick =
 function(){
-
-  preventiveControlMode =
-    "done";
-
-  renderControlList();
+  setControlMode("done");
 };
 
 
 $("preventiveLogout").onclick =
 async function(){
 
-  if (
-    preventiveSession
-  ){
+  if (preventiveSession) {
 
-    try{
+    try {
 
       await apiPost({
 
-        action:
-          "preventiveLogout",
+        action:"preventiveLogout",
 
         preventiveSessionToken:
           preventiveSession.sessionToken
 
       });
 
-    }catch(error){}
+    }
+    catch(error){}
   }
 
 
@@ -4648,9 +5003,10 @@ async function(){
 $("cancelPreventive").onclick =
 function(){
 
-  if (!preventivePosting){
+  if (!preventivePosting) {
 
-    $("preventiveModal").style.display =
+    $("preventiveModal")
+      .style.display =
       "none";
   }
 };
@@ -4663,9 +5019,10 @@ savePreventive;
 $("cancelReport").onclick =
 function(){
 
-  if (!reportPosting){
+  if (!reportPosting) {
 
-    $("reportModal").style.display =
+    $("reportModal")
+      .style.display =
       "none";
   }
 };
@@ -4679,9 +5036,7 @@ $("historySelect").onchange =
 function(){
 
   renderHistoryItem(
-    Number(
-      this.value
-    )
+    Number(this.value)
   );
 };
 
@@ -4693,9 +5048,10 @@ toggleConclusion;
 $("cancelManage").onclick =
 function(){
 
-  if (!managePosting){
+  if (!managePosting) {
 
-    $("manageModal").style.display =
+    $("manageModal")
+      .style.display =
       "none";
   }
 };
@@ -4705,9 +5061,35 @@ $("saveManage").onclick =
 saveManage;
 
 
-/* ==========================================================
+/* ASSINATURA */
+
+$("signatureCanvas")
+  .addEventListener(
+    "pointerdown",
+    signatureStart
+  );
+
+
+$("signatureCanvas")
+  .addEventListener(
+    "pointermove",
+    signatureMove
+  );
+
+
+window.addEventListener(
+  "pointerup",
+  signatureEnd
+);
+
+
+$("clearSignature").onclick =
+clearSignatureCanvas;
+
+
+/* ============================================================
    MAIN
-   ========================================================== */
+   ============================================================ */
 
 async function main(){
 
@@ -4728,11 +5110,9 @@ async function main(){
   if (
     !id ||
     id === "EQBUSCA"
-  ){
+  ) {
 
-    show(
-      "searchScreen"
-    );
+    show("searchScreen");
 
     showSearchTab();
 
@@ -4740,9 +5120,7 @@ async function main(){
   }
 
 
-  await loadAsset(
-    id
-  );
+  await loadAsset(id);
 }
 
 
