@@ -1,263 +1,1794 @@
-/** ============================================================
- * QRManut – SISTEMA INTEGRADO DE MANUTENÇÃO
- *
- * VERSÃO: PRODUÇÃO 7.2
- *
- * NOVIDADES 7.2
- * ------------------------------------------------------------
- * - Confirmação do envio da OC ao prestador
- * - Relatório mensal de preventivas por comando
- * - Seleção da competência
- * - Relatório parcial ou completo
- * - Lista equipamentos realizados
- * - Lista equipamentos pendentes
- * - Observação do cadastro do equipamento no relatório
- * - Observação da preventiva
- * - Links de foto e assinatura
- * - MASTER: relatório consolidado ou por prestador
- * - PRESTADOR: somente seu próprio relatório
- * - Registro dos relatórios enviados
- *
- * MANTÉM:
- * - QR individual
- * - EQBUSCA
- * - Busca geral
- * - OCs pendentes
- * - Notificação de OC por e-mail
- * - Login preventivas
- * - MASTER/PRESTADOR
- * - Assinatura configurável
- * - Foto obrigatória configurável
- * - Observação obrigatória configurável
- * - Controle mensal de preventivas
- * ============================================================ */
+<!doctype html>
+
+<html lang="pt-br">
+
+<head>
+
+<meta charset="utf-8">
+
+<meta
+  name="viewport"
+  content="width=device-width,initial-scale=1"
+>
+
+<title>QRManut</title>
+
+<style>
+
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  background:#f5f7fa;
+  color:#111827;
+  font-family:
+    system-ui,
+    -apple-system,
+    Segoe UI,
+    Roboto,
+    Arial,
+    sans-serif;
+}
+
+.container{
+  max-width:960px;
+  margin:auto;
+  padding:16px;
+}
+
+.card{
+  background:#fff;
+  border:1px solid #e5e7eb;
+  border-radius:16px;
+  padding:16px;
+  box-shadow:0 5px 15px rgba(0,0,0,.05);
+}
+
+h1{
+  margin:0 0 5px;
+  font-size:1.35rem;
+}
+
+h2{
+  margin-top:0;
+  font-size:1.1rem;
+}
+
+h3{
+  font-size:1rem;
+  margin-top:18px;
+}
+
+.hidden{
+  display:none !important;
+}
+
+.muted{
+  color:#6b7280;
+}
+
+.badge{
+  display:inline-block;
+  background:#e8eef8;
+  color:#1f4e78;
+  padding:5px 9px;
+  border-radius:999px;
+  font-size:.8rem;
+  font-weight:700;
+  margin-top:6px;
+}
+
+.section{
+  border-top:1px solid #e5e7eb;
+  margin-top:18px;
+  padding-top:14px;
+}
+
+.pair{
+  padding:7px 0;
+  border-bottom:1px dashed #eee;
+}
+
+.pair:last-child{
+  border-bottom:0;
+}
 
 
-const CONFIG = {
+/* BOTÕES FICHA */
 
-  SPREADSHEET_ID:
-    "1_NbVTSjnkbIWTMkXT5Cx_y1nsE6kLmvmnkYfyJwfitY",
+.actions{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  align-items:center;
+  gap:10px;
+  margin-top:20px;
+}
 
-  EQUIPMENT_SHEET:
-    "Equipamentos",
+.chip,
+.btn-preventive,
+.btn-search{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  min-height:44px;
+  padding:11px 17px;
+  border-radius:999px;
+  font-weight:700;
+  cursor:pointer;
+}
 
-  HISTORY_SHEET:
-    "Historico",
+.chip{
+  background:#dc2626;
+  color:#fff;
+  border:0;
+}
 
-  PREVENTIVE_SHEET:
-    "Preventivas",
+.btn-preventive{
+  background:#047857;
+  color:#fff;
+  border:0;
+}
 
-  PREVENTIVE_ACCESS_SHEET:
-    "Acessos_Preventiva",
+.btn-search{
+  background:#fff;
+  color:#1f4e78;
+  border:1px solid #1f4e78;
+}
 
-  PREVENTIVE_REPORT_LOG_SHEET:
-    "Relatorios_Preventiva",
 
-  REQUIRED_TOKEN:
-    "pncqalpha123",
+/* STATUS */
 
-  SEARCH_ID:
-    "EQBUSCA",
+.status-card{
+  margin-top:16px;
+  border-radius:13px;
+  padding:13px;
+  border:1px solid #e5e7eb;
+}
 
-  NOTIFICATION_EMAIL_TO:
-    "manutencao@pncq.org.br",
+.status-card.ok{
+  background:#ecfdf5;
+}
 
-  NOTIFICATION_EMAIL_CC:
-    "j.guimaraes@pncq.org.br",
+.status-card.critico{
+  background:#fef2f2;
+}
 
-  PHOTO_FOLDER_NAME:
-    "QRManut_Fotos",
+.status-card.atendimento{
+  background:#fffbeb;
+}
 
-  PREVENTIVE_PHOTO_FOLDER_NAME:
-    "QRManut_Preventivas",
+.status-card.aguardando{
+  background:#fff7ed;
+}
 
-  PREVENTIVE_SIGNATURE_FOLDER_NAME:
-    "QRManut_Assinaturas",
+.status-title{
+  font-weight:800;
+}
 
-  PHOTO_PUBLIC_BY_LINK:
-    true,
+.status-info{
+  margin-top:5px;
+  font-size:.86rem;
+  color:#6b7280;
+}
 
-  MAX_PHOTO_BYTES:
-    4 * 1024 * 1024,
 
-  MAX_SIGNATURE_BYTES:
-    2 * 1024 * 1024,
+/* EQBUSCA */
 
-  HISTORY_LIMIT:
-    50,
+.search-title{
+  color:#1f4e78;
+  font-size:1.45rem;
+  font-weight:800;
+}
 
-  PREVENTIVE_HISTORY_LIMIT:
-    50,
+.menu-busca{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+  margin:18px 0;
+}
 
-  SEARCH_LIMIT:
-    30,
+.menu-button{
+  border:1px solid #d1d5db;
+  background:#fff;
+  border-radius:12px;
+  padding:13px;
+  font-weight:700;
+  cursor:pointer;
+}
 
-  PENDING_LIMIT:
-    100,
+.menu-button.active{
+  background:#1f4e78;
+  color:#fff;
+}
 
-  PREVENTIVE_CONTROL_LIMIT:
-    1000,
+.menu-button.preventive.active{
+  background:#047857;
+  border-color:#047857;
+}
 
-  PREVENTIVE_SESSION_SECONDS:
-    21600,
+.search-box{
+  display:flex;
+  gap:8px;
+}
 
-  DEFAULT_STATUS:
-    "Aberta",
+.search-box input{
+  flex:1;
+}
 
-  STATUS_OPTIONS: [
-    "Aberta",
-    "Em atendimento",
-    "Aguardando peça",
-    "Concluída",
-    "Cancelada"
-  ],
+.search-box button{
+  border:0;
+  background:#1f4e78;
+  color:#fff;
+  border-radius:9px;
+  padding:0 18px;
+}
 
-  ACTIVE_STATUS: [
-    "Aberta",
-    "Em atendimento",
-    "Aguardando peça"
-  ],
+.search-result,
+.pending-card,
+.control-item,
+.history-card,
+.preventive-card{
+  margin-top:11px;
+  padding:14px;
+  border:1px solid #e5e7eb;
+  border-radius:13px;
+  background:#fff;
+}
 
-  PREVENTIVE_STATUS:
-    "Realizada",
+.search-result-id{
+  font-size:.8rem;
+  font-weight:800;
+  color:#1f4e78;
+}
 
-  PREVENTIVE_MONTHLY_LABEL:
-    "Mensal",
+.search-result-name{
+  font-weight:700;
+}
 
-  CATEGORIAS_OCORRENCIA: [
-    "Civil",
-    "Sanitário",
-    "Elétrica",
-    "Hidráulica",
-    "Climatização",
-    "Refrigeração",
-    "Utilidades",
-    "Segurança",
-    "Mobiliário",
-    "Equipamento",
-    "Outros"
-  ],
+.search-result-data{
+  margin-top:8px;
+  line-height:1.55;
+  color:#4b5563;
+  font-size:.86rem;
+}
 
-  COMPONENTES_OCORRENCIA: [
-    "Geral",
-    "Piso",
-    "Parede",
-    "Teto",
-    "Porta",
-    "Janela",
-    "Vaso Sanitário",
-    "Pia",
-    "Torneira",
-    "Descarga",
-    "Mictório",
-    "Ralo",
-    "Luminária",
-    "Tomada",
-    "Interruptor",
-    "Tubulação",
-    "Registro",
-    "Bomba",
-    "Motor",
-    "Painel",
-    "Ar-condicionado",
-    "Mobiliário",
-    "Outro"
-  ],
+.open-button{
+  display:block;
+  margin-top:10px;
+  padding:10px;
+  border-radius:9px;
+  background:#1f4e78;
+  color:#fff;
+  text-align:center;
+  text-decoration:none;
+  font-weight:700;
+}
 
-  VERSION:
-    "2026-08-12-PRODUCAO-7.2"
-};
+
+/* RESUMOS */
+
+.pending-summary,
+.control-summary{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+  margin:14px 0;
+}
+
+.pending-number,
+.control-summary-card{
+  background:#fff;
+  border:1px solid #e5e7eb;
+  border-radius:12px;
+  padding:11px;
+  text-align:center;
+}
+
+.pending-number strong,
+.control-summary-card strong{
+  display:block;
+  font-size:1.3rem;
+}
+
+
+/* PREVENTIVAS */
+
+.preventive-login-info{
+  margin-bottom:13px;
+  padding:10px;
+  background:#ecfdf5;
+  border-radius:10px;
+  color:#065f46;
+  font-size:.85rem;
+}
+
+.control-header{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  align-items:end;
+}
+
+.control-field{
+  flex:1;
+  min-width:180px;
+}
+
+.progress-box{
+  margin-top:14px;
+  padding:13px;
+  border:1px solid #e5e7eb;
+  border-radius:12px;
+}
+
+.progress-head{
+  display:flex;
+  justify-content:space-between;
+  font-weight:700;
+}
+
+.progress-track{
+  height:13px;
+  background:#e5e7eb;
+  border-radius:999px;
+  overflow:hidden;
+  margin-top:8px;
+}
+
+.progress-fill{
+  height:100%;
+  width:0;
+  background:#059669;
+}
+
+.control-tabs{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:15px;
+}
+
+.control-tab{
+  padding:8px 12px;
+  border:1px solid #d1d5db;
+  border-radius:999px;
+  background:#fff;
+  font-weight:700;
+}
+
+.control-tab.active{
+  background:#111827;
+  color:#fff;
+}
+
+.control-item.pending{
+  border-left:5px solid #dc2626;
+}
+
+.control-item.done{
+  border-left:5px solid #059669;
+}
+
+.control-head{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.control-status{
+  padding:5px 8px;
+  border-radius:999px;
+  font-size:.75rem;
+  font-weight:800;
+}
+
+.control-status.pending{
+  background:#fee2e2;
+  color:#991b1b;
+}
+
+.control-status.done{
+  background:#dcfce7;
+  color:#166534;
+}
+
+.provider-card{
+  margin-top:8px;
+  padding:10px;
+  border:1px solid #e5e7eb;
+  border-radius:10px;
+}
+
+.report-action-box{
+  margin-top:20px;
+  padding:15px;
+  border:1px solid #bfdbfe;
+  background:#eff6ff;
+  border-radius:13px;
+  text-align:center;
+}
+
+.report-action-box button{
+  margin-top:8px;
+}
+
+
+/* FORM */
+
+label{
+  display:grid;
+  gap:5px;
+  margin-top:12px;
+  font-weight:600;
+}
+
+input,
+select,
+textarea{
+  width:100%;
+  padding:11px;
+  border:1px solid #d1d5db;
+  border-radius:9px;
+  font:inherit;
+}
+
+textarea{
+  resize:vertical;
+}
+
+button{
+  font:inherit;
+}
+
+.btn{
+  border:0;
+  border-radius:9px;
+  padding:11px 15px;
+  background:#111827;
+  color:#fff;
+  cursor:pointer;
+}
+
+.btn-green{
+  background:#047857;
+}
+
+.btn-blue{
+  background:#1f4e78;
+}
+
+.btn-secondary{
+  background:#e5e7eb;
+  color:#111827;
+}
+
+button:disabled{
+  opacity:.55;
+  cursor:not-allowed;
+}
+
+
+/* REQUISITOS */
+
+.requirements-box{
+  margin-top:13px;
+  padding:11px;
+  border-radius:11px;
+  background:#f9fafb;
+  border:1px solid #e5e7eb;
+}
+
+.requirement{
+  margin:5px 0;
+  font-size:.85rem;
+}
+
+.required-yes{
+  color:#991b1b;
+  font-weight:700;
+}
+
+.required-no{
+  color:#047857;
+}
+
+
+/* ASSINATURA */
+
+.signature-box{
+  margin-top:14px;
+  padding:12px;
+  border:1px solid #d1d5db;
+  border-radius:12px;
+  background:#f9fafb;
+}
+
+.signature-title{
+  font-weight:800;
+}
+
+.signature-help{
+  margin-top:3px;
+  font-size:.8rem;
+  color:#6b7280;
+}
+
+.signature-canvas-wrap{
+  margin-top:10px;
+  border:2px dashed #9ca3af;
+  background:#fff;
+  border-radius:9px;
+  overflow:hidden;
+}
+
+#signatureCanvas{
+  width:100%;
+  height:180px;
+  display:block;
+  touch-action:none;
+}
+
+
+/* MODAL */
+
+.modal{
+  position:fixed;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:12px;
+  background:rgba(0,0,0,.45);
+  z-index:999;
+}
+
+.modal-box{
+  width:min(700px,96vw);
+  max-height:92vh;
+  overflow:auto;
+  background:#fff;
+  border-radius:15px;
+  padding:17px;
+}
+
+.modal-actions{
+  display:flex;
+  justify-content:flex-end;
+  gap:8px;
+  margin-top:16px;
+}
+
+.photo-preview{
+  display:none;
+  max-width:100%;
+  max-height:280px;
+  margin-top:10px;
+}
+
+.message{
+  display:none;
+  margin-top:12px;
+  padding:10px;
+  border-radius:8px;
+  line-height:1.5;
+}
+
+.message.error{
+  display:block;
+  background:#fee2e2;
+  color:#991b1b;
+}
+
+.message.loading{
+  display:block;
+  background:#fef3c7;
+  color:#92400e;
+}
+
+.message.success{
+  display:block;
+  background:#d1fae5;
+  color:#065f46;
+}
+
+.message.info{
+  display:block;
+  background:#dbeafe;
+  color:#1e3a8a;
+}
+
+.preventive-info{
+  padding:11px;
+  border:1px solid #a7f3d0;
+  border-radius:10px;
+  background:#ecfdf5;
+  line-height:1.6;
+}
+
+.tag{
+  display:inline-block;
+  padding:4px 8px;
+  margin:5px 4px 5px 0;
+  background:#eef2ff;
+  border-radius:999px;
+  font-size:.75rem;
+}
+
+.preventive-card{
+  background:#f0fdf4;
+}
+
+.preventive-id{
+  color:#047857;
+  font-weight:800;
+}
+
+.footer{
+  margin-top:20px;
+  text-align:center;
+  color:#9ca3af;
+  font-size:.72rem;
+}
+
+iframe{
+  display:none;
+}
+
+
+@media(max-width:700px){
+
+  .menu-busca{
+    grid-template-columns:1fr;
+  }
+
+  .pending-summary,
+  .control-summary{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .search-box{
+    display:grid;
+  }
+
+  .search-box button{
+    padding:12px;
+  }
+
+  .actions{
+    flex-direction:column;
+  }
+
+  .chip,
+  .btn-preventive,
+  .btn-search{
+    width:min(100%,380px);
+  }
+
+  .modal-actions{
+    flex-direction:column-reverse;
+  }
+
+  .modal-actions button{
+    width:100%;
+  }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+
+<!-- =========================================================
+     EQBUSCA
+     ========================================================= -->
+
+<div
+  id="searchScreen"
+  class="hidden"
+>
+
+<div class="search-title">
+QRManut
+</div>
+
+<div class="muted">
+Gestão rápida de manutenção
+</div>
+
+
+<div class="menu-busca">
+
+<button
+  id="tabSearch"
+  class="menu-button active"
+>
+🔎 Buscar ativos
+</button>
+
+<button
+  id="tabPending"
+  class="menu-button"
+>
+⚠️ OCs pendentes
+</button>
+
+<button
+  id="tabPreventive"
+  class="menu-button preventive"
+>
+🛠️ Preventivas
+</button>
+
+</div>
+
+
+<div id="searchArea">
+
+<div class="card">
+
+<div class="search-box">
+
+<input
+  id="searchInput"
+  placeholder="ID, equipamento, ambiente, localização..."
+>
+
+<button id="searchButton">
+Buscar
+</button>
+
+</div>
+
+</div>
+
+<div
+  id="searchStatus"
+  class="muted"
+  style="margin-top:12px"
+></div>
+
+<div id="searchResults"></div>
+
+</div>
+
+
+<div
+  id="pendingArea"
+  class="hidden"
+>
+
+<div
+  id="pendingSummary"
+  class="pending-summary"
+></div>
+
+<div id="pendingResults"></div>
+
+</div>
+
+
+<div
+  id="preventiveControlArea"
+  class="hidden"
+>
+
+<div class="card">
+
+<div
+  id="preventiveLoggedInfo"
+  class="preventive-login-info"
+></div>
+
+
+<div class="control-header">
+
+<div class="control-field">
+
+<label>
+Competência
+
+<input
+  id="controlCompetence"
+  type="month"
+>
+
+</label>
+
+</div>
+
+
+<div class="control-field">
+
+<label>
+Prestador
+
+<select id="controlProvider">
+
+<option value="">
+Todos
+</option>
+
+</select>
+
+</label>
+
+</div>
+
+
+<button
+  id="controlRefresh"
+  class="btn btn-green"
+>
+Atualizar
+</button>
+
+
+<button
+  id="preventiveLogout"
+  class="btn btn-secondary"
+>
+Sair
+</button>
+
+</div>
+
+
+<h3 id="controlTitle"></h3>
+
+
+<div
+  id="controlSummary"
+  class="control-summary"
+></div>
+
+
+<div class="progress-box">
+
+<div class="progress-head">
+
+<span>
+Conclusão da competência
+</span>
+
+<span id="progressText">
+0%
+</span>
+
+</div>
+
+<div class="progress-track">
+
+<div
+  id="progressFill"
+  class="progress-fill"
+></div>
+
+</div>
+
+</div>
+
+
+<div id="providerSummary"></div>
+
+
+<div class="control-tabs">
+
+<button
+  id="controlAll"
+  class="control-tab active"
+>
+Todos
+</button>
+
+<button
+  id="controlPending"
+  class="control-tab"
+>
+🔴 Pendentes
+</button>
+
+<button
+  id="controlDone"
+  class="control-tab"
+>
+✅ Realizadas
+</button>
+
+</div>
+
+
+<div
+  id="controlListStatus"
+  class="muted"
+  style="margin-top:12px"
+></div>
+
+<div id="controlResults"></div>
+
+
+<!-- RELATÓRIO -->
+
+<div class="report-action-box">
+
+<strong>
+📧 Relatório da competência
+</strong>
+
+<div
+  class="muted"
+  style="margin-top:5px"
+>
+Envia por e-mail as preventivas realizadas e as que ainda estão pendentes.
+</div>
+
+<button
+  id="sendMonthlyReport"
+  type="button"
+  class="btn btn-blue"
+>
+📧 Enviar relatório da competência
+</button>
+
+<div
+  id="monthlyReportMessage"
+  class="message"
+></div>
+
+</div>
+
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<!-- =========================================================
+     FICHA
+     ========================================================= -->
+
+<div
+  id="assetScreen"
+  class="hidden"
+>
+
+<div class="card">
+
+<h1 id="titulo">
+Carregando...
+</h1>
+
+<div
+  id="meta"
+  class="muted"
+></div>
+
+<div
+  id="tipoBadge"
+  class="badge"
+></div>
+
+
+<div
+  id="statusCard"
+  class="status-card"
+>
+
+<div
+  id="statusTitle"
+  class="status-title"
+></div>
+
+<div
+  id="statusInfo"
+  class="status-info"
+></div>
+
+</div>
+
+
+<div
+  id="classificationSection"
+  class="section hidden"
+>
+
+<h3>
+Classificação
+</h3>
+
+<div id="classification"></div>
+
+</div>
+
+
+<div
+  id="locationSection"
+  class="section hidden"
+>
+
+<h3>
+Localização
+</h3>
+
+<div id="location"></div>
+
+</div>
+
+
+<div
+  id="technicalSection"
+  class="section hidden"
+>
+
+<h3>
+Características Técnicas
+</h3>
+
+<div id="technical"></div>
+
+</div>
+
+
+<div class="section">
+
+<h3>
+Gestão do Ativo
+</h3>
+
+<div id="management"></div>
+
+</div>
+
+
+<div class="actions">
+
+<button
+  id="reportButton"
+  class="chip"
+>
+Reportar Serviço / Anomalia / Reparo
+</button>
+
+<button
+  id="preventiveButton"
+  class="btn-preventive hidden"
+>
+🛠️ Registrar Preventiva
+</button>
+
+<button
+  id="searchAssetsButton"
+  class="btn-search"
+>
+🔎 Buscar Ativos
+</button>
+
+</div>
+
+
+<div class="section">
+
+<h3>
+Histórico de Manutenção
+</h3>
+
+<div
+  id="historyStatus"
+  class="muted"
+></div>
+
+<select
+  id="historySelect"
+  class="hidden"
+></select>
+
+<div id="historyDetail"></div>
+
+</div>
+
+
+<div
+  id="preventiveHistorySection"
+  class="section hidden"
+>
+
+<h3>
+🛠️ Histórico de Preventivas
+</h3>
+
+<div
+  id="preventiveHistoryStatus"
+  class="muted"
+>
+Login necessário para visualizar.
+</div>
+
+<div id="preventiveHistory"></div>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<!-- =========================================================
+     LOGIN PREVENTIVA
+     ========================================================= -->
+
+<div
+  id="preventiveLoginModal"
+  class="modal"
+>
+
+<div class="modal-box">
+
+<h2>
+🔐 Acesso às Preventivas
+</h2>
+
+
+<div
+  id="loginProviderInfo"
+  class="preventive-info hidden"
+></div>
+
+
+<label>
+
+Usuário
+
+<input
+  id="preventiveUsername"
+  autocomplete="username"
+>
+
+</label>
+
+
+<label>
+
+Senha
+
+<input
+  id="preventivePassword"
+  type="password"
+  autocomplete="current-password"
+>
+
+</label>
+
+
+<div
+  id="loginMessage"
+  class="message"
+></div>
+
+
+<div class="modal-actions">
+
+<button
+  id="cancelLogin"
+  class="btn btn-secondary"
+>
+Cancelar
+</button>
+
+<button
+  id="sendLogin"
+  class="btn btn-green"
+>
+Entrar
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<!-- =========================================================
+     PREVENTIVA
+     ========================================================= -->
+
+<div
+  id="preventiveModal"
+  class="modal"
+>
+
+<div class="modal-box">
+
+<h2>
+🛠️ Registrar Manutenção Preventiva
+</h2>
+
+
+<div class="preventive-info">
+
+<div>
+<b>Ativo:</b>
+<span id="preventiveAsset"></span>
+</div>
+
+<div>
+<b>Periodicidade:</b>
+<span id="preventivePeriodicity"></span>
+</div>
+
+<div>
+<b>Prestador:</b>
+<span id="preventiveProvider"></span>
+</div>
+
+<div>
+<b>Competência:</b>
+<span id="preventiveCompetence"></span>
+</div>
+
+</div>
+
+
+<div
+  id="preventiveRequirements"
+  class="requirements-box"
+></div>
+
+
+<label>
+
+Responsável pela preventiva *
+
+<input id="preventiveResponsible">
+
+</label>
+
+
+<label id="preventiveObservationLabel">
+
+Observação
+
+<textarea
+  id="preventiveObservation"
+  rows="5"
+></textarea>
+
+</label>
+
+
+<label id="preventivePhotoLabel">
+
+Foto / evidência
+
+<input
+  id="preventivePhotoInput"
+  type="file"
+  accept="image/*"
+  capture="environment"
+>
+
+</label>
+
+
+<img
+  id="preventivePhotoPreview"
+  class="photo-preview"
+>
+
+
+<div
+  id="signatureBox"
+  class="signature-box hidden"
+>
+
+<div class="signature-title">
+
+✍️ Assinatura do responsável
+
+<span
+  id="signatureRequiredText"
+  class="required-yes"
+></span>
+
+</div>
+
+<div class="signature-help">
+Assine no quadro usando o dedo ou mouse.
+</div>
+
+<div class="signature-canvas-wrap">
+
+<canvas id="signatureCanvas"></canvas>
+
+</div>
+
+<button
+  id="clearSignature"
+  type="button"
+  class="btn btn-secondary"
+  style="margin-top:8px"
+>
+Limpar assinatura
+</button>
+
+</div>
+
+
+<div
+  id="preventiveMessage"
+  class="message"
+></div>
+
+
+<div class="modal-actions">
+
+<button
+  id="cancelPreventive"
+  class="btn btn-secondary"
+>
+Cancelar
+</button>
+
+<button
+  id="savePreventive"
+  class="btn btn-green"
+>
+Registrar Preventiva
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<!-- =========================================================
+     NOVA OC
+     ========================================================= -->
+
+<div
+  id="reportModal"
+  class="modal"
+>
+
+<div class="modal-box">
+
+<h2>
+Reportar Serviço / Anomalia / Reparo
+</h2>
+
+
+<label>
+Seu nome *
+
+<input id="reporterName">
+</label>
+
+
+<label>
+Contato
+
+<input id="reporterContact">
+</label>
+
+
+<label>
+Categoria *
+
+<select id="category">
+
+<option value="">Selecione...</option>
+<option>Civil</option>
+<option>Sanitário</option>
+<option>Elétrica</option>
+<option>Hidráulica</option>
+<option>Climatização</option>
+<option>Refrigeração</option>
+<option>Utilidades</option>
+<option>Segurança</option>
+<option>Mobiliário</option>
+<option>Equipamento</option>
+<option>Outros</option>
+
+</select>
+
+</label>
+
+
+<label>
+Componente *
+
+<select id="component">
+
+<option value="">Selecione...</option>
+<option>Geral</option>
+<option>Piso</option>
+<option>Parede</option>
+<option>Teto</option>
+<option>Porta</option>
+<option>Janela</option>
+<option>Vaso Sanitário</option>
+<option>Pia</option>
+<option>Torneira</option>
+<option>Descarga</option>
+<option>Mictório</option>
+<option>Ralo</option>
+<option>Luminária</option>
+<option>Tomada</option>
+<option>Interruptor</option>
+<option>Tubulação</option>
+<option>Registro</option>
+<option>Bomba</option>
+<option>Motor</option>
+<option>Painel</option>
+<option>Ar-condicionado</option>
+<option>Mobiliário</option>
+<option>Outro</option>
+
+</select>
+
+</label>
+
+
+<label>
+Descrição *
+
+<textarea
+  id="description"
+  rows="5"
+></textarea>
+
+</label>
+
+
+<label>
+Foto
+
+<input
+  id="photoInput"
+  type="file"
+  accept="image/*"
+  capture="environment"
+>
+
+</label>
+
+
+<img
+  id="photoPreview"
+  class="photo-preview"
+>
+
+
+<div
+  id="reportMessage"
+  class="message"
+></div>
+
+
+<div class="modal-actions">
+
+<button
+  id="cancelReport"
+  class="btn btn-secondary"
+>
+Cancelar
+</button>
+
+<button
+  id="sendReport"
+  class="btn"
+>
+Gravar ocorrência
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<!-- =========================================================
+     GERENCIAR OC
+     ========================================================= -->
+
+<div
+  id="manageModal"
+  class="modal"
+>
+
+<div class="modal-box">
+
+<h2>
+Gerenciar ocorrência
+</h2>
+
+
+<label>
+Alterado por *
+
+<input id="manageChangedBy">
+</label>
+
+
+<label>
+Categoria
+
+<select id="manageCategory"></select>
+</label>
+
+
+<label>
+Componente
+
+<select id="manageComponent"></select>
+</label>
+
+
+<label>
+Descrição
+
+<textarea
+  id="manageDescription"
+  rows="4"
+></textarea>
+
+</label>
+
+
+<label>
+Status
+
+<select id="manageStatus">
+
+<option>Aberta</option>
+<option>Em atendimento</option>
+<option>Aguardando peça</option>
+<option>Concluída</option>
+<option>Cancelada</option>
+
+</select>
+
+</label>
+
+
+<label>
+Responsável
+
+<input id="manageResponsible">
+</label>
+
+
+<label>
+Solução
+
+<textarea
+  id="manageSolution"
+  rows="4"
+></textarea>
+
+</label>
+
+
+<label>
+Foto da ocorrência
+
+<input
+  id="manageOccurrencePhotoInput"
+  type="file"
+  accept="image/*"
+>
+
+</label>
+
+
+<img
+  id="manageOccurrencePhotoPreview"
+  class="photo-preview"
+>
+
+
+<div
+  id="conclusionPhotoArea"
+  class="hidden"
+>
+
+<label>
+Foto da conclusão
+
+<input
+  id="conclusionPhotoInput"
+  type="file"
+  accept="image/*"
+>
+
+</label>
+
+<img
+  id="conclusionPhotoPreview"
+  class="photo-preview"
+>
+
+</div>
+
+
+<div
+  id="manageMessage"
+  class="message"
+></div>
+
+
+<div class="modal-actions">
+
+<button
+  id="cancelManage"
+  class="btn btn-secondary"
+>
+Cancelar
+</button>
+
+<button
+  id="saveManage"
+  class="btn"
+>
+Salvar alterações
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<!-- GERENCIAMENTO OC VIA IFRAME -->
+
+<form
+  id="manageForm"
+  method="POST"
+  target="manageFrame"
+  style="display:none"
+>
+
+<input name="action" value="updateOccurrence">
+<input name="token" id="m_token">
+<input name="ocorrencia" id="m_occurrence">
+<input name="status" id="m_status">
+<input name="responsavel" id="m_responsible">
+<input name="solucao" id="m_solution">
+<input name="alteradoPor" id="m_changedBy">
+<input name="descricaoOcorrencia" id="m_description">
+<input name="categoriaOcorrenciaEdit" id="m_category">
+<input name="componenteAfetadoEdit" id="m_component">
+<input name="fotoOcorrenciaBase64" id="m_occurrencePhoto">
+<input name="fotoOcorrenciaNome" id="m_occurrencePhotoName">
+<input name="fotoOcorrenciaMime" id="m_occurrencePhotoMime">
+<input name="fotoConclusaoBase64" id="m_photo">
+<input name="fotoConclusaoNome" id="m_photoName">
+<input name="fotoConclusaoMime" id="m_photoMime">
+
+</form>
+
+<iframe
+  id="manageFrame"
+  name="manageFrame"
+></iframe>
+
+
+<div class="footer">
+QRManut • Versão 7.2
+</div>
+
+
+</div>
+
+
+<script>
 
 
 /* ============================================================
- * BÁSICO
- * ============================================================ */
+   CONFIG
+   ============================================================ */
 
-function getSpreadsheet_() {
+const API_URL =
+"https://script.google.com/macros/s/AKfycbx4tpC42Q6WdkNhTUTAGoZWvG5M24zwlNscnwbDP5B3Q5pWo8B32-Lf0rQ2Xtua1AFMAQ/exec";
 
-  return SpreadsheetApp.openById(
-    CONFIG.SPREADSHEET_ID
-  );
+const TOKEN =
+"pncqalpha123";
+
+const RESPONSIBLE_KEY =
+"qrmanut_responsavel";
+
+const PREVENTIVE_SESSION_KEY =
+"qrmanut_preventive_session";
+
+const MAX_DIM =
+1280;
+
+const QUALITY =
+0.72;
+
+
+/* ESTADO */
+
+let currentAsset = null;
+
+let history = [];
+
+let selectedOccurrence = null;
+
+let preventiveControlData = null;
+
+let preventiveControlMode = "all";
+
+let preventiveSession = null;
+
+let preventiveRequirements = null;
+
+let loginNextAction = null;
+
+let photoData = null;
+
+let preventivePhotoData = null;
+
+let correctionPhotoData = null;
+
+let conclusionPhotoData = null;
+
+let reportPosting = false;
+
+let preventivePosting = false;
+
+let managePosting = false;
+
+let signatureDirty = false;
+
+let signatureDrawing = false;
+
+let signatureCtx = null;
+
+
+/* ============================================================
+   HELPERS
+   ============================================================ */
+
+function $(id){
+  return document.getElementById(id);
 }
 
 
-function normKey_(s) {
-
-  return String(s || "")
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase()
-    .trim()
-    .replace(/\s+/g, "_")
-    .replace(/[^a-z0-9_]/g, "");
+function show(id){
+  $(id).classList.remove("hidden");
 }
 
 
-function normId_(s) {
-
-  return String(s || "")
-    .trim()
-    .toUpperCase();
+function hide(id){
+  $(id).classList.add("hidden");
 }
 
 
-function normalizarBusca_(texto) {
+function esc(value){
 
-  return String(texto || "")
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase()
-    .trim()
-    .replace(/\s+/g, " ");
-}
-
-
-function sim_(valor) {
-
-  var v =
-    normalizarBusca_(valor);
-
-  return (
-    v === "sim" ||
-    v === "s" ||
-    v === "true"
-  );
-}
-
-
-function jsonResponse_(obj) {
-
-  return ContentService
-    .createTextOutput(
-      JSON.stringify(obj)
-    )
-    .setMimeType(
-      ContentService.MimeType.JSON
-    );
-}
-
-
-function serializeValue_(value) {
-
-  if (
-    value instanceof Date &&
-    !isNaN(value)
-  ) {
-
-    return Utilities.formatDate(
-      value,
-      Session.getScriptTimeZone(),
-      "yyyy-MM-dd'T'HH:mm:ss"
-    );
-  }
-
-  return value;
-}
-
-
-function escapeHtml_(texto) {
-
-  return String(texto || "")
+  return String(value ?? "")
     .replace(/&/g,"&amp;")
     .replace(/</g,"&lt;")
     .replace(/>/g,"&gt;")
@@ -266,3878 +1797,1479 @@ function escapeHtml_(texto) {
 }
 
 
-/* ============================================================
- * COMPETÊNCIA
- * ============================================================ */
+function normalizeId(value){
 
-function getCompetencia_(data) {
+  return String(value || "")
+    .trim()
+    .toUpperCase();
+}
 
-  return Utilities.formatDate(
-    data || new Date(),
-    Session.getScriptTimeZone(),
-    "yyyy-MM"
+
+function getId(){
+
+  return normalizeId(
+    new URLSearchParams(
+      location.search
+    ).get("id")
   );
 }
 
 
-function validarCompetencia_(competencia) {
+function formatDate(value){
 
-  return /^\d{4}-\d{2}$/
-    .test(
-      String(competencia || "")
-    );
+  if (!value) return "";
+
+  const d =
+    new Date(value);
+
+  if (
+    isNaN(d)
+  ) {
+
+    return value;
+  }
+
+  return d.toLocaleString(
+    "pt-BR"
+  );
 }
 
 
-function resolverCompetencia_(competencia) {
+function currentCompetence(){
 
-  var valor =
-    String(
-      competencia || ""
-    ).trim();
-
-  if (!valor) {
-
-    return getCompetencia_(
-      new Date()
-    );
-  }
-
-  if (
-    !validarCompetencia_(valor)
-  ) {
-
-    throw new Error(
-      "Competência inválida. Utilize YYYY-MM."
-    );
-  }
-
-  return valor;
-}
-
-
-function formatarCompetenciaPtBr_(competencia) {
-
-  var partes =
-    String(
-      competencia || ""
-    ).split("-");
-
-  if (
-    partes.length !== 2
-  ) {
-
-    return competencia;
-  }
-
-  var meses = [
-    "",
-    "Janeiro",
-    "Fevereiro",
-    "Março",
-    "Abril",
-    "Maio",
-    "Junho",
-    "Julho",
-    "Agosto",
-    "Setembro",
-    "Outubro",
-    "Novembro",
-    "Dezembro"
-  ];
-
-  var mes =
-    Number(
-      partes[1]
-    );
-
-  if (
-    mes < 1 ||
-    mes > 12
-  ) {
-
-    return competencia;
-  }
+  const d =
+    new Date();
 
   return (
-    meses[mes] +
-    "/" +
-    partes[0]
+    d.getFullYear() +
+    "-" +
+    String(
+      d.getMonth() + 1
+    )
+    .padStart(
+      2,
+      "0"
+    )
   );
 }
 
 
-/* ============================================================
- * EQUIPAMENTOS
- * ============================================================ */
+function pairs(items){
 
-function readEquipmentSheet_() {
-
-  var sh =
-    getSpreadsheet_()
-      .getSheetByName(
-        CONFIG.EQUIPMENT_SHEET
-      );
-
-  if (!sh) {
-
-    throw new Error(
-      "Aba Equipamentos não encontrada."
-    );
-  }
-
-  var values =
-    sh.getDataRange()
-      .getValues();
-
-  if (
-    values.length <= 1
-  ) {
-
-    return [];
-  }
-
-  var headers =
-    values[0].map(
-      normKey_
-    );
-
-  return values
-    .slice(1)
+  return items
     .filter(
-      function(row) {
-
-        return row.some(
-          function(v) {
-
-            return (
-              String(v).trim() !== ""
-            );
-          }
-        );
-      }
+      item =>
+        item[1] !== "" &&
+        item[1] !== null &&
+        item[1] !== undefined
     )
     .map(
-      function(row) {
+      item => `
 
-        var obj = {};
+        <div class="pair">
 
-        headers.forEach(
-          function(h,i) {
+          <b>
+            ${esc(item[0])}:
+          </b>
 
-            obj[h] =
-              serializeValue_(
-                row[i]
-              );
-          }
-        );
+          ${esc(item[1])}
 
-        return obj;
-      }
-    );
-}
+        </div>
 
-
-function findEquipmentById_(rows,id) {
-
-  var target =
-    normId_(id);
-
-  for (
-    var i = 0;
-    i < rows.length;
-    i++
-  ) {
-
-    if (
-      normId_(rows[i].id) ===
-      target
-    ) {
-
-      return rows[i];
-    }
-  }
-
-  return null;
-}
-
-
-function buildEquipmentPayload_(eq) {
-
-  return {
-
-    id:
-      eq.id || "",
-
-    nome_do_equipamento:
-      eq.nome_do_equipamento || "",
-
-    fabricante:
-      eq.fabricante || "",
-
-    modelo:
-      eq.modelo || "",
-
-    numero_de_serie:
-      eq.numero_de_serie || "",
-
-    capacidade:
-      eq.capacidade || "",
-
-    amperagem_nominal_fla:
-      eq.amperagem_nominal_fla || "",
-
-    amperagem_de_partida_flr:
-      eq.amperagem_de_partida_flr || "",
-
-    amperagem_medida:
-      eq.amperagem_medida || "",
-
-    voltagem:
-      eq.voltagem || "",
-
-    peso:
-      eq.peso || "",
-
-    ano_de_aquisicao:
-      eq.ano_de_aquisicao || "",
-
-    vida_util_estimada:
-      eq.vida_util_estimada || "",
-
-    status:
-      eq.status || "",
-
-    observacoes:
-      eq.observacoes || "",
-
-    prestador:
-      eq.prestador || "",
-
-    periodicidade:
-      eq.periodicidade || "",
-
-    tipo_de_ativo:
-      eq.tipo_de_ativo ||
-      "Equipamento",
-
-    categoria_do_ativo:
-      eq.categoria_do_ativo || "",
-
-    subcategoria:
-      eq.subcategoria || "",
-
-    area:
-      eq.area || "",
-
-    ambiente:
-      eq.ambiente || "",
-
-    componente_elemento:
-      eq.componente__elemento ||
-      eq.componente_elemento ||
-      "",
-
-    pavimento:
-      eq.pavimento || "",
-
-    localizacao:
-      eq.localizacao || "",
-
-    criticidade:
-      eq.criticidade || "",
-
-    classe_de_manutencao:
-      eq.classe_de_manutencao || "",
-
-    local_detalhado:
-      eq.local_detalhado || ""
-
-  };
+      `
+    )
+    .join("");
 }
 
 
 /* ============================================================
- * BUSCA GERAL
- * ============================================================ */
+   API
+   ============================================================ */
 
-function buscarAtivos_(termo) {
+async function api(params){
 
-  var busca =
-    normalizarBusca_(
-      termo
+  const response =
+    await fetch(
+
+      API_URL +
+
+      "?" +
+
+      new URLSearchParams({
+
+        token:TOKEN,
+
+        ...params
+
+      })
+
     );
 
-  if (
-    !busca ||
-    busca.length < 2
-  ) {
+  return response.json();
+}
 
-    return [];
-  }
 
-  var ativos =
-    readEquipmentSheet_();
+async function apiPost(params){
 
-  var resultados = [];
+  const body =
+    new URLSearchParams({
 
-  for (
-    var i = 0;
-    i < ativos.length;
-    i++
-  ) {
+      token:TOKEN,
 
-    var a =
-      ativos[i];
-
-    var texto = [
-
-      a.id,
-      a.nome_do_equipamento,
-      a.fabricante,
-      a.modelo,
-      a.numero_de_serie,
-      a.localizacao,
-      a.tipo_de_ativo,
-      a.categoria_do_ativo,
-      a.subcategoria,
-      a.area,
-      a.ambiente,
-      a.componente__elemento,
-      a.pavimento,
-      a.criticidade,
-      a.classe_de_manutencao,
-      a.local_detalhado,
-      a.prestador,
-      a.periodicidade,
-      a.status
-
-    ]
-    .map(
-      normalizarBusca_
-    )
-    .join(" ");
-
-    if (
-      texto.indexOf(busca) === -1
-    ) {
-
-      continue;
-    }
-
-    resultados.push({
-
-      id:
-        a.id || "",
-
-      nome:
-        a.nome_do_equipamento || "",
-
-      tipo:
-        a.tipo_de_ativo ||
-        "Equipamento",
-
-      pavimento:
-        a.pavimento || "",
-
-      localizacao:
-        a.localizacao || "",
-
-      ambiente:
-        a.ambiente || "",
-
-      localDetalhado:
-        a.local_detalhado || "",
-
-      fabricante:
-        a.fabricante || "",
-
-      modelo:
-        a.modelo || "",
-
-      status:
-        a.status || "",
-
-      prestador:
-        a.prestador || "",
-
-      periodicidade:
-        a.periodicidade || ""
+      ...params
 
     });
 
-    if (
-      resultados.length >=
-      CONFIG.SEARCH_LIMIT
-    ) {
+  const response =
+    await fetch(
 
-      break;
-    }
-  }
+      API_URL,
 
-  return resultados;
-}
+      {
 
+        method:"POST",
 
-/* ============================================================
- * HISTÓRICO DE OC
- * ============================================================ */
+        headers:{
+          "Content-Type":
+            "application/x-www-form-urlencoded;charset=UTF-8"
+        },
 
-function getHistorySheet_() {
+        body:
+          body.toString()
 
-  var ss =
-    getSpreadsheet_();
-
-  var sh =
-    ss.getSheetByName(
-      CONFIG.HISTORY_SHEET
-    );
-
-  if (!sh) {
-
-    sh =
-      ss.insertSheet(
-        CONFIG.HISTORY_SHEET
-      );
-  }
-
-  return sh;
-}
-
-
-function prepareHistorySheet_() {
-
-  var sh =
-    getHistorySheet_();
-
-  var headers = [
-
-    "Ocorrência",
-    "ID",
-    "Nome do equipamento",
-    "Data/Hora",
-    "Reportado por",
-    "Contato",
-    "Descrição",
-    "Foto",
-    "Status",
-    "Responsável",
-    "Data início",
-    "Data conclusão",
-    "Solução",
-    "Foto conclusão",
-    "Categoria da ocorrência",
-    "Componente afetado",
-    "Última alteração",
-    "Última alteração por",
-    "Notificação Prestador",
-    "E-mail Prestador"
-
-  ];
-
-  sh.getRange(
-    1,
-    1,
-    1,
-    headers.length
-  )
-  .setValues([
-    headers
-  ])
-  .setFontWeight(
-    "bold"
-  );
-
-  sh.setFrozenRows(1);
-
-  return sh;
-}
-
-
-/* ============================================================
- * PREVENTIVAS
- * ============================================================ */
-
-function getPreventiveSheet_() {
-
-  var ss =
-    getSpreadsheet_();
-
-  var sh =
-    ss.getSheetByName(
-      CONFIG.PREVENTIVE_SHEET
-    );
-
-  if (!sh) {
-
-    sh =
-      ss.insertSheet(
-        CONFIG.PREVENTIVE_SHEET
-      );
-  }
-
-  return sh;
-}
-
-
-function preparePreventiveSheet_() {
-
-  var sh =
-    getPreventiveSheet_();
-
-  var headers = [
-
-    "ID Registro",
-    "ID Ativo",
-    "Equipamento",
-    "Data/Hora",
-    "Competência",
-    "Periodicidade",
-    "Prestador",
-    "Responsável",
-    "Status",
-    "Observação",
-    "Foto",
-    "Assinatura",
-    "Assinatura Exigida",
-    "Foto Obrigatória",
-    "Observação Obrigatória",
-    "Usuário de Acesso"
-
-  ];
-
-  sh.getRange(
-    1,
-    1,
-    1,
-    headers.length
-  )
-  .setValues([
-    headers
-  ])
-  .setFontWeight(
-    "bold"
-  );
-
-  sh.setFrozenRows(1);
-
-  return sh;
-}
-
-
-/* ============================================================
- * ACESSOS PREVENTIVA
- *
- * A Prestador
- * B Usuário
- * C Senha
- * D Perfil
- * E Ativo
- * F Exigir Assinatura
- * G Foto Obrigatória
- * H Observação Obrigatória
- * I Notificar OC
- * J E-mail OC
- * K Enviar Relatório Preventivas
- * L E-mail Relatório
- * ============================================================ */
-
-function getPreventiveAccessSheet_() {
-
-  var ss =
-    getSpreadsheet_();
-
-  var sh =
-    ss.getSheetByName(
-      CONFIG.PREVENTIVE_ACCESS_SHEET
-    );
-
-  if (!sh) {
-
-    sh =
-      ss.insertSheet(
-        CONFIG.PREVENTIVE_ACCESS_SHEET
-      );
-  }
-
-  return sh;
-}
-
-
-function preparePreventiveAccessSheet_() {
-
-  var sh =
-    getPreventiveAccessSheet_();
-
-  var headers = [
-
-    "Prestador",
-    "Usuário",
-    "Senha",
-    "Perfil",
-    "Ativo",
-    "Exigir Assinatura",
-    "Foto Obrigatória",
-    "Observação Obrigatória",
-    "Notificar OC",
-    "E-mail OC",
-    "Enviar Relatório Preventivas",
-    "E-mail Relatório"
-
-  ];
-
-  sh.getRange(
-    1,
-    1,
-    1,
-    headers.length
-  )
-  .setValues([
-    headers
-  ])
-  .setFontWeight(
-    "bold"
-  );
-
-  sh.setFrozenRows(1);
-
-  return sh;
-}
-
-
-function readPreventiveAccess_() {
-
-  var values =
-    preparePreventiveAccessSheet_()
-      .getDataRange()
-      .getDisplayValues();
-
-  var result = [];
-
-  for (
-    var i = 1;
-    i < values.length;
-    i++
-  ) {
-
-    var r =
-      values[i];
-
-    if (
-      !String(r[0] || "").trim() &&
-      !String(r[1] || "").trim()
-    ) {
-
-      continue;
-    }
-
-    result.push({
-
-      prestador:
-        String(r[0] || "").trim(),
-
-      usuario:
-        String(r[1] || "").trim(),
-
-      senha:
-        String(r[2] || ""),
-
-      perfil:
-        String(
-          r[3] ||
-          "PRESTADOR"
-        )
-        .trim()
-        .toUpperCase(),
-
-      ativo:
-        normalizarBusca_(
-          r[4]
-        ) !== "nao",
-
-      exigirAssinatura:
-        sim_(r[5]),
-
-      fotoObrigatoria:
-        sim_(r[6]),
-
-      observacaoObrigatoria:
-        sim_(r[7]),
-
-      notificarOC:
-        sim_(r[8]),
-
-      emailOC:
-        String(r[9] || "")
-          .trim(),
-
-      enviarRelatorio:
-        sim_(r[10]),
-
-      emailRelatorio:
-        String(r[11] || "")
-          .trim()
-
-    });
-  }
-
-  return result;
-}
-
-
-/* ============================================================
- * REGRAS
- * ============================================================ */
-
-function getProviderRows_(prestador) {
-
-  var target =
-    normalizarBusca_(
-      prestador
-    );
-
-  return readPreventiveAccess_()
-    .filter(
-      function(x) {
-
-        return (
-          x.ativo &&
-          normalizarBusca_(
-            x.prestador
-          ) === target
-        );
       }
-    );
-}
 
-
-function getProviderRules_(prestador) {
-
-  var rows =
-    getProviderRows_(
-      prestador
     );
 
-  if (
-    !rows.length
-  ) {
-
-    return {
-
-      exigirAssinatura:false,
-      fotoObrigatoria:false,
-      observacaoObrigatoria:false
-
-    };
-  }
-
-  return {
-
-    exigirAssinatura:
-      rows.some(
-        function(x) {
-          return x.exigirAssinatura;
-        }
-      ),
-
-    fotoObrigatoria:
-      rows.some(
-        function(x) {
-          return x.fotoObrigatoria;
-        }
-      ),
-
-    observacaoObrigatoria:
-      rows.some(
-        function(x) {
-          return x.observacaoObrigatoria;
-        }
-      )
-
-  };
-}
-
-
-function coletarEmails_(texto) {
-
-  var emails = [];
-
-  String(
-    texto || ""
-  )
-  .split(/[;,]/)
-  .forEach(
-    function(item) {
-
-      var email =
-        String(item || "")
-          .trim();
-
-      if (
-        email &&
-        emails.indexOf(email) === -1
-      ) {
-
-        emails.push(email);
-      }
-    }
-  );
-
-  return emails;
-}
-
-
-function getProviderNotificationConfig_(prestador) {
-
-  var rows =
-    getProviderRows_(
-      prestador
-    );
-
-  var emails = [];
-
-  rows.forEach(
-    function(row) {
-
-      coletarEmails_(
-        row.emailOC
-      )
-      .forEach(
-        function(email) {
-
-          if (
-            emails.indexOf(email) === -1
-          ) {
-
-            emails.push(email);
-          }
-        }
-      );
-    }
-  );
-
-  return {
-
-    notificar:
-      rows.some(
-        function(x) {
-          return x.notificarOC;
-        }
-      ),
-
-    emails:
-      emails,
-
-    emailString:
-      emails.join(",")
-
-  };
-}
-
-
-function getProviderReportConfig_(prestador) {
-
-  var rows =
-    getProviderRows_(
-      prestador
-    );
-
-  var emails = [];
-
-  rows.forEach(
-    function(row) {
-
-      coletarEmails_(
-        row.emailRelatorio
-      )
-      .forEach(
-        function(email) {
-
-          if (
-            emails.indexOf(email) === -1
-          ) {
-
-            emails.push(email);
-          }
-        }
-      );
-    }
-  );
-
-  return {
-
-    permitido:
-      rows.some(
-        function(x) {
-          return x.enviarRelatorio;
-        }
-      ),
-
-    emails:
-      emails,
-
-    emailString:
-      emails.join(",")
-
-  };
+  return response.json();
 }
 
 
 /* ============================================================
- * SESSÃO PREVENTIVA
- * ============================================================ */
+   RESPONSÁVEL
+   ============================================================ */
 
-function gerarTokenSessaoPreventiva_() {
-
-  return (
-    Utilities.getUuid()
-      .replace(/-/g,"")
-    +
-    Utilities.getUuid()
-      .replace(/-/g,"")
-  );
-}
-
-
-function getPreventiveCache_() {
-
-  return CacheService
-    .getScriptCache();
-}
-
-
-function salvarSessaoPreventiva_(dados) {
-
-  var token =
-    gerarTokenSessaoPreventiva_();
-
-  getPreventiveCache_()
-    .put(
-
-      "preventive_session_" +
-      token,
-
-      JSON.stringify(
-        dados
-      ),
-
-      CONFIG.PREVENTIVE_SESSION_SECONDS
-
-    );
-
-  return token;
-}
-
-
-function getPreventiveSession_(token) {
-
-  if (!token) {
-
-    return null;
-  }
-
-  var raw =
-    getPreventiveCache_()
-      .get(
-        "preventive_session_" +
-        token
-      );
-
-  if (!raw) {
-
-    return null;
-  }
+function getSavedResponsible(){
 
   try {
 
-    return JSON.parse(
-      raw
+    return (
+      localStorage.getItem(
+        RESPONSIBLE_KEY
+      ) || ""
     );
 
   } catch(error) {
 
-    return null;
+    return "";
   }
 }
 
 
-function validarSessaoPreventiva_(token) {
+function saveResponsible(name){
 
-  var sessao =
-    getPreventiveSession_(
-      token
-    );
-
-  if (!sessao) {
-
-    throw new Error(
-      "Sessão de preventiva inválida ou expirada."
-    );
-  }
-
-  return sessao;
-}
-
-
-function isMasterSession_(sessao) {
-
-  return (
-    sessao &&
-    sessao.perfil === "MASTER"
-  );
-}
-
-
-function prestadorPermitido_(sessao,prestadorAtivo) {
-
-  if (
-    isMasterSession_(sessao)
-  ) {
-
-    return true;
-  }
-
-  return (
-    normalizarBusca_(
-      sessao.prestador
-    ) ===
-    normalizarBusca_(
-      prestadorAtivo
-    )
-  );
-}
-
-
-function getEffectivePreventiveRequirements_(sessao,prestador) {
-
-  var regras =
-    getProviderRules_(
-      prestador
-    );
-
-  return {
-
-    exigirAssinatura:
-      isMasterSession_(sessao)
-        ? false
-        : regras.exigirAssinatura,
-
-    fotoObrigatoria:
-      regras.fotoObrigatoria,
-
-    observacaoObrigatoria:
-      regras.observacaoObrigatoria
-
-  };
-}
-
-
-/* ============================================================
- * LOGIN
- * ============================================================ */
-
-function loginPreventive_(body) {
-
-  var usuario =
-    String(
-      body.username || ""
-    ).trim();
-
-  var senha =
-    String(
-      body.password || ""
-    );
-
-  if (
-    !usuario ||
-    !senha
-  ) {
-
-    throw new Error(
-      "Informe usuário e senha."
-    );
-  }
-
-  var encontrado =
-    readPreventiveAccess_()
-      .find(
-        function(item) {
-
-          return (
-
-            item.ativo &&
-            item.usuario &&
-
-            normalizarBusca_(
-              item.usuario
-            ) ===
-            normalizarBusca_(
-              usuario
-            ) &&
-
-            item.senha ===
-            senha
-
-          );
-        }
-      );
-
-  if (!encontrado) {
-
-    throw new Error(
-      "Usuário ou senha inválidos."
-    );
-  }
-
-  if (
-    encontrado.perfil !== "MASTER" &&
-    encontrado.perfil !== "PRESTADOR"
-  ) {
-
-    throw new Error(
-      "Perfil inválido."
-    );
-  }
-
-  var sessao = {
-
-    usuario:
-      encontrado.usuario,
-
-    prestador:
-      encontrado.prestador,
-
-    perfil:
-      encontrado.perfil,
-
-    loginEm:
-      serializeValue_(
-        new Date()
-      )
-
-  };
-
-  var token =
-    salvarSessaoPreventiva_(
-      sessao
-    );
-
-  return {
-
-    ok:true,
-
-    sessionToken:
-      token,
-
-    usuario:
-      sessao.usuario,
-
-    prestador:
-      sessao.prestador,
-
-    perfil:
-      sessao.perfil,
-
-    expiresIn:
-      CONFIG.PREVENTIVE_SESSION_SECONDS
-
-  };
-}
-
-
-function logoutPreventive_(body) {
-
-  var token =
-    String(
-      body.preventiveSessionToken ||
-      ""
-    );
-
-  if (token) {
-
-    getPreventiveCache_()
-      .remove(
-        "preventive_session_" +
-        token
-      );
-  }
-
-  return {
-    ok:true
-  };
-}
-
-
-/* ============================================================
- * IDS
- * ============================================================ */
-
-function gerarNumeroOcorrencia_() {
-
-  var lock =
-    LockService.getScriptLock();
-
-  lock.waitLock(
-    30000
-  );
+  if (!name) return;
 
   try {
 
-    var sh =
-      prepareHistorySheet_();
-
-    var maior = 0;
-
-    if (
-      sh.getLastRow() > 1
-    ) {
-
-      sh.getRange(
-        2,
-        1,
-        sh.getLastRow() - 1,
-        1
-      )
-      .getDisplayValues()
-      .forEach(
-        function(row) {
-
-          var match =
-            String(
-              row[0] || ""
-            )
-            .match(
-              /^OC-(\d+)$/i
-            );
-
-          if (match) {
-
-            maior =
-              Math.max(
-                maior,
-                Number(match[1])
-              );
-          }
-        }
-      );
-    }
-
-    return (
-      "OC-" +
-      Utilities.formatString(
-        "%06d",
-        maior + 1
-      )
-    );
-
-  } finally {
-
-    lock.releaseLock();
-  }
-}
-
-
-function gerarNumeroPreventiva_() {
-
-  var lock =
-    LockService.getScriptLock();
-
-  lock.waitLock(
-    30000
-  );
-
-  try {
-
-    var sh =
-      preparePreventiveSheet_();
-
-    var maior = 0;
-
-    if (
-      sh.getLastRow() > 1
-    ) {
-
-      sh.getRange(
-        2,
-        1,
-        sh.getLastRow() - 1,
-        1
-      )
-      .getDisplayValues()
-      .forEach(
-        function(row) {
-
-          var match =
-            String(
-              row[0] || ""
-            )
-            .match(
-              /^PR-(\d+)$/i
-            );
-
-          if (match) {
-
-            maior =
-              Math.max(
-                maior,
-                Number(match[1])
-              );
-          }
-        }
-      );
-    }
-
-    return (
-      "PR-" +
-      Utilities.formatString(
-        "%06d",
-        maior + 1
-      )
-    );
-
-  } finally {
-
-    lock.releaseLock();
-  }
-}
-
-
-/* ============================================================
- * DRIVE
- * ============================================================ */
-
-function getOrCreateFolder_(name) {
-
-  var folders =
-    DriveApp.getFoldersByName(
+    localStorage.setItem(
+      RESPONSIBLE_KEY,
       name
     );
 
-  return folders.hasNext()
-    ? folders.next()
-    : DriveApp.createFolder(
-        name
-      );
+  } catch(error){}
 }
 
 
-function aplicarPermissaoFoto_(file) {
+/* ============================================================
+   SESSÃO
+   ============================================================ */
+
+function savePreventiveSession(data){
+
+  preventiveSession =
+    data;
+
+  sessionStorage.setItem(
+    PREVENTIVE_SESSION_KEY,
+    JSON.stringify(data)
+  );
+}
+
+
+function readPreventiveSession(){
+
+  try {
+
+    const raw =
+      sessionStorage.getItem(
+        PREVENTIVE_SESSION_KEY
+      );
+
+    preventiveSession =
+      raw
+        ? JSON.parse(raw)
+        : null;
+
+  } catch(error) {
+
+    preventiveSession =
+      null;
+  }
+}
+
+
+function clearPreventiveSession(){
+
+  preventiveSession =
+    null;
+
+  sessionStorage.removeItem(
+    PREVENTIVE_SESSION_KEY
+  );
+}
+
+
+async function sessionIsValid(){
 
   if (
-    !CONFIG.PHOTO_PUBLIC_BY_LINK
+    !preventiveSession ||
+    !preventiveSession.sessionToken
+  ) {
+
+    return false;
+  }
+
+  try {
+
+    const result =
+      await api({
+
+        action:
+          "preventivesession",
+
+        session:
+          preventiveSession.sessionToken
+
+      });
+
+    if (!result.ok) {
+
+      clearPreventiveSession();
+
+      return false;
+    }
+
+    return true;
+
+  } catch(error) {
+
+    clearPreventiveSession();
+
+    return false;
+  }
+}
+
+
+/* ============================================================
+   LOGIN
+   ============================================================ */
+
+async function requirePreventiveLogin(
+  nextAction,
+  provider
+){
+
+  const valid =
+    await sessionIsValid();
+
+  if (valid) {
+
+    if (
+      preventiveSession.perfil ===
+      "MASTER"
+    ) {
+
+      nextAction();
+
+      return;
+    }
+
+    if (
+      !provider ||
+
+      String(
+        preventiveSession.prestador
+      )
+      .trim()
+      .toLowerCase() ===
+
+      String(provider)
+      .trim()
+      .toLowerCase()
+
+    ) {
+
+      nextAction();
+
+      return;
+    }
+  }
+
+  loginNextAction =
+    nextAction;
+
+  $("preventiveUsername").value =
+    "";
+
+  $("preventivePassword").value =
+    "";
+
+  $("loginMessage").className =
+    "message";
+
+  if (provider) {
+
+    show(
+      "loginProviderInfo"
+    );
+
+    $("loginProviderInfo")
+      .innerHTML =
+
+      "<b>Prestador do ativo:</b> " +
+      esc(provider);
+
+  } else {
+
+    hide(
+      "loginProviderInfo"
+    );
+  }
+
+  $("preventiveLoginModal")
+    .style.display =
+    "flex";
+}
+
+
+async function doPreventiveLogin(){
+
+  const user =
+    $("preventiveUsername")
+      .value
+      .trim();
+
+  const password =
+    $("preventivePassword")
+      .value;
+
+  if (
+    !user ||
+    !password
+  ) {
+
+    $("loginMessage").className =
+      "message error";
+
+    $("loginMessage").textContent =
+      "Informe usuário e senha.";
+
+    return;
+  }
+
+  $("sendLogin").disabled =
+    true;
+
+  $("sendLogin").textContent =
+    "Entrando...";
+
+  try {
+
+    const result =
+      await apiPost({
+
+        action:
+          "preventiveLogin",
+
+        username:
+          user,
+
+        password:
+          password
+
+      });
+
+    if (!result.ok) {
+
+      throw new Error(
+        result.detail ||
+        "Usuário ou senha inválidos."
+      );
+    }
+
+    savePreventiveSession(
+      result
+    );
+
+    $("preventiveLoginModal")
+      .style.display =
+      "none";
+
+    if (
+      loginNextAction
+    ) {
+
+      const fn =
+        loginNextAction;
+
+      loginNextAction =
+        null;
+
+      fn();
+    }
+
+  } catch(error) {
+
+    $("loginMessage").className =
+      "message error";
+
+    $("loginMessage").textContent =
+      error.message;
+
+  } finally {
+
+    $("sendLogin").disabled =
+      false;
+
+    $("sendLogin").textContent =
+      "Entrar";
+  }
+}
+
+
+/* ============================================================
+   FOTO
+   ============================================================ */
+
+function processPhoto(file){
+
+  return new Promise(
+
+    function(resolve,reject){
+
+      const reader =
+        new FileReader();
+
+      reader.onload =
+        function(e){
+
+          const img =
+            new Image();
+
+          img.onload =
+            function(){
+
+              let w =
+                img.width;
+
+              let h =
+                img.height;
+
+              if (
+                w > MAX_DIM ||
+                h > MAX_DIM
+              ) {
+
+                if (
+                  w > h
+                ) {
+
+                  h =
+                    Math.round(
+                      h *
+                      MAX_DIM /
+                      w
+                    );
+
+                  w =
+                    MAX_DIM;
+
+                } else {
+
+                  w =
+                    Math.round(
+                      w *
+                      MAX_DIM /
+                      h
+                    );
+
+                  h =
+                    MAX_DIM;
+                }
+              }
+
+              const canvas =
+                document.createElement(
+                  "canvas"
+                );
+
+              canvas.width =
+                w;
+
+              canvas.height =
+                h;
+
+              canvas
+                .getContext("2d")
+                .drawImage(
+                  img,
+                  0,
+                  0,
+                  w,
+                  h
+                );
+
+              const url =
+                canvas.toDataURL(
+                  "image/jpeg",
+                  QUALITY
+                );
+
+              resolve({
+
+                base64:
+                  url.split(",")[1],
+
+                dataUrl:
+                  url,
+
+                mime:
+                  "image/jpeg",
+
+                name:
+                  "foto_" +
+                  Date.now() +
+                  ".jpg"
+
+              });
+            };
+
+          img.src =
+            e.target.result;
+        };
+
+      reader.onerror =
+        reject;
+
+      reader.readAsDataURL(
+        file
+      );
+    }
+  );
+}
+
+
+/* ============================================================
+   ASSINATURA
+   ============================================================ */
+
+function setupSignatureCanvas(){
+
+  const canvas =
+    $("signatureCanvas");
+
+  const rect =
+    canvas.getBoundingClientRect();
+
+  const ratio =
+    window.devicePixelRatio || 1;
+
+  canvas.width =
+    Math.floor(
+      rect.width * ratio
+    );
+
+  canvas.height =
+    Math.floor(
+      180 * ratio
+    );
+
+  signatureCtx =
+    canvas.getContext("2d");
+
+  signatureCtx.scale(
+    ratio,
+    ratio
+  );
+
+  signatureCtx.lineWidth =
+    2;
+
+  signatureCtx.lineCap =
+    "round";
+
+  signatureCtx.lineJoin =
+    "round";
+
+  clearSignatureCanvas();
+}
+
+
+function clearSignatureCanvas(){
+
+  const canvas =
+    $("signatureCanvas");
+
+  if (!signatureCtx) return;
+
+  signatureCtx.save();
+
+  signatureCtx.setTransform(
+    1,0,0,1,0,0
+  );
+
+  signatureCtx.fillStyle =
+    "#ffffff";
+
+  signatureCtx.fillRect(
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
+
+  signatureCtx.restore();
+
+  signatureDirty =
+    false;
+}
+
+
+function signaturePoint(event){
+
+  const rect =
+    $("signatureCanvas")
+      .getBoundingClientRect();
+
+  return {
+
+    x:
+      event.clientX -
+      rect.left,
+
+    y:
+      event.clientY -
+      rect.top
+
+  };
+}
+
+
+function signatureStart(event){
+
+  event.preventDefault();
+
+  signatureDrawing =
+    true;
+
+  const p =
+    signaturePoint(event);
+
+  signatureCtx.beginPath();
+
+  signatureCtx.moveTo(
+    p.x,
+    p.y
+  );
+
+  signatureDirty =
+    true;
+}
+
+
+function signatureMove(event){
+
+  if (
+    !signatureDrawing
   ) {
 
     return;
   }
 
-  try {
+  event.preventDefault();
 
-    file.setSharing(
-      DriveApp.Access.ANYONE_WITH_LINK,
-      DriveApp.Permission.VIEW
-    );
+  const p =
+    signaturePoint(event);
 
-  } catch(error) {
+  signatureCtx.lineTo(
+    p.x,
+    p.y
+  );
 
-    Logger.log(
-      error
-    );
-  }
+  signatureCtx.stroke();
 }
 
 
-function createBlobFromBase64_(
-  base64Raw,
-  mimeRaw,
-  nomeRaw,
-  maxBytes
-) {
+function signatureEnd(){
 
-  var raw =
-    String(
-      base64Raw || ""
-    ).trim();
+  signatureDrawing =
+    false;
+}
 
-  if (!raw) {
+
+function getSignatureData(){
+
+  if (
+    !signatureDirty
+  ) {
 
     return null;
   }
 
-  var base64 =
-    raw;
-
-  var mime =
-    String(
-      mimeRaw ||
-      "image/jpeg"
-    );
-
-  var match =
-    raw.match(
-      /^data:([^;]+);base64,(.+)$/s
-    );
-
-  if (match) {
-
-    mime =
-      match[1];
-
-    base64 =
-      match[2];
-  }
-
-  var bytes =
-    Utilities.base64Decode(
-      base64
-    );
-
-  if (
-    bytes.length >
-    maxBytes
-  ) {
-
-    throw new Error(
-      "Arquivo acima do limite permitido."
-    );
-  }
-
-  return Utilities.newBlob(
-    bytes,
-    mime,
-    String(
-      nomeRaw ||
-      "arquivo"
-    )
-  );
-}
-
-
-function savePhotoFromBase64_(
-  base64Raw,
-  mimeRaw,
-  nomeRaw,
-  equipmentId,
-  occurrence,
-  suffix
-) {
-
-  var blob =
-    createBlobFromBase64_(
-      base64Raw,
-      mimeRaw,
-      nomeRaw,
-      CONFIG.MAX_PHOTO_BYTES
-    );
-
-  if (!blob) {
-
-    return {
-      blob:null,
-      url:""
-    };
-  }
-
-  blob.setName(
-
-    occurrence +
-    "_" +
-    normId_(equipmentId) +
-    "_" +
-    suffix +
-    "_" +
-    Utilities.formatDate(
-      new Date(),
-      Session.getScriptTimeZone(),
-      "yyyyMMdd_HHmmss"
-    ) +
-    ".jpg"
-
-  );
-
-  var file =
-    getOrCreateFolder_(
-      CONFIG.PHOTO_FOLDER_NAME
-    )
-    .createFile(
-      blob
-    );
-
-  aplicarPermissaoFoto_(
-    file
-  );
-
-  return {
-
-    blob:
-      blob,
-
-    url:
-      file.getUrl()
-
-  };
-}
-
-
-function savePreventivePhoto_(
-  base64Raw,
-  mimeRaw,
-  nomeRaw,
-  equipmentId,
-  registro
-) {
-
-  var blob =
-    createBlobFromBase64_(
-      base64Raw,
-      mimeRaw,
-      nomeRaw,
-      CONFIG.MAX_PHOTO_BYTES
-    );
-
-  if (!blob) {
-
-    return {
-      url:""
-    };
-  }
-
-  blob.setName(
-
-    registro +
-    "_" +
-    normId_(equipmentId) +
-    "_PREVENTIVA_" +
-    Utilities.formatDate(
-      new Date(),
-      Session.getScriptTimeZone(),
-      "yyyyMMdd_HHmmss"
-    ) +
-    ".jpg"
-
-  );
-
-  var file =
-    getOrCreateFolder_(
-      CONFIG.PREVENTIVE_PHOTO_FOLDER_NAME
-    )
-    .createFile(
-      blob
-    );
-
-  aplicarPermissaoFoto_(
-    file
-  );
-
-  return {
-    url:file.getUrl()
-  };
-}
-
-
-function savePreventiveSignature_(
-  base64Raw,
-  mimeRaw,
-  equipmentId,
-  registro
-) {
-
-  var blob =
-    createBlobFromBase64_(
-      base64Raw,
-      mimeRaw ||
-      "image/png",
-      "assinatura.png",
-      CONFIG.MAX_SIGNATURE_BYTES
-    );
-
-  if (!blob) {
-
-    return {
-      url:""
-    };
-  }
-
-  blob.setName(
-
-    registro +
-    "_" +
-    normId_(equipmentId) +
-    "_ASSINATURA_" +
-    Utilities.formatDate(
-      new Date(),
-      Session.getScriptTimeZone(),
-      "yyyyMMdd_HHmmss"
-    ) +
-    ".png"
-
-  );
-
-  var file =
-    getOrCreateFolder_(
-      CONFIG.PREVENTIVE_SIGNATURE_FOLDER_NAME
-    )
-    .createFile(
-      blob
-    );
-
-  aplicarPermissaoFoto_(
-    file
-  );
-
-  return {
-    url:file.getUrl()
-  };
-}
-
-
-/* ============================================================
- * E-MAIL DA OC
- * ============================================================ */
-
-function enviarEmailPNCQ_(dados,fotoBlob) {
-
-  var assunto =
-
-    "[QRManut][" +
-    dados.ocorrencia +
-    "] " +
-    dados.id +
-    " - " +
-    dados.nomeEquipamento;
-
-  var corpo =
-
-    "Nova ocorrência registrada no QRManut.\n\n" +
-
-    "Ocorrência: " +
-    dados.ocorrencia +
-    "\n" +
-
-    "Ativo: " +
-    dados.id +
-    " - " +
-    dados.nomeEquipamento +
-    "\n" +
-
-    "Prestador: " +
-    (
-      dados.prestador ||
-      "Não informado"
-    ) +
-    "\n" +
-
-    "Pavimento: " +
-    (
-      dados.pavimento ||
-      "-"
-    ) +
-    "\n" +
-
-    "Localização: " +
-    (
-      dados.localizacao ||
-      "-"
-    ) +
-    "\n\n" +
-
-    "Categoria: " +
-    dados.categoriaOcorrencia +
-    "\n" +
-
-    "Componente: " +
-    dados.componenteAfetado +
-    "\n\n" +
-
-    "Reportado por: " +
-    dados.reportadoPor +
-    "\n\n" +
-
-    "Descrição:\n" +
-    dados.descricao;
-
-  if (
-    dados.fotoUrl
-  ) {
-
-    corpo +=
-
-      "\n\nFoto:\n" +
-      dados.fotoUrl;
-  }
-
-  var options = {
-
-    to:
-      CONFIG.NOTIFICATION_EMAIL_TO,
-
-    cc:
-      CONFIG.NOTIFICATION_EMAIL_CC,
-
-    subject:
-      assunto,
-
-    body:
-      corpo,
-
-    name:
-      "QRManut"
-
-  };
-
-  if (fotoBlob) {
-
-    options.attachments = [
-      fotoBlob
-    ];
-  }
-
-  MailApp.sendEmail(
-    options
-  );
-}
-
-
-function enviarEmailPrestador_(dados,emails) {
-
-  var assunto =
-
-    "[QRManut][" +
-    dados.ocorrencia +
-    "] " +
-    dados.id +
-    " - " +
-    dados.nomeEquipamento;
-
-  var corpo =
-
-    "Olá,\n\n" +
-
-    "Uma nova ocorrência de manutenção foi registrada para um ativo sob responsabilidade deste prestador.\n\n" +
-
-    "Ocorrência: " +
-    dados.ocorrencia +
-    "\n\n" +
-
-    "Ativo: " +
-    dados.id +
-    " - " +
-    dados.nomeEquipamento +
-    "\n" +
-
-    "Prestador: " +
-    (
-      dados.prestador ||
-      "-"
-    ) +
-    "\n" +
-
-    "Pavimento: " +
-    (
-      dados.pavimento ||
-      "-"
-    ) +
-    "\n" +
-
-    "Localização: " +
-    (
-      dados.localizacao ||
-      "-"
-    ) +
-    "\n" +
-
-    "Local detalhado: " +
-    (
-      dados.localDetalhado ||
-      "-"
-    ) +
-    "\n\n" +
-
-    "Categoria: " +
-    dados.categoriaOcorrencia +
-    "\n" +
-
-    "Componente: " +
-    dados.componenteAfetado +
-    "\n\n" +
-
-    "Descrição:\n" +
-    dados.descricao +
-    "\n\n" +
-
-    "Reportado por: " +
-    dados.reportadoPor;
-
-  if (
-    dados.fotoUrl
-  ) {
-
-    corpo +=
-
-      "\n\nFoto da ocorrência:\n" +
-      dados.fotoUrl;
-  }
-
-  corpo +=
-
-    "\n\nMensagem automática do QRManut.";
-
-  MailApp.sendEmail({
-
-    to:
-      emails.join(","),
-
-    subject:
-      assunto,
-
-    body:
-      corpo,
-
-    name:
-      "QRManut"
-
-  });
-}
-
-
-/* ============================================================
- * NOVA OC
- * ============================================================ */
-
-function validarCategoriaOcorrencia_(categoria) {
-
-  if (
-    CONFIG.CATEGORIAS_OCORRENCIA
-      .indexOf(
-        categoria
-      ) === -1
-  ) {
-
-    throw new Error(
-      "Categoria inválida."
-    );
-  }
-}
-
-
-function validarComponenteAfetado_(componente) {
-
-  if (
-    CONFIG.COMPONENTES_OCORRENCIA
-      .indexOf(
-        componente
-      ) === -1
-  ) {
-
-    throw new Error(
-      "Componente inválido."
-    );
-  }
-}
-
-
-function processReport_(body) {
-
-  var id =
-    normId_(
-      body.id
-    );
-
-  if (!id) {
-
-    throw new Error(
-      "ID não informado."
-    );
-  }
-
-  var ativo =
-    findEquipmentById_(
-      readEquipmentSheet_(),
-      id
-    );
-
-  if (!ativo) {
-
-    throw new Error(
-      "Ativo não encontrado."
-    );
-  }
-
-  validarCategoriaOcorrencia_(
-    body.categoriaOcorrencia
-  );
-
-  validarComponenteAfetado_(
-    body.componenteAfetado
-  );
-
-  if (
-    !String(
-      body.reportadoPor
-    ).trim() ||
-    !String(
-      body.descricao
-    ).trim()
-  ) {
-
-    throw new Error(
-      "Preencha os campos obrigatórios."
-    );
-  }
-
-  var registro =
-    gerarNumeroOcorrencia_();
-
-  var agora =
-    new Date();
-
-  var foto =
-    savePhotoFromBase64_(
-      body.fotoBase64,
-      body.fotoMime,
-      body.fotoNome,
-      id,
-      registro,
-      "ABERTURA"
-    );
-
-  var sh =
-    prepareHistorySheet_();
-
-  sh.appendRow([
-
-    registro,
-    id,
-    ativo.nome_do_equipamento || "",
-    agora,
-    body.reportadoPor,
-    body.contato || "",
-    body.descricao,
-    foto.url || "",
-    CONFIG.DEFAULT_STATUS,
-    "",
-    "",
-    "",
-    "",
-    "",
-    body.categoriaOcorrencia,
-    body.componenteAfetado,
-    "",
-    "",
-    "Não",
-    ""
-
-  ]);
-
-  var row =
-    sh.getLastRow();
-
-  var dados = {
-
-    ocorrencia:
-      registro,
-
-    id:
-      id,
-
-    nomeEquipamento:
-      ativo.nome_do_equipamento || "",
-
-    prestador:
-      ativo.prestador || "",
-
-    pavimento:
-      ativo.pavimento || "",
-
-    localizacao:
-      ativo.localizacao || "",
-
-    localDetalhado:
-      ativo.local_detalhado || "",
-
-    categoriaOcorrencia:
-      body.categoriaOcorrencia,
-
-    componenteAfetado:
-      body.componenteAfetado,
-
-    descricao:
-      body.descricao,
-
-    reportadoPor:
-      body.reportadoPor,
-
-    fotoUrl:
-      foto.url || ""
-
-  };
-
-
-  try {
-
-    enviarEmailPNCQ_(
-      dados,
-      foto.blob
-    );
-
-  } catch(error) {
-
-    Logger.log(
-      "Erro e-mail PNCQ: " +
-      error
-    );
-  }
-
-
-  var config =
-    getProviderNotificationConfig_(
-      ativo.prestador
-    );
-
-  var statusNotificacao =
-    "Não";
-
-  var emailPrestador =
-    config.emailString ||
-    "";
-
-  if (
-    config.notificar
-  ) {
-
-    if (
-      !config.emails.length
-    ) {
-
-      statusNotificacao =
-        "Não - sem e-mail";
-
-    } else {
-
-      try {
-
-        enviarEmailPrestador_(
-          dados,
-          config.emails
-        );
-
-        statusNotificacao =
-          "Sim";
-
-      } catch(error) {
-
-        statusNotificacao =
-          "Erro";
-
-        Logger.log(
-          "Erro e-mail prestador: " +
-          error
-        );
-      }
-    }
-  }
-
-  sh.getRange(
-    row,
-    19
-  )
-  .setValue(
-    statusNotificacao
-  );
-
-  sh.getRange(
-    row,
-    20
-  )
-  .setValue(
-    emailPrestador
-  );
-
-  SpreadsheetApp.flush();
-
-  return {
-
-    ok:true,
-
-    ocorrencia:
-      registro,
-
-    notificacaoPrestador:
-      statusNotificacao,
-
-    emailPrestador:
-      emailPrestador
-
-  };
-}
-
-
-/* ============================================================
- * LOCALIZA OC
- * ============================================================ */
-
-function findOccurrenceRow_(occurrence) {
-
-  var sh =
-    prepareHistorySheet_();
-
-  if (
-    sh.getLastRow() <= 1
-  ) {
-
-    return 0;
-  }
-
-  var values =
-    sh.getRange(
-      2,
-      1,
-      sh.getLastRow() - 1,
-      1
-    )
-    .getDisplayValues();
-
-  var target =
-    String(
-      occurrence || ""
-    )
-    .trim()
-    .toUpperCase();
-
-  for (
-    var i = 0;
-    i < values.length;
-    i++
-  ) {
-
-    if (
-      String(
-        values[i][0] || ""
-      )
-      .trim()
-      .toUpperCase() ===
-      target
-    ) {
-
-      return i + 2;
-    }
-  }
-
-  return 0;
-}
-
-
-/* ============================================================
- * ATUALIZA OC
- * ============================================================ */
-
-function updateOccurrence_(body) {
-
-  var row =
-    findOccurrenceRow_(
-      body.ocorrencia
-    );
-
-  if (!row) {
-
-    throw new Error(
-      "Ocorrência não encontrada."
-    );
-  }
-
-  validarCategoriaOcorrencia_(
-    body.categoriaOcorrenciaEdit
-  );
-
-  validarComponenteAfetado_(
-    body.componenteAfetadoEdit
-  );
-
-  var sh =
-    prepareHistorySheet_();
-
-  var id =
-    sh.getRange(
-      row,
-      2
-    )
-    .getValue();
-
-  sh.getRange(row,7)
-    .setValue(
-      body.descricaoOcorrencia
-    );
-
-  sh.getRange(row,9)
-    .setValue(
-      body.status
-    );
-
-  sh.getRange(row,10)
-    .setValue(
-      body.responsavel || ""
-    );
-
-  sh.getRange(row,13)
-    .setValue(
-      body.solucao || ""
-    );
-
-  sh.getRange(row,15)
-    .setValue(
-      body.categoriaOcorrenciaEdit
-    );
-
-  sh.getRange(row,16)
-    .setValue(
-      body.componenteAfetadoEdit
-    );
-
-
-  if (
-    body.fotoOcorrenciaBase64
-  ) {
-
-    var f1 =
-      savePhotoFromBase64_(
-        body.fotoOcorrenciaBase64,
-        body.fotoOcorrenciaMime,
-        body.fotoOcorrenciaNome,
-        id,
-        body.ocorrencia,
-        "CORRECAO"
+  const dataUrl =
+    $("signatureCanvas")
+      .toDataURL(
+        "image/png"
       );
 
-    sh.getRange(
-      row,
-      8
-    )
-    .setValue(
-      f1.url
-    );
-  }
-
-
-  if (
-    body.fotoConclusaoBase64
-  ) {
-
-    var f2 =
-      savePhotoFromBase64_(
-        body.fotoConclusaoBase64,
-        body.fotoConclusaoMime,
-        body.fotoConclusaoNome,
-        id,
-        body.ocorrencia,
-        "CONCLUSAO"
-      );
-
-    sh.getRange(
-      row,
-      14
-    )
-    .setValue(
-      f2.url
-    );
-  }
-
-
-  var inicio =
-    sh.getRange(
-      row,
-      11
-    );
-
-  var conclusao =
-    sh.getRange(
-      row,
-      12
-    );
-
-  if (
-    (
-      body.status === "Em atendimento" ||
-      body.status === "Aguardando peça" ||
-      body.status === "Concluída"
-    ) &&
-    !inicio.getValue()
-  ) {
-
-    inicio.setValue(
-      new Date()
-    );
-  }
-
-  if (
-    body.status === "Concluída" &&
-    !conclusao.getValue()
-  ) {
-
-    conclusao.setValue(
-      new Date()
-    );
-  }
-
-  sh.getRange(
-    row,
-    17
-  )
-  .setValue(
-    new Date()
-  );
-
-  sh.getRange(
-    row,
-    18
-  )
-  .setValue(
-    body.alteradoPor
-  );
-
-  return {
-    ok:true
-  };
-}
-
-
-/* ============================================================
- * REGISTRO PREVENTIVA
- * ============================================================ */
-
-function processPreventive_(body) {
-
-  var sessao =
-    validarSessaoPreventiva_(
-      body.preventiveSessionToken
-    );
-
-  var id =
-    normId_(
-      body.id
-    );
-
-  var ativo =
-    findEquipmentById_(
-      readEquipmentSheet_(),
-      id
-    );
-
-  if (!ativo) {
-
-    throw new Error(
-      "Ativo não encontrado."
-    );
-  }
-
-  if (
-    !prestadorPermitido_(
-      sessao,
-      ativo.prestador
-    )
-  ) {
-
-    throw new Error(
-      "Acesso não autorizado."
-    );
-  }
-
-  var requisitos =
-    getEffectivePreventiveRequirements_(
-      sessao,
-      ativo.prestador
-    );
-
-  var responsavel =
-    String(
-      body.preventiveResponsible ||
-      ""
-    ).trim();
-
-  var observacao =
-    String(
-      body.preventiveObservation ||
-      ""
-    ).trim();
-
-  if (!responsavel) {
-
-    throw new Error(
-      "Informe o responsável."
-    );
-  }
-
-  if (
-    requisitos.observacaoObrigatoria &&
-    !observacao
-  ) {
-
-    throw new Error(
-      "A observação é obrigatória."
-    );
-  }
-
-  if (
-    requisitos.fotoObrigatoria &&
-    !body.preventivePhotoBase64
-  ) {
-
-    throw new Error(
-      "A foto é obrigatória."
-    );
-  }
-
-  if (
-    requisitos.exigirAssinatura &&
-    !body.preventiveSignatureBase64
-  ) {
-
-    throw new Error(
-      "A assinatura é obrigatória."
-    );
-  }
-
-  var data =
-    new Date();
-
-  var registro =
-    gerarNumeroPreventiva_();
-
-  var foto =
-    savePreventivePhoto_(
-      body.preventivePhotoBase64,
-      body.preventivePhotoMime,
-      body.preventivePhotoName,
-      id,
-      registro
-    );
-
-  var assinatura =
-    savePreventiveSignature_(
-      body.preventiveSignatureBase64,
-      body.preventiveSignatureMime,
-      id,
-      registro
-    );
-
-  preparePreventiveSheet_()
-    .appendRow([
-
-      registro,
-      id,
-      ativo.nome_do_equipamento || "",
-      data,
-      getCompetencia_(data),
-      ativo.periodicidade || "",
-      ativo.prestador || "",
-      responsavel,
-      CONFIG.PREVENTIVE_STATUS,
-      observacao,
-      foto.url || "",
-      assinatura.url || "",
-      requisitos.exigirAssinatura
-        ? "Sim"
-        : "Não",
-      requisitos.fotoObrigatoria
-        ? "Sim"
-        : "Não",
-      requisitos.observacaoObrigatoria
-        ? "Sim"
-        : "Não",
-      sessao.usuario || ""
-
-    ]);
-
   return {
 
-    ok:true,
+    base64:
+      dataUrl.split(",")[1],
 
-    registro:
-      registro,
-
-    competencia:
-      getCompetencia_(data)
+    mime:
+      "image/png"
 
   };
 }
 
 
 /* ============================================================
- * HISTÓRICO OC
- * ============================================================ */
+   TABS
+   ============================================================ */
 
-function getHistoryByEquipment_(equipmentId) {
+function showOnly(area){
 
-  var values =
-    prepareHistorySheet_()
-      .getDataRange()
-      .getValues();
-
-  var target =
-    normId_(
-      equipmentId
-    );
-
-  var result = [];
-
-  for (
-    var i = 1;
-    i < values.length;
-    i++
-  ) {
-
-    var r =
-      values[i];
-
-    if (
-      normId_(r[1]) !==
-      target
-    ) {
-
-      continue;
-    }
-
-    result.push({
-
-      ocorrencia:
-        String(r[0] || ""),
-
-      id:
-        String(r[1] || ""),
-
-      equipamento:
-        String(r[2] || ""),
-
-      data:
-        serializeValue_(r[3]) || "",
-
-      reportadoPor:
-        String(r[4] || ""),
-
-      contato:
-        String(r[5] || ""),
-
-      descricao:
-        String(r[6] || ""),
-
-      foto:
-        String(r[7] || ""),
-
-      status:
-        String(r[8] || ""),
-
-      responsavel:
-        String(r[9] || ""),
-
-      dataInicio:
-        serializeValue_(r[10]) || "",
-
-      dataConclusao:
-        serializeValue_(r[11]) || "",
-
-      solucao:
-        String(r[12] || ""),
-
-      fotoConclusao:
-        String(r[13] || ""),
-
-      categoriaOcorrencia:
-        String(r[14] || ""),
-
-      componenteAfetado:
-        String(r[15] || ""),
-
-      ultimaAlteracao:
-        serializeValue_(r[16]) || "",
-
-      ultimaAlteracaoPor:
-        String(r[17] || ""),
-
-      notificacaoPrestador:
-        String(r[18] || ""),
-
-      emailPrestador:
-        String(r[19] || "")
-
-    });
-  }
-
-  result.sort(
-    function(a,b) {
-
-      return (
-        new Date(b.data) -
-        new Date(a.data)
-      );
-    }
+  [
+    "searchArea",
+    "pendingArea",
+    "preventiveControlArea"
+  ]
+  .forEach(
+    hide
   );
 
-  return result.slice(
-    0,
-    CONFIG.HISTORY_LIMIT
+  show(area);
+}
+
+
+function clearTabs(){
+
+  [
+    "tabSearch",
+    "tabPending",
+    "tabPreventive"
+  ]
+  .forEach(
+    id =>
+      $(id)
+        .classList
+        .remove("active")
   );
 }
 
 
-/* ============================================================
- * HISTÓRICO PREVENTIVA
- * ============================================================ */
+function showSearchTab(){
 
-function getPreventiveHistoryByEquipment_(equipmentId,sessionToken) {
+  clearTabs();
 
-  var sessao =
-    validarSessaoPreventiva_(
-      sessionToken
-    );
+  $("tabSearch")
+    .classList
+    .add("active");
 
-  var ativo =
-    findEquipmentById_(
-      readEquipmentSheet_(),
-      equipmentId
-    );
-
-  if (!ativo) {
-
-    throw new Error(
-      "Ativo não encontrado."
-    );
-  }
-
-  if (
-    !prestadorPermitido_(
-      sessao,
-      ativo.prestador
-    )
-  ) {
-
-    throw new Error(
-      "Acesso não autorizado."
-    );
-  }
-
-  var values =
-    preparePreventiveSheet_()
-      .getDataRange()
-      .getValues();
-
-  var target =
-    normId_(
-      equipmentId
-    );
-
-  var result = [];
-
-  for (
-    var i = 1;
-    i < values.length;
-    i++
-  ) {
-
-    var r =
-      values[i];
-
-    if (
-      normId_(r[1]) !==
-      target
-    ) {
-
-      continue;
-    }
-
-    result.push({
-
-      registro:
-        String(r[0] || ""),
-
-      id:
-        String(r[1] || ""),
-
-      equipamento:
-        String(r[2] || ""),
-
-      data:
-        serializeValue_(r[3]) || "",
-
-      competencia:
-        String(r[4] || ""),
-
-      periodicidade:
-        String(r[5] || ""),
-
-      prestador:
-        String(r[6] || ""),
-
-      responsavel:
-        String(r[7] || ""),
-
-      status:
-        String(r[8] || ""),
-
-      observacao:
-        String(r[9] || ""),
-
-      foto:
-        String(r[10] || ""),
-
-      assinatura:
-        String(r[11] || ""),
-
-      usuarioAcesso:
-        String(r[15] || "")
-
-    });
-  }
-
-  result.sort(
-    function(a,b) {
-
-      return (
-        new Date(b.data) -
-        new Date(a.data)
-      );
-    }
-  );
-
-  return result.slice(
-    0,
-    CONFIG.PREVENTIVE_HISTORY_LIMIT
+  showOnly(
+    "searchArea"
   );
 }
 
 
-/* ============================================================
- * OC PENDENTES
- * ============================================================ */
+async function showPendingTab(){
 
-function getPendingOccurrences_() {
+  clearTabs();
 
-  var values =
-    prepareHistorySheet_()
-      .getDataRange()
-      .getValues();
+  $("tabPending")
+    .classList
+    .add("active");
 
-  var ativos =
-    readEquipmentSheet_();
-
-  var mapa = {};
-
-  ativos.forEach(
-    function(a) {
-
-      mapa[
-        normId_(a.id)
-      ] = a;
-    }
+  showOnly(
+    "pendingArea"
   );
 
-  var result = [];
+  await loadPending();
+}
 
-  var summary = {
 
-    abertas:0,
-    emAtendimento:0,
-    aguardandoPeca:0,
-    total:0
+function showPreventiveTab(){
 
-  };
+  requirePreventiveLogin(
 
-  for (
-    var i = 1;
-    i < values.length;
-    i++
-  ) {
+    function(){
 
-    var r =
-      values[i];
+      clearTabs();
 
-    var status =
-      String(
-        r[8] || ""
+      $("tabPreventive")
+        .classList
+        .add("active");
+
+      showOnly(
+        "preventiveControlArea"
       );
 
-    if (
-      CONFIG.ACTIVE_STATUS
-        .indexOf(status) === -1
-    ) {
-
-      continue;
-    }
-
-    if (
-      status === "Aberta"
-    ) {
-      summary.abertas++;
-    }
-
-    if (
-      status === "Em atendimento"
-    ) {
-      summary.emAtendimento++;
-    }
-
-    if (
-      status === "Aguardando peça"
-    ) {
-      summary.aguardandoPeca++;
-    }
-
-    var ativo =
-      mapa[
-        normId_(r[1])
-      ] || {};
-
-    result.push({
-
-      ocorrencia:
-        String(r[0] || ""),
-
-      id:
-        String(r[1] || ""),
-
-      nome:
-        String(r[2] || ""),
-
-      data:
-        serializeValue_(r[3]) || "",
-
-      descricao:
-        String(r[6] || ""),
-
-      foto:
-        String(r[7] || ""),
-
-      status:
-        status,
-
-      responsavel:
-        String(r[9] || ""),
-
-      dataInicio:
-        serializeValue_(r[10]) || "",
-
-      categoriaOcorrencia:
-        String(r[14] || ""),
-
-      componenteAfetado:
-        String(r[15] || ""),
-
-      pavimento:
-        ativo.pavimento || "",
-
-      localizacao:
-        ativo.localizacao || ""
-
-    });
-  }
-
-  summary.total =
-    result.length;
-
-  return {
-
-    summary:
-      summary,
-
-    occurrences:
-      result.slice(
-        0,
-        CONFIG.PENDING_LIMIT
-      )
-
-  };
-}
-
-
-/* ============================================================
- * STATUS ATIVO
- * ============================================================ */
-
-function getEquipmentStatusSummary_(equipmentId) {
-
-  var history =
-    getHistoryByEquipment_(
-      equipmentId
-    );
-
-  var abertas = 0;
-  var atendimento = 0;
-  var aguardando = 0;
-
-  history.forEach(
-    function(item) {
-
-      if (
-        item.status === "Aberta"
-      ) {
-        abertas++;
-      }
-
-      if (
-        item.status === "Em atendimento"
-      ) {
-        atendimento++;
-      }
-
-      if (
-        item.status === "Aguardando peça"
-      ) {
-        aguardando++;
-      }
-    }
-  );
-
-  var total =
-    abertas +
-    atendimento +
-    aguardando;
-
-  if (
-    abertas > 0
-  ) {
-
-    return {
-
-      situacao:
-        "Com ocorrência aberta",
-
-      nivel:
-        "critico",
-
-      icone:
-        "🔴",
-
-      totalAtivas:
-        total
-
-    };
-  }
-
-  if (
-    aguardando > 0
-  ) {
-
-    return {
-
-      situacao:
-        "Aguardando peça",
-
-      nivel:
-        "aguardando",
-
-      icone:
-        "🟠",
-
-      totalAtivas:
-        total
-
-    };
-  }
-
-  if (
-    atendimento > 0
-  ) {
-
-    return {
-
-      situacao:
-        "Em atendimento",
-
-      nivel:
-        "atendimento",
-
-      icone:
-        "🟡",
-
-      totalAtivas:
-        total
-
-    };
-  }
-
-  return {
-
-    situacao:
-      "Sem ocorrências ativas",
-
-    nivel:
-      "ok",
-
-    icone:
-      "🟢",
-
-    totalAtivas:
-      0
-
-  };
-}
-
-
-/* ============================================================
- * MAPA PREVENTIVA
- * ============================================================ */
-
-function isPeriodicidadeMensal_(valor) {
-
-  return (
-    normalizarBusca_(valor) ===
-    "mensal"
-  );
-}
-
-
-function getPreventiveMapByCompetencia_(competencia) {
-
-  var values =
-    preparePreventiveSheet_()
-      .getDataRange()
-      .getValues();
-
-  var mapa = {};
-
-  for (
-    var i = 1;
-    i < values.length;
-    i++
-  ) {
-
-    var r =
-      values[i];
-
-    if (
-      String(r[4] || "") !==
-      competencia
-    ) {
-
-      continue;
-    }
-
-    var id =
-      normId_(
-        r[1]
-      );
-
-    if (!mapa[id]) {
-
-      mapa[id] = [];
-    }
-
-    mapa[id].push({
-
-      registro:
-        String(r[0] || ""),
-
-      data:
-        serializeValue_(r[3]) || "",
-
-      prestador:
-        String(r[6] || ""),
-
-      responsavel:
-        String(r[7] || ""),
-
-      status:
-        String(r[8] || ""),
-
-      observacao:
-        String(r[9] || ""),
-
-      foto:
-        String(r[10] || ""),
-
-      assinatura:
-        String(r[11] || ""),
-
-      usuarioAcesso:
-        String(r[15] || "")
-
-    });
-  }
-
-  return mapa;
-}
-
-
-/* ============================================================
- * CONTROLE MENSAL
- * ============================================================ */
-
-function getMonthlyPreventiveControl_(
-  competenciaInformada,
-  sessao,
-  filtroPrestador
-) {
-
-  var competencia =
-    resolverCompetencia_(
-      competenciaInformada
-    );
-
-  var filtro =
-    String(
-      filtroPrestador || ""
-    ).trim();
-
-  /*
-   * Prestador comum nunca pode consultar outro.
-   */
-
-  if (
-    !isMasterSession_(sessao)
-  ) {
-
-    filtro =
-      sessao.prestador;
-  }
-
-  var ativos =
-    readEquipmentSheet_();
-
-  var mapa =
-    getPreventiveMapByCompetencia_(
-      competencia
-    );
-
-  var realizadas = [];
-  var pendentes = [];
-
-  ativos.forEach(
-    function(ativo) {
-
-      if (
-        !isPeriodicidadeMensal_(
-          ativo.periodicidade
-        )
-      ) {
-
-        return;
-      }
-
-      if (
-        !prestadorPermitido_(
-          sessao,
-          ativo.prestador
-        )
-      ) {
-
-        return;
-      }
-
-      if (
-        filtro &&
-        normalizarBusca_(
-          ativo.prestador
-        ) !==
-        normalizarBusca_(
-          filtro
-        )
-      ) {
-
-        return;
-      }
-
-      var id =
-        normId_(
-          ativo.id
-        );
-
-      var registros =
-        mapa[id] || [];
-
-      var validos =
-        registros.filter(
-          function(r) {
-
-            return (
-              normalizarBusca_(
-                r.status
-              ) === "realizada"
-            );
-          }
-        );
-
-      validos.sort(
-        function(a,b) {
-
-          return (
-            new Date(b.data) -
-            new Date(a.data)
-          );
-        }
-      );
-
-      var item = {
-
-        id:
-          ativo.id || "",
-
-        nome:
-          ativo.nome_do_equipamento || "",
-
-        periodicidade:
-          ativo.periodicidade || "",
-
-        prestador:
-          ativo.prestador || "",
-
-        pavimento:
-          ativo.pavimento || "",
-
-        localizacao:
-          ativo.localizacao || "",
-
-        localDetalhado:
-          ativo.local_detalhado || "",
-
-        ambiente:
-          ativo.ambiente || "",
-
-        observacaoEquipamento:
-          ativo.observacoes || "",
-
-        preventivaRealizada:
-          validos.length > 0,
-
-        ultimoRegistro:
-          validos.length
-            ? validos[0]
-            : null
-
-      };
-
-      if (
-        item.preventivaRealizada
-      ) {
-
-        realizadas.push(
-          item
-        );
-
-      } else {
-
-        pendentes.push(
-          item
-        );
-      }
-    }
-  );
-
-  realizadas.sort(
-    function(a,b) {
-
-      return String(a.nome)
-        .localeCompare(
-          String(b.nome),
-          "pt-BR"
-        );
-    }
-  );
-
-  pendentes.sort(
-    function(a,b) {
-
-      return String(a.nome)
-        .localeCompare(
-          String(b.nome),
-          "pt-BR"
-        );
-    }
-  );
-
-  var previstas =
-    realizadas.length +
-    pendentes.length;
-
-  var percentual =
-    previstas
-      ? Number(
-          (
-            realizadas.length /
-            previstas *
-            100
-          ).toFixed(1)
-        )
-      : 0;
-
-  var prestadoresMap = {};
-
-  realizadas
-    .concat(
-      pendentes
-    )
-    .forEach(
-      function(item) {
-
-        var nome =
-          item.prestador ||
-          "Não informado";
-
-        if (
-          !prestadoresMap[nome]
-        ) {
-
-          prestadoresMap[nome] = {
-
-            prestador:nome,
-            previstas:0,
-            realizadas:0,
-            pendentes:0,
-            percentual:0
-
-          };
-        }
-
-        prestadoresMap[nome]
-          .previstas++;
-
-        if (
-          item.preventivaRealizada
-        ) {
-
-          prestadoresMap[nome]
-            .realizadas++;
-
-        } else {
-
-          prestadoresMap[nome]
-            .pendentes++;
-        }
-      }
-    );
-
-  var prestadores =
-    Object.keys(
-      prestadoresMap
-    )
-    .map(
-      function(k) {
-
-        var x =
-          prestadoresMap[k];
-
-        x.percentual =
-          x.previstas
-            ? Number(
-                (
-                  x.realizadas /
-                  x.previstas *
-                  100
-                )
-                .toFixed(1)
-              )
-            : 0;
-
-        return x;
-      }
-    );
-
-  return {
-
-    competencia:
-      competencia,
-
-    competenciaDescricao:
-      formatarCompetenciaPtBr_(
-        competencia
-      ),
-
-    filtroPrestador:
-      filtro,
-
-    perfil:
-      sessao.perfil,
-
-    prestadorSessao:
-      sessao.prestador,
-
-    summary:{
-
-      previstas:
-        previstas,
-
-      realizadas:
-        realizadas.length,
-
-      pendentes:
-        pendentes.length,
-
-      percentual:
-        percentual
+      loadPreventiveControl();
 
     },
 
-    prestadores:
-      prestadores,
+    null
 
-    pendentes:
-      pendentes.slice(
-        0,
-        CONFIG.PREVENTIVE_CONTROL_LIMIT
-      ),
-
-    realizadas:
-      realizadas.slice(
-        0,
-        CONFIG.PREVENTIVE_CONTROL_LIMIT
-      )
-
-  };
-}
-
-
-/* ============================================================
- * RELATÓRIOS ENVIADOS
- * ============================================================ */
-
-function preparePreventiveReportLogSheet_() {
-
-  var ss =
-    getSpreadsheet_();
-
-  var sh =
-    ss.getSheetByName(
-      CONFIG.PREVENTIVE_REPORT_LOG_SHEET
-    );
-
-  if (!sh) {
-
-    sh =
-      ss.insertSheet(
-        CONFIG.PREVENTIVE_REPORT_LOG_SHEET
-      );
-  }
-
-  var headers = [
-
-    "Data/Hora",
-    "Competência",
-    "Escopo / Prestador",
-    "Previstas",
-    "Realizadas",
-    "Pendentes",
-    "Percentual",
-    "Enviado por",
-    "Perfil",
-    "E-mail"
-
-  ];
-
-  sh.getRange(
-    1,
-    1,
-    1,
-    headers.length
-  )
-  .setValues([
-    headers
-  ])
-  .setFontWeight(
-    "bold"
   );
-
-  sh.setFrozenRows(1);
-
-  return sh;
 }
 
 
 /* ============================================================
- * CONFIGURAÇÃO DO ENVIO DO RELATÓRIO
- * ============================================================ */
+   BUSCA
+   ============================================================ */
 
-function resolverConfigRelatorio_(sessao,filtroPrestador) {
+async function searchAssets(){
 
-  /*
-   * PRESTADOR:
-   * usa a configuração dele.
-   */
+  let q =
+    $("searchInput")
+      .value
+      .trim();
 
   if (
-    !isMasterSession_(sessao)
+    q.length < 2
   ) {
 
-    var configPrestador =
-      getProviderReportConfig_(
-        sessao.prestador
-      );
+    $("searchStatus")
+      .textContent =
+      "Digite pelo menos 2 caracteres.";
 
-    return {
-
-      permitido:
-        configPrestador.permitido,
-
-      emails:
-        configPrestador.emails,
-
-      emailString:
-        configPrestador.emailString,
-
-      escopo:
-        sessao.prestador
-
-    };
+    return;
   }
 
-
-  /*
-   * MASTER + prestador selecionado:
-   * usa configuração do prestador.
-   */
-
   if (
-    filtroPrestador
+    /^[a-z0-9_-]+$/i
+      .test(q)
   ) {
 
-    var configSelecionado =
-      getProviderReportConfig_(
-        filtroPrestador
-      );
-
-    return {
-
-      permitido:
-        configSelecionado.permitido,
-
-      emails:
-        configSelecionado.emails,
-
-      emailString:
-        configSelecionado.emailString,
-
-      escopo:
-        filtroPrestador
-
-    };
+    q =
+      normalizeId(q);
   }
 
+  $("searchStatus")
+    .textContent =
+    "Buscando...";
 
-  /*
-   * MASTER + TODOS:
-   * usa configuração da linha do PNCQ/MASTER.
-   */
+  try {
 
-  var configMaster =
-    getProviderReportConfig_(
-      sessao.prestador
-    );
+    const data =
+      await api({
 
-  return {
+        action:"search",
 
-    permitido:
-      configMaster.permitido,
+        q:q
 
-    emails:
-      configMaster.emails,
+      });
 
-    emailString:
-      configMaster.emailString,
+    const items =
+      data.results || [];
 
-    escopo:
-      "Todos os prestadores"
+    $("searchStatus")
+      .textContent =
 
-  };
-}
+      items.length +
+      " resultado(s)";
 
+    $("searchResults")
+      .innerHTML =
 
-/* ============================================================
- * HTML DO RELATÓRIO
- * ============================================================ */
+      items.map(
+        item => `
 
-function montarHtmlRelatorioPreventivas_(data,escopo) {
+          <div class="search-result">
 
-  var s =
-    data.summary;
+            <div class="search-result-id">
+              ${esc(item.id)}
+            </div>
 
-  var html = `
+            <div class="search-result-name">
+              ${esc(item.nome)}
+            </div>
 
-    <div style="
-      font-family:Arial,sans-serif;
-      color:#222;
-      max-width:900px;
-      margin:auto;
-    ">
+            <div class="search-result-data">
 
-      <h2 style="color:#1f4e78">
-        QRManut – Relatório de Manutenções Preventivas
-      </h2>
+              ${
+                item.pavimento
+                  ? `<div><b>Pavimento:</b> ${esc(item.pavimento)}</div>`
+                  : ""
+              }
 
-      <p>
-        <strong>Competência:</strong>
-        ${escapeHtml_(data.competenciaDescricao)}
-      </p>
+              ${
+                item.localizacao
+                  ? `<div><b>Localização:</b> ${esc(item.localizacao)}</div>`
+                  : ""
+              }
 
-      <p>
-        <strong>Escopo:</strong>
-        ${escapeHtml_(escopo)}
-      </p>
+              ${
+                item.prestador
+                  ? `<div><b>Prestador:</b> ${esc(item.prestador)}</div>`
+                  : ""
+              }
 
-      <table
-        cellpadding="10"
-        cellspacing="0"
-        style="
-          border-collapse:collapse;
-          width:100%;
-          margin:20px 0;
-        "
-      >
+              ${
+                item.periodicidade
+                  ? `<div><b>Periodicidade:</b> ${esc(item.periodicidade)}</div>`
+                  : ""
+              }
 
-        <tr>
+            </div>
 
-          <td style="
-            border:1px solid #ddd;
-            text-align:center;
-          ">
-            <strong>${s.previstas}</strong>
-            <br>
-            Previstas
-          </td>
-
-          <td style="
-            border:1px solid #ddd;
-            text-align:center;
-          ">
-            <strong>${s.realizadas}</strong>
-            <br>
-            Realizadas
-          </td>
-
-          <td style="
-            border:1px solid #ddd;
-            text-align:center;
-          ">
-            <strong>${s.pendentes}</strong>
-            <br>
-            Pendentes
-          </td>
-
-          <td style="
-            border:1px solid #ddd;
-            text-align:center;
-          ">
-            <strong>${s.percentual}%</strong>
-            <br>
-            Conclusão
-          </td>
-
-        </tr>
-
-      </table>
-
-      <h3 style="color:#047857">
-        ✅ Preventivas realizadas
-      </h3>
-
-  `;
-
-
-  if (
-    !data.realizadas.length
-  ) {
-
-    html +=
-      "<p>Nenhuma preventiva realizada nesta competência.</p>";
-
-  } else {
-
-    data.realizadas.forEach(
-      function(item) {
-
-        var registro =
-          item.ultimoRegistro ||
-          {};
-
-        html += `
-
-          <div style="
-            border:1px solid #ccc;
-            border-left:5px solid #047857;
-            padding:14px;
-            margin:10px 0;
-            border-radius:6px;
-          ">
-
-            <strong>
-              ${escapeHtml_(item.id)}
-              –
-              ${escapeHtml_(item.nome)}
-            </strong>
-
-            <br><br>
-
-            <strong>Prestador:</strong>
-            ${escapeHtml_(item.prestador || "-")}
-            <br>
-
-            <strong>Pavimento:</strong>
-            ${escapeHtml_(item.pavimento || "-")}
-            <br>
-
-            <strong>Localização:</strong>
-            ${escapeHtml_(item.localizacao || "-")}
-            <br>
-
-            ${
-              item.localDetalhado
-                ? `
-                  <strong>Local detalhado:</strong>
-                  ${escapeHtml_(item.localDetalhado)}
-                  <br>
-                `
-                : ""
-            }
-
-            <strong>Data da preventiva:</strong>
-            ${escapeHtml_(
-              registro.data
-                ? Utilities.formatDate(
-                    new Date(registro.data),
-                    Session.getScriptTimeZone(),
-                    "dd/MM/yyyy HH:mm"
-                  )
-                : "-"
-            )}
-            <br>
-
-            <strong>Responsável:</strong>
-            ${escapeHtml_(registro.responsavel || "-")}
-            <br>
-
-            ${
-              item.observacaoEquipamento
-                ? `
-
-                  <br>
-
-                  <strong>
-                    Observação do equipamento:
-                  </strong>
-
-                  <br>
-
-                  ${escapeHtml_(item.observacaoEquipamento)}
-
-                `
-                : ""
-            }
-
-            ${
-              registro.observacao
-                ? `
-
-                  <br><br>
-
-                  <strong>
-                    Observação da preventiva:
-                  </strong>
-
-                  <br>
-
-                  ${escapeHtml_(registro.observacao)}
-
-                `
-                : ""
-            }
-
-            ${
-              registro.foto
-                ? `
-
-                  <br><br>
-
-                  <a href="${escapeHtml_(registro.foto)}">
-                    📷 Ver foto/evidência
-                  </a>
-
-                `
-                : ""
-            }
-
-            ${
-              registro.assinatura
-                ? `
-
-                  <br>
-
-                  <a href="${escapeHtml_(registro.assinatura)}">
-                    ✍️ Ver assinatura
-                  </a>
-
-                `
-                : ""
-            }
+            <a
+              class="open-button"
+              href="?id=${encodeURIComponent(
+                normalizeId(item.id)
+              )}"
+            >
+              Abrir ficha
+            </a>
 
           </div>
 
-        `;
-      }
-    );
+        `
+      )
+      .join("");
+
+  } catch(error) {
+
+    $("searchStatus")
+      .textContent =
+      "Erro ao realizar busca.";
   }
+}
 
 
-  html += `
+/* ============================================================
+   OC PENDENTE
+   ============================================================ */
 
-      <h3 style="
-        color:#b91c1c;
-        margin-top:30px;
-      ">
-        🔴 Preventivas pendentes
-      </h3>
+async function loadPending(){
 
-  `;
+  const data =
+    await api({
+      action:"pending"
+    });
 
+  const s =
+    data.summary || {};
 
-  if (
-    !data.pendentes.length
-  ) {
+  $("pendingSummary")
+    .innerHTML = `
 
-    html += `
+      <div class="pending-number">
 
-      <p>
-        ✅ Nenhuma preventiva pendente nesta competência.
-      </p>
+        <strong>
+          ${s.total || 0}
+        </strong>
+
+        Total
+
+      </div>
+
+      <div class="pending-number">
+
+        <strong>
+          🔴 ${s.abertas || 0}
+        </strong>
+
+        Abertas
+
+      </div>
+
+      <div class="pending-number">
+
+        <strong>
+          🟡 ${s.emAtendimento || 0}
+        </strong>
+
+        Atendimento
+
+      </div>
+
+      <div class="pending-number">
+
+        <strong>
+          🟠 ${s.aguardandoPeca || 0}
+        </strong>
+
+        Aguardando peça
+
+      </div>
 
     `;
 
+  $("pendingResults")
+    .innerHTML =
+
+    (data.occurrences || [])
+      .map(
+        item => `
+
+          <div class="pending-card">
+
+            <b>
+              ${esc(item.ocorrencia)}
+            </b>
+
+            <div>
+
+              ${esc(item.id)}
+              –
+              ${esc(item.nome)}
+
+            </div>
+
+            <div class="search-result-data">
+
+              <b>Status:</b>
+              ${esc(item.status)}
+
+              <br>
+
+              <b>Descrição:</b>
+              ${esc(item.descricao)}
+
+            </div>
+
+            <a
+              class="open-button"
+              href="?id=${encodeURIComponent(
+                normalizeId(item.id)
+              )}"
+            >
+              Abrir ficha
+            </a>
+
+          </div>
+
+        `
+      )
+      .join("");
+}
+
+
+/* ============================================================
+   CONTROLE PREVENTIVAS
+   ============================================================ */
+
+async function loadPreventiveControl(){
+
+  if (
+    !$("controlCompetence").value
+  ) {
+
+    $("controlCompetence").value =
+      currentCompetence();
+  }
+
+  const provider =
+    preventiveSession &&
+    preventiveSession.perfil ===
+    "MASTER"
+      ? $("controlProvider").value
+      : "";
+
+  const result =
+    await api({
+
+      action:
+        "preventivecontrol",
+
+      competencia:
+        $("controlCompetence").value,
+
+      prestador:
+        provider,
+
+      session:
+        preventiveSession.sessionToken
+
+    });
+
+  if (!result.ok) {
+
+    clearPreventiveSession();
+
+    showPreventiveTab();
+
+    return;
+  }
+
+  preventiveControlData =
+    result.data;
+
+  renderPreventiveControl();
+}
+
+
+function renderPreventiveControl(){
+
+  const data =
+    preventiveControlData;
+
+  const s =
+    data.summary;
+
+  $("preventiveLoggedInfo")
+    .innerHTML =
+
+    "Acesso: <b>" +
+    esc(preventiveSession.usuario) +
+
+    "</b> • Perfil: <b>" +
+    esc(preventiveSession.perfil) +
+
+    "</b> • Prestador: <b>" +
+    esc(preventiveSession.prestador) +
+
+    "</b>";
+
+  $("controlTitle")
+    .textContent =
+
+    "Preventivas – " +
+    data.competenciaDescricao;
+
+  $("controlSummary")
+    .innerHTML = `
+
+      <div class="control-summary-card">
+        <strong>${s.previstas}</strong>
+        Previstas
+      </div>
+
+      <div class="control-summary-card">
+        <strong>✅ ${s.realizadas}</strong>
+        Realizadas
+      </div>
+
+      <div class="control-summary-card">
+        <strong>🔴 ${s.pendentes}</strong>
+        Pendentes
+      </div>
+
+      <div class="control-summary-card">
+        <strong>${s.percentual}%</strong>
+        Conclusão
+      </div>
+
+    `;
+
+  $("progressText")
+    .textContent =
+    s.percentual +
+    "%";
+
+  $("progressFill")
+    .style.width =
+    s.percentual +
+    "%";
+
+
+  /*
+   * Preenche prestadores apenas
+   * quando ainda não existem opções.
+   */
+
+  if (
+    preventiveSession.perfil ===
+    "MASTER"
+  ) {
+
+    const atual =
+      $("controlProvider").value;
+
+    const allProviders =
+      data.prestadores
+        .map(x => x.prestador);
+
+    /*
+     * Quando estamos filtrados,
+     * precisamos preservar as opções.
+     * Na primeira carga TODOS contém todos.
+     */
+
+    if (
+      !atual ||
+      $("controlProvider").options.length <= 1
+    ) {
+
+      $("controlProvider")
+        .innerHTML =
+
+        `<option value="">Todos os prestadores</option>` +
+
+        allProviders
+          .map(
+            p => `
+
+              <option value="${esc(p)}">
+                ${esc(p)}
+              </option>
+
+            `
+          )
+          .join("");
+    }
+
+    $("controlProvider")
+      .disabled =
+      false;
+
   } else {
 
-    data.pendentes.forEach(
-      function(item) {
+    $("controlProvider")
+      .innerHTML = `
 
-        html += `
+        <option value="${esc(
+          preventiveSession.prestador
+        )}">
 
-          <div style="
-            border:1px solid #ccc;
-            border-left:5px solid #b91c1c;
-            padding:14px;
-            margin:10px 0;
-            border-radius:6px;
-          ">
+          ${esc(
+            preventiveSession.prestador
+          )}
 
-            <strong>
-              ${escapeHtml_(item.id)}
-              –
-              ${escapeHtml_(item.nome)}
-            </strong>
+        </option>
 
-            <br><br>
+      `;
 
-            <strong>Prestador:</strong>
-            ${escapeHtml_(item.prestador || "-")}
+    $("controlProvider")
+      .disabled =
+      true;
+  }
+
+
+  $("providerSummary")
+    .innerHTML =
+
+    data.prestadores
+      .map(
+        p => `
+
+          <div class="provider-card">
+
+            <b>
+              ${esc(p.prestador)}
+            </b>
+
             <br>
 
-            <strong>Pavimento:</strong>
-            ${escapeHtml_(item.pavimento || "-")}
+            Previstas:
+            ${p.previstas}
+
+            • Realizadas:
+            ${p.realizadas}
+
+            • Pendentes:
+            ${p.pendentes}
+
+            • ${p.percentual}%
+
+          </div>
+
+        `
+      )
+      .join("");
+
+  renderControlList();
+}
+
+
+function setControlMode(mode){
+
+  preventiveControlMode =
+    mode;
+
+  [
+    "controlAll",
+    "controlPending",
+    "controlDone"
+  ]
+  .forEach(
+    id =>
+      $(id)
+        .classList
+        .remove("active")
+  );
+
+  if (
+    mode === "pending"
+  ) {
+
+    $("controlPending")
+      .classList
+      .add("active");
+
+  } else if (
+    mode === "done"
+  ) {
+
+    $("controlDone")
+      .classList
+      .add("active");
+
+  } else {
+
+    $("controlAll")
+      .classList
+      .add("active");
+  }
+
+  renderControlList();
+}
+
+
+function renderControlList(){
+
+  if (
+    !preventiveControlData
+  ) {
+
+    return;
+  }
+
+  let items = [];
+
+  if (
+    preventiveControlMode ===
+    "pending"
+  ) {
+
+    items =
+      preventiveControlData
+        .pendentes
+        .map(
+          x => ({
+            ...x,
+            state:"pending"
+          })
+        );
+
+  } else if (
+    preventiveControlMode ===
+    "done"
+  ) {
+
+    items =
+      preventiveControlData
+        .realizadas
+        .map(
+          x => ({
+            ...x,
+            state:"done"
+          })
+        );
+
+  } else {
+
+    items = [
+
+      ...preventiveControlData
+        .pendentes
+        .map(
+          x => ({
+            ...x,
+            state:"pending"
+          })
+        ),
+
+      ...preventiveControlData
+        .realizadas
+        .map(
+          x => ({
+            ...x,
+            state:"done"
+          })
+        )
+
+    ];
+  }
+
+  $("controlListStatus")
+    .textContent =
+
+    items.length +
+    " equipamento(s)";
+
+  $("controlResults")
+    .innerHTML =
+
+    items.map(
+      item => `
+
+        <div
+          class="
+            control-item
+            ${item.state}
+          "
+        >
+
+          <div class="control-head">
+
+            <div>
+
+              <b>
+                ${esc(item.id)}
+              </b>
+
+              <div>
+                ${esc(item.nome)}
+              </div>
+
+            </div>
+
+            <span
+              class="
+                control-status
+                ${item.state}
+              "
+            >
+
+              ${
+                item.state === "done"
+                  ? "✅ Realizada"
+                  : "🔴 Pendente"
+              }
+
+            </span>
+
+          </div>
+
+
+          <div class="search-result-data">
+
+            <b>Prestador:</b>
+            ${esc(item.prestador)}
+
             <br>
 
-            <strong>Localização:</strong>
-            ${escapeHtml_(item.localizacao || "-")}
+            <b>Pavimento:</b>
+            ${esc(item.pavimento)}
 
-            ${
-              item.localDetalhado
-                ? `
-                  <br>
-                  <strong>Local detalhado:</strong>
-                  ${escapeHtml_(item.localDetalhado)}
-                `
-                : ""
-            }
+            <br>
+
+            <b>Localização:</b>
+            ${esc(item.localizacao)}
 
             ${
               item.observacaoEquipamento
@@ -4145,13 +3277,55 @@ function montarHtmlRelatorioPreventivas_(data,escopo) {
 
                   <br><br>
 
-                  <strong>
-                    Observação do equipamento:
-                  </strong>
+                  <b>Observação do equipamento:</b>
 
                   <br>
 
-                  ${escapeHtml_(item.observacaoEquipamento)}
+                  ${esc(
+                    item.observacaoEquipamento
+                  )}
+
+                `
+                : ""
+            }
+
+            ${
+              item.ultimoRegistro
+                ? `
+
+                  <br><br>
+
+                  <b>Executada:</b>
+
+                  ${esc(
+                    formatDate(
+                      item.ultimoRegistro.data
+                    )
+                  )}
+
+                  <br>
+
+                  <b>Responsável:</b>
+
+                  ${esc(
+                    item.ultimoRegistro.responsavel
+                  )}
+
+                  ${
+                    item.ultimoRegistro.observacao
+                      ? `
+
+                        <br>
+
+                        <b>Observação da preventiva:</b>
+
+                        ${esc(
+                          item.ultimoRegistro.observacao
+                        )}
+
+                      `
+                      : ""
+                  }
 
                 `
                 : ""
@@ -4159,1264 +3333,2199 @@ function montarHtmlRelatorioPreventivas_(data,escopo) {
 
           </div>
 
-        `;
-      }
-    );
-  }
+          <a
+            class="open-button"
+            href="?id=${encodeURIComponent(
+              normalizeId(item.id)
+            )}"
+          >
+            Abrir ficha
+          </a>
 
+        </div>
 
-  html += `
-
-      <hr style="
-        border:0;
-        border-top:1px solid #ddd;
-        margin-top:30px;
-      ">
-
-      <p style="
-        color:#777;
-        font-size:12px;
-      ">
-        Relatório gerado pelo QRManut.
-        A situação apresentada corresponde ao momento da emissão deste e-mail.
-      </p>
-
-    </div>
-
-  `;
-
-
-  return html;
+      `
+    )
+    .join("");
 }
 
 
 /* ============================================================
- * ENVIO DO RELATÓRIO
- * ============================================================ */
+   ENVIO RELATÓRIO MENSAL
+   ============================================================ */
 
-function enviarRelatorioPreventivas_(body) {
-
-  var sessao =
-    validarSessaoPreventiva_(
-      body.preventiveSessionToken
-    );
-
-  var competencia =
-    resolverCompetencia_(
-      body.competencia
-    );
-
-  var filtroPrestador =
-    String(
-      body.reportProvider || ""
-    ).trim();
-
+async function sendMonthlyPreventiveReport(){
 
   if (
-    !isMasterSession_(sessao)
+    !preventiveSession
   ) {
 
-    filtroPrestador =
-      sessao.prestador;
+    return;
+  }
+
+  const competencia =
+    $("controlCompetence")
+      .value;
+
+  const provider =
+    preventiveSession.perfil ===
+    "MASTER"
+      ? $("controlProvider").value
+      : preventiveSession.prestador;
+
+  const s =
+    preventiveControlData
+      ? preventiveControlData.summary
+      : {
+          previstas:0,
+          realizadas:0,
+          pendentes:0
+        };
+
+  const competenciaTexto =
+    $("controlTitle")
+      .textContent
+      .replace(
+        "Preventivas – ",
+        ""
+      );
+
+  const escopo =
+    provider ||
+    "Todos os prestadores";
+
+  const confirmar =
+    confirm(
+
+      "Enviar relatório de " +
+      competenciaTexto +
+      "?\n\n" +
+
+      "Escopo: " +
+      escopo +
+      "\n\n" +
+
+      "Previstas: " +
+      s.previstas +
+      "\n" +
+
+      "Realizadas: " +
+      s.realizadas +
+      "\n" +
+
+      "Pendentes: " +
+      s.pendentes
+
+    );
+
+  if (!confirmar) {
+
+    return;
+  }
+
+  const btn =
+    $("sendMonthlyReport");
+
+  const msg =
+    $("monthlyReportMessage");
+
+  btn.disabled =
+    true;
+
+  btn.textContent =
+    "Enviando relatório...";
+
+  msg.className =
+    "message loading";
+
+  msg.textContent =
+    "Gerando e enviando o relatório...";
+
+  try {
+
+    const result =
+      await apiPost({
+
+        action:
+          "sendPreventiveReport",
+
+        preventiveSessionToken:
+          preventiveSession.sessionToken,
+
+        competencia:
+          competencia,
+
+        reportProvider:
+          provider || ""
+
+      });
+
+    if (!result.ok) {
+
+      throw new Error(
+        result.detail ||
+        "Não foi possível enviar o relatório."
+      );
+    }
+
+    msg.className =
+      "message success";
+
+    msg.innerHTML =
+
+      "✅ Relatório de <b>" +
+      esc(
+        result.competenciaDescricao
+      ) +
+
+      "</b> enviado com sucesso." +
+
+      "<br><br>" +
+
+      "<b>Escopo:</b> " +
+      esc(result.escopo) +
+
+      "<br>" +
+
+      "<b>Destino:</b> " +
+      esc(result.email) +
+
+      "<br><br>" +
+
+      "<b>Previstas:</b> " +
+      result.summary.previstas +
+
+      " • <b>Realizadas:</b> " +
+      result.summary.realizadas +
+
+      " • <b>Pendentes:</b> " +
+      result.summary.pendentes +
+
+      " • <b>Conclusão:</b> " +
+      result.summary.percentual +
+      "%";
+
+  } catch(error) {
+
+    msg.className =
+      "message error";
+
+    msg.textContent =
+      error.message;
+
+  } finally {
+
+    btn.disabled =
+      false;
+
+    btn.textContent =
+      "📧 Enviar relatório da competência";
+  }
+}
+
+
+/* ============================================================
+   CARREGAR ATIVO
+   ============================================================ */
+
+async function loadAsset(id){
+
+  hide(
+    "searchScreen"
+  );
+
+  show(
+    "assetScreen"
+  );
+
+  const [
+    asset,
+    status,
+    hist
+  ] =
+    await Promise.all([
+
+      api({
+        id:id
+      }),
+
+      api({
+        action:"status",
+        id:id
+      }),
+
+      api({
+        action:"history",
+        id:id
+      })
+
+    ]);
+
+  if (!asset.ok) {
+
+    $("titulo")
+      .textContent =
+      "Ativo não encontrado";
+
+    return;
+  }
+
+  currentAsset =
+    asset.data;
+
+  renderAsset(
+    currentAsset
+  );
+
+  if (
+    status.ok
+  ) {
+
+    renderStatus(
+      status.data
+    );
+  }
+
+  if (
+    hist.ok
+  ) {
+
+    renderHistory(
+      hist.history ||
+      []
+    );
+  }
+
+  if (
+    await sessionIsValid()
+  ) {
+
+    if (
+      preventiveSession.perfil ===
+      "MASTER" ||
+
+      String(
+        preventiveSession.prestador
+      )
+      .toLowerCase() ===
+
+      String(
+        currentAsset.prestador
+      )
+      .toLowerCase()
+    ) {
+
+      loadPreventiveHistory();
+    }
+  }
+}
+
+
+function renderAsset(a){
+
+  $("titulo")
+    .textContent =
+
+    a.id +
+    " – " +
+    a.nome_do_equipamento;
+
+  $("meta")
+    .textContent =
+
+    a.local_detalhado ||
+    a.localizacao ||
+    a.pavimento ||
+    "";
+
+  $("tipoBadge")
+    .textContent =
+
+    a.tipo_de_ativo ||
+    "Equipamento";
+
+
+  const classification =
+    pairs([
+
+      ["Tipo de Ativo",a.tipo_de_ativo],
+      ["Categoria",a.categoria_do_ativo],
+      ["Subcategoria",a.subcategoria],
+      ["Criticidade",a.criticidade],
+      ["Classe de Manutenção",a.classe_de_manutencao]
+
+    ]);
+
+  if (
+    classification
+  ) {
+
+    show(
+      "classificationSection"
+    );
+
+    $("classification")
+      .innerHTML =
+      classification;
   }
 
 
-  var config =
-    resolverConfigRelatorio_(
-      sessao,
-      filtroPrestador
-    );
+  const location =
+    pairs([
 
+      ["Área",a.area],
+      ["Ambiente",a.ambiente],
+      ["Componente / Elemento",a.componente_elemento],
+      ["Pavimento",a.pavimento],
+      ["Localização",a.localizacao],
+      ["Local Detalhado",a.local_detalhado]
+
+    ]);
 
   if (
-    !config.permitido
+    location
   ) {
 
-    throw new Error(
-      "O envio de relatório não está habilitado para este prestador."
+    show(
+      "locationSection"
     );
+
+    $("location")
+      .innerHTML =
+      location;
   }
 
 
+  const technical =
+    pairs([
+
+      ["Fabricante",a.fabricante],
+      ["Modelo",a.modelo],
+      ["Número de Série",a.numero_de_serie],
+      ["Capacidade",a.capacidade],
+      ["Amperagem Nominal",a.amperagem_nominal_fla],
+      ["Amperagem de Partida",a.amperagem_de_partida_flr],
+      ["Amperagem Medida",a.amperagem_medida],
+      ["Voltagem",a.voltagem],
+      ["Peso",a.peso],
+      ["Ano de Aquisição",a.ano_de_aquisicao],
+      ["Vida Útil Estimada",a.vida_util_estimada]
+
+    ]);
+
   if (
-    !config.emails.length
+    technical
   ) {
 
-    throw new Error(
-      "Nenhum e-mail de relatório está cadastrado."
+    show(
+      "technicalSection"
     );
+
+    $("technical")
+      .innerHTML =
+      technical;
   }
 
 
-  var data =
-    getMonthlyPreventiveControl_(
-      competencia,
-      sessao,
-      filtroPrestador
-    );
+  $("management")
+    .innerHTML =
 
+    pairs([
 
-  var assunto =
-
-    "[QRManut] Relatório Preventivas - " +
-    data.competenciaDescricao +
-    " - " +
-    config.escopo;
-
-
-  var html =
-    montarHtmlRelatorioPreventivas_(
-      data,
-      config.escopo
-    );
-
-
-  var texto =
-
-    "QRManut - Relatório de Manutenções Preventivas\n\n" +
-
-    "Competência: " +
-    data.competenciaDescricao +
-    "\n" +
-
-    "Escopo: " +
-    config.escopo +
-    "\n\n" +
-
-    "Previstas: " +
-    data.summary.previstas +
-    "\n" +
-
-    "Realizadas: " +
-    data.summary.realizadas +
-    "\n" +
-
-    "Pendentes: " +
-    data.summary.pendentes +
-    "\n" +
-
-    "Conclusão: " +
-    data.summary.percentual +
-    "%";
-
-
-  MailApp.sendEmail({
-
-    to:
-      config.emails.join(","),
-
-    subject:
-      assunto,
-
-    body:
-      texto,
-
-    htmlBody:
-      html,
-
-    name:
-      "QRManut"
-
-  });
-
-
-  preparePreventiveReportLogSheet_()
-    .appendRow([
-
-      new Date(),
-      competencia,
-      config.escopo,
-      data.summary.previstas,
-      data.summary.realizadas,
-      data.summary.pendentes,
-      data.summary.percentual + "%",
-      sessao.usuario,
-      sessao.perfil,
-      config.emailString
+      ["Status cadastral",a.status],
+      ["Prestador",a.prestador],
+      ["Periodicidade",a.periodicidade],
+      ["Observações",a.observacoes]
 
     ]);
 
 
-  return {
+  if (
+    a.periodicidade
+  ) {
 
-    ok:true,
+    show(
+      "preventiveButton"
+    );
 
-    competencia:
-      competencia,
+    show(
+      "preventiveHistorySection"
+    );
 
-    competenciaDescricao:
-      data.competenciaDescricao,
+  } else {
 
-    escopo:
-      config.escopo,
+    hide(
+      "preventiveButton"
+    );
 
-    email:
-      config.emailString,
+    hide(
+      "preventiveHistorySection"
+    );
+  }
+}
 
-    summary:
-      data.summary
 
-  };
+function renderStatus(s){
+
+  $("statusCard")
+    .className =
+
+    "status-card " +
+    (
+      s.nivel ||
+      ""
+    );
+
+  $("statusTitle")
+    .textContent =
+
+    (
+      s.icone ||
+      ""
+    ) +
+    " " +
+    (
+      s.situacao ||
+      ""
+    );
+
+  $("statusInfo")
+    .textContent =
+
+    s.totalAtivas
+      ? s.totalAtivas +
+        " ocorrência(s) ativa(s)"
+      : "Nenhuma ocorrência ativa.";
 }
 
 
 /* ============================================================
- * BODY POST
- * ============================================================ */
+   HISTÓRICO OC
+   ============================================================ */
 
-function readPostBody_(e) {
+function renderHistory(items){
 
-  var p =
-    e && e.parameter
-      ? e.parameter
-      : {};
+  history =
+    items;
 
-  return {
+  if (
+    !items.length
+  ) {
 
-    action:
-      p.action || "",
+    $("historyStatus")
+      .textContent =
+      "Nenhum histórico registrado.";
 
-    token:
-      p.token || "",
+    return;
+  }
 
-    id:
-      p.id || "",
+  show(
+    "historySelect"
+  );
 
-    reportadoPor:
-      p.reportadoPor || "",
+  $("historyStatus")
+    .textContent =
 
-    contato:
-      p.contato || "",
+    items.length +
+    " registro(s)";
 
-    descricao:
-      p.descricao || "",
+  $("historySelect")
+    .innerHTML =
 
-    categoriaOcorrencia:
-      p.categoriaOcorrencia || "",
+    items.map(
+      (x,i) => `
 
-    componenteAfetado:
-      p.componenteAfetado || "",
+        <option value="${i}">
 
-    fotoBase64:
-      p.fotoBase64 || "",
+          ${esc(x.ocorrencia)}
+          |
+          ${esc(x.status)}
 
-    fotoNome:
-      p.fotoNome || "",
+        </option>
 
-    fotoMime:
-      p.fotoMime || "",
+      `
+    )
+    .join("");
 
-    ocorrencia:
-      p.ocorrencia || "",
-
-    status:
-      p.status || "",
-
-    responsavel:
-      p.responsavel || "",
-
-    solucao:
-      p.solucao || "",
-
-    alteradoPor:
-      p.alteradoPor || "",
-
-    descricaoOcorrencia:
-      p.descricaoOcorrencia || "",
-
-    categoriaOcorrenciaEdit:
-      p.categoriaOcorrenciaEdit || "",
-
-    componenteAfetadoEdit:
-      p.componenteAfetadoEdit || "",
-
-    fotoOcorrenciaBase64:
-      p.fotoOcorrenciaBase64 || "",
-
-    fotoOcorrenciaNome:
-      p.fotoOcorrenciaNome || "",
-
-    fotoOcorrenciaMime:
-      p.fotoOcorrenciaMime || "",
-
-    fotoConclusaoBase64:
-      p.fotoConclusaoBase64 || "",
-
-    fotoConclusaoNome:
-      p.fotoConclusaoNome || "",
-
-    fotoConclusaoMime:
-      p.fotoConclusaoMime || "",
-
-    preventiveResponsible:
-      p.preventiveResponsible || "",
-
-    preventiveObservation:
-      p.preventiveObservation || "",
-
-    preventivePhotoBase64:
-      p.preventivePhotoBase64 || "",
-
-    preventivePhotoName:
-      p.preventivePhotoName || "",
-
-    preventivePhotoMime:
-      p.preventivePhotoMime || "",
-
-    preventiveSignatureBase64:
-      p.preventiveSignatureBase64 || "",
-
-    preventiveSignatureMime:
-      p.preventiveSignatureMime || "",
-
-    preventiveSessionToken:
-      p.preventiveSessionToken || "",
-
-    username:
-      p.username || "",
-
-    password:
-      p.password || "",
-
-    competencia:
-      p.competencia || "",
-
-    reportProvider:
-      p.reportProvider || ""
-
-  };
+  renderHistoryItem(
+    0
+  );
 }
 
 
-/* ============================================================
- * GET
- * ============================================================ */
+function renderHistoryItem(index){
 
-function doGet(e) {
+  const x =
+    history[index];
 
-  try {
+  if (!x) return;
 
-    var p =
-      e && e.parameter
-        ? e.parameter
-        : {};
+  selectedOccurrence =
+    x;
 
+  $("historyDetail")
+    .innerHTML = `
 
-    if (
-      p.ping
-    ) {
+      <div class="history-card">
 
-      return jsonResponse_({
+        <b>
+          ${esc(x.ocorrencia)}
+        </b>
 
-        ok:true,
+        <div class="muted">
+          ${esc(formatDate(x.data))}
+        </div>
 
-        app:
-          "QRManut",
+        <span class="tag">
+          ${esc(x.status)}
+        </span>
 
-        version:
-          CONFIG.VERSION,
-
-        message:
-          "API online"
-
-      });
-    }
-
-
-    if (
-      p.token !==
-      CONFIG.REQUIRED_TOKEN
-    ) {
-
-      return jsonResponse_({
-
-        ok:false,
-
-        error:
-          "unauthorized_token"
-
-      });
-    }
-
-
-    var action =
-      String(
-        p.action || ""
-      )
-      .trim()
-      .toLowerCase();
-
-
-    if (
-      action === "search"
-    ) {
-
-      var result =
-        buscarAtivos_(
-          p.q || ""
-        );
-
-      return jsonResponse_({
-
-        ok:true,
-
-        total:
-          result.length,
-
-        results:
-          result
-
-      });
-    }
-
-
-    if (
-      action === "pending"
-    ) {
-
-      var pending =
-        getPendingOccurrences_();
-
-      return jsonResponse_({
-
-        ok:true,
-
-        summary:
-          pending.summary,
-
-        occurrences:
-          pending.occurrences
-
-      });
-    }
-
-
-    if (
-      action ===
-      "preventivesession"
-    ) {
-
-      var session =
-        getPreventiveSession_(
-          p.session || ""
-        );
-
-      return jsonResponse_({
-
-        ok:
-          !!session,
-
-        session:
-          session || null
-
-      });
-    }
-
-
-    if (
-      action ===
-      "preventiverequirements"
-    ) {
-
-      var sessao1 =
-        validarSessaoPreventiva_(
-          p.session || ""
-        );
-
-      var ativo1 =
-        findEquipmentById_(
-          readEquipmentSheet_(),
-          p.id || ""
-        );
-
-      if (!ativo1) {
-
-        throw new Error(
-          "Ativo não encontrado."
-        );
-      }
-
-      if (
-        !prestadorPermitido_(
-          sessao1,
-          ativo1.prestador
-        )
-      ) {
-
-        throw new Error(
-          "Acesso não autorizado."
-        );
-      }
-
-      return jsonResponse_({
-
-        ok:true,
-
-        data:
-          getEffectivePreventiveRequirements_(
-            sessao1,
-            ativo1.prestador
-          )
-
-      });
-    }
-
-
-    if (
-      action ===
-      "preventivecontrol"
-    ) {
-
-      var sessao2 =
-        validarSessaoPreventiva_(
-          p.session || ""
-        );
-
-      return jsonResponse_({
-
-        ok:true,
-
-        data:
-          getMonthlyPreventiveControl_(
-            p.competencia || "",
-            sessao2,
-            p.prestador || ""
-          )
-
-      });
-    }
-
-
-    var id =
-      String(
-        p.id || ""
-      ).trim();
-
-
-    if (!id) {
-
-      return jsonResponse_({
-
-        ok:false,
-
-        error:
-          "missing_id"
-
-      });
-    }
-
-
-    if (
-      normId_(id) ===
-      CONFIG.SEARCH_ID
-    ) {
-
-      return jsonResponse_({
-
-        ok:true,
-
-        data:{
-
-          id:
-            CONFIG.SEARCH_ID,
-
-          tipo:
-            "busca"
-
+        ${
+          x.categoriaOcorrencia
+            ? `<span class="tag">${esc(x.categoriaOcorrencia)}</span>`
+            : ""
         }
 
-      });
-    }
+        ${
+          x.componenteAfetado
+            ? `<span class="tag">${esc(x.componenteAfetado)}</span>`
+            : ""
+        }
+
+        <div style="margin-top:8px">
+
+          <b>Descrição:</b>
+
+          <br>
+
+          ${esc(x.descricao)}
+
+        </div>
+
+        ${
+          x.foto
+            ? `
+
+              <div style="margin-top:8px">
+
+                <a
+                  href="${esc(x.foto)}"
+                  target="_blank"
+                >
+                  📷 Ver foto
+                </a>
+
+              </div>
+
+            `
+            : ""
+        }
+
+        ${
+          x.solucao
+            ? `
+
+              <div style="margin-top:8px">
+
+                <b>Solução:</b>
+
+                <br>
+
+                ${esc(x.solucao)}
+
+              </div>
+
+            `
+            : ""
+        }
+
+        <button
+          class="btn"
+          style="
+            width:100%;
+            margin-top:12px;
+          "
+          onclick="openManage(${index})"
+        >
+          Gerenciar ocorrência
+        </button>
+
+      </div>
+
+    `;
+}
 
 
-    if (
-      action === "history"
-    ) {
+/* ============================================================
+   HISTÓRICO PREVENTIVA
+   ============================================================ */
 
-      return jsonResponse_({
+async function loadPreventiveHistory(){
 
-        ok:true,
+  const result =
+    await api({
 
-        history:
-          getHistoryByEquipment_(
-            id
-          )
+      action:
+        "preventivehistory",
 
-      });
-    }
+      id:
+        currentAsset.id,
+
+      session:
+        preventiveSession.sessionToken
+
+    });
+
+  if (!result.ok) {
+
+    return;
+  }
+
+  const items =
+    result.preventives ||
+    [];
+
+  $("preventiveHistoryStatus")
+    .textContent =
+
+    items.length
+      ? items.length +
+        " preventiva(s) registrada(s)"
+      : "Nenhuma preventiva registrada.";
+
+  $("preventiveHistory")
+    .innerHTML =
+
+    items.map(
+      item => `
+
+        <div class="preventive-card">
+
+          <div class="preventive-id">
+
+            ${esc(item.registro)}
+
+          </div>
+
+          <div class="muted">
+
+            ${esc(
+              formatDate(
+                item.data
+              )
+            )}
+
+          </div>
+
+          <div style="margin-top:7px">
+
+            <b>Competência:</b>
+            ${esc(item.competencia)}
+
+            <br>
+
+            <b>Prestador:</b>
+            ${esc(item.prestador)}
+
+            <br>
+
+            <b>Responsável:</b>
+            ${esc(item.responsavel)}
+
+          </div>
+
+          ${
+            item.observacao
+              ? `
+
+                <div style="margin-top:8px">
+
+                  <b>
+                    Observação da preventiva:
+                  </b>
+
+                  <br>
+
+                  ${esc(item.observacao)}
+
+                </div>
+
+              `
+              : ""
+          }
+
+          ${
+            item.foto
+              ? `
+
+                <div style="margin-top:8px">
+
+                  <a
+                    href="${esc(item.foto)}"
+                    target="_blank"
+                  >
+                    📷 Ver evidência
+                  </a>
+
+                </div>
+
+              `
+              : ""
+          }
+
+          ${
+            item.assinatura
+              ? `
+
+                <div style="margin-top:8px">
+
+                  <a
+                    href="${esc(item.assinatura)}"
+                    target="_blank"
+                  >
+                    ✍️ Ver assinatura
+                  </a>
+
+                </div>
+
+              `
+              : ""
+          }
+
+        </div>
+
+      `
+    )
+    .join("");
+}
 
 
-    if (
-      action ===
-      "preventivehistory"
-    ) {
+/* ============================================================
+   ABRIR PREVENTIVA
+   ============================================================ */
 
-      return jsonResponse_({
+function requestPreventive(){
 
-        ok:true,
+  requirePreventiveLogin(
 
-        preventives:
-          getPreventiveHistoryByEquipment_(
-            id,
-            p.session || ""
-          )
+    async function(){
 
-      });
-    }
+      await openPreventive();
 
+      loadPreventiveHistory();
 
-    if (
-      action === "status"
-    ) {
+    },
 
-      return jsonResponse_({
+    currentAsset.prestador
 
-        ok:true,
-
-        data:
-          getEquipmentStatusSummary_(
-            id
-          )
-
-      });
-    }
+  );
+}
 
 
-    var ativo =
-      findEquipmentById_(
-        readEquipmentSheet_(),
-        id
-      );
+async function openPreventive(){
 
+  preventivePhotoData =
+    null;
 
-    if (!ativo) {
+  signatureDirty =
+    false;
 
-      return jsonResponse_({
+  $("preventivePhotoInput").value =
+    "";
 
-        ok:false,
+  $("preventivePhotoPreview")
+    .style.display =
+    "none";
 
-        error:
-          "not_found"
+  $("preventiveMessage")
+    .className =
+    "message";
 
-      });
-    }
+  $("preventiveAsset")
+    .textContent =
 
+    currentAsset.id +
+    " – " +
+    currentAsset.nome_do_equipamento;
 
-    return jsonResponse_({
+  $("preventivePeriodicity")
+    .textContent =
 
-      ok:true,
+    currentAsset.periodicidade ||
+    "Não informada";
 
-      data:
-        buildEquipmentPayload_(
-          ativo
-        )
+  $("preventiveProvider")
+    .textContent =
+
+    currentAsset.prestador ||
+    "Não informado";
+
+  $("preventiveCompetence")
+    .textContent =
+    currentCompetence();
+
+  $("preventiveResponsible")
+    .value =
+    getSavedResponsible();
+
+  $("preventiveObservation")
+    .value =
+    "";
+
+  const rules =
+    await api({
+
+      action:
+        "preventiverequirements",
+
+      id:
+        currentAsset.id,
+
+      session:
+        preventiveSession.sessionToken
 
     });
 
-  } catch(error) {
+  if (!rules.ok) {
 
-    return jsonResponse_({
+    alert(
+      rules.detail ||
+      "Não foi possível carregar as regras."
+    );
 
-      ok:false,
+    return;
+  }
 
-      error:
-        "server_error",
+  preventiveRequirements =
+    rules.data;
 
-      detail:
-        String(
-          error.message ||
-          error
-        )
+  renderPreventiveRequirements();
 
-    });
+  $("preventiveModal")
+    .style.display =
+    "flex";
+
+  if (
+    !$("signatureBox")
+      .classList
+      .contains("hidden")
+  ) {
+
+    requestAnimationFrame(
+      setupSignatureCanvas
+    );
+  }
+}
+
+
+function renderPreventiveRequirements(){
+
+  const r =
+    preventiveRequirements;
+
+  $("preventiveRequirements")
+    .innerHTML = `
+
+      <b>
+        Requisitos deste registro
+      </b>
+
+      <div
+        class="
+          requirement
+          ${
+            r.exigirAssinatura
+              ? "required-yes"
+              : "required-no"
+          }
+        "
+      >
+
+        ${
+          r.exigirAssinatura
+            ? "● Assinatura obrigatória"
+            : "✓ Assinatura não obrigatória"
+        }
+
+      </div>
+
+      <div
+        class="
+          requirement
+          ${
+            r.fotoObrigatoria
+              ? "required-yes"
+              : "required-no"
+          }
+        "
+      >
+
+        ${
+          r.fotoObrigatoria
+            ? "● Foto obrigatória"
+            : "✓ Foto opcional"
+        }
+
+      </div>
+
+      <div
+        class="
+          requirement
+          ${
+            r.observacaoObrigatoria
+              ? "required-yes"
+              : "required-no"
+          }
+        "
+      >
+
+        ${
+          r.observacaoObrigatoria
+            ? "● Observação obrigatória"
+            : "✓ Observação opcional"
+        }
+
+      </div>
+
+    `;
+
+  if (
+    r.exigirAssinatura
+  ) {
+
+    show(
+      "signatureBox"
+    );
+
+    $("signatureRequiredText")
+      .textContent =
+      " * obrigatório";
+
+  } else {
+
+    hide(
+      "signatureBox"
+    );
   }
 }
 
 
 /* ============================================================
- * POST
- * ============================================================ */
+   SALVAR PREVENTIVA
+   ============================================================ */
 
-function doPost(e) {
+async function savePreventive(){
+
+  if (
+    preventivePosting
+  ) {
+
+    return;
+  }
+
+  const responsible =
+    $("preventiveResponsible")
+      .value
+      .trim();
+
+  const observation =
+    $("preventiveObservation")
+      .value
+      .trim();
+
+  if (!responsible) {
+
+    showPreventiveError(
+      "Informe o responsável pela preventiva."
+    );
+
+    return;
+  }
+
+  if (
+    preventiveRequirements
+      .observacaoObrigatoria &&
+    !observation
+  ) {
+
+    showPreventiveError(
+      "A observação é obrigatória."
+    );
+
+    return;
+  }
+
+  if (
+    preventiveRequirements
+      .fotoObrigatoria &&
+    !preventivePhotoData
+  ) {
+
+    showPreventiveError(
+      "A foto é obrigatória."
+    );
+
+    return;
+  }
+
+  if (
+    preventiveRequirements
+      .exigirAssinatura &&
+    !signatureDirty
+  ) {
+
+    showPreventiveError(
+      "A assinatura é obrigatória."
+    );
+
+    return;
+  }
+
+  saveResponsible(
+    responsible
+  );
+
+  const signature =
+    getSignatureData();
+
+  preventivePosting =
+    true;
+
+  $("savePreventive")
+    .disabled =
+    true;
+
+  $("savePreventive")
+    .textContent =
+    "Registrando...";
 
   try {
 
-    var body =
-      readPostBody_(
-        e
-      );
+    const result =
+      await apiPost({
 
+        action:
+          "registerPreventive",
 
-    if (
-      body.token !==
-      CONFIG.REQUIRED_TOKEN
-    ) {
+        id:
+          currentAsset.id,
 
-      return jsonResponse_({
+        preventiveSessionToken:
+          preventiveSession.sessionToken,
 
-        ok:false,
+        preventiveResponsible:
+          responsible,
 
-        error:
-          "unauthorized_token"
+        preventiveObservation:
+          observation,
+
+        preventivePhotoBase64:
+          preventivePhotoData
+            ? preventivePhotoData.base64
+            : "",
+
+        preventivePhotoName:
+          preventivePhotoData
+            ? preventivePhotoData.name
+            : "",
+
+        preventivePhotoMime:
+          preventivePhotoData
+            ? preventivePhotoData.mime
+            : "",
+
+        preventiveSignatureBase64:
+          signature
+            ? signature.base64
+            : "",
+
+        preventiveSignatureMime:
+          signature
+            ? signature.mime
+            : ""
 
       });
-    }
 
+    if (!result.ok) {
 
-    var action =
-      String(
-        body.action || ""
-      )
-      .trim()
-      .toLowerCase();
-
-
-    if (
-      action ===
-      "preventivelogin"
-    ) {
-
-      return jsonResponse_(
-        loginPreventive_(
-          body
-        )
+      throw new Error(
+        result.detail ||
+        "Não foi possível registrar a preventiva."
       );
     }
 
+    $("preventiveMessage")
+      .className =
+      "message success";
 
-    if (
-      action ===
-      "preventivelogout"
-    ) {
+    $("preventiveMessage")
+      .innerHTML =
 
-      return jsonResponse_(
-        logoutPreventive_(
-          body
-        )
-      );
-    }
+      "✅ Preventiva <b>" +
+      esc(result.registro) +
+      "</b> registrada com sucesso.";
 
+    await loadPreventiveHistory();
 
-    if (
-      action ===
-      "registerpreventive"
-    ) {
+    setTimeout(
+      function(){
 
-      return jsonResponse_(
-        processPreventive_(
-          body
-        )
-      );
-    }
+        $("preventiveModal")
+          .style.display =
+          "none";
 
+        $("savePreventive")
+          .disabled =
+          false;
 
-    if (
-      action ===
-      "sendpreventivereport"
-    ) {
+        $("savePreventive")
+          .textContent =
+          "Registrar Preventiva";
 
-      return jsonResponse_(
-        enviarRelatorioPreventivas_(
-          body
-        )
-      );
-    }
+        preventivePosting =
+          false;
 
-
-    if (
-      action ===
-      "updateoccurrence"
-    ) {
-
-      return jsonResponse_(
-        updateOccurrence_(
-          body
-        )
-      );
-    }
-
-
-    if (
-      action === "" ||
-      action ===
-      "reportoccurrence"
-    ) {
-
-      return jsonResponse_(
-        processReport_(
-          body
-        )
-      );
-    }
-
-
-    throw new Error(
-      "Ação não reconhecida: " +
-      action
+      },
+      1000
     );
 
   } catch(error) {
 
-    return jsonResponse_({
+    preventivePosting =
+      false;
 
-      ok:false,
+    $("savePreventive")
+      .disabled =
+      false;
 
-      error:
-        "post_error",
+    $("savePreventive")
+      .textContent =
+      "Registrar Preventiva";
 
-      detail:
-        String(
-          error.message ||
-          error
-        )
+    showPreventiveError(
+      error.message
+    );
+  }
+}
 
-    });
+
+function showPreventiveError(message){
+
+  $("preventiveMessage")
+    .className =
+    "message error";
+
+  $("preventiveMessage")
+    .textContent =
+    message;
+}
+
+
+/* ============================================================
+   NOVA OC - AGORA RECEBE RESPOSTA DO GS
+   ============================================================ */
+
+function openReport(){
+
+  $("reporterName")
+    .value =
+    getSavedResponsible();
+
+  $("reportMessage")
+    .className =
+    "message";
+
+  $("reportMessage")
+    .innerHTML =
+    "";
+
+  $("sendReport")
+    .disabled =
+    false;
+
+  $("sendReport")
+    .textContent =
+    "Gravar ocorrência";
+
+  $("cancelReport")
+    .textContent =
+    "Cancelar";
+
+  $("reportModal")
+    .style.display =
+    "flex";
+}
+
+
+async function sendReport(){
+
+  if (
+    reportPosting
+  ) {
+
+    return;
+  }
+
+  const name =
+    $("reporterName")
+      .value
+      .trim();
+
+  const description =
+    $("description")
+      .value
+      .trim();
+
+  if (
+    !name ||
+    !$("category").value ||
+    !$("component").value ||
+    !description
+  ) {
+
+    $("reportMessage")
+      .className =
+      "message error";
+
+    $("reportMessage")
+      .textContent =
+      "Preencha os campos obrigatórios.";
+
+    return;
+  }
+
+  saveResponsible(
+    name
+  );
+
+  reportPosting =
+    true;
+
+  $("sendReport")
+    .disabled =
+    true;
+
+  $("sendReport")
+    .textContent =
+    "Gravando...";
+
+  $("reportMessage")
+    .className =
+    "message loading";
+
+  $("reportMessage")
+    .textContent =
+    "Registrando ocorrência...";
+
+  try {
+
+    const result =
+      await apiPost({
+
+        action:
+          "reportOccurrence",
+
+        id:
+          currentAsset.id,
+
+        reportadoPor:
+          name,
+
+        contato:
+          $("reporterContact").value,
+
+        categoriaOcorrencia:
+          $("category").value,
+
+        componenteAfetado:
+          $("component").value,
+
+        descricao:
+          description,
+
+        fotoBase64:
+          photoData
+            ? photoData.base64
+            : "",
+
+        fotoNome:
+          photoData
+            ? photoData.name
+            : "",
+
+        fotoMime:
+          photoData
+            ? photoData.mime
+            : ""
+
+      });
+
+    if (!result.ok) {
+
+      throw new Error(
+        result.detail ||
+        "Não foi possível registrar a ocorrência."
+      );
+    }
+
+    let notificationHtml =
+      "";
+
+    if (
+      result.notificacaoPrestador ===
+      "Sim"
+    ) {
+
+      notificationHtml = `
+
+        <br><br>
+
+        📧 <b>Prestador notificado:</b>
+
+        <br>
+
+        ${esc(
+          result.emailPrestador
+        )}
+
+      `;
+
+    } else if (
+      result.notificacaoPrestador ===
+      "Não - sem e-mail"
+    ) {
+
+      notificationHtml = `
+
+        <br><br>
+
+        ⚠️ O prestador está configurado para receber a ocorrência,
+        mas não possui e-mail cadastrado.
+
+      `;
+
+    } else if (
+      result.notificacaoPrestador ===
+      "Erro"
+    ) {
+
+      notificationHtml = `
+
+        <br><br>
+
+        ⚠️ A ocorrência foi registrada,
+        mas houve erro ao notificar o prestador.
+
+      `;
+
+    } else {
+
+      notificationHtml = `
+
+        <br><br>
+
+        ℹ️ Este prestador não está configurado
+        para receber notificações de ocorrência.
+
+      `;
+    }
+
+    $("reportMessage")
+      .className =
+      "message success";
+
+    $("reportMessage")
+      .innerHTML =
+
+      "✅ Ocorrência <b>" +
+      esc(result.ocorrencia) +
+      "</b> registrada com sucesso." +
+
+      notificationHtml;
+
+    $("sendReport")
+      .textContent =
+      "Ocorrência gravada";
+
+    $("cancelReport")
+      .textContent =
+      "Fechar";
+
+  } catch(error) {
+
+    reportPosting =
+      false;
+
+    $("sendReport")
+      .disabled =
+      false;
+
+    $("sendReport")
+      .textContent =
+      "Gravar ocorrência";
+
+    $("reportMessage")
+      .className =
+      "message error";
+
+    $("reportMessage")
+      .textContent =
+      error.message;
   }
 }
 
 
 /* ============================================================
- * LOCALIZAÇÕES
- * ============================================================ */
+   GERENCIAR OC
+   ============================================================ */
 
-function getLocalizacoesPorPavimento_() {
+const CATEGORIES = [
+  "Civil",
+  "Sanitário",
+  "Elétrica",
+  "Hidráulica",
+  "Climatização",
+  "Refrigeração",
+  "Utilidades",
+  "Segurança",
+  "Mobiliário",
+  "Equipamento",
+  "Outros"
+];
 
-  return {
 
-    "ÁREA EXTERNA":[
-      "Guarita",
-      "Subestação",
-      "Abrigo de Resíduos",
-      "Estacionamento",
-      "Área Externa",
-      "Sala do Gerador 1",
-      "Sala do Gerador 2"
-    ],
+const COMPONENTS = [
+  "Geral",
+  "Piso",
+  "Parede",
+  "Teto",
+  "Porta",
+  "Janela",
+  "Vaso Sanitário",
+  "Pia",
+  "Torneira",
+  "Descarga",
+  "Mictório",
+  "Ralo",
+  "Luminária",
+  "Tomada",
+  "Interruptor",
+  "Tubulação",
+  "Registro",
+  "Bomba",
+  "Motor",
+  "Painel",
+  "Ar-condicionado",
+  "Mobiliário",
+  "Outro"
+];
 
-    "1º PISO":[
-      "Recepção",
-      "Expedição",
-      "Laboratório de Produção",
-      "Sala de Lavagem",
-      "Sala do Liofilizador",
-      "Hall do Café",
-      "Corredor das Câmaras Frigoríficas"
-    ],
 
-    "2º PISO":[
-      "Secretaria",
-      "Sala da Diretoria Administrativa",
-      "Sala da Diretoria de Controle de Qualidade",
-      "Sala da Administração",
-      "Sala da Superintendência",
-      "Financeiro",
-      "Assessoria",
-      "Auditório",
-      "Sala de Reunião",
-      "Laboratório de Toxicologia",
-      "Laboratório de Controle de Qualidade",
-      "Laboratório de Microbiologia",
-      "Laboratório de Micologia",
-      "Laboratório de Pesquisa",
-      "Laboratório de Biologia Molecular",
-      "Sala da Garantia da Qualidade",
-      "Almoxarifado",
-      "Refeitório",
-      "Sala do CPD",
-      "Hall do Café",
-      "Hall do Elevador de Carga",
-      "Setor de Compras"
-    ],
+function buildManageDropdowns(){
 
-    "3º PISO":[
-      "Sala da Manutenção",
-      "Gaiola de Depósito",
-      "Salão Azul",
-      "Expedição de Controle Interno",
-      "Casa dos Compressores",
-      "Abrigo dos Gases",
-      "Sala dos Barrilhetes de Água"
-    ]
+  $("manageCategory")
+    .innerHTML =
 
-  };
+    CATEGORIES
+      .map(
+        x =>
+          `<option>${esc(x)}</option>`
+      )
+      .join("");
+
+  $("manageComponent")
+    .innerHTML =
+
+    COMPONENTS
+      .map(
+        x =>
+          `<option>${esc(x)}</option>`
+      )
+      .join("");
 }
 
 
-function atualizarDropdownLocalizacaoLinha_(sh,linha) {
+function openManage(index){
 
-  var pavimento =
-    String(
-      sh.getRange(
-        linha,
-        25
-      )
-      .getValue() ||
-      ""
+  selectedOccurrence =
+    history[index];
+
+  correctionPhotoData =
+    null;
+
+  conclusionPhotoData =
+    null;
+
+  $("manageChangedBy")
+    .value =
+    getSavedResponsible();
+
+  $("manageCategory")
+    .value =
+
+    selectedOccurrence
+      .categoriaOcorrencia ||
+    "Outros";
+
+  $("manageComponent")
+    .value =
+
+    selectedOccurrence
+      .componenteAfetado ||
+    "Geral";
+
+  $("manageDescription")
+    .value =
+
+    selectedOccurrence
+      .descricao ||
+    "";
+
+  $("manageStatus")
+    .value =
+
+    selectedOccurrence
+      .status ||
+    "Aberta";
+
+  $("manageResponsible")
+    .value =
+
+    selectedOccurrence
+      .responsavel ||
+    "";
+
+  $("manageSolution")
+    .value =
+
+    selectedOccurrence
+      .solucao ||
+    "";
+
+  toggleConclusion();
+
+  $("manageModal")
+    .style.display =
+    "flex";
+}
+
+
+function toggleConclusion(){
+
+  if (
+    $("manageStatus").value ===
+    "Concluída"
+  ) {
+
+    show(
+      "conclusionPhotoArea"
+    );
+
+  } else {
+
+    hide(
+      "conclusionPhotoArea"
+    );
+  }
+}
+
+
+function saveManage(){
+
+  if (
+    managePosting
+  ) {
+
+    return;
+  }
+
+  const changedBy =
+    $("manageChangedBy")
+      .value
+      .trim();
+
+  if (!changedBy) {
+
+    $("manageMessage")
+      .className =
+      "message error";
+
+    $("manageMessage")
+      .textContent =
+      "Informe quem está realizando a alteração.";
+
+    return;
+  }
+
+  managePosting =
+    true;
+
+  saveResponsible(
+    changedBy
+  );
+
+  $("saveManage")
+    .disabled =
+    true;
+
+  $("saveManage")
+    .textContent =
+    "Salvando...";
+
+  $("m_token").value =
+    TOKEN;
+
+  $("m_occurrence").value =
+    selectedOccurrence.ocorrencia;
+
+  $("m_status").value =
+    $("manageStatus").value;
+
+  $("m_responsible").value =
+    $("manageResponsible").value;
+
+  $("m_solution").value =
+    $("manageSolution").value;
+
+  $("m_changedBy").value =
+    changedBy;
+
+  $("m_description").value =
+    $("manageDescription").value;
+
+  $("m_category").value =
+    $("manageCategory").value;
+
+  $("m_component").value =
+    $("manageComponent").value;
+
+
+  if (
+    correctionPhotoData
+  ) {
+
+    $("m_occurrencePhoto").value =
+      correctionPhotoData.base64;
+
+    $("m_occurrencePhotoName").value =
+      correctionPhotoData.name;
+
+    $("m_occurrencePhotoMime").value =
+      correctionPhotoData.mime;
+
+  } else {
+
+    $("m_occurrencePhoto").value =
+      "";
+
+    $("m_occurrencePhotoName").value =
+      "";
+
+    $("m_occurrencePhotoMime").value =
+      "";
+  }
+
+
+  if (
+    conclusionPhotoData
+  ) {
+
+    $("m_photo").value =
+      conclusionPhotoData.base64;
+
+    $("m_photoName").value =
+      conclusionPhotoData.name;
+
+    $("m_photoMime").value =
+      conclusionPhotoData.mime;
+
+  } else {
+
+    $("m_photo").value =
+      "";
+
+    $("m_photoName").value =
+      "";
+
+    $("m_photoMime").value =
+      "";
+  }
+
+  $("manageForm")
+    .action =
+    API_URL;
+
+  $("manageForm")
+    .submit();
+}
+
+
+/* ============================================================
+   FOTOS
+   ============================================================ */
+
+$("photoInput").onchange =
+async function(){
+
+  if (
+    !this.files[0]
+  ) {
+
+    photoData =
+      null;
+
+    $("photoPreview")
+      .style.display =
+      "none";
+
+    return;
+  }
+
+  photoData =
+    await processPhoto(
+      this.files[0]
+    );
+
+  $("photoPreview")
+    .src =
+    photoData.dataUrl;
+
+  $("photoPreview")
+    .style.display =
+    "block";
+};
+
+
+$("preventivePhotoInput").onchange =
+async function(){
+
+  if (
+    !this.files[0]
+  ) {
+
+    preventivePhotoData =
+      null;
+
+    $("preventivePhotoPreview")
+      .style.display =
+      "none";
+
+    return;
+  }
+
+  preventivePhotoData =
+    await processPhoto(
+      this.files[0]
+    );
+
+  $("preventivePhotoPreview")
+    .src =
+    preventivePhotoData.dataUrl;
+
+  $("preventivePhotoPreview")
+    .style.display =
+    "block";
+};
+
+
+$("manageOccurrencePhotoInput").onchange =
+async function(){
+
+  if (!this.files[0]) return;
+
+  correctionPhotoData =
+    await processPhoto(
+      this.files[0]
+    );
+
+  $("manageOccurrencePhotoPreview")
+    .src =
+    correctionPhotoData.dataUrl;
+
+  $("manageOccurrencePhotoPreview")
+    .style.display =
+    "block";
+};
+
+
+$("conclusionPhotoInput").onchange =
+async function(){
+
+  if (!this.files[0]) return;
+
+  conclusionPhotoData =
+    await processPhoto(
+      this.files[0]
+    );
+
+  $("conclusionPhotoPreview")
+    .src =
+    conclusionPhotoData.dataUrl;
+
+  $("conclusionPhotoPreview")
+    .style.display =
+    "block";
+};
+
+
+/* ============================================================
+   IFRAME GERENCIAMENTO
+   ============================================================ */
+
+$("manageFrame").onload =
+function(){
+
+  if (
+    !managePosting
+  ) {
+
+    return;
+  }
+
+  managePosting =
+    false;
+
+  $("manageModal")
+    .style.display =
+    "none";
+
+  location.reload();
+};
+
+
+/* ============================================================
+   EVENTOS
+   ============================================================ */
+
+$("tabSearch").onclick =
+showSearchTab;
+
+$("tabPending").onclick =
+showPendingTab;
+
+$("tabPreventive").onclick =
+showPreventiveTab;
+
+$("searchButton").onclick =
+searchAssets;
+
+
+$("searchInput").onkeydown =
+function(e){
+
+  if (
+    e.key === "Enter"
+  ) {
+
+    e.preventDefault();
+
+    searchAssets();
+  }
+};
+
+
+$("reportButton").onclick =
+openReport;
+
+$("preventiveButton").onclick =
+requestPreventive;
+
+
+$("searchAssetsButton").onclick =
+function(){
+
+  hide(
+    "assetScreen"
+  );
+
+  show(
+    "searchScreen"
+  );
+
+  showSearchTab();
+};
+
+
+$("sendLogin").onclick =
+doPreventiveLogin;
+
+
+$("preventivePassword").onkeydown =
+function(e){
+
+  if (
+    e.key === "Enter"
+  ) {
+
+    doPreventiveLogin();
+  }
+};
+
+
+$("cancelLogin").onclick =
+function(){
+
+  loginNextAction =
+    null;
+
+  $("preventiveLoginModal")
+    .style.display =
+    "none";
+};
+
+
+$("controlRefresh").onclick =
+loadPreventiveControl;
+
+
+$("controlCompetence").onchange =
+function(){
+
+  /*
+   * Ao trocar mês, recarrega.
+   */
+
+  loadPreventiveControl();
+};
+
+
+$("controlProvider").onchange =
+function(){
+
+  /*
+   * MASTER:
+   * novo prestador = consulta nova no backend.
+   */
+
+  if (
+    preventiveSession &&
+    preventiveSession.perfil === "MASTER"
+  ) {
+
+    loadPreventiveControl();
+
+  } else {
+
+    renderControlList();
+  }
+};
+
+
+$("controlAll").onclick =
+function(){
+
+  setControlMode(
+    "all"
+  );
+};
+
+
+$("controlPending").onclick =
+function(){
+
+  setControlMode(
+    "pending"
+  );
+};
+
+
+$("controlDone").onclick =
+function(){
+
+  setControlMode(
+    "done"
+  );
+};
+
+
+$("sendMonthlyReport").onclick =
+sendMonthlyPreventiveReport;
+
+
+$("preventiveLogout").onclick =
+async function(){
+
+  if (
+    preventiveSession
+  ) {
+
+    try {
+
+      await apiPost({
+
+        action:
+          "preventiveLogout",
+
+        preventiveSessionToken:
+          preventiveSession.sessionToken
+
+      });
+
+    } catch(error){}
+  }
+
+  clearPreventiveSession();
+
+  showSearchTab();
+};
+
+
+$("cancelPreventive").onclick =
+function(){
+
+  if (
+    !preventivePosting
+  ) {
+
+    $("preventiveModal")
+      .style.display =
+      "none";
+  }
+};
+
+
+$("savePreventive").onclick =
+savePreventive;
+
+
+$("cancelReport").onclick =
+function(){
+
+  if (
+    reportPosting
+  ) {
+
+    /*
+     * Se já gravou e está apenas mostrando
+     * a confirmação, permite fechar.
+     */
+
+    if (
+      $("sendReport")
+        .textContent ===
+      "Ocorrência gravada"
+    ) {
+
+      reportPosting =
+        false;
+
+      $("reportModal")
+        .style.display =
+        "none";
+
+      location.reload();
+    }
+
+    return;
+  }
+
+  $("reportModal")
+    .style.display =
+    "none";
+};
+
+
+$("sendReport").onclick =
+sendReport;
+
+
+$("historySelect").onchange =
+function(){
+
+  renderHistoryItem(
+    Number(
+      this.value
     )
-    .trim();
-
-  var celula =
-    sh.getRange(
-      linha,
-      12
-    );
-
-  var opcoes =
-    getLocalizacoesPorPavimento_()[
-      pavimento
-    ];
-
-  if (!opcoes) {
-
-    celula.clearDataValidations();
-
-    return;
-  }
-
-  var regra =
-    SpreadsheetApp
-      .newDataValidation()
-      .requireValueInList(
-        opcoes,
-        true
-      )
-      .setAllowInvalid(
-        false
-      )
-      .build();
-
-  celula.setDataValidation(
-    regra
   );
-}
+};
 
 
-function configurarDropdownsDependentesLocalizacao() {
+$("manageStatus").onchange =
+toggleConclusion;
 
-  var sh =
-    getSpreadsheet_()
-      .getSheetByName(
-        CONFIG.EQUIPMENT_SHEET
-      );
 
-  if (!sh) {
+$("cancelManage").onclick =
+function(){
 
-    return;
-  }
-
-  for (
-    var i = 2;
-    i <= sh.getLastRow();
-    i++
+  if (
+    !managePosting
   ) {
 
-    atualizarDropdownLocalizacaoLinha_(
-      sh,
-      i
-    );
+    $("manageModal")
+      .style.display =
+      "none";
   }
-}
+};
+
+
+$("saveManage").onclick =
+saveManage;
+
+
+/* ASSINATURA */
+
+$("signatureCanvas")
+  .addEventListener(
+    "pointerdown",
+    signatureStart
+  );
+
+$("signatureCanvas")
+  .addEventListener(
+    "pointermove",
+    signatureMove
+  );
+
+window.addEventListener(
+  "pointerup",
+  signatureEnd
+);
+
+$("clearSignature").onclick =
+clearSignatureCanvas;
 
 
 /* ============================================================
- * ON EDIT
- * ============================================================ */
+   MAIN
+   ============================================================ */
 
-function onEdit(e) {
+async function main(){
 
-  if (
-    !e ||
-    !e.range
-  ) {
+  buildManageDropdowns();
 
-    return;
-  }
+  readPreventiveSession();
 
-  var sh =
-    e.range.getSheet();
+  $("controlCompetence")
+    .value =
+    currentCompetence();
 
-  var row =
-    e.range.getRow();
-
-  var col =
-    e.range.getColumn();
+  const id =
+    getId();
 
   if (
-    row <= 1
+    !id ||
+    id === "EQBUSCA"
   ) {
 
-    return;
-  }
-
-  if (
-    sh.getName() ===
-    CONFIG.EQUIPMENT_SHEET &&
-    col === 25
-  ) {
-
-    atualizarDropdownLocalizacaoLinha_(
-      sh,
-      row
+    show(
+      "searchScreen"
     );
+
+    showSearchTab();
+
+    return;
   }
 
-  if (
-    sh.getName() ===
-    CONFIG.HISTORY_SHEET &&
-    col === 9
-  ) {
-
-    var status =
-      String(
-        e.value || ""
-      );
-
-    var inicio =
-      sh.getRange(
-        row,
-        11
-      );
-
-    var conclusao =
-      sh.getRange(
-        row,
-        12
-      );
-
-    if (
-      (
-        status === "Em atendimento" ||
-        status === "Aguardando peça" ||
-        status === "Concluída"
-      ) &&
-      !inicio.getValue()
-    ) {
-
-      inicio.setValue(
-        new Date()
-      );
-    }
-
-    if (
-      status === "Concluída" &&
-      !conclusao.getValue()
-    ) {
-
-      conclusao.setValue(
-        new Date()
-      );
-    }
-  }
-}
-
-
-/* ============================================================
- * CONFIGURAÇÃO 7.2
- * ============================================================ */
-
-function configurarAcessosPreventiva72() {
-
-  var sh =
-    preparePreventiveAccessSheet_();
-
-
-  var regraPerfil =
-    SpreadsheetApp
-      .newDataValidation()
-      .requireValueInList(
-        [
-          "MASTER",
-          "PRESTADOR"
-        ],
-        true
-      )
-      .setAllowInvalid(
-        false
-      )
-      .build();
-
-
-  var regraSN =
-    SpreadsheetApp
-      .newDataValidation()
-      .requireValueInList(
-        [
-          "Sim",
-          "Não"
-        ],
-        true
-      )
-      .setAllowInvalid(
-        false
-      )
-      .build();
-
-
-  sh.getRange(
-    2,
-    4,
-    500,
-    1
-  )
-  .setDataValidation(
-    regraPerfil
-  );
-
-
-  /*
-   * E até I
-   */
-
-  sh.getRange(
-    2,
-    5,
-    500,
-    5
-  )
-  .setDataValidation(
-    regraSN
-  );
-
-
-  /*
-   * K = Enviar Relatório
-   */
-
-  sh.getRange(
-    2,
-    11,
-    500,
-    1
-  )
-  .setDataValidation(
-    regraSN
-  );
-
-
-  if (
-    sh.getLastRow() === 1
-  ) {
-
-    sh.appendRow([
-
-      "PNCQ",
-      "pncq",
-      "",
-      "MASTER",
-      "Sim",
-      "Não",
-      "Não",
-      "Não",
-      "Não",
-      "",
-      "Sim",
-      CONFIG.NOTIFICATION_EMAIL_TO
-
-    ]);
-  }
-
-
-  sh.autoResizeColumns(
-    1,
-    12
+  await loadAsset(
+    id
   );
 }
 
 
-function configurarQRManut72() {
+main();
 
-  prepareHistorySheet_();
+</script>
 
-  preparePreventiveSheet_();
+</body>
 
-  preparePreventiveAccessSheet_();
-
-  preparePreventiveReportLogSheet_();
-
-  configurarAcessosPreventiva72();
-
-  configurarDropdownsDependentesLocalizacao();
-
-  SpreadsheetApp.flush();
-
-
-  Logger.log(
-    "================================="
-  );
-
-  Logger.log(
-    "QRManut 7.2 configurado."
-  );
-
-  Logger.log(
-    CONFIG.VERSION
-  );
-
-  Logger.log(
-    "================================="
-  );
-}
-
-
-/* ============================================================
- * TESTES
- * ============================================================ */
-
-function testeEstrutura72() {
-
-  Logger.log(
-    "VERSÃO: " +
-    CONFIG.VERSION
-  );
-
-  Logger.log(
-    "Acessos colunas: " +
-    preparePreventiveAccessSheet_()
-      .getLastColumn()
-  );
-
-  Logger.log(
-    "Preventivas colunas: " +
-    preparePreventiveSheet_()
-      .getLastColumn()
-  );
-
-  Logger.log(
-    "Histórico colunas: " +
-    prepareHistorySheet_()
-      .getLastColumn()
-  );
-
-  Logger.log(
-    "Relatórios colunas: " +
-    preparePreventiveReportLogSheet_()
-      .getLastColumn()
-  );
-}
-
-
-function testeConfiguracaoRelatorios72() {
-
-  var rows =
-    readPreventiveAccess_();
-
-  rows.forEach(
-    function(item) {
-
-      Logger.log(
-
-        item.prestador +
-
-        " | Usuário: " +
-        item.usuario +
-
-        " | Enviar relatório: " +
-        item.enviarRelatorio +
-
-        " | E-mail: " +
-        item.emailRelatorio
-
-      );
-    }
-  );
-}
+</html>
