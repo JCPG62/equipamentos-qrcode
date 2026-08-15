@@ -4,12 +4,17 @@
   "short_name": "QRManut",
   "description": "Sistema QRManut para gestão de ativos, ocorrências e manutenções preventivas.",
   "lang": "pt-BR",
+
   "start_url": "./equip_formulario.html?id=EQBUSCA",
   "scope": "./",
+
   "display": "standalone",
+
   "background_color": "#f5f7fa",
   "theme_color": "#0b315e",
+
   "orientation": "portrait-primary",
+
   "icons": [
     {
       "src": "./qrmanut-180.png",
