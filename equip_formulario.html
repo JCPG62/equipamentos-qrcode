@@ -203,7 +203,7 @@
 
 <div id="reportModal" class="modal"><div class="modal-box"><h2>Reportar Serviço / Anomalia / Reparo</h2><label>Seu nome *<input id="reporterName"></label><label>Contato<input id="reporterContact"></label><label>Categoria *<select id="category"><option value="">Selecione...</option><option>Civil</option><option>Sanitário</option><option>Elétrica</option><option>Hidráulica</option><option>Climatização</option><option>Refrigeração</option><option>Utilidades</option><option>Segurança</option><option>Mobiliário</option><option>Equipamento</option><option>Outros</option></select></label><label>Componente *<select id="component"><option value="">Selecione...</option><option>Geral</option><option>Piso</option><option>Parede</option><option>Teto</option><option>Porta</option><option>Janela</option><option>Vaso Sanitário</option><option>Pia</option><option>Torneira</option><option>Descarga</option><option>Mictório</option><option>Ralo</option><option>Luminária</option><option>Tomada</option><option>Interruptor</option><option>Tubulação</option><option>Registro</option><option>Bomba</option><option>Motor</option><option>Painel</option><option>Ar-condicionado</option><option>Mobiliário</option><option>Outro</option></select></label><label>Descrição *<textarea id="description" rows="5"></textarea></label><label>Foto<input id="photoInput" type="file" accept="image/*" capture="environment"></label><img id="photoPreview" class="photo-preview"><div id="reportMessage" class="message"></div><div class="modal-actions"><button id="cancelReport" class="btn btn-secondary">Cancelar</button><button id="sendReport" class="btn">Gravar ocorrência</button></div></div></div>
 
-<div id="manageModal" class="modal"><div class="modal-box"><h2>Gerenciar ocorrência</h2><label>Alterado por *<input id="manageChangedBy"></label><label>Categoria<select id="manageCategory"></select></label><label>Componente<select id="manageComponent"></select></label><label>Descrição<textarea id="manageDescription" rows="4"></textarea></label><label>Status<select id="manageStatus"><option>Aberta</option><option>Em atendimento</option><option>Aguardando peça</option><option>Concluída</option><option>Cancelada</option></select></label><label>Responsável<input id="manageResponsible"></label><label>Solução<textarea id="manageSolution" rows="4"></textarea></label><label>Foto da ocorrência<input id="manageOccurrencePhotoInput" type="file" accept="image/*" capture="environment"></label><img id="manageOccurrencePhotoPreview" class="photo-preview"><div id="conclusionPhotoArea" class="hidden"><label>Foto da conclusão<input id="conclusionPhotoInput" type="file" accept="image/*" capture="environment"></label><img id="conclusionPhotoPreview" class="photo-preview"></div><div id="manageMessage" class="message"></div><div class="modal-actions"><button id="cancelManage" class="btn btn-secondary">Cancelar</button><button id="saveManage" class="btn">Salvar alterações</button></div></div></div>
+<div id="manageModal" class="modal"><div class="modal-box"><h2>Gerenciar ocorrência</h2><label>Alterado por *<input id="manageChangedBy"></label><label>Categoria<select id="manageCategory"></select></label><label>Componente<select id="manageComponent"></select></label><label>Descrição<textarea id="manageDescription" rows="4"></textarea></label><label>Status<select id="manageStatus"><option>Aberta</option><option>Em atendimento</option><option>Aguardando peça</option><option>Concluída</option><option>Cancelada</option></select></label><label>Responsável<input id="manageResponsible"></label><label>Solução<textarea id="manageSolution" rows="4"></textarea></label><label>Foto da ocorrência<input id="manageOccurrencePhotoInput" type="file" accept="image/*"></label><div id="manageOccurrencePhotoStatus" class="muted" style="margin-top:5px"></div><img id="manageOccurrencePhotoPreview" class="photo-preview"><div id="conclusionPhotoArea" class="hidden"><label>Foto da conclusão<input id="conclusionPhotoInput" type="file" accept="image/*"></label><div id="conclusionPhotoStatus" class="muted" style="margin-top:5px"></div><img id="conclusionPhotoPreview" class="photo-preview"></div><div id="manageMessage" class="message"></div><div class="modal-actions"><button id="cancelManage" class="btn btn-secondary">Cancelar</button><button id="saveManage" class="btn">Salvar alterações</button></div></div></div>
 
 <form id="manageForm" method="POST" target="manageFrame" style="display:none"><input name="action" value="updateOccurrence"><input name="systemSessionToken" id="m_system_session"><input name="token" id="m_token"><input name="ocorrencia" id="m_occurrence"><input name="status" id="m_status"><input name="responsavel" id="m_responsible"><input name="solucao" id="m_solution"><input name="alteradoPor" id="m_changedBy"><input name="descricaoOcorrencia" id="m_description"><input name="categoriaOcorrenciaEdit" id="m_category"><input name="componenteAfetadoEdit" id="m_component"><input name="fotoOcorrenciaBase64" id="m_occurrencePhoto"><input name="fotoOcorrenciaNome" id="m_occurrencePhotoName"><input name="fotoOcorrenciaMime" id="m_occurrencePhotoMime"><input name="fotoConclusaoBase64" id="m_photo"><input name="fotoConclusaoNome" id="m_photoName"><input name="fotoConclusaoMime" id="m_photoMime"></form>
 <iframe id="manageFrame" name="manageFrame"></iframe>
@@ -471,9 +471,86 @@ async function savePreventive(){if(preventivePosting)return;const responsible=$(
 function openReport(){$("reporterName").value=getSavedResponsible();$("reportMessage").className="message";$("reportMessage").innerHTML="";$("sendReport").disabled=false;$("sendReport").textContent="Gravar ocorrência";$("cancelReport").textContent="Cancelar";$("reportModal").style.display="flex"}
 async function sendReport(){if(reportPosting)return;const name=$("reporterName").value.trim(),description=$("description").value.trim();if(!name||!$("category").value||!$("component").value||!description){$("reportMessage").className="message error";$("reportMessage").textContent="Preencha os campos obrigatórios.";return}saveResponsible(name);reportPosting=true;$("sendReport").disabled=true;$("sendReport").textContent="Gravando...";$("reportMessage").className="message loading";$("reportMessage").textContent="Registrando ocorrência...";try{const r=await apiPost({action:"reportOccurrence",id:currentAsset.id,reportadoPor:name,contato:$("reporterContact").value,categoriaOcorrencia:$("category").value,componenteAfetado:$("component").value,descricao:description,fotoBase64:photoData?.base64||"",fotoNome:photoData?.name||"",fotoMime:photoData?.mime||""});if(!r.ok)throw new Error(r.detail||"Não foi possível registrar a ocorrência.");let n="";if(r.notificacaoPrestador==="Sim")n=`<br><br>📧 <b>Prestador notificado:</b><br>${esc(r.emailPrestador)}`;else if(r.notificacaoPrestador==="Não - sem e-mail")n="<br><br>⚠️ Prestador configurado para receber a ocorrência, mas sem e-mail cadastrado.";else if(r.notificacaoPrestador==="Erro")n="<br><br>⚠️ A ocorrência foi registrada, mas houve erro ao notificar o prestador.";else n="<br><br>ℹ️ Este prestador não está configurado para receber notificações de ocorrência.";$("reportMessage").className="message success";$("reportMessage").innerHTML=`✅ Ocorrência <b>${esc(r.ocorrencia)}</b> registrada com sucesso.${n}`;$("sendReport").textContent="Ocorrência gravada";$("cancelReport").textContent="Fechar"}catch(e){reportPosting=false;$("sendReport").disabled=false;$("sendReport").textContent="Gravar ocorrência";$("reportMessage").className="message error";$("reportMessage").textContent=e.message}}
 const CATEGORIES=["Civil","Sanitário","Elétrica","Hidráulica","Climatização","Refrigeração","Utilidades","Segurança","Mobiliário","Equipamento","Outros"],COMPONENTS=["Geral","Piso","Parede","Teto","Porta","Janela","Vaso Sanitário","Pia","Torneira","Descarga","Mictório","Ralo","Luminária","Tomada","Interruptor","Tubulação","Registro","Bomba","Motor","Painel","Ar-condicionado","Mobiliário","Outro"];
-function buildManageDropdowns(){$("manageCategory").innerHTML=CATEGORIES.map(x=>`<option>${esc(x)}</option>`).join("");$("manageComponent").innerHTML=COMPONENTS.map(x=>`<option>${esc(x)}</option>`).join("")}function openManage(i){selectedOccurrence=history[i];correctionPhotoData=null;conclusionPhotoData=null;$("manageChangedBy").value=getSavedResponsible();$("manageCategory").value=selectedOccurrence.categoriaOcorrencia||"Outros";$("manageComponent").value=selectedOccurrence.componenteAfetado||"Geral";$("manageDescription").value=selectedOccurrence.descricao||"";$("manageStatus").value=selectedOccurrence.status||"Aberta";$("manageResponsible").value=selectedOccurrence.responsavel||"";$("manageSolution").value=selectedOccurrence.solucao||"";toggleConclusion();$("manageModal").style.display="flex"}function toggleConclusion(){if($("manageStatus").value==="Concluída")show("conclusionPhotoArea");else hide("conclusionPhotoArea")}
-function saveManage(){if(managePosting)return;if(!systemSession?.systemSessionToken){$("manageMessage").className="message error";$("manageMessage").textContent="Faça login no Menu Principal para alterar a ocorrência.";return}const changedBy=$("manageChangedBy").value.trim();if(!changedBy){$("manageMessage").className="message error";$("manageMessage").textContent="Informe quem está realizando a alteração.";return}managePosting=true;saveResponsible(changedBy);$("saveManage").disabled=true;$("saveManage").textContent="Salvando...";$("m_token").value="";$("m_system_session").value=systemSession.systemSessionToken;$("m_occurrence").value=selectedOccurrence.ocorrencia;$("m_status").value=$("manageStatus").value;$("m_responsible").value=$("manageResponsible").value;$("m_solution").value=$("manageSolution").value;$("m_changedBy").value=changedBy;$("m_description").value=$("manageDescription").value;$("m_category").value=$("manageCategory").value;$("m_component").value=$("manageComponent").value;if(correctionPhotoData){$("m_occurrencePhoto").value=correctionPhotoData.base64;$("m_occurrencePhotoName").value=correctionPhotoData.name;$("m_occurrencePhotoMime").value=correctionPhotoData.mime}else{$("m_occurrencePhoto").value="";$("m_occurrencePhotoName").value="";$("m_occurrencePhotoMime").value=""}if(conclusionPhotoData){$("m_photo").value=conclusionPhotoData.base64;$("m_photoName").value=conclusionPhotoData.name;$("m_photoMime").value=conclusionPhotoData.mime}else{$("m_photo").value="";$("m_photoName").value="";$("m_photoMime").value=""}$("manageForm").action=API_URL;$("manageForm").submit()}
-$("photoInput").onchange=async function(){if(!this.files[0]){photoData=null;$("photoPreview").style.display="none";return}photoData=await processPhoto(this.files[0]);$("photoPreview").src=photoData.dataUrl;$("photoPreview").style.display="block"};$("preventivePhotoInput").onchange=async function(){if(!this.files[0]){preventivePhotoData=null;$("preventivePhotoPreview").style.display="none";return}preventivePhotoData=await processPhoto(this.files[0]);$("preventivePhotoPreview").src=preventivePhotoData.dataUrl;$("preventivePhotoPreview").style.display="block"};$("manageOccurrencePhotoInput").onchange=async function(){if(!this.files[0])return;correctionPhotoData=await processPhoto(this.files[0]);$("manageOccurrencePhotoPreview").src=correctionPhotoData.dataUrl;$("manageOccurrencePhotoPreview").style.display="block"};$("conclusionPhotoInput").onchange=async function(){if(!this.files[0])return;conclusionPhotoData=await processPhoto(this.files[0]);$("conclusionPhotoPreview").src=conclusionPhotoData.dataUrl;$("conclusionPhotoPreview").style.display="block"};$("manageFrame").onload=function(){if(!managePosting)return;managePosting=false;$("manageModal").style.display="none";location.reload()};
+function buildManageDropdowns(){$("manageCategory").innerHTML=CATEGORIES.map(x=>`<option>${esc(x)}</option>`).join("");$("manageComponent").innerHTML=COMPONENTS.map(x=>`<option>${esc(x)}</option>`).join("")}function openManage(i){selectedOccurrence=history[i];correctionPhotoData=null;conclusionPhotoData=null;$("manageOccurrencePhotoInput").value="";$("conclusionPhotoInput").value="";if($("manageOccurrencePhotoStatus"))$("manageOccurrencePhotoStatus").textContent="";if($("conclusionPhotoStatus"))$("conclusionPhotoStatus").textContent="";$("manageOccurrencePhotoPreview").style.display="none";$("conclusionPhotoPreview").style.display="none";$("manageChangedBy").value=getSavedResponsible();$("manageCategory").value=selectedOccurrence.categoriaOcorrencia||"Outros";$("manageComponent").value=selectedOccurrence.componenteAfetado||"Geral";$("manageDescription").value=selectedOccurrence.descricao||"";$("manageStatus").value=selectedOccurrence.status||"Aberta";$("manageResponsible").value=selectedOccurrence.responsavel||"";$("manageSolution").value=selectedOccurrence.solucao||"";toggleConclusion();$("manageModal").style.display="flex"}function toggleConclusion(){if($("manageStatus").value==="Concluída")show("conclusionPhotoArea");else hide("conclusionPhotoArea")}
+async function saveManage(){
+  if(managePosting)return;
+
+  if(!systemSession?.systemSessionToken){
+    $("manageMessage").className="message error";
+    $("manageMessage").textContent="Faça login no Menu Principal para alterar a ocorrência.";
+    return;
+  }
+
+  const changedBy=$("manageChangedBy").value.trim();
+
+  if(!changedBy){
+    $("manageMessage").className="message error";
+    $("manageMessage").textContent="Informe quem está realizando a alteração.";
+    return;
+  }
+
+  managePosting=true;
+  saveResponsible(changedBy);
+
+  const btn=$("saveManage");
+  btn.disabled=true;
+  btn.textContent="Salvando...";
+
+  $("manageMessage").className="message loading";
+  $("manageMessage").textContent="Salvando alterações e evidências...";
+
+  try{
+    const payload={
+      action:"updateOccurrence",
+      systemSessionToken:systemSession.systemSessionToken,
+      ocorrencia:selectedOccurrence.ocorrencia,
+      status:$("manageStatus").value,
+      responsavel:$("manageResponsible").value,
+      solucao:$("manageSolution").value,
+      alteradoPor:changedBy,
+      descricaoOcorrencia:$("manageDescription").value,
+      categoriaOcorrenciaEdit:$("manageCategory").value,
+      componenteAfetadoEdit:$("manageComponent").value,
+
+      fotoOcorrenciaBase64:correctionPhotoData?.base64||"",
+      fotoOcorrenciaNome:correctionPhotoData?.name||"",
+      fotoOcorrenciaMime:correctionPhotoData?.mime||"",
+
+      fotoConclusaoBase64:conclusionPhotoData?.base64||"",
+      fotoConclusaoNome:conclusionPhotoData?.name||"",
+      fotoConclusaoMime:conclusionPhotoData?.mime||""
+    };
+
+    const r=await apiPost(payload);
+
+    if(!r.ok){
+      throw new Error(r.detail||"Não foi possível salvar a ocorrência.");
+    }
+
+    $("manageMessage").className="message success";
+
+    let evidence="";
+    if(r.fotoCorrecaoSalva)evidence+="<br>📷 Foto da ocorrência salva.";
+    if(r.fotoConclusaoSalva)evidence+="<br>📷 Foto da conclusão salva.";
+
+    $("manageMessage").innerHTML="✅ Alterações salvas com sucesso."+evidence;
+
+    btn.textContent="Alterações salvas";
+
+    setTimeout(()=>{
+      $("manageModal").style.display="none";
+      location.reload();
+    },900);
+
+  }catch(e){
+    managePosting=false;
+    btn.disabled=false;
+    btn.textContent="Salvar alterações";
+    $("manageMessage").className="message error";
+    $("manageMessage").textContent=e.message;
+  }
+}
+$("photoInput").onchange=async function(){if(!this.files[0]){photoData=null;$("photoPreview").style.display="none";return}photoData=await processPhoto(this.files[0]);$("photoPreview").src=photoData.dataUrl;$("photoPreview").style.display="block"};$("preventivePhotoInput").onchange=async function(){if(!this.files[0]){preventivePhotoData=null;$("preventivePhotoPreview").style.display="none";return}preventivePhotoData=await processPhoto(this.files[0]);$("preventivePhotoPreview").src=preventivePhotoData.dataUrl;$("preventivePhotoPreview").style.display="block"};$("manageOccurrencePhotoInput").onchange=async function(){if(!this.files[0]){correctionPhotoData=null;$("manageOccurrencePhotoPreview").style.display="none";if($("manageOccurrencePhotoStatus"))$("manageOccurrencePhotoStatus").textContent="";return}if($("manageOccurrencePhotoStatus"))$("manageOccurrencePhotoStatus").textContent="Preparando imagem...";correctionPhotoData=await processPhoto(this.files[0]);$("manageOccurrencePhotoPreview").src=correctionPhotoData.dataUrl;$("manageOccurrencePhotoPreview").style.display="block";if($("manageOccurrencePhotoStatus"))$("manageOccurrencePhotoStatus").textContent="📷 Imagem selecionada: "+this.files[0].name};$("conclusionPhotoInput").onchange=async function(){if(!this.files[0]){conclusionPhotoData=null;$("conclusionPhotoPreview").style.display="none";if($("conclusionPhotoStatus"))$("conclusionPhotoStatus").textContent="";return}if($("conclusionPhotoStatus"))$("conclusionPhotoStatus").textContent="Preparando imagem...";conclusionPhotoData=await processPhoto(this.files[0]);$("conclusionPhotoPreview").src=conclusionPhotoData.dataUrl;$("conclusionPhotoPreview").style.display="block";if($("conclusionPhotoStatus"))$("conclusionPhotoStatus").textContent="📷 Imagem selecionada: "+this.files[0].name};$("manageFrame").onload=function(){if(!managePosting)return;managePosting=false;$("manageModal").style.display="none";location.reload()};
 
 
 const PASSWORD_EYE_OPEN=`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path><circle cx="12" cy="12" r="2.8"></circle></svg>`;
