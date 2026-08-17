@@ -243,7 +243,7 @@
 
 <form id="manageForm" method="POST" target="manageFrame" style="display:none"><input name="action" value="updateOccurrence"><input name="systemSessionToken" id="m_system_session"><input name="token" id="m_token"><input name="ocorrencia" id="m_occurrence"><input name="status" id="m_status"><input name="responsavel" id="m_responsible"><input name="solucao" id="m_solution"><input name="alteradoPor" id="m_changedBy"><input name="descricaoOcorrencia" id="m_description"><input name="categoriaOcorrenciaEdit" id="m_category"><input name="componenteAfetadoEdit" id="m_component"><input name="fotoOcorrenciaBase64" id="m_occurrencePhoto"><input name="fotoOcorrenciaNome" id="m_occurrencePhotoName"><input name="fotoOcorrenciaMime" id="m_occurrencePhotoMime"><input name="fotoConclusaoBase64" id="m_photo"><input name="fotoConclusaoNome" id="m_photoName"><input name="fotoConclusaoMime" id="m_photoMime"></form>
 <iframe id="manageFrame" name="manageFrame"></iframe>
-<div class="footer">QRManut • Versão 7.4.5.3</div>
+<div class="footer">QRManut • Versão 7.4.5.4</div>
 </div>
 <script>
 const API_URL="https://script.google.com/macros/s/AKfycbx4tpC42Q6WdkNhTUTAGoZWvG5M24zwlNscnwbDP5B3Q5pWo8B32-Lf0rQ2Xtua1AFMAQ/exec";
@@ -901,6 +901,289 @@ const QR_PLACEHOLDERS={
   }
 };
 
+
+const QR_ROUTINE_PT_EN={
+  "Buscar":"Search",
+  "Digite pelo menos 2 caracteres para iniciar a busca.":"Type at least 2 characters to start searching.",
+  "← Voltar ao equipamento":"← Back to Asset",
+
+  "⚠️ OCs Pendentes":"⚠️ Pending Work Orders",
+  "Prestador":"Service Provider",
+  "Status":"Status",
+  "Categoria":"Category",
+  "Pavimento":"Floor",
+  "Localização":"Location",
+  "Todos os prestadores":"All service providers",
+  "Todos os status":"All statuses",
+  "Todas as categorias":"All categories",
+  "Todos os pavimentos":"All floors",
+  "Todas as localizações":"All locations",
+  "Aplicar filtros":"Apply Filters",
+  "Limpar filtros":"Clear Filters",
+
+  "📊 Relatório de OCs Concluídas":"📊 Completed Work Order Report",
+  "O período considera a data em que a ocorrência foi concluída.":"The period is based on the date the work order was completed.",
+  "Data inicial":"Start date",
+  "Data final":"End date",
+  "Componente":"Component",
+  "Todos os componentes":"All components",
+  "Consultar":"Search",
+  "📄 Gerar PDF":"📄 Generate PDF",
+  "PDF do relatório":"Report PDF",
+
+  "📄 Documentos Técnicos":"📄 Technical Documents",
+  "Tipo":"Type",
+  "Disciplina":"Discipline",
+  "Todos":"All",
+  "Todas":"All",
+
+  "📤 Upload de Documentos":"📤 Upload Documents",
+  "Disponível para MASTER e GESTOR. Somente PDF, até 8 MB.":"Available to MASTER and MANAGER. PDF only, up to 8 MB.",
+  "Título *":"Title *",
+  "Tipo *":"Type *",
+  "Ambiente":"Environment",
+  "Assunto":"Subject",
+  "Revisão":"Revision",
+  "ID do Ativo (opcional)":"Asset ID (optional)",
+  "Observações":"Notes",
+  "Arquivo PDF *":"PDF File *",
+  "Nenhum arquivo selecionado.":"No file selected.",
+  "Sem prestador específico":"No specific service provider",
+  "Selecione":"Select",
+  "Enviar documento":"Upload Document",
+  "Limpar campos":"Clear Fields",
+  "← Voltar ao Menu Principal":"← Back to Main Menu",
+
+  "⚙️ Configuração da Empresa":"⚙️ Company Configuration",
+  "Dados institucionais desta implantação dedicada.":"Institutional data for this dedicated deployment.",
+  "ID Empresa":"Company ID",
+  "Nome da Empresa *":"Company Name *",
+  "Nome Fantasia":"Trade Name",
+  "E-mail de Manutenção":"Maintenance Email",
+  "E-mail Administrativo":"Administrative Email",
+  "Nome do Sistema *":"System Name *",
+  "Cor Principal":"Primary Color",
+  "Fuso Horário":"Time Zone",
+  "URL Principal":"Main URL",
+  "E-mail de Relatórios":"Reports Email",
+  "Logo (URL)":"Logo (URL)",
+  "Empresa ativa":"Active company",
+  "Pré-visualização":"Preview",
+  "Salvar configuração":"Save Configuration",
+
+  "🏢 Prestadores":"🏢 Service Providers",
+  "Regras operacionais herdadas pelos usuários.":"Operational rules inherited by linked users.",
+  "+ Novo prestador":"+ New provider",
+
+  "🧾 Auditoria":"🧾 Audit",
+  "Trilha de eventos administrativos e operacionais. Consulta exclusiva do perfil MASTER.":"Administrative and operational event trail. MASTER access only.",
+  "Ação":"Action",
+  "Resultado":"Result",
+  "Usuário":"User",
+  "Busca":"Search",
+  "Todas as ações":"All actions",
+  "Todos os resultados":"All results",
+  "Todos os usuários":"All users",
+
+  "👥 Gestão de Usuários":"👥 User Management",
+  "Cada funcionário deve possuir um usuário individual.":"Each employee must have an individual user account.",
+  "+ Novo usuário":"+ New user",
+
+  "Competência":"Period",
+  "Atualizar":"Refresh",
+  "Voltar":"Back",
+  "Conclusão da competência":"Period completion",
+  "🔴 Pendentes":"🔴 Pending",
+  "✅ Realizadas":"✅ Completed",
+  "📧 Relatório da competência":"📧 Period Report",
+  "Gera um PDF com as preventivas realizadas e pendentes e envia o arquivo por e-mail.":"Generates a PDF with completed and pending preventive maintenance and sends it by email.",
+  "📧 Enviar relatório da competência":"📧 Send Period Report",
+
+  "Carregando...":"Loading...",
+  "Classificação":"Classification",
+  "Características Técnicas":"Technical Specifications",
+  "Gestão do Ativo":"Asset Management",
+  "📚 Documentos do Equipamento":"📚 Equipment Documents",
+  "Reportar Serviço / Anomalia / Reparo":"Report Service / Issue / Repair",
+  "🛠️ Registrar Preventiva":"🛠️ Register Preventive Maintenance",
+  "Histórico de Manutenção":"Maintenance History",
+
+  "🔐 Acesso ao QRManut":"🔐 QRManut Access",
+  "O acesso ao Menu Principal é individual e controlado por perfil e escopo.":"Main Menu access is individual and controlled by role and scope.",
+  "Usuário ou e-mail":"Username or email",
+  "Senha":"Password",
+  "Esqueci minha senha":"Forgot my password",
+  "Cancelar":"Cancel",
+  "Entrar":"Sign In",
+
+  "🔑 Recuperar senha":"🔑 Recover Password",
+  "Informe seu usuário ou e-mail. Se o cadastro existir, o QRManut enviará as instruções.":"Enter your username or email. If the account exists, QRManut will send instructions.",
+  "Enviar instruções":"Send Instructions",
+
+  "Nova senha":"New Password",
+  "Confirmar senha":"Confirm Password",
+  "Mínimo de 8 caracteres, com letra maiúscula, minúscula, número e caractere especial.":"Minimum 8 characters, including uppercase, lowercase, number and special character.",
+  "Salvar senha":"Save Password",
+
+  "👤 Novo usuário":"👤 New User",
+  "Nome *":"Name *",
+  "Usuário/Login *":"Username/Login *",
+  "E-mail *":"Email *",
+  "Perfil *":"Role *",
+  "Vínculo interno / sem prestador":"Internal account / no provider",
+  "Criar e enviar convite":"Create and Send Invite",
+
+  "🏢 Prestador":"🏢 Service Provider",
+  "Nome/Razão Social *":"Name/Legal Name *",
+  "Ativo":"Active",
+  "Exigir assinatura":"Require signature",
+  "Foto obrigatória":"Photo required",
+  "Observação obrigatória":"Notes required",
+  "Pode registrar preventiva":"Can register preventive maintenance",
+  "Pode atender OC":"Can handle work orders",
+  "Notificar OC":"Notify work order",
+  "Enviar relatório":"Send report",
+  "E-mail OC":"Work Order Email",
+  "E-mail Relatório":"Report Email",
+  "Salvar prestador":"Save Provider",
+
+  "🛠️ Registrar Manutenção Preventiva":"🛠️ Register Preventive Maintenance",
+  "Periodicidade:":"Frequency:",
+  "Prestador:":"Service Provider:",
+  "Competência:":"Period:",
+  "Responsável pela preventiva *":"Preventive maintenance technician *",
+  "Observação":"Notes",
+  "Foto / evidência":"Photo / evidence",
+  "✍️ Assinatura do responsável":"✍️ Technician Signature",
+  "Assine no quadro usando o dedo ou mouse.":"Sign in the box using your finger or mouse.",
+  "Limpar assinatura":"Clear Signature",
+  "Registrar Preventiva":"Register Preventive Maintenance",
+
+  "Seu nome *":"Your name *",
+  "Contato":"Contact",
+  "Descrição *":"Description *",
+  "Foto":"Photo",
+  "Gravar ocorrência":"Save Work Order",
+
+  "Gerenciar ocorrência":"Manage Work Order",
+  "Alterado por *":"Changed by *",
+  "Descrição":"Description",
+  "Responsável":"Responsible",
+  "Solução":"Solution",
+  "Foto da ocorrência / correção":"Work Order / Correction Photo",
+  "📷 Tirar foto":"📷 Take Photo",
+  "🖼️ Anexar imagem":"🖼️ Attach Image",
+  "Foto da conclusão":"Completion Photo",
+  "Salvar alterações":"Save Changes",
+
+  "Aberta":"Open",
+  "Em atendimento":"In progress",
+  "Aguardando peça":"Waiting for part",
+  "Concluída":"Completed",
+  "Cancelada":"Cancelled"
+};
+
+const QR_ROUTINE_EN_PT=Object.fromEntries(
+  Object.entries(QR_ROUTINE_PT_EN).map(([pt,en])=>[en,pt])
+);
+
+const qrOriginalOptionValues=new WeakMap();
+
+function qrTranslateTextNode(node){
+  if(!node || node.nodeType!==Node.TEXT_NODE)return;
+
+  const raw=node.nodeValue;
+  const trimmed=raw.trim();
+  if(!trimmed)return;
+
+  let translated=trimmed;
+
+  if(qrLanguage==="en-US"){
+    translated=QR_ROUTINE_PT_EN[trimmed]||trimmed;
+  }else{
+    translated=QR_ROUTINE_EN_PT[trimmed]||trimmed;
+  }
+
+  if(translated!==trimmed){
+    const left=raw.match(/^\s*/)?.[0]||"";
+    const right=raw.match(/\s*$/)?.[0]||"";
+    node.nodeValue=left+translated+right;
+  }
+}
+
+function qrTranslateElementTree(root){
+  if(!root)return;
+
+  // Preserve option internal values before changing visible text.
+  root.querySelectorAll?.("option").forEach(opt=>{
+    if(!qrOriginalOptionValues.has(opt)){
+      const original=opt.hasAttribute("value")?opt.getAttribute("value"):opt.textContent.trim();
+      qrOriginalOptionValues.set(opt,original);
+      if(!opt.hasAttribute("value"))opt.setAttribute("value",original);
+    }
+
+    const current=opt.textContent.trim();
+    const translated=qrLanguage==="en-US"
+      ? (QR_ROUTINE_PT_EN[current]||current)
+      : (QR_ROUTINE_EN_PT[current]||current);
+
+    if(translated!==current)opt.textContent=translated;
+  });
+
+  const walker=document.createTreeWalker(
+    root,
+    NodeFilter.SHOW_TEXT,
+    {
+      acceptNode(node){
+        const parent=node.parentElement;
+        if(!parent)return NodeFilter.FILTER_REJECT;
+        if(["SCRIPT","STYLE","TEXTAREA","INPUT"].includes(parent.tagName))return NodeFilter.FILTER_REJECT;
+        if(parent.tagName==="OPTION")return NodeFilter.FILTER_REJECT;
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    }
+  );
+
+  let node;
+  while((node=walker.nextNode())){
+    qrTranslateTextNode(node);
+  }
+}
+
+function qrTranslateRoutineScreens(){
+  [
+    "searchArea","pendingArea","occurrenceReportArea","documentsArea",
+    "documentUploadArea","companyArea","providersAdminArea","auditArea",
+    "usersArea","preventiveControlArea","assetScreen","systemLoginModal",
+    "forgotPasswordModal","setPasswordModal","userModal","providerModal",
+    "preventiveModal","reportModal","manageModal"
+  ].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el)qrTranslateElementTree(el);
+  });
+}
+
+function qrInstallRoutineObserver(){
+  if(window.__qrRoutineObserver)return;
+
+  window.__qrRoutineObserver=new MutationObserver(mutations=>{
+    for(const m of mutations){
+      m.addedNodes.forEach(node=>{
+        if(node.nodeType===Node.ELEMENT_NODE){
+          qrTranslateElementTree(node);
+        }else if(node.nodeType===Node.TEXT_NODE){
+          qrTranslateTextNode(node);
+        }
+      });
+    }
+  });
+
+  window.__qrRoutineObserver.observe(document.body,{
+    childList:true,
+    subtree:true
+  });
+}
+
 function qrApplyLanguage(lang){
   qrLanguage=lang==="en-US"?"en-US":"pt-BR";
   try{localStorage.setItem(QR_LANG_KEY,qrLanguage)}catch(e){}
@@ -923,6 +1206,8 @@ function qrApplyLanguage(lang){
   if(en)en.classList.toggle("active",qrLanguage==="en-US");
 
   document.documentElement.lang=qrLanguage==="en-US"?"en":"pt-BR";
+
+  qrTranslateRoutineScreens();
 
   // Headings/labels that have no functional event attached.
   const safeText=[
@@ -954,9 +1239,11 @@ function qrLoadLanguage(){
 
 document.getElementById("qrLangPt").addEventListener("click",function(){
   qrApplyLanguage("pt-BR");
+  qrTranslateRoutineScreens();
 });
 document.getElementById("qrLangEn").addEventListener("click",function(){
   qrApplyLanguage("en-US");
+  qrTranslateRoutineScreens();
 });
 
 $("openSystemLoginButton").onclick=()=>requireSystemLogin(openMainMenu);$("forgotPasswordButton").onclick=openForgotPassword;$("cancelRecovery").onclick=()=>{$("forgotPasswordModal").style.display="none";$("systemLoginModal").style.display="flex"};$("sendRecovery").onclick=sendRecovery;$("saveNewPassword").onclick=savePasswordFromToken;$("tabUsers").onclick=showUsersTab;$("newUserButton").onclick=openNewUser;$("tabAudit").onclick=showAuditTab;$("tabProvidersAdmin").onclick=showProvidersAdminTab;$("tabCompany").onclick=showCompanyTab;$("companyBackMenu").onclick=showSearchTab;$("providersBackMenu").onclick=showSearchTab;$("newProviderButton").onclick=()=>openProviderModal(null);$("cancelProvider").onclick=()=>{$("providerModal").style.display="none"};$("saveProvider").onclick=saveProviderAdmin;$("saveCompanyConfig").onclick=saveCompanyConfig;["companyName","companyTradeName","companySystemName","companyLogo"].forEach(id=>$(id).oninput=updateCompanyPreview);$("auditRefresh").onclick=loadAudit;$("auditClear").onclick=clearAuditFilters;$("auditSearch").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();loadAudit()}};$("cancelUser").onclick=()=>{$("userModal").style.display="none"};$("saveUser").onclick=saveUser;$("sendSystemLogin").onclick=doSystemLogin;$("systemPassword").onkeydown=e=>{if(e.key==="Enter")doSystemLogin()};$("cancelSystemLogin").onclick=()=>{systemLoginNextAction=null;$("systemLoginModal").style.display="none";if(!systemSession)showMenuGate()};$("systemLogoutButton").onclick=logoutSystemMenu;$("installAppButton").onclick=installQRManut;$("tabSearch").onclick=showSearchTab;$("tabPending").onclick=showPendingTab;$("pendingApplyFilters").onclick=loadPending;$("pendingClearFilters").onclick=clearPendingFilters;$("tabOccurrenceReport").onclick=showOccurrenceReportTab;$("tabPreventive").onclick=showPreventiveTab;$("tabDocuments").onclick=showDocumentsTab;$("tabDocumentUpload").onclick=showDocumentUploadTab;$("documentUploadBackMenu").onclick=cancelDocumentUpload;$("uploadDocumentFile").onchange=prepareDocumentUploadFile;$("sendDocumentUpload").onclick=sendDocumentUpload;$("clearDocumentUpload").onclick=clearDocumentUploadForm;$("searchButton").onclick=searchAssets;$("searchInput").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();searchAssets()}};$("documentSearchButton").onclick=searchDocuments;$("documentSearchInput").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();searchDocuments()}};$("documentTypeFilter").onchange=searchDocuments;$("documentDisciplineFilter").onchange=searchDocuments;$("documentFloorFilter").onchange=searchDocuments;$("reportButton").onclick=openReport;$("preventiveButton").onclick=requestPreventive;
@@ -965,6 +1252,21 @@ $("backAssetButton").onclick=function(){const id=getOriginAsset();if(!id)return;
 $("occReportRefresh").onclick=loadOccurrenceReport;$("occReportPdf").onclick=generateOccurrenceReportPdf;["occReportStart","occReportEnd","occReportProvider","occReportCategory","occReportComponent","occReportFloor","occReportLocation"].forEach(id=>$(id).onchange=markOccurrenceReportDirty);$("controlRefresh").onclick=refreshPreventiveControl;$("controlCompetence").onchange=loadPreventiveControl;$("controlProvider").onchange=()=>{if(["MASTER","GESTOR"].includes(systemSession?.perfil))loadPreventiveControl();else renderControlList()};$("controlAll").onclick=()=>setControlMode("all");$("controlPending").onclick=()=>setControlMode("pending");$("controlDone").onclick=()=>setControlMode("done");$("sendMonthlyReport").onclick=sendMonthlyPreventiveReport;
 $("preventiveLogout").onclick=()=>showSearchTab();$("cancelPreventive").onclick=()=>{if(!preventivePosting)$("preventiveModal").style.display="none"};$("savePreventive").onclick=savePreventive;$("cancelReport").onclick=function(){if(reportPosting){if($("sendReport").textContent==="Ocorrência gravada"){reportPosting=false;$("reportModal").style.display="none";location.reload()}return}$("reportModal").style.display="none"};$("sendReport").onclick=sendReport;$("historySelect").onchange=function(){renderHistoryItem(Number(this.value))};$("manageStatus").onchange=toggleConclusion;$("cancelManage").onclick=()=>{if(!managePosting)$("manageModal").style.display="none"};$("saveManage").onclick=saveManage;$("signatureCanvas").addEventListener("pointerdown",signatureStart);$("signatureCanvas").addEventListener("pointermove",signatureMove);window.addEventListener("pointerup",signatureEnd);$("clearSignature").onclick=clearSignatureCanvas;
 qrLoadLanguage();
+qrInstallRoutineObserver();
+qrTranslateRoutineScreens();
+
+[
+  "tabSearch","tabPending","tabOccurrenceReport","tabPreventive",
+  "tabDocuments","tabDocumentUpload","tabUsers","tabAudit",
+  "tabProvidersAdmin","tabCompany","reportButton","preventiveButton"
+].forEach(id=>{
+  const el=document.getElementById(id);
+  if(el)el.addEventListener("click",()=>{
+    setTimeout(qrTranslateRoutineScreens,0);
+    setTimeout(qrTranslateRoutineScreens,250);
+  });
+});
+
 async function main(){buildManageDropdowns();setupPasswordToggles();readPreventiveSession();readSystemSession();setupInstallExperience();await loadPublicAppConfig();if(await openSetPasswordFromUrl())return;$("controlCompetence").value=currentCompetence();setDefaultOccurrenceReportDates();const id=getId();if(!id||id==="EQBUSCA"){clearOriginAsset();show("searchScreen");if(await systemSessionIsValid())openMainMenu();else showMenuGate();return}await loadAsset(id)}main();
 </script>
 </body>
