@@ -243,7 +243,7 @@
 
 <form id="manageForm" method="POST" target="manageFrame" style="display:none"><input name="action" value="updateOccurrence"><input name="systemSessionToken" id="m_system_session"><input name="token" id="m_token"><input name="ocorrencia" id="m_occurrence"><input name="status" id="m_status"><input name="responsavel" id="m_responsible"><input name="solucao" id="m_solution"><input name="alteradoPor" id="m_changedBy"><input name="descricaoOcorrencia" id="m_description"><input name="categoriaOcorrenciaEdit" id="m_category"><input name="componenteAfetadoEdit" id="m_component"><input name="fotoOcorrenciaBase64" id="m_occurrencePhoto"><input name="fotoOcorrenciaNome" id="m_occurrencePhotoName"><input name="fotoOcorrenciaMime" id="m_occurrencePhotoMime"><input name="fotoConclusaoBase64" id="m_photo"><input name="fotoConclusaoNome" id="m_photoName"><input name="fotoConclusaoMime" id="m_photoMime"></form>
 <iframe id="manageFrame" name="manageFrame"></iframe>
-<div class="footer">QRManut • Versão 7.4.5.4</div>
+<div class="footer">QRManut • Versão 7.4.5.5</div>
 </div>
 <script>
 const API_URL="https://script.google.com/macros/s/AKfycbx4tpC42Q6WdkNhTUTAGoZWvG5M24zwlNscnwbDP5B3Q5pWo8B32-Lf0rQ2Xtua1AFMAQ/exec";
@@ -1080,7 +1080,63 @@ const QR_ROUTINE_PT_EN={
   "Em atendimento":"In progress",
   "Aguardando peça":"Waiting for part",
   "Concluída":"Completed",
-  "Cancelada":"Cancelled"
+  "Cancelada":"Cancelled",
+  "Instalar QRManut no celular":"Install QRManut on this device",
+  "Menu Principal protegido":"Protected Main Menu",
+  "A ficha do equipamento e o registro de ocorrências continuam disponíveis pelo QR Code. Para acessar a Gestão Rápida, identifique-se.":"The equipment record and work order reporting remain available through the QR Code. Sign in to access the Main Menu.",
+  "Entrar no Menu Principal":"Sign In to Main Menu",
+  "Sair do Menu":"Sign Out",
+  "Acesso":"Access",
+  "Perfil":"Role",
+  "Previstas":"Planned",
+  "Realizadas":"Completed",
+  "Pendentes":"Pending",
+  "Conclusão":"Completion",
+  "Período":"Period",
+  "Atualizando...":"Refreshing...",
+  "Consultando...":"Searching...",
+  "Consultando OCs concluídas...":"Loading completed work orders...",
+  "OCs concluídas":"Completed work orders",
+  "Tempo médio":"Average time",
+  "Categorias":"Categories",
+  "Prestadores":"Service providers",
+  "Abertas":"Open",
+  "Atendimento":"In progress",
+  "Aguardando peça":"Waiting for part",
+  "Total":"Total",
+  "Abrir ficha":"Open record",
+  "Observação do equipamento:":"Equipment note:",
+  "Equipamento sem Contrato":"Equipment without contract",
+  "Todas as categorias":"All categories",
+  "Todos os componentes":"All components",
+  "Todos os pavimentos":"All floors",
+  "Todas as localizações":"All locations",
+  "Todos os prestadores":"All service providers",
+  "Todos os status":"All statuses",
+  "Sem prestador específico":"No specific service provider",
+  "Selecione":"Select",
+  "Previsão":"Planned",
+  "Realizada":"Completed",
+  "Pendente":"Pending",
+  "Todas":"All",
+  "Todos":"All",
+  "Equipamentos":"Equipment",
+  "equipamento(s)":"equipment",
+  "OC(s) encontrada(s) com os filtros aplicados.":"work order(s) found with the applied filters.",
+  "OC(s) concluída(s) no período":"work order(s) completed in the period",
+  "dia(s)":"day(s)",
+  "Categoria:":"Category:",
+  "Pavimento:":"Floor:",
+  "Localização:":"Location:",
+  "Descrição:":"Description:",
+  "Prestador:":"Service Provider:",
+  "Status:":"Status:",
+  "Previstas:":"Planned:",
+  "Realizadas:":"Completed:",
+  "Pendentes:":"Pending:",
+  "Acesso:":"Access:",
+  "Perfil:":"Role:"
+
 };
 
 const QR_ROUTINE_EN_PT=Object.fromEntries(
@@ -1089,6 +1145,96 @@ const QR_ROUTINE_EN_PT=Object.fromEntries(
 
 const qrOriginalOptionValues=new WeakMap();
 
+
+function qrTranslateExactText(text){
+  const trimmed=String(text||"").trim();
+  if(!trimmed)return trimmed;
+
+  if(qrLanguage==="en-US"){
+    return QR_ROUTINE_PT_EN[trimmed]||trimmed;
+  }
+
+  return QR_ROUTINE_EN_PT[trimmed]||trimmed;
+}
+
+function qrTranslateCompositeText(text){
+  let t=String(text||"").trim();
+  if(!t)return t;
+
+  // Exact match first
+  const exact=qrTranslateExactText(t);
+  if(exact!==t)return exact;
+
+  if(qrLanguage==="en-US"){
+    const prefixes=[
+      ["Status:","Status:"],
+      ["Prestador:","Service Provider:"],
+      ["Categoria:","Category:"],
+      ["Pavimento:","Floor:"],
+      ["Localização:","Location:"],
+      ["Descrição:","Description:"],
+      ["Observação do equipamento:","Equipment note:"],
+      ["Previstas:","Planned:"],
+      ["Realizadas:","Completed:"],
+      ["Pendentes:","Pending:"],
+      ["Acesso:","Access:"],
+      ["Perfil:","Role:"]
+    ];
+
+    for(const [pt,en] of prefixes){
+      if(t.startsWith(pt)){
+        return en+t.slice(pt.length);
+      }
+    }
+
+    // Dynamic result sentences
+    let m=t.match(/^(\d+)\s+OC\(s\)\s+encontrada\(s\)\s+com\s+os\s+filtros\s+aplicados\.$/i);
+    if(m)return `${m[1]} work order(s) found with the applied filters.`;
+
+    m=t.match(/^(\d+)\s+OC\(s\)\s+concluída\(s\)\s+no\s+período\s+(.+)$/i);
+    if(m)return `${m[1]} work order(s) completed in the period ${m[2]}`;
+
+    m=t.match(/^(\d+(?:[.,]\d+)?)\s+dia\(s\)$/i);
+    if(m)return `${m[1]} day(s)`;
+
+    m=t.match(/^(\d+)\s+equipamento\(s\)$/i);
+    if(m)return `${m[1]} equipment`;
+
+    // Preventive title month text
+    m=t.match(/^Preventivas\s+[–-]\s+(.+)$/i);
+    if(m)return `Preventive Maintenance – ${m[1]}`;
+
+    // Provider summary line
+    m=t.match(/^Previstas:\s*(\d+)\s*•\s*Realizadas:\s*(\d+)\s*•\s*Pendentes:\s*(\d+)\s*•\s*(.+)$/i);
+    if(m)return `Planned: ${m[1]} • Completed: ${m[2]} • Pending: ${m[3]} • ${m[4]}`;
+  }
+
+  return t;
+}
+
+function qrTranslateOptionElement(opt){
+  if(!opt || opt.tagName!=="OPTION")return;
+
+  if(!qrOriginalOptionValues.has(opt)){
+    const original=opt.hasAttribute("value")
+      ? opt.getAttribute("value")
+      : opt.textContent.trim();
+
+    qrOriginalOptionValues.set(opt,original);
+
+    if(!opt.hasAttribute("value")){
+      opt.setAttribute("value",original);
+    }
+  }
+
+  const current=opt.textContent.trim();
+  const translated=qrTranslateCompositeText(current);
+
+  if(translated!==current){
+    opt.textContent=translated;
+  }
+}
+
 function qrTranslateTextNode(node){
   if(!node || node.nodeType!==Node.TEXT_NODE)return;
 
@@ -1096,13 +1242,7 @@ function qrTranslateTextNode(node){
   const trimmed=raw.trim();
   if(!trimmed)return;
 
-  let translated=trimmed;
-
-  if(qrLanguage==="en-US"){
-    translated=QR_ROUTINE_PT_EN[trimmed]||trimmed;
-  }else{
-    translated=QR_ROUTINE_EN_PT[trimmed]||trimmed;
-  }
+  const translated=qrTranslateCompositeText(trimmed);
 
   if(translated!==trimmed){
     const left=raw.match(/^\s*/)?.[0]||"";
@@ -1115,19 +1255,12 @@ function qrTranslateElementTree(root){
   if(!root)return;
 
   // Preserve option internal values before changing visible text.
+  if(root.tagName==="OPTION"){
+    qrTranslateOptionElement(root);
+  }
+
   root.querySelectorAll?.("option").forEach(opt=>{
-    if(!qrOriginalOptionValues.has(opt)){
-      const original=opt.hasAttribute("value")?opt.getAttribute("value"):opt.textContent.trim();
-      qrOriginalOptionValues.set(opt,original);
-      if(!opt.hasAttribute("value"))opt.setAttribute("value",original);
-    }
-
-    const current=opt.textContent.trim();
-    const translated=qrLanguage==="en-US"
-      ? (QR_ROUTINE_PT_EN[current]||current)
-      : (QR_ROUTINE_EN_PT[current]||current);
-
-    if(translated!==current)opt.textContent=translated;
+    qrTranslateOptionElement(opt);
   });
 
   const walker=document.createTreeWalker(
@@ -1150,6 +1283,42 @@ function qrTranslateElementTree(root){
   }
 }
 
+
+function qrTranslateAttributes(root){
+  if(!root)return;
+
+  root.querySelectorAll?.("input[placeholder],textarea[placeholder]").forEach(el=>{
+    const p=el.getAttribute("placeholder")||"";
+    if(!el.dataset.qrOriginalPlaceholder){
+      el.dataset.qrOriginalPlaceholder=p;
+    }
+
+    if(qrLanguage==="en-US"){
+      const translated=qrTranslateCompositeText(el.dataset.qrOriginalPlaceholder);
+      if(translated!==el.dataset.qrOriginalPlaceholder){
+        el.setAttribute("placeholder",translated);
+      }else if(el.dataset.qrOriginalPlaceholder==="Ex.: AC102_SP3P"){
+        el.setAttribute("placeholder","E.g.: AC102_SP3P");
+      }
+    }else{
+      el.setAttribute("placeholder",el.dataset.qrOriginalPlaceholder);
+    }
+  });
+
+  root.querySelectorAll?.("[title]").forEach(el=>{
+    const title=el.getAttribute("title")||"";
+    if(!el.dataset.qrOriginalTitle){
+      el.dataset.qrOriginalTitle=title;
+    }
+    if(qrLanguage==="en-US"){
+      const translated=qrTranslateCompositeText(el.dataset.qrOriginalTitle);
+      el.setAttribute("title",translated);
+    }else{
+      el.setAttribute("title",el.dataset.qrOriginalTitle);
+    }
+  });
+}
+
 function qrTranslateRoutineScreens(){
   [
     "searchArea","pendingArea","occurrenceReportArea","documentsArea",
@@ -1159,7 +1328,7 @@ function qrTranslateRoutineScreens(){
     "preventiveModal","reportModal","manageModal"
   ].forEach(id=>{
     const el=document.getElementById(id);
-    if(el)qrTranslateElementTree(el);
+    if(el){qrTranslateElementTree(el);qrTranslateAttributes(el);}
   });
 }
 
@@ -1171,6 +1340,7 @@ function qrInstallRoutineObserver(){
       m.addedNodes.forEach(node=>{
         if(node.nodeType===Node.ELEMENT_NODE){
           qrTranslateElementTree(node);
+          qrTranslateAttributes(node);
         }else if(node.nodeType===Node.TEXT_NODE){
           qrTranslateTextNode(node);
         }
@@ -1240,6 +1410,8 @@ function qrLoadLanguage(){
 document.getElementById("qrLangPt").addEventListener("click",function(){
   qrApplyLanguage("pt-BR");
   qrTranslateRoutineScreens();
+  qrTranslateElementTree(document.body);
+  qrTranslateAttributes(document.body);
 });
 document.getElementById("qrLangEn").addEventListener("click",function(){
   qrApplyLanguage("en-US");
@@ -1254,6 +1426,8 @@ $("preventiveLogout").onclick=()=>showSearchTab();$("cancelPreventive").onclick=
 qrLoadLanguage();
 qrInstallRoutineObserver();
 qrTranslateRoutineScreens();
+qrTranslateElementTree(document.body);
+qrTranslateAttributes(document.body);
 
 [
   "tabSearch","tabPending","tabOccurrenceReport","tabPreventive",
