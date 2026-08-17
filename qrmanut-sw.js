@@ -1,37 +1,28 @@
-{
-  "id": "./equip_formulario.html?id=EQBUSCA",
-  "name": "QRManut – Manutenção Inteligente",
-  "short_name": "QRManut",
-  "description": "Sistema QRManut para gestão de ativos, ocorrências e manutenções preventivas.",
-  "lang": "pt-BR",
+const CACHE_NAME = "qrmanut-static-7.4.5.2";
 
-  "start_url": "./equip_formulario.html?id=EQBUSCA",
-  "scope": "./",
+const STATIC_ASSETS = [
+  "./manifest.webmanifest",
+  "./qrmanut-180.png",
+  "./qrmanut-192.png",
+  "./qrmanut-512.png"
+];
 
-  "display": "standalone",
+self.addEventListener("install", event => {
+  event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(STATIC_ASSETS)).catch(() => null));
+  self.skipWaiting();
+});
 
-  "background_color": "#f5f7fa",
-  "theme_color": "#0b315e",
+self.addEventListener("activate", event => {
+  event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key)))).then(() => self.clients.claim()));
+});
 
-  "orientation": "portrait-primary",
-
-  "icons": [
-    {
-      "src": "./qrmanut-180.png",
-      "sizes": "180x180",
-      "type": "image/png"
-    },
-    {
-      "src": "./qrmanut-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "./qrmanut-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
-    }
-  ]
-}
+self.addEventListener("fetch", event => {
+  const request = event.request;
+  if (request.method !== "GET") return;
+  if (request.mode === "navigate") { event.respondWith(fetch(request)); return; }
+  const url = new URL(request.url);
+  if (url.origin !== self.location.origin) return;
+  const isStaticAsset = STATIC_ASSETS.some(asset => url.pathname.endsWith(asset.replace("./", "/")));
+  if (!isStaticAsset) return;
+  event.respondWith(caches.match(request).then(cached => cached || fetch(request)));
+});
