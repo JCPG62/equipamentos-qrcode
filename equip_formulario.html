@@ -28,7 +28,7 @@
 </div>
 <div class="container">
 
-<div id="searchScreen" class="hidden">
+<div id="searchScreen">
   <div class="search-title">QRManut</div>
   <div class="muted">Gestão rápida de manutenção</div>
   <button id="installAppButton" type="button" class="install-app-button hidden">📲 Instalar QRManut no celular</button>
@@ -243,7 +243,7 @@
 
 <form id="manageForm" method="POST" target="manageFrame" style="display:none"><input name="action" value="updateOccurrence"><input name="systemSessionToken" id="m_system_session"><input name="token" id="m_token"><input name="ocorrencia" id="m_occurrence"><input name="status" id="m_status"><input name="responsavel" id="m_responsible"><input name="solucao" id="m_solution"><input name="alteradoPor" id="m_changedBy"><input name="descricaoOcorrencia" id="m_description"><input name="categoriaOcorrenciaEdit" id="m_category"><input name="componenteAfetadoEdit" id="m_component"><input name="fotoOcorrenciaBase64" id="m_occurrencePhoto"><input name="fotoOcorrenciaNome" id="m_occurrencePhotoName"><input name="fotoOcorrenciaMime" id="m_occurrencePhotoMime"><input name="fotoConclusaoBase64" id="m_photo"><input name="fotoConclusaoNome" id="m_photoName"><input name="fotoConclusaoMime" id="m_photoMime"></form>
 <iframe id="manageFrame" name="manageFrame"></iframe>
-<div class="footer">QRManut • Versão 7.4.5.1</div>
+<div class="footer">QRManut • Versão 7.4.5.2</div>
 </div>
 <script>
 const API_URL="https://script.google.com/macros/s/AKfycbx4tpC42Q6WdkNhTUTAGoZWvG5M24zwlNscnwbDP5B3Q5pWo8B32-Lf0rQ2Xtua1AFMAQ/exec";
@@ -1075,30 +1075,6 @@ function applyLanguage(lang){
 }
 
 
-async function selectLanguageAndContinue(lang){
-  applyLanguage(lang);
-
-  try{
-    const id=getId();
-
-    if(!id || id==="EQBUSCA"){
-      hide("assetScreen");
-      show("searchScreen");
-
-      if(await systemSessionIsValid()){
-        openMainMenu();
-      }else{
-        showMenuGate();
-      }
-    }else{
-      show("assetScreen");
-    }
-  }catch(e){
-    // Mesmo se houver falha secundária, a interface não fica travada.
-    show("searchScreen");
-  }
-}
-
 function loadLanguage(){
   let saved="pt-BR";
 
@@ -1124,12 +1100,29 @@ function openNewUser(){$("userName").value="";$("userLogin").value="";$("userEma
 async function saveUser(){const b=$("saveUser");b.disabled=true;b.textContent="Criando...";try{const r=await menuApiPost({action:"createUser",userName:$("userName").value.trim(),userLogin:$("userLogin").value.trim(),userEmail:$("userEmail").value.trim(),userProviderId:$("userProvider").value,userProfile:$("userProfile").value});if(!r.ok)throw new Error(r.detail||"Não foi possível criar o usuário.");$("userMessage").className="message success";$("userMessage").textContent=r.message;setTimeout(async()=>{$("userModal").style.display="none";await loadUsers()},900)}catch(e){$("userMessage").className="message error";$("userMessage").textContent=e.message}finally{b.disabled=false;b.textContent="Criar e enviar convite"}}
 async function setUserStatus(id,status){if(!confirm(`Alterar o status do usuário para ${status}?`))return;try{const r=await menuApiPost({action:"updateUserStatus",userId:id,userStatus:status});if(!r.ok)throw new Error(r.detail||"Erro ao alterar usuário.");await loadUsers()}catch(e){alert(e.message)}}
 async function resendInviteUser(id){try{const r=await menuApiPost({action:"resendInvite",userId:id});if(!r.ok)throw new Error(r.detail||"Erro ao enviar convite.");alert("Convite enviado.")}catch(e){alert(e.message)}}
-$("langPt").onclick=()=>selectLanguageAndContinue("pt-BR");$("langEn").onclick=()=>selectLanguageAndContinue("en-US");$("openSystemLoginButton").onclick=()=>requireSystemLogin(openMainMenu);$("forgotPasswordButton").onclick=openForgotPassword;$("cancelRecovery").onclick=()=>{$("forgotPasswordModal").style.display="none";$("systemLoginModal").style.display="flex"};$("sendRecovery").onclick=sendRecovery;$("saveNewPassword").onclick=savePasswordFromToken;$("tabUsers").onclick=showUsersTab;$("newUserButton").onclick=openNewUser;$("tabAudit").onclick=showAuditTab;$("tabProvidersAdmin").onclick=showProvidersAdminTab;$("tabCompany").onclick=showCompanyTab;$("companyBackMenu").onclick=showSearchTab;$("providersBackMenu").onclick=showSearchTab;$("newProviderButton").onclick=()=>openProviderModal(null);$("cancelProvider").onclick=()=>{$("providerModal").style.display="none"};$("saveProvider").onclick=saveProviderAdmin;$("saveCompanyConfig").onclick=saveCompanyConfig;["companyName","companyTradeName","companySystemName","companyLogo"].forEach(id=>$(id).oninput=updateCompanyPreview);$("auditRefresh").onclick=loadAudit;$("auditClear").onclick=clearAuditFilters;$("auditSearch").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();loadAudit()}};$("cancelUser").onclick=()=>{$("userModal").style.display="none"};$("saveUser").onclick=saveUser;$("sendSystemLogin").onclick=doSystemLogin;$("systemPassword").onkeydown=e=>{if(e.key==="Enter")doSystemLogin()};$("cancelSystemLogin").onclick=()=>{systemLoginNextAction=null;$("systemLoginModal").style.display="none";if(!systemSession)showMenuGate()};$("systemLogoutButton").onclick=logoutSystemMenu;$("installAppButton").onclick=installQRManut;$("tabSearch").onclick=showSearchTab;$("tabPending").onclick=showPendingTab;$("pendingApplyFilters").onclick=loadPending;$("pendingClearFilters").onclick=clearPendingFilters;$("tabOccurrenceReport").onclick=showOccurrenceReportTab;$("tabPreventive").onclick=showPreventiveTab;$("tabDocuments").onclick=showDocumentsTab;$("tabDocumentUpload").onclick=showDocumentUploadTab;$("documentUploadBackMenu").onclick=cancelDocumentUpload;$("uploadDocumentFile").onchange=prepareDocumentUploadFile;$("sendDocumentUpload").onclick=sendDocumentUpload;$("clearDocumentUpload").onclick=clearDocumentUploadForm;$("searchButton").onclick=searchAssets;$("searchInput").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();searchAssets()}};$("documentSearchButton").onclick=searchDocuments;$("documentSearchInput").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();searchDocuments()}};$("documentTypeFilter").onchange=searchDocuments;$("documentDisciplineFilter").onchange=searchDocuments;$("documentFloorFilter").onchange=searchDocuments;$("reportButton").onclick=openReport;$("preventiveButton").onclick=requestPreventive;
+$("langPt").onclick=()=>applyLanguage("pt-BR");$("langEn").onclick=()=>applyLanguage("en-US");$("openSystemLoginButton").onclick=()=>requireSystemLogin(openMainMenu);$("forgotPasswordButton").onclick=openForgotPassword;$("cancelRecovery").onclick=()=>{$("forgotPasswordModal").style.display="none";$("systemLoginModal").style.display="flex"};$("sendRecovery").onclick=sendRecovery;$("saveNewPassword").onclick=savePasswordFromToken;$("tabUsers").onclick=showUsersTab;$("newUserButton").onclick=openNewUser;$("tabAudit").onclick=showAuditTab;$("tabProvidersAdmin").onclick=showProvidersAdminTab;$("tabCompany").onclick=showCompanyTab;$("companyBackMenu").onclick=showSearchTab;$("providersBackMenu").onclick=showSearchTab;$("newProviderButton").onclick=()=>openProviderModal(null);$("cancelProvider").onclick=()=>{$("providerModal").style.display="none"};$("saveProvider").onclick=saveProviderAdmin;$("saveCompanyConfig").onclick=saveCompanyConfig;["companyName","companyTradeName","companySystemName","companyLogo"].forEach(id=>$(id).oninput=updateCompanyPreview);$("auditRefresh").onclick=loadAudit;$("auditClear").onclick=clearAuditFilters;$("auditSearch").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();loadAudit()}};$("cancelUser").onclick=()=>{$("userModal").style.display="none"};$("saveUser").onclick=saveUser;$("sendSystemLogin").onclick=doSystemLogin;$("systemPassword").onkeydown=e=>{if(e.key==="Enter")doSystemLogin()};$("cancelSystemLogin").onclick=()=>{systemLoginNextAction=null;$("systemLoginModal").style.display="none";if(!systemSession)showMenuGate()};$("systemLogoutButton").onclick=logoutSystemMenu;$("installAppButton").onclick=installQRManut;$("tabSearch").onclick=showSearchTab;$("tabPending").onclick=showPendingTab;$("pendingApplyFilters").onclick=loadPending;$("pendingClearFilters").onclick=clearPendingFilters;$("tabOccurrenceReport").onclick=showOccurrenceReportTab;$("tabPreventive").onclick=showPreventiveTab;$("tabDocuments").onclick=showDocumentsTab;$("tabDocumentUpload").onclick=showDocumentUploadTab;$("documentUploadBackMenu").onclick=cancelDocumentUpload;$("uploadDocumentFile").onchange=prepareDocumentUploadFile;$("sendDocumentUpload").onclick=sendDocumentUpload;$("clearDocumentUpload").onclick=clearDocumentUploadForm;$("searchButton").onclick=searchAssets;$("searchInput").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();searchAssets()}};$("documentSearchButton").onclick=searchDocuments;$("documentSearchInput").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();searchDocuments()}};$("documentTypeFilter").onchange=searchDocuments;$("documentDisciplineFilter").onchange=searchDocuments;$("documentFloorFilter").onchange=searchDocuments;$("reportButton").onclick=openReport;$("preventiveButton").onclick=requestPreventive;
 $("searchAssetsButton").onclick=function(){if(currentAsset?.id)setOriginAsset(currentAsset.id);requireSystemLogin(()=>{hide("assetScreen");show("searchScreen");openMainMenu();focusBackAssetButton()})};
 $("backAssetButton").onclick=function(){const id=getOriginAsset();if(!id)return;clearOriginAsset();location.href="?id="+encodeURIComponent(id)};
 $("occReportRefresh").onclick=loadOccurrenceReport;$("occReportPdf").onclick=generateOccurrenceReportPdf;["occReportStart","occReportEnd","occReportProvider","occReportCategory","occReportComponent","occReportFloor","occReportLocation"].forEach(id=>$(id).onchange=markOccurrenceReportDirty);$("controlRefresh").onclick=refreshPreventiveControl;$("controlCompetence").onchange=loadPreventiveControl;$("controlProvider").onchange=()=>{if(["MASTER","GESTOR"].includes(systemSession?.perfil))loadPreventiveControl();else renderControlList()};$("controlAll").onclick=()=>setControlMode("all");$("controlPending").onclick=()=>setControlMode("pending");$("controlDone").onclick=()=>setControlMode("done");$("sendMonthlyReport").onclick=sendMonthlyPreventiveReport;
 $("preventiveLogout").onclick=()=>showSearchTab();$("cancelPreventive").onclick=()=>{if(!preventivePosting)$("preventiveModal").style.display="none"};$("savePreventive").onclick=savePreventive;$("cancelReport").onclick=function(){if(reportPosting){if($("sendReport").textContent==="Ocorrência gravada"){reportPosting=false;$("reportModal").style.display="none";location.reload()}return}$("reportModal").style.display="none"};$("sendReport").onclick=sendReport;$("historySelect").onchange=function(){renderHistoryItem(Number(this.value))};$("manageStatus").onchange=toggleConclusion;$("cancelManage").onclick=()=>{if(!managePosting)$("manageModal").style.display="none"};$("saveManage").onclick=saveManage;$("signatureCanvas").addEventListener("pointerdown",signatureStart);$("signatureCanvas").addEventListener("pointermove",signatureMove);window.addEventListener("pointerup",signatureEnd);$("clearSignature").onclick=clearSignatureCanvas;
-async function main(){buildManageDropdowns();setupPasswordToggles();readPreventiveSession();readSystemSession();setupInstallExperience();loadLanguage();await loadPublicAppConfig();if(await openSetPasswordFromUrl())return;$("controlCompetence").value=currentCompetence();setDefaultOccurrenceReportDates();const id=getId();if(!id||id==="EQBUSCA"){clearOriginAsset();show("searchScreen");if(await systemSessionIsValid())openMainMenu();else showMenuGate();return}await loadAsset(id)}main();
+async function main(){
+  try{loadLanguage();}catch(e){console.warn("Idioma:",e)}
+  buildManageDropdowns();
+  setupPasswordToggles();
+  readPreventiveSession();
+  readSystemSession();
+  setupInstallExperience();await loadPublicAppConfig();if(await openSetPasswordFromUrl())return;$("controlCompetence").value=currentCompetence();setDefaultOccurrenceReportDates();const id=getId();if(!id||id==="EQBUSCA"){clearOriginAsset();show("searchScreen");if(await systemSessionIsValid())openMainMenu();else showMenuGate();return}await loadAsset(id)}
+main().catch(function(e){
+  console.error("QRManut startup:",e);
+  try{
+    show("searchScreen");
+    hide("assetScreen");
+    if(!systemSession)showMenuGate();
+  }catch(err){
+    const s=document.getElementById("searchScreen");
+    if(s)s.classList.remove("hidden");
+  }
+});
 </script>
 </body>
 </html>
