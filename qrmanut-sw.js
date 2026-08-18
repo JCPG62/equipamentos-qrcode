@@ -1,6 +1,7 @@
-const CACHE_NAME = "qrmanut-static-7.4.5.6";
+const CACHE_NAME = "qrmanut-static-7.4.5.7";
 
 const STATIC_ASSETS = [
+  "./qrmanut-i18n-7457.js",
   "./manifest.webmanifest",
   "./qrmanut-180.png",
   "./qrmanut-192.png",
