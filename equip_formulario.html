@@ -207,6 +207,18 @@ html,body{max-width:100%;overflow-x:hidden}
   }
 }
 
+
+.asset-progress-note{
+  margin-top:10px;
+  padding:9px 11px;
+  border-radius:10px;
+  background:#f8fafc;
+  border:1px solid #e2e8f0;
+  color:#64748b;
+  font-size:.84rem;
+}
+.asset-progress-note.hidden{display:none!important}
+
 </style>
 </head>
 <body>
@@ -442,7 +454,7 @@ html,body{max-width:100%;overflow-x:hidden}
 
 <div id="assetScreen" class="hidden">
   <div class="card">
-    <h1 id="titulo">Carregando...</h1><div id="meta" class="muted"></div><div id="tipoBadge" class="badge"></div>
+    <h1 id="titulo">Carregando...</h1><div id="meta" class="muted"></div><div id="tipoBadge" class="badge"></div><div id="assetProgressNote" class="asset-progress-note hidden"></div>
     <div id="statusCard" class="status-card"><div id="statusTitle" class="status-title"></div><div id="statusInfo" class="status-info"></div></div>
     <div id="classificationSection" class="section hidden"><h3>Classificação</h3><div id="classification"></div></div>
     <div id="locationSection" class="section hidden"><h3>Localização</h3><div id="location"></div></div>
@@ -476,7 +488,7 @@ html,body{max-width:100%;overflow-x:hidden}
 
 <form id="manageForm" method="POST" target="manageFrame" style="display:none"><input name="action" value="updateOccurrence"><input name="systemSessionToken" id="m_system_session"><input name="token" id="m_token"><input name="ocorrencia" id="m_occurrence"><input name="status" id="m_status"><input name="responsavel" id="m_responsible"><input name="solucao" id="m_solution"><input name="alteradoPor" id="m_changedBy"><input name="descricaoOcorrencia" id="m_description"><input name="categoriaOcorrenciaEdit" id="m_category"><input name="componenteAfetadoEdit" id="m_component"><input name="fotoOcorrenciaBase64" id="m_occurrencePhoto"><input name="fotoOcorrenciaNome" id="m_occurrencePhotoName"><input name="fotoOcorrenciaMime" id="m_occurrencePhotoMime"><input name="fotoConclusaoBase64" id="m_photo"><input name="fotoConclusaoNome" id="m_photoName"><input name="fotoConclusaoMime" id="m_photoMime"></form>
 <iframe id="manageFrame" name="manageFrame"></iframe>
-<div class="footer">QRManut • Versão 7.4.6.2</div>
+<div class="footer">QRManut • Versão 7.4.7</div>
 </div>
 <script>
 const API_URL="https://script.google.com/macros/s/AKfycbx4tpC42Q6WdkNhTUTAGoZWvG5M24zwlNscnwbDP5B3Q5pWo8B32-Lf0rQ2Xtua1AFMAQ/exec";
@@ -704,27 +716,121 @@ function renderPreventiveControl(){const d=preventiveControlData,s=d.summary;$("
 function setControlMode(m){preventiveControlMode=m;["controlAll","controlPending","controlDone"].forEach(id=>$(id).classList.remove("active"));$(m==="pending"?"controlPending":m==="done"?"controlDone":"controlAll").classList.add("active");renderControlList()}
 function renderControlList(){if(!preventiveControlData)return;let items=preventiveControlMode==="pending"?preventiveControlData.pendentes.map(x=>({...x,state:"pending"})):preventiveControlMode==="done"?preventiveControlData.realizadas.map(x=>({...x,state:"done"})):[...preventiveControlData.pendentes.map(x=>({...x,state:"pending"})),...preventiveControlData.realizadas.map(x=>({...x,state:"done"}))];$("controlListStatus").textContent=items.length+" equipamento(s)";$("controlResults").innerHTML=items.map(item=>`<div class="control-item ${item.state}"><div class="control-head"><div><b>${esc(item.id)}</b><div>${esc(item.nome)}</div></div><span class="control-status ${item.state}">${item.state==="done"?"✅ Realizada":"🔴 Pendente"}</span></div><div class="search-result-data"><b>Prestador:</b> ${esc(item.prestador)}<br><b>Pavimento:</b> ${esc(item.pavimento)}<br><b>Localização:</b> ${esc(item.localizacao)}${item.observacaoEquipamento?`<br><br><b>Observação do equipamento:</b><br>${esc(item.observacaoEquipamento)}`:""}${item.ultimoRegistro?`<br><br><b>Executada:</b> ${esc(formatDate(item.ultimoRegistro.data))}<br><b>Responsável:</b> ${esc(item.ultimoRegistro.responsavel)}${item.ultimoRegistro.observacao?`<br><b>Observação da preventiva:</b> ${esc(item.ultimoRegistro.observacao)}`:""}`:""}</div><a class="open-button" href="?id=${encodeURIComponent(normalizeId(item.id))}">Abrir ficha</a></div>`).join("")}
 async function sendMonthlyPreventiveReport(){if(!preventiveSession)return;const competencia=$("controlCompetence").value,provider=["MASTER","GESTOR"].includes(systemSession.perfil)?$("controlProvider").value:systemSession.prestador,s=preventiveControlData?.summary||{previstas:0,realizadas:0,pendentes:0},txt=$("controlTitle").textContent.replace("Preventivas – ",""),escopo=provider||"Todos os prestadores";if(!confirm(`Enviar relatório de ${txt}?\n\nEscopo: ${escopo}\n\nPrevistas: ${s.previstas}\nRealizadas: ${s.realizadas}\nPendentes: ${s.pendentes}`))return;const btn=$("sendMonthlyReport"),msg=$("monthlyReportMessage");btn.disabled=true;btn.textContent="Enviando relatório...";msg.className="message loading";msg.textContent="Gerando o PDF e enviando o relatório...";try{const r=await apiPost({action:"sendPreventiveReport",systemSessionToken:systemSession.systemSessionToken,competencia,reportProvider:provider||""});if(!r.ok)throw new Error(r.detail||"Não foi possível enviar o relatório.");msg.className="message success";msg.innerHTML=`✅ Relatório de <b>${esc(r.competenciaDescricao)}</b> enviado com sucesso.<br><br><b>Escopo:</b> ${esc(r.escopo)}<br><b>Destino:</b> ${esc(r.email)}<br><br><b>Previstas:</b> ${r.summary.previstas} • <b>Realizadas:</b> ${r.summary.realizadas} • <b>Pendentes:</b> ${r.summary.pendentes} • <b>Conclusão:</b> ${r.summary.percentual}%`}catch(e){msg.className="message error";msg.textContent=e.message}finally{btn.disabled=false;btn.textContent="📧 Enviar relatório da competência"}}
+
+async function loadAssetHistory747(id){
+  try{
+    const r=await api({action:"history",id});
+    if(r&&r.ok)return r.history||r.data||[];
+  }catch(e){}
+  try{
+    const b=await api({action:"assetbundle",id});
+    if(b&&b.ok)return b.history||[];
+  }catch(e){}
+  return [];
+}
+
+async function loadAssetDocuments747(id){
+  try{
+    const r=await api({action:"assetdocuments",id});
+    if(r&&r.ok)return r.documents||r.data||[];
+  }catch(e){}
+  try{
+    const b=await api({action:"assetbundle",id});
+    if(b&&b.ok)return b.documents||[];
+  }catch(e){}
+  return [];
+}
+
 async function loadAsset(id){
   hide("searchScreen");
   show("assetScreen");
-  const bundle=await api({action:"assetbundle",id});
-  if(!bundle.ok){
-    $("titulo").textContent="Ativo não encontrado";
-    return;
-  }
 
-  currentAsset=bundle.data;
-  renderAsset(currentAsset);
-  if(bundle.status){currentAssetStatus=bundle.status;renderStatus(bundle.status);}
-  renderHistory(bundle.history||[]);
-  renderAssetDocuments(bundle.documents||[]);
+  currentAsset=null;
+  currentAssetStatus=null;
+  history=[];
 
-  if(await sessionIsValid()&&(
-    ["MASTER","GESTOR"].includes(systemSession.perfil)||
-    !systemSession.prestador||
-    String(systemSession.prestador).toLowerCase()===String(currentAsset.prestador).toLowerCase()
-  )){
-    loadPreventiveHistory();
+  $("titulo").textContent=qrLanguage==="en-US"?"Loading asset...":"Carregando equipamento...";
+  $("meta").textContent="";
+  $("tipoBadge").textContent="";
+  $("statusTitle").textContent="";
+  $("statusInfo").textContent="";
+  $("historyStatus").textContent=qrLanguage==="en-US"?"Loading...":"Carregando...";
+  $("assetDocumentsStatus").textContent=qrLanguage==="en-US"?"Loading...":"Carregando...";
+  $("preventiveHistoryStatus").textContent=qrLanguage==="en-US"?"Loading...":"Carregando...";
+
+  show("assetProgressNote");
+  $("assetProgressNote").textContent=qrLanguage==="en-US"
+    ?"Loading essential asset data..."
+    :"Carregando os dados principais do equipamento...";
+
+  try{
+    // 7.4.7: primeiro carrega apenas o essencial para exibir a ficha rapidamente.
+    const basic=await api({action:"assetbasic",id});
+
+    if(!basic.ok){
+      $("titulo").textContent=qrLanguage==="en-US"?"Asset not found":"Ativo não encontrado";
+      hide("assetProgressNote");
+      return;
+    }
+
+    currentAsset=basic.data;
+    renderAsset(currentAsset);
+
+    $("assetProgressNote").textContent=qrLanguage==="en-US"
+      ?"Main record loaded. Loading operational details..."
+      :"Ficha principal carregada. Buscando os detalhes operacionais...";
+
+    // Dados secundários são carregados em paralelo e não bloqueiam a ficha.
+    const statusPromise=api({action:"assetstatus",id})
+      .then(r=>{
+        if(r?.ok&&r.data){
+          currentAssetStatus=r.data;
+          renderStatus(r.data);
+        }
+      })
+      .catch(()=>{});
+
+    const historyPromise=loadAssetHistory747(id)
+      .then(items=>{renderHistory(items||[]);})
+      .catch(()=>{
+        $("historyStatus").textContent=qrLanguage==="en-US"?"Unable to load history.":"Não foi possível carregar o histórico.";
+      });
+
+    const documentsPromise=loadAssetDocuments747(id)
+      .then(items=>{renderAssetDocuments(items||[]);})
+      .catch(()=>{
+        hide("assetDocumentsSection");
+        $("assetDocumentsStatus").textContent="";
+      });
+
+    const sessionOk=await sessionIsValid();
+
+    let preventivePromise=Promise.resolve();
+
+    if(sessionOk&&(
+      ["MASTER","GESTOR"].includes(systemSession.perfil)||
+      !systemSession.prestador||
+      String(systemSession.prestador).toLowerCase()===String(currentAsset.prestador).toLowerCase()
+    )){
+      preventivePromise=loadPreventiveHistory().catch(()=>{});
+    }else{
+      $("preventiveHistoryStatus").textContent=qrLanguage==="en-US"
+        ?"Sign in to view."
+        :"Login necessário para visualizar.";
+    }
+
+    Promise.allSettled([
+      statusPromise,
+      historyPromise,
+      documentsPromise,
+      preventivePromise
+    ]).then(()=>{
+      hide("assetProgressNote");
+    });
+
+  }catch(e){
+    $("titulo").textContent=qrLanguage==="en-US"?"Unable to load asset":"Não foi possível carregar o equipamento";
+    $("assetProgressNote").textContent=e.message||"";
   }
 }
 function renderAssetDocuments(items){if(!items||!items.length){hide("assetDocumentsSection");$("assetDocuments").innerHTML="";$("assetDocumentsStatus").textContent="";return}show("assetDocumentsSection");$("assetDocumentsStatus").textContent=items.length+" documento(s) relacionado(s) a este ativo";$("assetDocuments").innerHTML=items.map(d=>{const icon=String(d.tipoDocumento||"").toLowerCase()==="manual"?"📘":"📄";return `<div class="asset-document-card"><div class="document-title">${icon} ${esc(d.titulo)}</div><div class="document-meta">${d.tipoDocumento?`<b>Tipo:</b> ${esc(d.tipoDocumento)}<br>`:""}${d.disciplina?`<b>Disciplina:</b> ${esc(d.disciplina)}<br>`:""}${d.assunto?`<b>Assunto:</b> ${esc(d.assunto)}<br>`:""}${d.revisao?`<b>Revisão:</b> ${esc(d.revisao)}<br>`:""}${d.observacoes?`<b>Observações:</b> ${esc(d.observacoes)}`:""}</div>${d.linkPdf?`<a class="document-open" href="${esc(d.linkPdf)}" target="_blank" rel="noopener">👁️ Abrir PDF</a>`:""}</div>`}).join("")}
