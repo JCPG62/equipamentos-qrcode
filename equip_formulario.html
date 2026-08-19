@@ -331,14 +331,13 @@ html,body{max-width:100%;overflow-x:hidden}
     <div class="card">
       <div class="back-asset-wrap"><button id="occurrenceCatalogBackMenu" class="back-asset-btn">← Voltar ao Menu Principal</button></div>
       <h2 id="occurrenceCatalogTitle">🧩 Categorias e Componentes</h2>
-      <div id="occurrenceCatalogHelp" class="muted">Cadastre as opções exibidas no formulário de ocorrência. Componentes são vinculados a uma categoria.</div>
+      <div id="occurrenceCatalogHelp" class="muted">Cadastre as opções exibidas no formulário de ocorrência. Novos itens entram automaticamente no final da lista. Use ↑ e ↓ para reorganizar.</div>
 
       <div class="admin-grid" style="margin-top:12px">
         <div class="full"><h3 id="catalogCategoryHeading">Categorias</h3></div>
         <input id="catalogCategoryId" type="hidden">
         <label id="catalogCategoryPtLabel">Nome em português *<input id="catalogCategoryPt"></label>
         <label id="catalogCategoryEnLabel">Nome em inglês<input id="catalogCategoryEn"></label>
-        <label id="catalogCategoryOrderLabel">Ordem<input id="catalogCategoryOrder" type="number" value="0"></label>
         <label class="switch-row"><input id="catalogCategoryActive" type="checkbox" checked> <span id="catalogCategoryActiveLabel">Ativa</span></label>
         <div class="full occ-report-actions">
           <button id="saveCatalogCategory" class="btn btn-blue">Salvar categoria</button>
@@ -356,7 +355,6 @@ html,body{max-width:100%;overflow-x:hidden}
           <label id="catalogComponentCategoryLabel">Categoria *<select id="catalogComponentCategory"></select></label>
           <label id="catalogComponentPtLabel">Nome em português *<input id="catalogComponentPt"></label>
           <label id="catalogComponentEnLabel">Nome em inglês<input id="catalogComponentEn"></label>
-          <label id="catalogComponentOrderLabel">Ordem<input id="catalogComponentOrder" type="number" value="0"></label>
           <label class="switch-row"><input id="catalogComponentActive" type="checkbox" checked> <span id="catalogComponentActiveLabel">Ativo</span></label>
           <div class="full occ-report-actions">
             <button id="saveCatalogComponent" class="btn btn-blue">Salvar componente</button>
@@ -488,7 +486,7 @@ html,body{max-width:100%;overflow-x:hidden}
 
 <form id="manageForm" method="POST" target="manageFrame" style="display:none"><input name="action" value="updateOccurrence"><input name="systemSessionToken" id="m_system_session"><input name="token" id="m_token"><input name="ocorrencia" id="m_occurrence"><input name="status" id="m_status"><input name="responsavel" id="m_responsible"><input name="solucao" id="m_solution"><input name="alteradoPor" id="m_changedBy"><input name="descricaoOcorrencia" id="m_description"><input name="categoriaOcorrenciaEdit" id="m_category"><input name="componenteAfetadoEdit" id="m_component"><input name="fotoOcorrenciaBase64" id="m_occurrencePhoto"><input name="fotoOcorrenciaNome" id="m_occurrencePhotoName"><input name="fotoOcorrenciaMime" id="m_occurrencePhotoMime"><input name="fotoConclusaoBase64" id="m_photo"><input name="fotoConclusaoNome" id="m_photoName"><input name="fotoConclusaoMime" id="m_photoMime"></form>
 <iframe id="manageFrame" name="manageFrame"></iframe>
-<div class="footer">QRManut • Versão 7.4.7.1</div>
+<div class="footer">QRManut • Versão 7.4.8</div>
 </div>
 <script>
 const API_URL="https://script.google.com/macros/s/AKfycbx4tpC42Q6WdkNhTUTAGoZWvG5M24zwlNscnwbDP5B3Q5pWo8B32-Lf0rQ2Xtua1AFMAQ/exec";
@@ -1431,45 +1429,91 @@ async function loadOccurrenceCatalogAdmin(){
 
 function renderOccurrenceCatalogAdmin(){
   const d=occurrenceCatalogAdminData||{categorias:[],componentes:[]};
-  $("catalogCategoriesStatus").textContent=qrLanguage==="en-US"?`${d.categorias.length} categories`:`${d.categorias.length} categoria(s)`;
+
+  $("catalogCategoriesStatus").textContent=qrLanguage==="en-US"
+    ?`${d.categorias.length} categories`
+    :`${d.categorias.length} categoria(s)`;
+
   $("catalogCategoriesList").innerHTML=d.categorias.map((x,i)=>`
-    <div class="user-card"><b>${esc(catalogLabel(x))}</b>
-      <div class="search-result-data">ID: ${esc(x.idCategoria)}<br>${qrLanguage==="en-US"?"Portuguese":"Português"}: ${esc(x.nomePt)}<br>English: ${esc(x.nomeEn||"-")}<br>Status: ${x.ativo?(qrLanguage==="en-US"?"Active":"Ativa"):(qrLanguage==="en-US"?"Inactive":"Inativa")}<br>${qrLanguage==="en-US"?"Order":"Ordem"}: ${x.ordem}</div>
-      <button class="btn btn-secondary" style="margin-top:8px" onclick="editCatalogCategory(${i})">${qrLanguage==="en-US"?"Edit":"Editar"}</button>
+    <div class="user-card">
+      <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap">
+        <div>
+          <b>${esc(catalogLabel(x))}</b>
+          <div class="search-result-data">
+            ID: ${esc(x.idCategoria)}<br>
+            ${qrLanguage==="en-US"?"Portuguese":"Português"}: ${esc(x.nomePt)}<br>
+            English: ${esc(x.nomeEn||"-")}<br>
+            Status: ${x.ativo?(qrLanguage==="en-US"?"Active":"Ativa"):(qrLanguage==="en-US"?"Inactive":"Inativa")}
+          </div>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <button class="btn btn-secondary" onclick="moveCatalogCategory('${esc(x.idCategoria)}','up')" title="${qrLanguage==="en-US"?"Move up":"Mover para cima"}">↑</button>
+          <button class="btn btn-secondary" onclick="moveCatalogCategory('${esc(x.idCategoria)}','down')" title="${qrLanguage==="en-US"?"Move down":"Mover para baixo"}">↓</button>
+          <button class="btn btn-secondary" onclick="editCatalogCategory(${i})">${qrLanguage==="en-US"?"Edit":"Editar"}</button>
+        </div>
+      </div>
     </div>`).join("");
 
-  $("catalogComponentCategory").innerHTML=d.categorias.map(x=>`<option value="${esc(x.idCategoria)}">${esc(catalogLabel(x))}</option>`).join("");
+  $("catalogComponentCategory").innerHTML=d.categorias.map(x=>
+    `<option value="${esc(x.idCategoria)}">${esc(catalogLabel(x))}</option>`
+  ).join("");
 
-  $("catalogComponentsStatus").textContent=qrLanguage==="en-US"?`${d.componentes.length} components`:`${d.componentes.length} componente(s)`;
-  $("catalogComponentsList").innerHTML=d.componentes.map((x,i)=>{
-    const cat=d.categorias.find(c=>c.idCategoria===x.idCategoria);
-    return `<div class="user-card"><b>${esc(catalogLabel(x))}</b>
-      <div class="search-result-data">ID: ${esc(x.idComponente)}<br>${qrLanguage==="en-US"?"Category":"Categoria"}: ${esc(cat?catalogLabel(cat):x.idCategoria)}<br>${qrLanguage==="en-US"?"Portuguese":"Português"}: ${esc(x.nomePt)}<br>English: ${esc(x.nomeEn||"-")}<br>Status: ${x.ativo?(qrLanguage==="en-US"?"Active":"Ativo"):(qrLanguage==="en-US"?"Inactive":"Inativo")}<br>${qrLanguage==="en-US"?"Order":"Ordem"}: ${x.ordem}</div>
-      <button class="btn btn-secondary" style="margin-top:8px" onclick="editCatalogComponent(${i})">${qrLanguage==="en-US"?"Edit":"Editar"}</button>
-    </div>`;
-  }).join("");
+  $("catalogComponentsStatus").textContent=qrLanguage==="en-US"
+    ?`${d.componentes.length} components`
+    :`${d.componentes.length} componente(s)`;
+
+  const groups=d.categorias.map(cat=>({
+    cat,
+    items:d.componentes.filter(x=>x.idCategoria===cat.idCategoria)
+  })).filter(g=>g.items.length);
+
+  $("catalogComponentsList").innerHTML=groups.map(g=>`
+    <div style="margin-top:14px">
+      <h4 style="margin:0 0 8px">${esc(catalogLabel(g.cat))}</h4>
+      ${g.items.map(x=>{
+        const i=d.componentes.findIndex(c=>c.idComponente===x.idComponente);
+        return `<div class="user-card">
+          <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap">
+            <div>
+              <b>${esc(catalogLabel(x))}</b>
+              <div class="search-result-data">
+                ID: ${esc(x.idComponente)}<br>
+                ${qrLanguage==="en-US"?"Portuguese":"Português"}: ${esc(x.nomePt)}<br>
+                English: ${esc(x.nomeEn||"-")}<br>
+                Status: ${x.ativo?(qrLanguage==="en-US"?"Active":"Ativo"):(qrLanguage==="en-US"?"Inactive":"Inativo")}
+              </div>
+            </div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap">
+              <button class="btn btn-secondary" onclick="moveCatalogComponent('${esc(x.idComponente)}','up')" title="${qrLanguage==="en-US"?"Move up":"Mover para cima"}">↑</button>
+              <button class="btn btn-secondary" onclick="moveCatalogComponent('${esc(x.idComponente)}','down')" title="${qrLanguage==="en-US"?"Move down":"Mover para baixo"}">↓</button>
+              <button class="btn btn-secondary" onclick="editCatalogComponent(${i})">${qrLanguage==="en-US"?"Edit":"Editar"}</button>
+            </div>
+          </div>
+        </div>`;
+      }).join("")}
+    </div>`).join("");
 }
 
 function editCatalogCategory(i){
   const x=occurrenceCatalogAdminData.categorias[i];if(!x)return;
-  $("catalogCategoryId").value=x.idCategoria;$("catalogCategoryPt").value=x.nomePt;$("catalogCategoryEn").value=x.nomeEn||"";$("catalogCategoryOrder").value=x.ordem||0;$("catalogCategoryActive").checked=!!x.ativo;
+  $("catalogCategoryId").value=x.idCategoria;$("catalogCategoryPt").value=x.nomePt;$("catalogCategoryEn").value=x.nomeEn||"";$("catalogCategoryActive").checked=!!x.ativo;
   $("catalogCategoryPt").focus();
 }
 function clearCatalogCategoryForm(){
-  $("catalogCategoryId").value="";$("catalogCategoryPt").value="";$("catalogCategoryEn").value="";$("catalogCategoryOrder").value="0";$("catalogCategoryActive").checked=true;
+  $("catalogCategoryId").value="";$("catalogCategoryPt").value="";$("catalogCategoryEn").value="";$("catalogCategoryActive").checked=true;
 }
 function editCatalogComponent(i){
   const x=occurrenceCatalogAdminData.componentes[i];if(!x)return;
-  $("catalogComponentId").value=x.idComponente;$("catalogComponentCategory").value=x.idCategoria;$("catalogComponentPt").value=x.nomePt;$("catalogComponentEn").value=x.nomeEn||"";$("catalogComponentOrder").value=x.ordem||0;$("catalogComponentActive").checked=!!x.ativo;
+  $("catalogComponentId").value=x.idComponente;$("catalogComponentCategory").value=x.idCategoria;$("catalogComponentPt").value=x.nomePt;$("catalogComponentEn").value=x.nomeEn||"";$("catalogComponentActive").checked=!!x.ativo;
   $("catalogComponentPt").focus();
 }
 function clearCatalogComponentForm(){
-  $("catalogComponentId").value="";$("catalogComponentPt").value="";$("catalogComponentEn").value="";$("catalogComponentOrder").value="0";$("catalogComponentActive").checked=true;
+  $("catalogComponentId").value="";$("catalogComponentPt").value="";$("catalogComponentEn").value="";$("catalogComponentActive").checked=true;
 }
 async function saveCatalogCategory(){
   const b=$("saveCatalogCategory");b.disabled=true;b.textContent=qrLanguage==="en-US"?"Saving...":"Salvando...";
   try{
-    const r=await menuApiPost({action:"saveOccurrenceCategory",catalogCategoryId:$("catalogCategoryId").value,catalogCategoryPt:$("catalogCategoryPt").value.trim(),catalogCategoryEn:$("catalogCategoryEn").value.trim(),catalogCategoryActive:$("catalogCategoryActive").checked?"Sim":"Não",catalogCategoryOrder:$("catalogCategoryOrder").value});
+    const r=await menuApiPost({action:"saveOccurrenceCategory",catalogCategoryId:$("catalogCategoryId").value,catalogCategoryPt:$("catalogCategoryPt").value.trim(),catalogCategoryEn:$("catalogCategoryEn").value.trim(),catalogCategoryActive:$("catalogCategoryActive").checked?"Sim":"Não"});
     if(!r.ok)throw new Error(r.detail||"Erro ao salvar.");
     clearCatalogCategoryForm();await loadOccurrenceCatalogAdmin();
   }catch(e){$("occurrenceCatalogMessage").className="message error";$("occurrenceCatalogMessage").textContent=e.message}
@@ -1478,11 +1522,42 @@ async function saveCatalogCategory(){
 async function saveCatalogComponent(){
   const b=$("saveCatalogComponent");b.disabled=true;b.textContent=qrLanguage==="en-US"?"Saving...":"Salvando...";
   try{
-    const r=await menuApiPost({action:"saveOccurrenceComponent",catalogComponentId:$("catalogComponentId").value,catalogComponentCategoryId:$("catalogComponentCategory").value,catalogComponentPt:$("catalogComponentPt").value.trim(),catalogComponentEn:$("catalogComponentEn").value.trim(),catalogComponentActive:$("catalogComponentActive").checked?"Sim":"Não",catalogComponentOrder:$("catalogComponentOrder").value});
+    const r=await menuApiPost({action:"saveOccurrenceComponent",catalogComponentId:$("catalogComponentId").value,catalogComponentCategoryId:$("catalogComponentCategory").value,catalogComponentPt:$("catalogComponentPt").value.trim(),catalogComponentEn:$("catalogComponentEn").value.trim(),catalogComponentActive:$("catalogComponentActive").checked?"Sim":"Não"});
     if(!r.ok)throw new Error(r.detail||"Erro ao salvar.");
     clearCatalogComponentForm();await loadOccurrenceCatalogAdmin();
   }catch(e){$("occurrenceCatalogMessage").className="message error";$("occurrenceCatalogMessage").textContent=e.message}
   finally{b.disabled=false;b.textContent=qrLanguage==="en-US"?"Save Component":"Salvar componente"}
+}
+
+
+async function moveCatalogCategory(id,direction){
+  try{
+    const r=await menuApiPost({
+      action:"moveOccurrenceCategory",
+      catalogMoveId:id,
+      catalogMoveDirection:direction
+    });
+    if(!r.ok)throw new Error(r.detail||"Erro ao reorganizar categoria.");
+    await loadOccurrenceCatalogAdmin();
+  }catch(e){
+    $("occurrenceCatalogMessage").className="message error";
+    $("occurrenceCatalogMessage").textContent=e.message;
+  }
+}
+
+async function moveCatalogComponent(id,direction){
+  try{
+    const r=await menuApiPost({
+      action:"moveOccurrenceComponent",
+      catalogMoveId:id,
+      catalogMoveDirection:direction
+    });
+    if(!r.ok)throw new Error(r.detail||"Erro ao reorganizar componente.");
+    await loadOccurrenceCatalogAdmin();
+  }catch(e){
+    $("occurrenceCatalogMessage").className="message error";
+    $("occurrenceCatalogMessage").textContent=e.message;
+  }
 }
 
 let currentAuthToken="",currentAuthTokenType="";
@@ -2467,7 +2542,7 @@ function qrApplyLanguage(lang){
 
 
   if($("occurrenceCatalogTitle"))$("occurrenceCatalogTitle").textContent=qrLanguage==="en-US"?"🧩 Categories & Components":"🧩 Categorias e Componentes";
-  if($("occurrenceCatalogHelp"))$("occurrenceCatalogHelp").textContent=qrLanguage==="en-US"?"Manage the options shown in the work order form. Components are linked to a category.":"Cadastre as opções exibidas no formulário de ocorrência. Componentes são vinculados a uma categoria.";
+  if($("occurrenceCatalogHelp"))$("occurrenceCatalogHelp").textContent=qrLanguage==="en-US"?"Manage the options shown in the work order form. New items are added automatically at the end. Use ↑ and ↓ to reorder.":"Cadastre as opções exibidas no formulário de ocorrência. Novos itens entram automaticamente no final da lista. Use ↑ e ↓ para reorganizar.";
   if($("catalogCategoryHeading"))$("catalogCategoryHeading").textContent=qrLanguage==="en-US"?"Categories":"Categorias";
   if($("catalogComponentHeading"))$("catalogComponentHeading").textContent=qrLanguage==="en-US"?"Components":"Componentes";
   if(occurrenceCatalogAdminData)renderOccurrenceCatalogAdmin();
