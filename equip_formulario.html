@@ -488,7 +488,7 @@ html,body{max-width:100%;overflow-x:hidden}
 
 <form id="manageForm" method="POST" target="manageFrame" style="display:none"><input name="action" value="updateOccurrence"><input name="systemSessionToken" id="m_system_session"><input name="token" id="m_token"><input name="ocorrencia" id="m_occurrence"><input name="status" id="m_status"><input name="responsavel" id="m_responsible"><input name="solucao" id="m_solution"><input name="alteradoPor" id="m_changedBy"><input name="descricaoOcorrencia" id="m_description"><input name="categoriaOcorrenciaEdit" id="m_category"><input name="componenteAfetadoEdit" id="m_component"><input name="fotoOcorrenciaBase64" id="m_occurrencePhoto"><input name="fotoOcorrenciaNome" id="m_occurrencePhotoName"><input name="fotoOcorrenciaMime" id="m_occurrencePhotoMime"><input name="fotoConclusaoBase64" id="m_photo"><input name="fotoConclusaoNome" id="m_photoName"><input name="fotoConclusaoMime" id="m_photoMime"></form>
 <iframe id="manageFrame" name="manageFrame"></iframe>
-<div class="footer">QRManut • Versão 7.4.7</div>
+<div class="footer">QRManut • Versão 7.4.7.1</div>
 </div>
 <script>
 const API_URL="https://script.google.com/macros/s/AKfycbx4tpC42Q6WdkNhTUTAGoZWvG5M24zwlNscnwbDP5B3Q5pWo8B32-Lf0rQ2Xtua1AFMAQ/exec";
@@ -763,25 +763,99 @@ async function loadAsset(id){
     ?"Loading essential asset data..."
     :"Carregando os dados principais do equipamento...";
 
-  try{
-    // 7.4.7: primeiro carrega apenas o essencial para exibir a ficha rapidamente.
-    const basic=await api({action:"assetbasic",id});
+  let basicOk=false;
+  let bundleOk=false;
 
-    if(!basic.ok){
+  const bundlePromise=api({action:"assetbundle",id})
+    .then(bundle=>{
+      if(bundle?.ok&&bundle.data){
+        bundleOk=true;
+        currentAsset=bundle.data;
+        renderAsset(currentAsset);
+
+        if(bundle.status){
+          currentAssetStatus=bundle.status;
+          renderStatus(bundle.status);
+        }
+
+        renderHistory(bundle.history||[]);
+        renderAssetDocuments(bundle.documents||[]);
+
+        $("assetProgressNote").textContent=qrLanguage==="en-US"
+          ?"Main record loaded."
+          :"Ficha carregada.";
+      }
+      return bundle;
+    })
+    .catch(()=>null);
+
+  const basicPromise=api({action:"assetbasic",id})
+    .then(basic=>{
+      if(basic?.ok&&basic.data){
+        basicOk=true;
+
+        if(!currentAsset){
+          currentAsset=basic.data;
+          renderAsset(currentAsset);
+
+          $("assetProgressNote").textContent=qrLanguage==="en-US"
+            ?"Main record loaded. Loading operational details..."
+            :"Ficha principal carregada. Buscando os detalhes operacionais...";
+        }
+      }
+      return basic;
+    })
+    .catch(()=>null);
+
+  // Aguarda alguma rota localizar o ativo, mas não declara "não encontrado"
+  // enquanto a consulta tradicional ainda estiver em andamento.
+  await Promise.race([
+    basicPromise.then(r=>r?.ok&&r.data?true:new Promise(()=>{})),
+    bundlePromise.then(r=>r?.ok&&r.data?true:new Promise(()=>{})),
+    new Promise(resolve=>setTimeout(()=>resolve(false),12000))
+  ]);
+
+  if(!currentAsset){
+    await Promise.allSettled([basicPromise,bundlePromise]);
+
+    if(!basicOk&&!bundleOk){
       $("titulo").textContent=qrLanguage==="en-US"?"Asset not found":"Ativo não encontrado";
+      $("meta").textContent="";
+      $("tipoBadge").textContent="";
+      $("historyStatus").textContent="";
+      $("assetDocumentsStatus").textContent="";
+      $("preventiveHistoryStatus").textContent="";
       hide("assetProgressNote");
       return;
     }
+  }
 
-    currentAsset=basic.data;
-    renderAsset(currentAsset);
+  // Quando assetbundle terminar, ele completa status, histórico e documentos.
+  bundlePromise.then(async bundle=>{
+    if(bundle?.ok&&bundle.data){
+      try{
+        const sessionOk=await sessionIsValid();
 
-    $("assetProgressNote").textContent=qrLanguage==="en-US"
-      ?"Main record loaded. Loading operational details..."
-      :"Ficha principal carregada. Buscando os detalhes operacionais...";
+        if(sessionOk&&(
+          ["MASTER","GESTOR"].includes(systemSession.perfil)||
+          !systemSession.prestador||
+          String(systemSession.prestador).toLowerCase()===String(currentAsset.prestador).toLowerCase()
+        )){
+          loadPreventiveHistory().catch(()=>{});
+        }else{
+          $("preventiveHistoryStatus").textContent=qrLanguage==="en-US"
+            ?"Sign in to view."
+            :"Login necessário para visualizar.";
+        }
+      }catch(e){}
 
-    // Dados secundários são carregados em paralelo e não bloqueiam a ficha.
-    const statusPromise=api({action:"assetstatus",id})
+      hide("assetProgressNote");
+    }
+  });
+
+  // Se só a rota otimizada respondeu, mantém a ficha aberta e busca o restante.
+  if(currentAsset&&!bundleOk){
+    api({action:"assetstatus",id})
       .then(r=>{
         if(r?.ok&&r.data){
           currentAssetStatus=r.data;
@@ -790,47 +864,19 @@ async function loadAsset(id){
       })
       .catch(()=>{});
 
-    const historyPromise=loadAssetHistory747(id)
-      .then(items=>{renderHistory(items||[]);})
-      .catch(()=>{
-        $("historyStatus").textContent=qrLanguage==="en-US"?"Unable to load history.":"Não foi possível carregar o histórico.";
-      });
+    sessionIsValid()
+      .then(ok=>{
+        if(ok&&(
+          ["MASTER","GESTOR"].includes(systemSession.perfil)||
+          !systemSession.prestador||
+          String(systemSession.prestador).toLowerCase()===String(currentAsset.prestador).toLowerCase()
+        )){
+          loadPreventiveHistory().catch(()=>{});
+        }
+      })
+      .catch(()=>{});
 
-    const documentsPromise=loadAssetDocuments747(id)
-      .then(items=>{renderAssetDocuments(items||[]);})
-      .catch(()=>{
-        hide("assetDocumentsSection");
-        $("assetDocumentsStatus").textContent="";
-      });
-
-    const sessionOk=await sessionIsValid();
-
-    let preventivePromise=Promise.resolve();
-
-    if(sessionOk&&(
-      ["MASTER","GESTOR"].includes(systemSession.perfil)||
-      !systemSession.prestador||
-      String(systemSession.prestador).toLowerCase()===String(currentAsset.prestador).toLowerCase()
-    )){
-      preventivePromise=loadPreventiveHistory().catch(()=>{});
-    }else{
-      $("preventiveHistoryStatus").textContent=qrLanguage==="en-US"
-        ?"Sign in to view."
-        :"Login necessário para visualizar.";
-    }
-
-    Promise.allSettled([
-      statusPromise,
-      historyPromise,
-      documentsPromise,
-      preventivePromise
-    ]).then(()=>{
-      hide("assetProgressNote");
-    });
-
-  }catch(e){
-    $("titulo").textContent=qrLanguage==="en-US"?"Unable to load asset":"Não foi possível carregar o equipamento";
-    $("assetProgressNote").textContent=e.message||"";
+    hide("assetProgressNote");
   }
 }
 function renderAssetDocuments(items){if(!items||!items.length){hide("assetDocumentsSection");$("assetDocuments").innerHTML="";$("assetDocumentsStatus").textContent="";return}show("assetDocumentsSection");$("assetDocumentsStatus").textContent=items.length+" documento(s) relacionado(s) a este ativo";$("assetDocuments").innerHTML=items.map(d=>{const icon=String(d.tipoDocumento||"").toLowerCase()==="manual"?"📘":"📄";return `<div class="asset-document-card"><div class="document-title">${icon} ${esc(d.titulo)}</div><div class="document-meta">${d.tipoDocumento?`<b>Tipo:</b> ${esc(d.tipoDocumento)}<br>`:""}${d.disciplina?`<b>Disciplina:</b> ${esc(d.disciplina)}<br>`:""}${d.assunto?`<b>Assunto:</b> ${esc(d.assunto)}<br>`:""}${d.revisao?`<b>Revisão:</b> ${esc(d.revisao)}<br>`:""}${d.observacoes?`<b>Observações:</b> ${esc(d.observacoes)}`:""}</div>${d.linkPdf?`<a class="document-open" href="${esc(d.linkPdf)}" target="_blank" rel="noopener">👁️ Abrir PDF</a>`:""}</div>`}).join("")}
