@@ -242,6 +242,7 @@ html,body{max-width:100%;overflow-x:hidden}
     <button id="tabPreventive" class="menu-button preventive">🛠️ Status das Preventivas</button>
     <button id="tabDocuments" class="menu-button documents">📄 Documentos Técnicos</button>
     <button id="tabOccurrenceCatalog" class="menu-button hidden">🧩 Categorias e Componentes</button>
+    <button id="tabMaintenancePending" class="menu-button hidden">📌 Pendências / Providências</button>
     <button id="tabDocumentUpload" class="menu-button upload-doc hidden">📤 Upload de Documentos</button>
     <button id="tabUsers" class="menu-button users hidden">👥 Gestão de Usuários</button>
     <button id="tabAudit" class="menu-button audit hidden">🧾 Auditoria</button>
@@ -327,7 +328,43 @@ html,body{max-width:100%;overflow-x:hidden}
 
   
   
-  <div id="occurrenceCatalogArea" class="hidden">
+  
+  <div id="maintenancePendingArea" class="hidden">
+    <div class="card">
+      <div class="back-asset-wrap"><button id="maintenancePendingBackMenu" class="back-asset-btn">← Voltar ao Menu Principal</button></div>
+      <h2 id="maintenancePendingTitle">📌 Pendências / Providências</h2>
+      <div id="maintenancePendingHelp" class="muted">Necessidades identificadas durante as preventivas e que exigem alguma providência.</div>
+
+      <div class="filter-grid" style="margin-top:12px">
+        <label>Status<select id="maintenancePendingStatusFilter">
+          <option value="">Todos</option>
+          <option>Pendente</option>
+          <option>Em andamento</option>
+          <option>Resolvida</option>
+        </select></label>
+        <label>Prioridade<select id="maintenancePendingPriorityFilter">
+          <option value="">Todas</option>
+          <option>Crítica</option>
+          <option>Alta</option>
+          <option>Média</option>
+          <option>Baixa</option>
+        </select></label>
+        <label>Busca<input id="maintenancePendingSearch" placeholder="ID, ativo, equipamento, material ou OC"></label>
+      </div>
+
+      <div class="occ-report-actions" style="margin-top:10px">
+        <button id="maintenancePendingRefresh" class="btn btn-blue">Atualizar</button>
+        <button id="maintenancePendingClear" class="btn btn-secondary">Limpar filtros</button>
+      </div>
+
+      <div id="maintenancePendingSummary" class="pending-summary"></div>
+      <div id="maintenancePendingStatusText" class="muted" style="margin-top:10px"></div>
+      <div id="maintenancePendingResults"></div>
+      <div id="maintenancePendingMessage" class="message"></div>
+    </div>
+  </div>
+
+<div id="occurrenceCatalogArea" class="hidden">
     <div class="card">
       <div class="back-asset-wrap"><button id="occurrenceCatalogBackMenu" class="back-asset-btn">← Voltar ao Menu Principal</button></div>
       <h2 id="occurrenceCatalogTitle">🧩 Categorias e Componentes</h2>
@@ -478,7 +515,43 @@ html,body{max-width:100%;overflow-x:hidden}
 
 <div id="preventiveLoginModal" class="modal hidden"><div class="modal-box"><h2>🔐 Acesso às Preventivas</h2><div id="loginProviderInfo" class="preventive-info hidden"></div><label>Usuário<input id="preventiveUsername" autocomplete="username"></label><label>Senha<div class="password-wrap"><input id="preventivePassword" type="password" autocomplete="current-password"><button type="button" class="password-toggle" data-password-target="preventivePassword" aria-label="Mostrar senha" title="Mostrar senha"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path><circle cx="12" cy="12" r="2.8"></circle></svg></button></div></label><div id="loginMessage" class="message"></div><div class="modal-actions"><button id="cancelLogin" class="btn btn-secondary">Cancelar</button><button id="sendLogin" class="btn btn-green">Entrar</button></div></div></div>
 
-<div id="preventiveModal" class="modal"><div class="modal-box"><h2>🛠️ Registrar Manutenção Preventiva</h2><div class="preventive-info"><div><b>Ativo:</b> <span id="preventiveAsset"></span></div><div><b>Periodicidade:</b> <span id="preventivePeriodicity"></span></div><div><b>Prestador:</b> <span id="preventiveProvider"></span></div><div><b>Competência:</b> <span id="preventiveCompetence"></span></div></div><div id="preventiveRequirements" class="requirements-box"></div><label>Responsável pela preventiva *<input id="preventiveResponsible"></label><label>Observação<textarea id="preventiveObservation" rows="5"></textarea></label><label>Foto / evidência<input id="preventivePhotoInput" type="file" accept="image/*" capture="environment"></label><img id="preventivePhotoPreview" class="photo-preview"><div id="signatureBox" class="signature-box hidden"><div class="signature-title">✍️ Assinatura do responsável <span id="signatureRequiredText" class="required-yes"></span></div><div class="signature-help">Assine no quadro usando o dedo ou mouse.</div><div class="signature-canvas-wrap"><canvas id="signatureCanvas"></canvas></div><button id="clearSignature" type="button" class="btn btn-secondary" style="margin-top:8px">Limpar assinatura</button></div><div id="preventiveMessage" class="message"></div><div class="modal-actions"><button id="cancelPreventive" class="btn btn-secondary">Cancelar</button><button id="savePreventive" class="btn btn-green">Registrar Preventiva</button></div></div></div>
+<div id="preventiveModal" class="modal"><div class="modal-box"><h2>🛠️ Registrar Manutenção Preventiva</h2><div class="preventive-info"><div><b>Ativo:</b> <span id="preventiveAsset"></span></div><div><b>Periodicidade:</b> <span id="preventivePeriodicity"></span></div><div><b>Prestador:</b> <span id="preventiveProvider"></span></div><div><b>Competência:</b> <span id="preventiveCompetence"></span></div></div><div id="preventiveRequirements" class="requirements-box"></div><label>Responsável pela preventiva *<input id="preventiveResponsible"></label><label>Observação<textarea id="preventiveObservation" rows="5"></textarea></label>
+<label class="switch-row" style="margin-top:12px">
+  <input id="preventiveNeedsAction" type="checkbox">
+  <span id="preventiveNeedsActionLabel">Foi identificada alguma necessidade de providência?</span>
+</label>
+<div id="preventiveActionFields" class="hidden" style="border:1px solid #f59e0b;background:#fffbeb;border-radius:12px;padding:12px;margin-top:8px">
+  <h3 id="preventiveActionHeading" style="margin-top:0">📌 Providência necessária</h3>
+  <label>Tipo de providência *<select id="preventiveActionType">
+    <option value="">Selecione...</option>
+    <option>Compra de material/peça</option>
+    <option>Serviço especializado</option>
+    <option>Intervenção corretiva</option>
+    <option>Inspeção aprofundada</option>
+    <option>Orçamento</option>
+    <option>Substituição de componente</option>
+    <option>Outro</option>
+  </select></label>
+  <label>Descrição da necessidade *<textarea id="preventiveActionDescription" rows="4"></textarea></label>
+  <label>Prioridade *<select id="preventiveActionPriority">
+    <option>Média</option>
+    <option>Baixa</option>
+    <option>Alta</option>
+    <option>Crítica</option>
+  </select></label>
+  <div class="two-col">
+    <label>Material / peça<input id="preventiveActionMaterial"></label>
+    <label>Quantidade<input id="preventiveActionQuantity"></label>
+  </div>
+  <label>Condição de operação<select id="preventiveActionOperation">
+    <option value="">Não informado</option>
+    <option>Pode continuar operando</option>
+    <option>Pode operar com restrição</option>
+    <option>Não deve operar</option>
+  </select></label>
+  <div class="muted" id="preventiveActionNotice">Ao salvar a preventiva, esta necessidade será registrada em Pendências / Providências e comunicada aos responsáveis.</div>
+</div>
+<label>Foto / evidência<input id="preventivePhotoInput" type="file" accept="image/*" capture="environment"></label><img id="preventivePhotoPreview" class="photo-preview"><div id="signatureBox" class="signature-box hidden"><div class="signature-title">✍️ Assinatura do responsável <span id="signatureRequiredText" class="required-yes"></span></div><div class="signature-help">Assine no quadro usando o dedo ou mouse.</div><div class="signature-canvas-wrap"><canvas id="signatureCanvas"></canvas></div><button id="clearSignature" type="button" class="btn btn-secondary" style="margin-top:8px">Limpar assinatura</button></div><div id="preventiveMessage" class="message"></div><div class="modal-actions"><button id="cancelPreventive" class="btn btn-secondary">Cancelar</button><button id="savePreventive" class="btn btn-green">Registrar Preventiva</button></div></div></div>
 
 <div id="reportModal" class="modal"><div class="modal-box"><h2>Reportar Serviço / Anomalia / Reparo</h2><label>Seu nome *<input id="reporterName"></label><label>Contato<input id="reporterContact"></label><label><span id="reportCategoryLabel">Categoria *</span><select id="category"><option value="">Selecione...</option></select></label><label><span id="reportComponentLabel">Componente *</span><select id="component"><option value="">Selecione...</option></select></label><label>Descrição *<textarea id="description" rows="5"></textarea></label><label>Foto<input id="photoInput" type="file" accept="image/*" capture="environment"></label><img id="photoPreview" class="photo-preview"><div id="reportMessage" class="message"></div><div class="modal-actions"><button id="cancelReport" class="btn btn-secondary">Cancelar</button><button id="sendReport" class="btn">Gravar ocorrência</button></div></div></div>
 
@@ -486,7 +559,7 @@ html,body{max-width:100%;overflow-x:hidden}
 
 <form id="manageForm" method="POST" target="manageFrame" style="display:none"><input name="action" value="updateOccurrence"><input name="systemSessionToken" id="m_system_session"><input name="token" id="m_token"><input name="ocorrencia" id="m_occurrence"><input name="status" id="m_status"><input name="responsavel" id="m_responsible"><input name="solucao" id="m_solution"><input name="alteradoPor" id="m_changedBy"><input name="descricaoOcorrencia" id="m_description"><input name="categoriaOcorrenciaEdit" id="m_category"><input name="componenteAfetadoEdit" id="m_component"><input name="fotoOcorrenciaBase64" id="m_occurrencePhoto"><input name="fotoOcorrenciaNome" id="m_occurrencePhotoName"><input name="fotoOcorrenciaMime" id="m_occurrencePhotoMime"><input name="fotoConclusaoBase64" id="m_photo"><input name="fotoConclusaoNome" id="m_photoName"><input name="fotoConclusaoMime" id="m_photoMime"></form>
 <iframe id="manageFrame" name="manageFrame"></iframe>
-<div class="footer">QRManut • Versão 7.4.8</div>
+<div class="footer">QRManut • Versão 7.5.0</div>
 </div>
 <script>
 const API_URL="https://script.google.com/macros/s/AKfycbx4tpC42Q6WdkNhTUTAGoZWvG5M24zwlNscnwbDP5B3Q5pWo8B32-Lf0rQ2Xtua1AFMAQ/exec";
@@ -574,7 +647,7 @@ async function systemSessionIsValid(){if(!systemSession?.systemSessionToken)retu
 function menuApi(params){if(!systemSession?.systemSessionToken)return Promise.reject(new Error("Faça login no Menu Principal."));return api({...params,systemSession:systemSession.systemSessionToken})}
 function menuApiPost(params){if(!systemSession?.systemSessionToken)return Promise.reject(new Error("Faça login no Menu Principal."));return apiPost({...params,systemSessionToken:systemSession.systemSessionToken})}
 function renderSystemAccess(){if(!systemSession){hide("systemAccessInfo");return}show("systemAccessInfo");$("systemAccessText").innerHTML=`Acesso: <b>${esc(systemSession.nome||systemSession.usuario)}</b> • Perfil: <b>${esc(systemSession.perfil)}</b>${systemSession.prestador?` • Prestador: <b>${esc(systemSession.prestador)}</b>`:""}`}
-function updateRoleUi(){if(!systemSession)return;["MASTER","GESTOR"].includes(systemSession.perfil)?show("tabUsers"):hide("tabUsers");if(systemSession.perfil==="GESTOR")$("userProfile").innerHTML='<option value="PRESTADOR">PRESTADOR</option><option value="CONSULTA">CONSULTA</option>';else $("userProfile").innerHTML='<option value="PRESTADOR">PRESTADOR</option><option value="CONSULTA">CONSULTA</option><option value="GESTOR">GESTOR</option><option value="MASTER">MASTER</option>';systemSession.perfil==="MASTER"?show("tabAudit"):hide("tabAudit");systemSession.perfil==="MASTER"?show("tabProvidersAdmin"):hide("tabProvidersAdmin");systemSession.perfil==="MASTER"?show("tabCompany"):hide("tabCompany");["MASTER","GESTOR"].includes(systemSession.perfil)?show("tabDocumentUpload"):hide("tabDocumentUpload");["MASTER","GESTOR"].includes(systemSession.perfil)?show("tabOccurrenceCatalog"):hide("tabOccurrenceCatalog")}
+function updateRoleUi(){if(!systemSession)return;["MASTER","GESTOR"].includes(systemSession.perfil)?show("tabUsers"):hide("tabUsers");if(systemSession.perfil==="GESTOR")$("userProfile").innerHTML='<option value="PRESTADOR">PRESTADOR</option><option value="CONSULTA">CONSULTA</option>';else $("userProfile").innerHTML='<option value="PRESTADOR">PRESTADOR</option><option value="CONSULTA">CONSULTA</option><option value="GESTOR">GESTOR</option><option value="MASTER">MASTER</option>';systemSession.perfil==="MASTER"?show("tabAudit"):hide("tabAudit");systemSession.perfil==="MASTER"?show("tabProvidersAdmin"):hide("tabProvidersAdmin");systemSession.perfil==="MASTER"?show("tabCompany"):hide("tabCompany");["MASTER","GESTOR"].includes(systemSession.perfil)?show("tabDocumentUpload"):hide("tabDocumentUpload");["MASTER","GESTOR"].includes(systemSession.perfil)?show("tabOccurrenceCatalog"):hide("tabOccurrenceCatalog");["MASTER","GESTOR","PRESTADOR"].includes(systemSession.perfil)?show("tabMaintenancePending"):hide("tabMaintenancePending")}
 function showMenuGate(){show("searchScreen");hide("mainMenuButtons");["searchArea","pendingArea","occurrenceReportArea","preventiveControlArea","documentsArea","usersArea","auditArea","companyArea","providersAdminArea","documentUploadArea"].forEach(hide);hide("systemAccessInfo");show("menuLockedCard")}
 function openMainMenu(){hide("menuLockedCard");show("mainMenuButtons");renderSystemAccess();updateRoleUi();showSearchTab();if(systemSession?.perfil==="PRESTADOR"){$("occReportProvider").disabled=true}else{$("occReportProvider").disabled=false}}
 async function requireSystemLogin(nextAction){if(await systemSessionIsValid()){nextAction();return}systemLoginNextAction=nextAction;$("systemUsername").value="";$("systemPassword").value="";$("systemLoginMessage").className="message";$("systemLoginModal").style.display="flex";setTimeout(()=>$("systemUsername").focus(),80)}
@@ -588,7 +661,7 @@ function focusSearchInput(){setTimeout(()=>{try{$("searchInput").focus()}catch(e
 async function requirePreventiveLogin(nextAction,provider){await requireSystemLogin(()=>{if(systemSession?.perfil==="CONSULTA"){alert("Seu perfil possui acesso somente leitura.");return}if(systemSession?.perfil==="PRESTADOR"&&provider&&String(systemSession.prestador||"").trim().toLowerCase()!==String(provider).trim().toLowerCase()){alert("Este equipamento não pertence ao escopo do seu prestador.");return}nextAction()})}
 function processPhoto(file){return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=e=>{const img=new Image();img.onload=()=>{let w=img.width,h=img.height;if(w>MAX_DIM||h>MAX_DIM){if(w>h){h=Math.round(h*MAX_DIM/w);w=MAX_DIM}else{w=Math.round(w*MAX_DIM/h);h=MAX_DIM}}const c=document.createElement("canvas");c.width=w;c.height=h;c.getContext("2d").drawImage(img,0,0,w,h);const url=c.toDataURL("image/jpeg",QUALITY);resolve({base64:url.split(",")[1],dataUrl:url,mime:"image/jpeg",name:"foto_"+Date.now()+".jpg"})};img.src=e.target.result};reader.onerror=reject;reader.readAsDataURL(file)})}
 function setupSignatureCanvas(){const c=$("signatureCanvas"),rect=c.getBoundingClientRect(),ratio=window.devicePixelRatio||1;c.width=Math.floor(rect.width*ratio);c.height=Math.floor(180*ratio);signatureCtx=c.getContext("2d");signatureCtx.scale(ratio,ratio);signatureCtx.lineWidth=2;signatureCtx.lineCap="round";signatureCtx.lineJoin="round";clearSignatureCanvas()}function clearSignatureCanvas(){const c=$("signatureCanvas");if(!signatureCtx)return;signatureCtx.save();signatureCtx.setTransform(1,0,0,1,0,0);signatureCtx.fillStyle="#fff";signatureCtx.fillRect(0,0,c.width,c.height);signatureCtx.restore();signatureDirty=false}function signaturePoint(e){const r=$("signatureCanvas").getBoundingClientRect();return{x:e.clientX-r.left,y:e.clientY-r.top}}function signatureStart(e){e.preventDefault();signatureDrawing=true;const p=signaturePoint(e);signatureCtx.beginPath();signatureCtx.moveTo(p.x,p.y);signatureDirty=true}function signatureMove(e){if(!signatureDrawing)return;e.preventDefault();const p=signaturePoint(e);signatureCtx.lineTo(p.x,p.y);signatureCtx.stroke()}function signatureEnd(){signatureDrawing=false}function getSignatureData(){if(!signatureDirty)return null;const u=$("signatureCanvas").toDataURL("image/png");return{base64:u.split(",")[1],mime:"image/png"}}
-function showOnly(a){["searchArea","pendingArea","occurrenceReportArea","preventiveControlArea","documentsArea","usersArea","auditArea","companyArea","providersAdminArea","documentUploadArea","occurrenceCatalogArea"].forEach(hide);show(a)}function clearTabs(){["tabSearch","tabPending","tabOccurrenceReport","tabPreventive","tabDocuments","tabUsers","tabAudit","tabProvidersAdmin","tabCompany","tabDocumentUpload","tabOccurrenceCatalog"].forEach(id=>$(id).classList.remove("active"))}function showSearchTab(){clearTabs();$("tabSearch").classList.add("active");showOnly("searchArea");updateBackAssetButton();focusSearchInput()}async function showPendingTab(){clearTabs();$("tabPending").classList.add("active");showOnly("pendingArea");await loadPendingFilters();await loadPending()}async function showOccurrenceReportTab(){clearTabs();$("tabOccurrenceReport").classList.add("active");showOnly("occurrenceReportArea");setDefaultOccurrenceReportDates();await loadOccurrenceReportFilters();if(!occurrenceReportData)await loadOccurrenceReport()}function showPreventiveTab(){requireSystemLogin(()=>{clearTabs();$("tabPreventive").classList.add("active");showOnly("preventiveControlArea");loadPreventiveControl()})}async function showDocumentsTab(){clearTabs();$("tabDocuments").classList.add("active");showOnly("documentsArea");await loadDocumentFilters();await searchDocuments()}async function showUsersTab(){clearTabs();$("tabUsers").classList.add("active");showOnly("usersArea");await loadUsers()}
+function showOnly(a){["searchArea","pendingArea","occurrenceReportArea","preventiveControlArea","documentsArea","usersArea","auditArea","companyArea","providersAdminArea","documentUploadArea","occurrenceCatalogArea","maintenancePendingArea"].forEach(hide);show(a)}function clearTabs(){["tabSearch","tabPending","tabOccurrenceReport","tabPreventive","tabDocuments","tabUsers","tabAudit","tabProvidersAdmin","tabCompany","tabDocumentUpload","tabOccurrenceCatalog","tabMaintenancePending"].forEach(id=>$(id).classList.remove("active"))}function showSearchTab(){clearTabs();$("tabSearch").classList.add("active");showOnly("searchArea");updateBackAssetButton();focusSearchInput()}async function showPendingTab(){clearTabs();$("tabPending").classList.add("active");showOnly("pendingArea");await loadPendingFilters();await loadPending()}async function showOccurrenceReportTab(){clearTabs();$("tabOccurrenceReport").classList.add("active");showOnly("occurrenceReportArea");setDefaultOccurrenceReportDates();await loadOccurrenceReportFilters();if(!occurrenceReportData)await loadOccurrenceReport()}function showPreventiveTab(){requireSystemLogin(()=>{clearTabs();$("tabPreventive").classList.add("active");showOnly("preventiveControlArea");loadPreventiveControl()})}async function showDocumentsTab(){clearTabs();$("tabDocuments").classList.add("active");showOnly("documentsArea");await loadDocumentFilters();await searchDocuments()}async function showUsersTab(){clearTabs();$("tabUsers").classList.add("active");showOnly("usersArea");await loadUsers()}
 async function showAuditTab(){if(systemSession?.perfil!=="MASTER"){alert("Somente MASTER pode consultar a auditoria.");return}clearTabs();$("tabAudit").classList.add("active");showOnly("auditArea");setDefaultAuditDates();await loadAuditFilters();await loadAudit()}
 
 function isoDateLocal(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
@@ -987,7 +1060,7 @@ async function loadPreventiveHistory(){
   $("preventiveHistory").innerHTML=items.map(item=>`<div class="preventive-card"><div class="preventive-id">${esc(item.registro)}</div><div class="muted">${esc(formatDate(item.data))}</div><div style="margin-top:7px"><b>${t("Competência","Period")}:</b> ${esc(item.competencia)}<br><b>${t("Prestador","Service Provider")}:</b> ${esc(item.prestador)}<br><b>${t("Responsável","Responsible")}:</b> ${esc(item.responsavel)}</div>${item.observacao?`<div style="margin-top:8px"><b>${t("Observação da preventiva","Preventive maintenance note")}:</b><br>${esc(item.observacao)}</div>`:""}${item.foto?`<div style="margin-top:8px"><a href="${esc(item.foto)}" target="_blank">📷 ${t("Ver evidência","View evidence")}</a></div>`:""}${item.assinatura?`<div style="margin-top:8px"><a href="${esc(item.assinatura)}" target="_blank">✍️ ${t("Ver assinatura","View signature")}</a></div>`:""}</div>`).join("");
 }
 function requestPreventive(){requirePreventiveLogin(async()=>{await openPreventive();loadPreventiveHistory()},currentAsset.prestador)}
-async function openPreventive(){preventivePhotoData=null;signatureDirty=false;$("preventivePhotoInput").value="";$("preventivePhotoPreview").style.display="none";$("preventiveMessage").className="message";$("preventiveAsset").textContent=currentAsset.id+" – "+currentAsset.nome_do_equipamento;$("preventivePeriodicity").textContent=currentAsset.periodicidade||"Não informada";$("preventiveProvider").textContent=currentAsset.prestador||"Não informado";$("preventiveCompetence").textContent=currentCompetence();$("preventiveResponsible").value=getSavedResponsible();$("preventiveObservation").value="";const r=await api({action:"preventiverequirements",id:currentAsset.id,systemSession:systemSession.systemSessionToken});if(!r.ok){alert(r.detail||"Não foi possível carregar as regras.");return}preventiveRequirements=r.data;renderPreventiveRequirements();$("preventiveModal").style.display="flex";if(!$("signatureBox").classList.contains("hidden"))requestAnimationFrame(setupSignatureCanvas)}
+async function openPreventive(){preventivePhotoData=null;signatureDirty=false;$("preventivePhotoInput").value="";$("preventivePhotoPreview").style.display="none";$("preventiveMessage").className="message";$("preventiveAsset").textContent=currentAsset.id+" – "+currentAsset.nome_do_equipamento;$("preventivePeriodicity").textContent=currentAsset.periodicidade||"Não informada";$("preventiveProvider").textContent=currentAsset.prestador||"Não informado";$("preventiveCompetence").textContent=currentCompetence();$("preventiveResponsible").value=getSavedResponsible();$("preventiveObservation").value="";$("preventiveNeedsAction").checked=false;hide("preventiveActionFields");$("preventiveActionType").value="";$("preventiveActionDescription").value="";$("preventiveActionPriority").value="Média";$("preventiveActionMaterial").value="";$("preventiveActionQuantity").value="";$("preventiveActionOperation").value="";const r=await api({action:"preventiverequirements",id:currentAsset.id,systemSession:systemSession.systemSessionToken});if(!r.ok){alert(r.detail||"Não foi possível carregar as regras.");return}preventiveRequirements=r.data;renderPreventiveRequirements();$("preventiveModal").style.display="flex";if(!$("signatureBox").classList.contains("hidden"))requestAnimationFrame(setupSignatureCanvas)}
 function renderPreventiveRequirements(){const r=preventiveRequirements;$("preventiveRequirements").innerHTML=`<b>Requisitos deste registro</b><div class="requirement ${r.exigirAssinatura?"required-yes":"required-no"}">${r.exigirAssinatura?"● Assinatura obrigatória":"✓ Assinatura não obrigatória"}</div><div class="requirement ${r.fotoObrigatoria?"required-yes":"required-no"}">${r.fotoObrigatoria?"● Foto obrigatória":"✓ Foto opcional"}</div><div class="requirement ${r.observacaoObrigatoria?"required-yes":"required-no"}">${r.observacaoObrigatoria?"● Observação obrigatória":"✓ Observação opcional"}</div>`;if(r.exigirAssinatura){show("signatureBox");$("signatureRequiredText").textContent=" * obrigatório"}else hide("signatureBox")}
 async function savePreventive(){
   if(preventivePosting)return;
@@ -999,6 +1072,10 @@ async function savePreventive(){
   if(preventiveRequirements.observacaoObrigatoria&&!observation)return showPreventiveError("A observação é obrigatória.");
   if(preventiveRequirements.fotoObrigatoria&&!preventivePhotoData)return showPreventiveError("A foto é obrigatória.");
   if(preventiveRequirements.exigirAssinatura&&!signatureDirty)return showPreventiveError("A assinatura é obrigatória.");
+  if($("preventiveNeedsAction").checked){
+    if(!$("preventiveActionType").value)return showPreventiveError(qrLanguage==="en-US"?"Select the required action type.":"Informe o tipo de providência necessária.");
+    if(!$("preventiveActionDescription").value.trim())return showPreventiveError(qrLanguage==="en-US"?"Describe the required action.":"Descreva a providência necessária.");
+  }
 
   saveResponsible(responsible);
   const signature=getSignatureData();
@@ -1023,7 +1100,14 @@ async function savePreventive(){
       preventivePhotoName:preventivePhotoData?.name||"",
       preventivePhotoMime:preventivePhotoData?.mime||"",
       preventiveSignatureBase64:signature?.base64||"",
-      preventiveSignatureMime:signature?.mime||""
+      preventiveSignatureMime:signature?.mime||"",
+      preventiveNeedsAction:$("preventiveNeedsAction").checked?"Sim":"Não",
+      preventiveActionType:$("preventiveActionType").value,
+      preventiveActionDescription:$("preventiveActionDescription").value.trim(),
+      preventiveActionPriority:$("preventiveActionPriority").value,
+      preventiveActionMaterial:$("preventiveActionMaterial").value.trim(),
+      preventiveActionQuantity:$("preventiveActionQuantity").value.trim(),
+      preventiveActionOperation:$("preventiveActionOperation").value
     });
 
     if(!r.ok)throw new Error(r.detail||"Não foi possível registrar a preventiva.");
@@ -1560,6 +1644,160 @@ async function moveCatalogComponent(id,direction){
   }
 }
 
+
+async function showMaintenancePendingTab(){
+  requireSystemLogin(async ()=>{
+    clearTabs();
+    $("tabMaintenancePending").classList.add("active");
+    showOnly("maintenancePendingArea");
+    await loadMaintenancePending();
+  });
+}
+
+async function loadMaintenancePending(){
+  const btn=$("maintenancePendingRefresh");
+  btn.disabled=true;
+  btn.textContent=qrLanguage==="en-US"?"Updating...":"Atualizando...";
+
+  $("maintenancePendingStatusText").textContent=qrLanguage==="en-US"?"Loading pending actions...":"Carregando pendências...";
+
+  try{
+    const r=await menuApi({
+      action:"maintenancepending",
+      status:$("maintenancePendingStatusFilter").value,
+      prioridade:$("maintenancePendingPriorityFilter").value,
+      q:$("maintenancePendingSearch").value.trim()
+    });
+
+    if(!r.ok)throw new Error(r.detail||"Erro ao consultar pendências.");
+
+    const items=r.data||[];
+    const counts={pending:0,doing:0,resolved:0,critical:0};
+
+    items.forEach(x=>{
+      if(x.status==="Pendente")counts.pending++;
+      if(x.status==="Em andamento")counts.doing++;
+      if(x.status==="Resolvida")counts.resolved++;
+      if(x.prioridade==="Crítica"&&x.status!=="Resolvida")counts.critical++;
+    });
+
+    $("maintenancePendingSummary").innerHTML=
+      `<div class="pending-summary-card"><strong>${items.length}</strong>${qrLanguage==="en-US"?"Total":"Total"}</div>`+
+      `<div class="pending-summary-card"><strong>🔴 ${counts.pending}</strong>${qrLanguage==="en-US"?"Pending":"Pendentes"}</div>`+
+      `<div class="pending-summary-card"><strong>🟡 ${counts.doing}</strong>${qrLanguage==="en-US"?"In progress":"Em andamento"}</div>`+
+      `<div class="pending-summary-card"><strong>🟢 ${counts.resolved}</strong>${qrLanguage==="en-US"?"Resolved":"Resolvidas"}</div>`+
+      `<div class="pending-summary-card"><strong>🚨 ${counts.critical}</strong>${qrLanguage==="en-US"?"Critical open":"Críticas abertas"}</div>`;
+
+    $("maintenancePendingStatusText").textContent=qrLanguage==="en-US"
+      ?`${items.length} record(s) displayed.`
+      :`${items.length} registro(s) exibido(s).`;
+
+    if(!items.length){
+      $("maintenancePendingResults").innerHTML=`<div class="document-empty">${qrLanguage==="en-US"?"No pending actions found.":"Nenhuma pendência encontrada."}</div>`;
+      return;
+    }
+
+    $("maintenancePendingResults").innerHTML=items.map(x=>{
+      const pClass=x.prioridade==="Crítica"?"error":x.prioridade==="Alta"?"warning":"";
+      const canGenerate=["MASTER","GESTOR"].includes(systemSession?.perfil)&&!x.ocRelacionada&&x.status!=="Resolvida";
+      return `<div class="pending-card">
+        <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap">
+          <div>
+            <b>${esc(x.idPendencia)}</b> • ${esc(x.idAtivo)} – ${esc(x.equipamento)}
+            <div class="search-result-data">
+              <b>${qrLanguage==="en-US"?"Origin":"Origem"}:</b> ${esc(x.idPreventiva||"-")}<br>
+              <b>${qrLanguage==="en-US"?"Priority":"Prioridade"}:</b> ${esc(x.prioridade)}<br>
+              <b>Status:</b> ${esc(x.status)}<br>
+              <b>${qrLanguage==="en-US"?"Action type":"Tipo de providência"}:</b> ${esc(x.tipo)}<br>
+              <b>${qrLanguage==="en-US"?"Description":"Descrição"}:</b> ${esc(x.descricao)}<br>
+              ${x.material?`<b>${qrLanguage==="en-US"?"Material/Part":"Material/Peça"}:</b> ${esc(x.material)}${x.quantidade?` • ${esc(x.quantidade)}`:""}<br>`:""}
+              ${x.condicaoOperacao?`<b>${qrLanguage==="en-US"?"Operating condition":"Condição de operação"}:</b> ${esc(x.condicaoOperacao)}<br>`:""}
+              ${x.prestador?`<b>${qrLanguage==="en-US"?"Service Provider":"Prestador"}:</b> ${esc(x.prestador)}<br>`:""}
+              ${x.responsavelAtual?`<b>${qrLanguage==="en-US"?"Responsible":"Responsável"}:</b> ${esc(x.responsavelAtual)}<br>`:""}
+              ${x.ocRelacionada?`<b>${qrLanguage==="en-US"?"Related WO":"OC relacionada"}:</b> ${esc(x.ocRelacionada)}<br>`:""}
+              ${x.solucao?`<b>${qrLanguage==="en-US"?"Resolution":"Solução"}:</b> ${esc(x.solucao)}<br>`:""}
+              ${x.foto?`<a href="${esc(x.foto)}" target="_blank" rel="noopener">📷 ${qrLanguage==="en-US"?"View evidence":"Ver evidência"}</a>`:""}
+            </div>
+          </div>
+          <span class="audit-result ${pClass}">${esc(x.prioridade)}</span>
+        </div>
+
+        <div class="occ-report-actions" style="margin-top:10px">
+          ${x.status==="Pendente"?`<button class="btn btn-secondary" onclick="setMaintenancePendingStatus('${esc(x.idPendencia)}','Em andamento')">${qrLanguage==="en-US"?"Start":"Iniciar"}</button>`:""}
+          ${x.status!=="Resolvida"?`<button class="btn btn-green" onclick="resolveMaintenancePending('${esc(x.idPendencia)}')">${qrLanguage==="en-US"?"Resolve":"Resolver"}</button>`:""}
+          ${canGenerate?`<button class="btn btn-blue" onclick="generateOccurrenceFromMaintenancePending('${esc(x.idPendencia)}')">${qrLanguage==="en-US"?"Generate Work Order":"Gerar OC"}</button>`:""}
+          <a class="open-button" href="?id=${encodeURIComponent(normalizeId(x.idAtivo))}">${qrLanguage==="en-US"?"Open asset":"Abrir ficha"}</a>
+        </div>
+      </div>`;
+    }).join("");
+
+  }catch(e){
+    $("maintenancePendingMessage").className="message error";
+    $("maintenancePendingMessage").textContent=e.message;
+  }finally{
+    btn.disabled=false;
+    btn.textContent=qrLanguage==="en-US"?"Update":"Atualizar";
+  }
+}
+
+async function setMaintenancePendingStatus(id,status,solution=""){
+  try{
+    const r=await menuApiPost({
+      action:"updateMaintenancePending",
+      maintenancePendingId:id,
+      maintenancePendingStatus:status,
+      maintenancePendingResponsible:systemSession?.nome||systemSession?.usuario||"",
+      maintenancePendingSolution:solution
+    });
+    if(!r.ok)throw new Error(r.detail||"Erro ao atualizar.");
+    await loadMaintenancePending();
+  }catch(e){
+    alert(e.message);
+  }
+}
+
+async function resolveMaintenancePending(id){
+  const text=prompt(
+    qrLanguage==="en-US"
+      ?"Briefly describe the action taken/resolution:"
+      :"Descreva brevemente a providência tomada/solução:"
+  );
+  if(text===null)return;
+  if(!String(text).trim()){
+    alert(qrLanguage==="en-US"?"Enter the resolution.":"Informe a solução/providência.");
+    return;
+  }
+  await setMaintenancePendingStatus(id,"Resolvida",String(text).trim());
+}
+
+async function generateOccurrenceFromMaintenancePending(id){
+  if(!confirm(qrLanguage==="en-US"?"Generate a work order from this pending action?":"Gerar uma OC a partir desta pendência?"))return;
+
+  try{
+    const r=await menuApiPost({
+      action:"generateOccurrenceFromPending",
+      maintenancePendingId:id
+    });
+    if(!r.ok)throw new Error(r.detail||"Erro ao gerar OC.");
+    alert((qrLanguage==="en-US"?"Work order generated: ":"OC gerada: ")+(r.ocorrencia||""));
+    await loadMaintenancePending();
+  }catch(e){
+    alert(e.message);
+  }
+}
+
+function clearMaintenancePendingFilters(){
+  $("maintenancePendingStatusFilter").value="";
+  $("maintenancePendingPriorityFilter").value="";
+  $("maintenancePendingSearch").value="";
+  loadMaintenancePending();
+}
+
+function togglePreventiveActionFields(){
+  if($("preventiveNeedsAction").checked)show("preventiveActionFields");
+  else hide("preventiveActionFields");
+}
+
 let currentAuthToken="",currentAuthTokenType="";
 function openForgotPassword(){$("systemLoginModal").style.display="none";$("recoveryIdentifier").value=$("systemUsername").value.trim();$("recoveryMessage").className="message";$("forgotPasswordModal").style.display="flex"}
 async function sendRecovery(){const id=$("recoveryIdentifier").value.trim();if(!id){$("recoveryMessage").className="message error";$("recoveryMessage").textContent="Informe seu usuário ou e-mail.";return}$("sendRecovery").disabled=true;$("sendRecovery").textContent="Enviando...";try{const r=await apiPost({action:"forgotPassword",recoveryIdentifier:id});if(!r.ok)throw new Error(r.detail||"Não foi possível processar a solicitação.");$("recoveryMessage").className="message success";$("recoveryMessage").textContent=r.message}catch(e){$("recoveryMessage").className="message error";$("recoveryMessage").textContent=e.message}finally{$("sendRecovery").disabled=false;$("sendRecovery").textContent="Enviar instruções"}}
@@ -1582,6 +1820,7 @@ const QR_TEXT={
     tabPreventive:"🛠️ Status das Preventivas",
     tabDocuments:"📄 Documentos Técnicos",
     tabOccurrenceCatalog:"🧩 Categorias e Componentes",
+    tabMaintenancePending:"📌 Pendências / Providências",
     tabDocumentUpload:"📤 Upload de Documentos",
     tabUsers:"👥 Gestão de Usuários",
     tabAudit:"🧾 Auditoria",
@@ -1621,6 +1860,7 @@ const QR_TEXT={
     tabPreventive:"🛠️ Preventive Maintenance Status",
     tabDocuments:"📄 Technical Documents",
     tabOccurrenceCatalog:"🧩 Categories & Components",
+    tabMaintenancePending:"📌 Pending Actions",
     tabDocumentUpload:"📤 Upload Documents",
     tabUsers:"👥 User Management",
     tabAudit:"🧾 Audit",
@@ -2548,6 +2788,13 @@ function qrApplyLanguage(lang){
   if(occurrenceCatalogAdminData)renderOccurrenceCatalogAdmin();
   if(occurrenceCatalogData&&$("category"))populateOccurrenceCategorySelect($("category").value,$("component").value);
 
+
+  if($("maintenancePendingTitle"))$("maintenancePendingTitle").textContent=qrLanguage==="en-US"?"📌 Pending Actions":"📌 Pendências / Providências";
+  if($("maintenancePendingHelp"))$("maintenancePendingHelp").textContent=qrLanguage==="en-US"?"Needs identified during preventive maintenance that require follow-up.":"Necessidades identificadas durante as preventivas e que exigem alguma providência.";
+  if($("preventiveNeedsActionLabel"))$("preventiveNeedsActionLabel").textContent=qrLanguage==="en-US"?"Was any follow-up action identified?":"Foi identificada alguma necessidade de providência?";
+  if($("preventiveActionHeading"))$("preventiveActionHeading").textContent=qrLanguage==="en-US"?"📌 Required action":"📌 Providência necessária";
+  if($("preventiveActionNotice"))$("preventiveActionNotice").textContent=qrLanguage==="en-US"?"When the preventive maintenance is saved, this need will be registered under Pending Actions and communicated to the responsible users.":"Ao salvar a preventiva, esta necessidade será registrada em Pendências / Providências e comunicada aos responsáveis.";
+
 }
 
 function qrLoadLanguage(){
@@ -2570,7 +2817,7 @@ document.getElementById("qrLangEn").addEventListener("click",function(){
   qrTranslateRoutineScreens();
 });
 
-$("openSystemLoginButton").onclick=()=>requireSystemLogin(openMainMenu);$("forgotPasswordButton").onclick=openForgotPassword;$("cancelRecovery").onclick=()=>{$("forgotPasswordModal").style.display="none";$("systemLoginModal").style.display="flex"};$("sendRecovery").onclick=sendRecovery;$("saveNewPassword").onclick=savePasswordFromToken;$("tabUsers").onclick=showUsersTab;$("newUserButton").onclick=openNewUser;$("tabAudit").onclick=showAuditTab;$("tabProvidersAdmin").onclick=showProvidersAdminTab;$("tabCompany").onclick=showCompanyTab;$("companyBackMenu").onclick=showSearchTab;$("providersBackMenu").onclick=showSearchTab;$("newProviderButton").onclick=()=>openProviderModal(null);$("cancelProvider").onclick=()=>{$("providerModal").style.display="none"};$("saveProvider").onclick=saveProviderAdmin;$("saveCompanyConfig").onclick=saveCompanyConfig;["companyName","companyTradeName","companySystemName","companyLogo"].forEach(id=>$(id).oninput=updateCompanyPreview);$("auditRefresh").onclick=loadAudit;$("auditClear").onclick=clearAuditFilters;$("auditSearch").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();loadAudit()}};$("cancelUser").onclick=()=>{$("userModal").style.display="none"};$("saveUser").onclick=saveUser;$("sendSystemLogin").onclick=doSystemLogin;$("systemPassword").onkeydown=e=>{if(e.key==="Enter")doSystemLogin()};$("cancelSystemLogin").onclick=()=>{systemLoginNextAction=null;$("systemLoginModal").style.display="none";if(!systemSession)showMenuGate()};$("systemLogoutButton").onclick=logoutSystemMenu;$("installAppButton").onclick=installQRManut;$("tabSearch").onclick=showSearchTab;$("tabPending").onclick=showPendingTab;$("pendingApplyFilters").onclick=loadPending;$("pendingClearFilters").onclick=clearPendingFilters;$("tabOccurrenceReport").onclick=showOccurrenceReportTab;$("tabPreventive").onclick=showPreventiveTab;$("tabDocuments").onclick=showDocumentsTab;$("tabOccurrenceCatalog").onclick=showOccurrenceCatalogTab;$("occurrenceCatalogBackMenu").onclick=showSearchTab;$("saveCatalogCategory").onclick=saveCatalogCategory;$("clearCatalogCategory").onclick=clearCatalogCategoryForm;$("saveCatalogComponent").onclick=saveCatalogComponent;$("clearCatalogComponent").onclick=clearCatalogComponentForm;$("category").onchange=()=>populateOccurrenceComponentSelect();$("manageCategory").onchange=()=>populateManageCatalog($("manageCategory").value,"");$("tabDocumentUpload").onclick=showDocumentUploadTab;$("documentUploadBackMenu").onclick=cancelDocumentUpload;$("uploadDocumentFile").onchange=prepareDocumentUploadFile;$("sendDocumentUpload").onclick=sendDocumentUpload;$("clearDocumentUpload").onclick=clearDocumentUploadForm;$("searchButton").onclick=searchAssets;$("searchInput").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();searchAssets()}};$("documentSearchButton").onclick=searchDocuments;$("documentSearchInput").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();searchDocuments()}};$("documentTypeFilter").onchange=searchDocuments;$("documentDisciplineFilter").onchange=searchDocuments;$("documentFloorFilter").onchange=searchDocuments;$("reportButton").onclick=openReport;$("preventiveButton").onclick=requestPreventive;
+$("openSystemLoginButton").onclick=()=>requireSystemLogin(openMainMenu);$("forgotPasswordButton").onclick=openForgotPassword;$("cancelRecovery").onclick=()=>{$("forgotPasswordModal").style.display="none";$("systemLoginModal").style.display="flex"};$("sendRecovery").onclick=sendRecovery;$("saveNewPassword").onclick=savePasswordFromToken;$("tabUsers").onclick=showUsersTab;$("newUserButton").onclick=openNewUser;$("tabAudit").onclick=showAuditTab;$("tabProvidersAdmin").onclick=showProvidersAdminTab;$("tabCompany").onclick=showCompanyTab;$("companyBackMenu").onclick=showSearchTab;$("providersBackMenu").onclick=showSearchTab;$("newProviderButton").onclick=()=>openProviderModal(null);$("cancelProvider").onclick=()=>{$("providerModal").style.display="none"};$("saveProvider").onclick=saveProviderAdmin;$("saveCompanyConfig").onclick=saveCompanyConfig;["companyName","companyTradeName","companySystemName","companyLogo"].forEach(id=>$(id).oninput=updateCompanyPreview);$("auditRefresh").onclick=loadAudit;$("auditClear").onclick=clearAuditFilters;$("auditSearch").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();loadAudit()}};$("cancelUser").onclick=()=>{$("userModal").style.display="none"};$("saveUser").onclick=saveUser;$("sendSystemLogin").onclick=doSystemLogin;$("systemPassword").onkeydown=e=>{if(e.key==="Enter")doSystemLogin()};$("cancelSystemLogin").onclick=()=>{systemLoginNextAction=null;$("systemLoginModal").style.display="none";if(!systemSession)showMenuGate()};$("systemLogoutButton").onclick=logoutSystemMenu;$("installAppButton").onclick=installQRManut;$("tabSearch").onclick=showSearchTab;$("tabPending").onclick=showPendingTab;$("pendingApplyFilters").onclick=loadPending;$("pendingClearFilters").onclick=clearPendingFilters;$("tabOccurrenceReport").onclick=showOccurrenceReportTab;$("tabPreventive").onclick=showPreventiveTab;$("tabDocuments").onclick=showDocumentsTab;$("tabMaintenancePending").onclick=showMaintenancePendingTab;$("maintenancePendingBackMenu").onclick=showSearchTab;$("maintenancePendingRefresh").onclick=loadMaintenancePending;$("maintenancePendingClear").onclick=clearMaintenancePendingFilters;$("maintenancePendingSearch").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();loadMaintenancePending()}};$("maintenancePendingStatusFilter").onchange=loadMaintenancePending;$("maintenancePendingPriorityFilter").onchange=loadMaintenancePending;$("preventiveNeedsAction").onchange=togglePreventiveActionFields;$("tabOccurrenceCatalog").onclick=showOccurrenceCatalogTab;$("occurrenceCatalogBackMenu").onclick=showSearchTab;$("saveCatalogCategory").onclick=saveCatalogCategory;$("clearCatalogCategory").onclick=clearCatalogCategoryForm;$("saveCatalogComponent").onclick=saveCatalogComponent;$("clearCatalogComponent").onclick=clearCatalogComponentForm;$("category").onchange=()=>populateOccurrenceComponentSelect();$("manageCategory").onchange=()=>populateManageCatalog($("manageCategory").value,"");$("tabDocumentUpload").onclick=showDocumentUploadTab;$("documentUploadBackMenu").onclick=cancelDocumentUpload;$("uploadDocumentFile").onchange=prepareDocumentUploadFile;$("sendDocumentUpload").onclick=sendDocumentUpload;$("clearDocumentUpload").onclick=clearDocumentUploadForm;$("searchButton").onclick=searchAssets;$("searchInput").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();searchAssets()}};$("documentSearchButton").onclick=searchDocuments;$("documentSearchInput").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();searchDocuments()}};$("documentTypeFilter").onchange=searchDocuments;$("documentDisciplineFilter").onchange=searchDocuments;$("documentFloorFilter").onchange=searchDocuments;$("reportButton").onclick=openReport;$("preventiveButton").onclick=requestPreventive;
 $("searchAssetsButton").onclick=function(){if(currentAsset?.id)setOriginAsset(currentAsset.id);requireSystemLogin(()=>{hide("assetScreen");show("searchScreen");openMainMenu();focusBackAssetButton()})};
 $("backAssetButton").onclick=function(){const id=getOriginAsset();if(!id)return;clearOriginAsset();location.href="?id="+encodeURIComponent(id)};
 $("occReportRefresh").onclick=loadOccurrenceReport;$("occReportPdf").onclick=generateOccurrenceReportPdf;["occReportStart","occReportEnd","occReportProvider","occReportCategory","occReportComponent","occReportFloor","occReportLocation"].forEach(id=>$(id).onchange=markOccurrenceReportDirty);$("controlRefresh").onclick=refreshPreventiveControl;$("controlCompetence").onchange=loadPreventiveControl;$("controlProvider").onchange=()=>{if(["MASTER","GESTOR"].includes(systemSession?.perfil))loadPreventiveControl();else renderControlList()};$("controlAll").onclick=()=>setControlMode("all");$("controlPending").onclick=()=>setControlMode("pending");$("controlDone").onclick=()=>setControlMode("done");$("sendMonthlyReport").onclick=sendMonthlyPreventiveReport;
