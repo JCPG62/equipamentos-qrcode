@@ -606,7 +606,7 @@ html,body{max-width:100%;overflow-x:hidden}
 </section>
 
 <div id="assetEditModal" class="modal">
-  <div class="modal-content" style="max-width:720px">
+  <div class="modal-box" style="max-width:720px">
     <h2 id="assetEditTitle" data-i18n="newAsset">Novo Ativo</h2>
     <input id="assetRow" type="hidden">
     <div class="grid">
@@ -726,7 +726,7 @@ html,body{max-width:100%;overflow-x:hidden}
 
 <form id="manageForm" method="POST" target="manageFrame" style="display:none"><input name="action" value="updateOccurrence"><input name="systemSessionToken" id="m_system_session"><input name="token" id="m_token"><input name="ocorrencia" id="m_occurrence"><input name="status" id="m_status"><input name="responsavel" id="m_responsible"><input name="solucao" id="m_solution"><input name="alteradoPor" id="m_changedBy"><input name="descricaoOcorrencia" id="m_description"><input name="categoriaOcorrenciaEdit" id="m_category"><input name="componenteAfetadoEdit" id="m_component"><input name="fotoOcorrenciaBase64" id="m_occurrencePhoto"><input name="fotoOcorrenciaNome" id="m_occurrencePhotoName"><input name="fotoOcorrenciaMime" id="m_occurrencePhotoMime"><input name="fotoConclusaoBase64" id="m_photo"><input name="fotoConclusaoNome" id="m_photoName"><input name="fotoConclusaoMime" id="m_photoMime"></form>
 <iframe id="manageFrame" name="manageFrame"></iframe>
-<div class="footer">QRManut • Versão 7.6.0.3</div>
+<div class="footer">QRManut • Versão 7.6.0.4</div>
 </div>
 <script>
 const API_URL="https://script.google.com/macros/s/AKfycbx4tpC42Q6WdkNhTUTAGoZWvG5M24zwlNscnwbDP5B3Q5pWo8B32-Lf0rQ2Xtua1AFMAQ/exec";
@@ -2081,7 +2081,7 @@ function openAssetModal760(a){
   $("assetLocation").value=a?.localizacao||"";
   $("assetStatus").value=a?.status||"Ativo";
   $("assetSuggestedId").textContent=a?.id||"—";
-  $("assetEditModal").classList.add("show");
+  $("assetEditModal").style.display="flex";
 }
 
 function editAsset760(row){
@@ -2116,7 +2116,7 @@ async function saveAsset760(){
     status:$("assetStatus").value
   });
   if(!r.ok)return alert(r.detail||r.error||"Erro ao salvar ativo.");
-  $("assetEditModal").classList.remove("show");
+  $("assetEditModal").style.display="none";
   await loadAssets760();
   alert((qrLanguage?.startsWith("en")?"Asset saved: ":"Ativo salvo: ")+r.id);
 }
@@ -3188,7 +3188,7 @@ async function main(){buildManageDropdowns();setupPasswordToggles();readPreventi
 
 $("tabAssetManagement").onclick=openAssetManagement760;
 $("assetNewButton").onclick=()=>openAssetModal760(null);
-$("assetCancel").onclick=()=>$("assetEditModal").classList.remove("show");
+$("assetCancel").onclick=()=>$("assetEditModal").style.display="none";
 $("assetSave").onclick=()=>saveAsset760().catch(e=>alert(e.message));
 $("assetSuggestNumber").onclick=()=>suggestAssetNumber760().catch(e=>alert(e.message));
 $("assetSearch").oninput=renderAssets760;
