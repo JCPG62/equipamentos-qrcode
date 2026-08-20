@@ -722,11 +722,17 @@ html,body{max-width:100%;overflow-x:hidden}
 
 <div id="reportModal" class="modal"><div class="modal-box"><h2>Reportar Serviço / Anomalia / Reparo</h2><label>Seu nome *<input id="reporterName"></label><label>Contato<input id="reporterContact"></label><label><span id="reportCategoryLabel">Categoria *</span><select id="category"><option value="">Selecione...</option></select></label><label><span id="reportComponentLabel">Componente *</span><select id="component"><option value="">Selecione...</option></select></label><label>Descrição *<textarea id="description" rows="5"></textarea></label><label>Foto<input id="photoInput" type="file" accept="image/*" capture="environment"></label><img id="photoPreview" class="photo-preview"><div id="reportMessage" class="message"></div><div class="modal-actions"><button id="cancelReport" class="btn btn-secondary">Cancelar</button><button id="sendReport" class="btn">Gravar ocorrência</button></div></div></div>
 
-<div id="manageModal" class="modal"><div class="modal-box"><h2>Gerenciar ocorrência</h2><label>Alterado por *<input id="manageChangedBy"></label><label>Categoria<select id="manageCategory"></select></label><label>Componente<select id="manageComponent"></select></label><label>Descrição<textarea id="manageDescription" rows="4"></textarea></label><label>Status<select id="manageStatus"><option>Aberta</option><option>Em atendimento</option><option>Aguardando peça</option><option>Concluída</option><option>Cancelada</option></select></label><label>Responsável<input id="manageResponsible"></label><label>Solução<textarea id="manageSolution" rows="4"></textarea></label><label>Foto da ocorrência / correção</label><div class="photo-source-actions"><button type="button" id="manageOccurrenceCameraButton" class="btn btn-blue">📷 Tirar foto</button><button type="button" id="manageOccurrenceAttachButton" class="btn btn-secondary">🖼️ Anexar imagem</button></div><input id="manageOccurrenceCameraInput" class="photo-source-hidden" type="file" accept="image/*" capture="environment"><input id="manageOccurrencePhotoInput" class="photo-source-hidden" type="file" accept="image/*"><div id="manageOccurrencePhotoStatus" class="muted" style="margin-top:5px"></div><img id="manageOccurrencePhotoPreview" class="photo-preview"><div id="conclusionPhotoArea" class="hidden"><label>Foto da conclusão</label><div class="photo-source-actions"><button type="button" id="conclusionCameraButton" class="btn btn-blue">📷 Tirar foto</button><button type="button" id="conclusionAttachButton" class="btn btn-secondary">🖼️ Anexar imagem</button></div><input id="conclusionCameraInput" class="photo-source-hidden" type="file" accept="image/*" capture="environment"><input id="conclusionPhotoInput" class="photo-source-hidden" type="file" accept="image/*"><div id="conclusionPhotoStatus" class="muted" style="margin-top:5px"></div><img id="conclusionPhotoPreview" class="photo-preview"></div><div id="manageMessage" class="message"></div><div class="modal-actions"><button id="cancelManage" class="btn btn-secondary">Cancelar</button><button id="saveManage" class="btn">Salvar alterações</button></div></div></div>
+<div id="manageModal" class="modal"><div class="modal-box"><h2>Gerenciar ocorrência</h2><label>Alterado por *<input id="manageChangedBy"></label><label>Categoria<select id="manageCategory"></select></label><label>Componente<select id="manageComponent"></select></label><label>Descrição<textarea id="manageDescription" rows="4"></textarea></label><label>Status<select id="manageStatus"><option>Aberta</option><option>Em atendimento</option><option>Aguardando peça</option><option>Concluída</option><option>Cancelada</option></select></label><label>Responsável<input id="manageResponsible"></label><label>Solução<textarea id="manageSolution" rows="4"></textarea></label><div id="existingOccurrencePhotoBox" class="hidden" style="margin-top:14px;padding:12px;border:1px solid #bfdbfe;background:#eff6ff;border-radius:12px">
+  <div id="existingOccurrencePhotoTitle" style="font-weight:800;color:#1e3a8a">📷 Foto inicial registrada</div>
+  <div id="existingOccurrencePhotoHelp" class="muted" style="margin-top:4px">Esta é a evidência registrada na abertura da ocorrência.</div>
+  <a id="existingOccurrencePhotoLink" class="document-open" href="#" target="_blank" rel="noopener" style="margin-top:8px">Abrir foto inicial</a>
+  <img id="existingOccurrencePhotoPreview" class="photo-preview" alt="Foto inicial da ocorrência" style="margin-top:10px">
+</div>
+<label>Adicionar nova foto da ocorrência / correção</label><div class="photo-source-actions"><button type="button" id="manageOccurrenceCameraButton" class="btn btn-blue">📷 Tirar foto</button><button type="button" id="manageOccurrenceAttachButton" class="btn btn-secondary">🖼️ Anexar imagem</button></div><input id="manageOccurrenceCameraInput" class="photo-source-hidden" type="file" accept="image/*" capture="environment"><input id="manageOccurrencePhotoInput" class="photo-source-hidden" type="file" accept="image/*"><div id="manageOccurrencePhotoStatus" class="muted" style="margin-top:5px"></div><img id="manageOccurrencePhotoPreview" class="photo-preview"><div id="conclusionPhotoArea" class="hidden"><label>Foto da conclusão</label><div class="photo-source-actions"><button type="button" id="conclusionCameraButton" class="btn btn-blue">📷 Tirar foto</button><button type="button" id="conclusionAttachButton" class="btn btn-secondary">🖼️ Anexar imagem</button></div><input id="conclusionCameraInput" class="photo-source-hidden" type="file" accept="image/*" capture="environment"><input id="conclusionPhotoInput" class="photo-source-hidden" type="file" accept="image/*"><div id="conclusionPhotoStatus" class="muted" style="margin-top:5px"></div><img id="conclusionPhotoPreview" class="photo-preview"></div><div id="manageMessage" class="message"></div><div class="modal-actions"><button id="cancelManage" class="btn btn-secondary">Cancelar</button><button id="saveManage" class="btn">Salvar alterações</button></div></div></div>
 
 <form id="manageForm" method="POST" target="manageFrame" style="display:none"><input name="action" value="updateOccurrence"><input name="systemSessionToken" id="m_system_session"><input name="token" id="m_token"><input name="ocorrencia" id="m_occurrence"><input name="status" id="m_status"><input name="responsavel" id="m_responsible"><input name="solucao" id="m_solution"><input name="alteradoPor" id="m_changedBy"><input name="descricaoOcorrencia" id="m_description"><input name="categoriaOcorrenciaEdit" id="m_category"><input name="componenteAfetadoEdit" id="m_component"><input name="fotoOcorrenciaBase64" id="m_occurrencePhoto"><input name="fotoOcorrenciaNome" id="m_occurrencePhotoName"><input name="fotoOcorrenciaMime" id="m_occurrencePhotoMime"><input name="fotoConclusaoBase64" id="m_photo"><input name="fotoConclusaoNome" id="m_photoName"><input name="fotoConclusaoMime" id="m_photoMime"></form>
 <iframe id="manageFrame" name="manageFrame"></iframe>
-<div class="footer">QRManut • Versão 7.6.0.4</div>
+<div class="footer">QRManut • Versão 7.6.0.5</div>
 </div>
 <script>
 const API_URL="https://script.google.com/macros/s/AKfycbx4tpC42Q6WdkNhTUTAGoZWvG5M24zwlNscnwbDP5B3Q5pWo8B32-Lf0rQ2Xtua1AFMAQ/exec";
@@ -1366,7 +1372,90 @@ function showPreventiveError(m){$("preventiveMessage").className="message error"
 async function openReport(){await populateOccurrenceCategorySelect();$("reporterName").value=getSavedResponsible();$("reportMessage").className="message";$("reportMessage").innerHTML="";$("sendReport").disabled=false;$("sendReport").textContent="Gravar ocorrência";$("cancelReport").textContent="Cancelar";$("reportModal").style.display="flex"}
 async function sendReport(){if(reportPosting)return;const name=$("reporterName").value.trim(),description=$("description").value.trim();if(!name||!$("category").value||!$("component").value||!description){$("reportMessage").className="message error";$("reportMessage").textContent="Preencha os campos obrigatórios.";return}saveResponsible(name);reportPosting=true;$("sendReport").disabled=true;$("sendReport").textContent="Gravando...";$("reportMessage").className="message loading";$("reportMessage").textContent="Registrando ocorrência...";try{const r=await apiPost({action:"reportOccurrence",id:currentAsset.id,reportadoPor:name,contato:$("reporterContact").value,categoriaOcorrencia:$("category").value,componenteAfetado:$("component").value,descricao:description,fotoBase64:photoData?.base64||"",fotoNome:photoData?.name||"",fotoMime:photoData?.mime||""});if(!r.ok)throw new Error(r.detail||"Não foi possível registrar a ocorrência.");let n="";if(r.notificacaoPrestador==="Sim")n=`<br><br>📧 <b>Prestador notificado:</b><br>${esc(r.emailPrestador)}`;else if(r.notificacaoPrestador==="Não - sem e-mail")n="<br><br>⚠️ Prestador configurado para receber a ocorrência, mas sem e-mail cadastrado.";else if(r.notificacaoPrestador==="Erro")n="<br><br>⚠️ A ocorrência foi registrada, mas houve erro ao notificar o prestador.";else n="<br><br>ℹ️ Este prestador não está configurado para receber notificações de ocorrência.";$("reportMessage").className="message success";$("reportMessage").innerHTML=`✅ Ocorrência <b>${esc(r.ocorrencia)}</b> registrada com sucesso.${n}`;$("sendReport").textContent="Ocorrência gravada";$("cancelReport").textContent="Fechar"}catch(e){reportPosting=false;$("sendReport").disabled=false;$("sendReport").textContent="Gravar ocorrência";$("reportMessage").className="message error";$("reportMessage").textContent=e.message}}
 const CATEGORIES=["Civil","Sanitário","Elétrica","Hidráulica","Climatização","Refrigeração","Utilidades","Segurança","Mobiliário","Equipamento","Outros"],COMPONENTS=["Geral","Piso","Parede","Teto","Porta","Janela","Vaso Sanitário","Pia","Torneira","Descarga","Mictório","Ralo","Luminária","Tomada","Interruptor","Tubulação","Registro","Bomba","Motor","Painel","Ar-condicionado","Mobiliário","Outro"];
-function buildManageDropdowns(){/* 7.4.6: opções carregadas da planilha */}function openManage(i){selectedOccurrence=history[i];correctionPhotoData=null;conclusionPhotoData=null;$("manageOccurrencePhotoInput").value="";$("manageOccurrenceCameraInput").value="";$("conclusionPhotoInput").value="";$("conclusionCameraInput").value="";if($("manageOccurrencePhotoStatus"))$("manageOccurrencePhotoStatus").textContent="";if($("conclusionPhotoStatus"))$("conclusionPhotoStatus").textContent="";$("manageOccurrencePhotoPreview").style.display="none";$("conclusionPhotoPreview").style.display="none";$("manageChangedBy").value=getSavedResponsible();populateManageCatalog(selectedOccurrence.categoriaOcorrencia||"",selectedOccurrence.componenteAfetado||"");$("manageDescription").value=selectedOccurrence.descricao||"";$("manageStatus").value=selectedOccurrence.status||"Aberta";$("manageResponsible").value=selectedOccurrence.responsavel||"";$("manageSolution").value=selectedOccurrence.solucao||"";toggleConclusion();$("manageModal").style.display="flex"}function toggleConclusion(){if($("manageStatus").value==="Concluída")show("conclusionPhotoArea");else hide("conclusionPhotoArea")}
+function buildManageDropdowns(){/* 7.4.6: opções carregadas da planilha */}
+function drivePhotoPreviewUrl(url){
+  const u=String(url||"").trim();
+  if(!u)return "";
+  let m=u.match(/\/file\/d\/([A-Za-z0-9_-]+)/i);
+  if(!m)m=u.match(/[?&]id=([A-Za-z0-9_-]+)/i);
+  if(m&&m[1])return "https://drive.google.com/thumbnail?id="+encodeURIComponent(m[1])+"&sz=w1000";
+  return u;
+}
+
+function showExistingOccurrencePhoto(item){
+  const box=$("existingOccurrencePhotoBox");
+  const link=$("existingOccurrencePhotoLink");
+  const preview=$("existingOccurrencePhotoPreview");
+  const url=String(item?.foto||"").trim();
+
+  $("existingOccurrencePhotoTitle").textContent=
+    qrLanguage==="en-US"?"📷 Initial photo on record":"📷 Foto inicial registrada";
+  $("existingOccurrencePhotoHelp").textContent=
+    qrLanguage==="en-US"?"This is the evidence recorded when the occurrence was opened.":"Esta é a evidência registrada na abertura da ocorrência.";
+  link.textContent=qrLanguage==="en-US"?"Open initial photo":"Abrir foto inicial";
+
+  if(!url){
+    hide("existingOccurrencePhotoBox");
+    link.removeAttribute("href");
+    preview.removeAttribute("src");
+    preview.style.display="none";
+    return;
+  }
+
+  show("existingOccurrencePhotoBox");
+  link.href=url;
+
+  preview.onload=()=>{preview.style.display="block";};
+  preview.onerror=()=>{preview.style.display="none";};
+  preview.src=drivePhotoPreviewUrl(url);
+}
+function openManage(i){
+  selectedOccurrence=history[i];
+  correctionPhotoData=null;
+  conclusionPhotoData=null;
+
+  $("manageOccurrencePhotoInput").value="";
+  $("manageOccurrenceCameraInput").value="";
+  $("conclusionPhotoInput").value="";
+  $("conclusionCameraInput").value="";
+
+  if($("manageOccurrencePhotoStatus"))$("manageOccurrencePhotoStatus").textContent="";
+  if($("conclusionPhotoStatus"))$("conclusionPhotoStatus").textContent="";
+
+  $("manageOccurrencePhotoPreview").style.display="none";
+  $("conclusionPhotoPreview").style.display="none";
+
+  /* 7.6.0.5: exibe a foto inicial já gravada no histórico. */
+  showExistingOccurrencePhoto(selectedOccurrence);
+
+  $("manageChangedBy").value=getSavedResponsible();
+  populateManageCatalog(
+    selectedOccurrence.categoriaOcorrencia||"",
+    selectedOccurrence.componenteAfetado||""
+  );
+  $("manageDescription").value=selectedOccurrence.descricao||"";
+  $("manageStatus").value=selectedOccurrence.status||"Aberta";
+  $("manageResponsible").value=selectedOccurrence.responsavel||"";
+  $("manageSolution").value=selectedOccurrence.solucao||"";
+
+  /* Mantém visível também uma eventual foto de conclusão já existente. */
+  if(selectedOccurrence.fotoConclusao){
+    const p=$("conclusionPhotoPreview");
+    p.onload=()=>{p.style.display="block";};
+    p.onerror=()=>{p.style.display="none";};
+    p.src=drivePhotoPreviewUrl(selectedOccurrence.fotoConclusao);
+    if($("conclusionPhotoStatus")){
+      $("conclusionPhotoStatus").innerHTML=
+        `📷 ${qrLanguage==="en-US"?"Conclusion photo already on record.":"Foto de conclusão já registrada."} <a href="${esc(selectedOccurrence.fotoConclusao)}" target="_blank" rel="noopener">${qrLanguage==="en-US"?"Open photo":"Abrir foto"}</a>`;
+    }
+  }
+
+  toggleConclusion();
+  $("manageMessage").className="message";
+  $("manageMessage").textContent="";
+  $("manageModal").style.display="flex";
+}
+function toggleConclusion(){if($("manageStatus").value==="Concluída")show("conclusionPhotoArea");else hide("conclusionPhotoArea")}
 async function saveManage(){
   if(managePosting)return;
 
