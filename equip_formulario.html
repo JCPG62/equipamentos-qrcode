@@ -219,6 +219,74 @@ html,body{max-width:100%;overflow-x:hidden}
 }
 .asset-progress-note.hidden{display:none!important}
 
+
+/* ============================================================
+ * QRManut 7.5.0.5 - Aviso próprio do sistema
+ * ============================================================ */
+#qrAlertModal{
+  position:fixed;
+  inset:0;
+  z-index:99999;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  background:rgba(15,23,42,.58);
+  backdrop-filter:blur(2px);
+}
+#qrAlertModal.qr-alert-open{display:flex}
+.qr-alert-box{
+  width:min(430px,calc(100vw - 32px));
+  background:#fff;
+  border-radius:18px;
+  box-shadow:0 24px 70px rgba(15,23,42,.28);
+  overflow:hidden;
+  border:1px solid rgba(148,163,184,.35);
+}
+.qr-alert-header{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:18px 20px 12px;
+  font-size:1.18rem;
+  font-weight:800;
+  color:#0b315e;
+}
+.qr-alert-logo{
+  width:32px;
+  height:32px;
+  border-radius:9px;
+  display:grid;
+  place-items:center;
+  background:#eaf2fb;
+  font-size:18px;
+}
+.qr-alert-message{
+  padding:8px 20px 20px;
+  color:#263445;
+  font-size:1rem;
+  line-height:1.5;
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+}
+.qr-alert-actions{
+  display:flex;
+  justify-content:flex-end;
+  padding:0 20px 18px;
+}
+#qrAlertOk{
+  min-width:88px;
+  border:0;
+  border-radius:10px;
+  padding:11px 20px;
+  background:#0b315e;
+  color:#fff;
+  font-weight:700;
+  font-size:1rem;
+  cursor:pointer;
+}
+#qrAlertOk:active{transform:translateY(1px)}
+
 </style>
 </head>
 <body>
@@ -504,6 +572,20 @@ html,body{max-width:100%;overflow-x:hidden}
 </div>
 
 
+
+<div id="qrAlertModal" role="dialog" aria-modal="true" aria-labelledby="qrAlertTitle" aria-describedby="qrAlertMessage">
+  <div class="qr-alert-box">
+    <div class="qr-alert-header">
+      <div class="qr-alert-logo">🔧</div>
+      <div id="qrAlertTitle">QRManut</div>
+    </div>
+    <div id="qrAlertMessage" class="qr-alert-message"></div>
+    <div class="qr-alert-actions">
+      <button id="qrAlertOk" type="button">OK</button>
+    </div>
+  </div>
+</div>
+
 <div id="systemLoginModal" class="modal"><div class="modal-box"><h2>🔐 Acesso ao QRManut</h2><div class="system-login-note">O acesso ao Menu Principal é individual e controlado por perfil e escopo.</div><label>Usuário ou e-mail<input id="systemUsername" autocomplete="username"></label><label>Senha<div class="password-wrap"><input id="systemPassword" type="password" autocomplete="current-password"><button type="button" class="password-toggle" data-password-target="systemPassword" aria-label="Mostrar senha" title="Mostrar senha"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path><circle cx="12" cy="12" r="2.8"></circle></svg></button></div></label><button id="forgotPasswordButton" class="auth-link" type="button">Esqueci minha senha</button><div id="systemLoginMessage" class="message"></div><div class="modal-actions"><button id="cancelSystemLogin" class="btn btn-secondary">Cancelar</button><button id="sendSystemLogin" class="btn btn-blue">Entrar</button></div></div></div>
 
 <div id="forgotPasswordModal" class="modal"><div class="modal-box"><h2>🔑 Recuperar senha</h2><div class="muted">Informe seu usuário ou e-mail. Se o cadastro existir, o QRManut enviará as instruções.</div><label>Usuário ou e-mail<input id="recoveryIdentifier"></label><div id="recoveryMessage" class="message"></div><div class="modal-actions"><button id="cancelRecovery" class="btn btn-secondary">Cancelar</button><button id="sendRecovery" class="btn btn-blue">Enviar instruções</button></div></div></div>
@@ -561,13 +643,54 @@ html,body{max-width:100%;overflow-x:hidden}
 
 <form id="manageForm" method="POST" target="manageFrame" style="display:none"><input name="action" value="updateOccurrence"><input name="systemSessionToken" id="m_system_session"><input name="token" id="m_token"><input name="ocorrencia" id="m_occurrence"><input name="status" id="m_status"><input name="responsavel" id="m_responsible"><input name="solucao" id="m_solution"><input name="alteradoPor" id="m_changedBy"><input name="descricaoOcorrencia" id="m_description"><input name="categoriaOcorrenciaEdit" id="m_category"><input name="componenteAfetadoEdit" id="m_component"><input name="fotoOcorrenciaBase64" id="m_occurrencePhoto"><input name="fotoOcorrenciaNome" id="m_occurrencePhotoName"><input name="fotoOcorrenciaMime" id="m_occurrencePhotoMime"><input name="fotoConclusaoBase64" id="m_photo"><input name="fotoConclusaoNome" id="m_photoName"><input name="fotoConclusaoMime" id="m_photoMime"></form>
 <iframe id="manageFrame" name="manageFrame"></iframe>
-<div class="footer">QRManut • Versão 7.5.0.4</div>
+<div class="footer">QRManut • Versão 7.5.0.5</div>
 </div>
 <script>
 const API_URL="https://script.google.com/macros/s/AKfycbx4tpC42Q6WdkNhTUTAGoZWvG5M24zwlNscnwbDP5B3Q5pWo8B32-Lf0rQ2Xtua1AFMAQ/exec";
 const TOKEN="";const SYSTEM_SESSION_KEY="qrmanut_system_session";const RESPONSIBLE_KEY="qrmanut_responsavel";const PREVENTIVE_SESSION_KEY="qrmanut_preventive_session";const ORIGIN_ASSET_KEY="qrmanut_origin_asset";const MAX_DIM=1280;const QUALITY=.72;
 let systemSession=null,systemLoginNextAction=null,currentAsset=null,currentAssetStatus=null,history=[],selectedOccurrence=null,preventiveControlData=null,preventiveControlMode="all",preventiveSession=null,preventiveRequirements=null,loginNextAction=null,photoData=null,preventivePhotoData=null,correctionPhotoData=null,conclusionPhotoData=null,reportPosting=false,preventivePosting=false,managePosting=false,signatureDirty=false,signatureDrawing=false,signatureCtx=null,occurrenceReportData=null,occurrenceReportFiltersLoaded=false,pendingFiltersLoaded=false,auditFiltersLoaded=false,companyConfigLoaded=false,providersAdminData=[];
-const $=id=>document.getElementById(id);const show=id=>$(id).classList.remove("hidden");const hide=id=>$(id).classList.add("hidden");
+const $=id=>document.getElementById(id);
+
+const qrNativeAlert=window.alert.bind(window);
+function qrShowAlert(message,title){
+  const modal=document.getElementById("qrAlertModal");
+  const msg=document.getElementById("qrAlertMessage");
+  const ttl=document.getElementById("qrAlertTitle");
+  const ok=document.getElementById("qrAlertOk");
+
+  if(!modal||!msg||!ttl||!ok){
+    qrNativeAlert(message);
+    return;
+  }
+
+  ttl.textContent=title||"QRManut";
+  msg.textContent=String(message??"");
+  modal.classList.add("qr-alert-open");
+
+  const close=()=>{
+    modal.classList.remove("qr-alert-open");
+    ok.removeEventListener("click",close);
+    document.removeEventListener("keydown",onKey);
+  };
+
+  const onKey=e=>{
+    if(e.key==="Enter"||e.key==="Escape"){
+      e.preventDefault();
+      close();
+    }
+  };
+
+  ok.addEventListener("click",close);
+  document.addEventListener("keydown",onKey);
+  setTimeout(()=>ok.focus(),0);
+}
+
+/* Todos os alert() existentes passam a usar a identidade visual do QRManut. */
+window.alert=function(message){
+  qrShowAlert(message,"QRManut");
+};
+
+const show=id=>$(id).classList.remove("hidden");const hide=id=>$(id).classList.add("hidden");
 
 let deferredInstallPrompt=null;
 
