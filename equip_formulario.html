@@ -311,6 +311,8 @@ html,body{max-width:100%;overflow-x:hidden}
     <button id="tabDocuments" class="menu-button documents">📄 Documentos Técnicos</button>
     <button id="tabOccurrenceCatalog" class="menu-button hidden">🧩 Categorias e Componentes</button>
     <button id="tabMaintenancePending" class="menu-button hidden">📌 Pendências / Providências</button>
+<button id="tabAssetManagement" class="btn btn-secondary" type="button">🏷️ <span data-i18n="assetManagement">Gestão de Ativos</span></button>
+
     <button id="tabDocumentUpload" class="menu-button upload-doc hidden">📤 Upload de Documentos</button>
     <button id="tabUsers" class="menu-button users hidden">👥 Gestão de Usuários</button>
     <button id="tabAudit" class="menu-button audit hidden">🧾 Auditoria</button>
@@ -586,6 +588,87 @@ html,body{max-width:100%;overflow-x:hidden}
   </div>
 </div>
 
+
+<section id="assetManagementPanel" class="hidden" style="margin-top:16px">
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap">
+      <div>
+        <h2 data-i18n="assetManagement">Gestão de Ativos</h2>
+        <div class="muted" data-i18n="assetManagementHelp">Cadastre, edite e inative ativos sem alterar diretamente a planilha.</div>
+      </div>
+      <button id="assetNewButton" class="btn btn-primary" type="button">+ <span data-i18n="newAsset">Novo Ativo</span></button>
+    </div>
+    <div style="margin-top:14px">
+      <input id="assetSearch" type="search" placeholder="Buscar ativo..." style="width:100%">
+    </div>
+    <div id="assetList" style="margin-top:14px"></div>
+  </div>
+</section>
+
+<div id="assetEditModal" class="modal">
+  <div class="modal-content" style="max-width:720px">
+    <h2 id="assetEditTitle" data-i18n="newAsset">Novo Ativo</h2>
+    <input id="assetRow" type="hidden">
+    <div class="grid">
+      <label>Família / Prefixo
+        <select id="assetPrefix">
+          <option value="EQ">EQ - Equipamento</option>
+          <option value="AC">AC - Ar-condicionado</option>
+          <option value="CD">CD - Condensador</option>
+          <option value="EX">EX - Exaustor</option>
+          <option value="VT">VT - Ventilador</option>
+          <option value="ATP">ATP - Estrutura predial</option>
+          <option value="BAN">BAN - Banheiro</option>
+          <option value="AMB">AMB - Ambiente</option>
+        </select>
+      </label>
+      <label>Número-base
+        <div style="display:flex;gap:8px">
+          <input id="assetBaseNumber" maxlength="3" inputmode="numeric">
+          <button id="assetSuggestNumber" class="btn btn-secondary" type="button">Sugerir</button>
+        </div>
+      </label>
+      <label>Tipo / Sigla
+        <select id="assetTypeCode"></select>
+      </label>
+      <label>Pavimento / código
+        <select id="assetFloorCode">
+          <option value="1P">1º Piso (1P)</option>
+          <option value="2P">2º Piso (2P)</option>
+          <option value="3P">3º Piso (3P)</option>
+          <option value="EX">Externo (EX)</option>
+          <option value="ET">Externo/Térreo (ET)</option>
+        </select>
+      </label>
+    </div>
+    <div class="card" style="margin:12px 0;background:#f8fafc">
+      <div class="muted">ID sugerido</div>
+      <div id="assetSuggestedId" style="font-size:1.35rem;font-weight:800;color:#0b315e">—</div>
+    </div>
+    <div class="grid">
+      <label>Nome do Equipamento
+        <input id="assetName">
+      </label>
+      <label>Categoria
+        <input id="assetCategory">
+      </label>
+      <label>Pavimento
+        <input id="assetFloor">
+      </label>
+      <label>Localização
+        <input id="assetLocation">
+      </label>
+      <label>Status
+        <select id="assetStatus"><option>Ativo</option><option>Inativo</option></select>
+      </label>
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:16px">
+      <button id="assetCancel" class="btn btn-secondary" type="button">Cancelar</button>
+      <button id="assetSave" class="btn btn-primary" type="button">Salvar Ativo</button>
+    </div>
+  </div>
+</div>
+
 <div id="systemLoginModal" class="modal"><div class="modal-box"><h2>🔐 Acesso ao QRManut</h2><div class="system-login-note">O acesso ao Menu Principal é individual e controlado por perfil e escopo.</div><label>Usuário ou e-mail<input id="systemUsername" autocomplete="username"></label><label>Senha<div class="password-wrap"><input id="systemPassword" type="password" autocomplete="current-password"><button type="button" class="password-toggle" data-password-target="systemPassword" aria-label="Mostrar senha" title="Mostrar senha"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path><circle cx="12" cy="12" r="2.8"></circle></svg></button></div></label><button id="forgotPasswordButton" class="auth-link" type="button">Esqueci minha senha</button><div id="systemLoginMessage" class="message"></div><div class="modal-actions"><button id="cancelSystemLogin" class="btn btn-secondary">Cancelar</button><button id="sendSystemLogin" class="btn btn-blue">Entrar</button></div></div></div>
 
 <div id="forgotPasswordModal" class="modal"><div class="modal-box"><h2>🔑 Recuperar senha</h2><div class="muted">Informe seu usuário ou e-mail. Se o cadastro existir, o QRManut enviará as instruções.</div><label>Usuário ou e-mail<input id="recoveryIdentifier"></label><div id="recoveryMessage" class="message"></div><div class="modal-actions"><button id="cancelRecovery" class="btn btn-secondary">Cancelar</button><button id="sendRecovery" class="btn btn-blue">Enviar instruções</button></div></div></div>
@@ -643,7 +726,7 @@ html,body{max-width:100%;overflow-x:hidden}
 
 <form id="manageForm" method="POST" target="manageFrame" style="display:none"><input name="action" value="updateOccurrence"><input name="systemSessionToken" id="m_system_session"><input name="token" id="m_token"><input name="ocorrencia" id="m_occurrence"><input name="status" id="m_status"><input name="responsavel" id="m_responsible"><input name="solucao" id="m_solution"><input name="alteradoPor" id="m_changedBy"><input name="descricaoOcorrencia" id="m_description"><input name="categoriaOcorrenciaEdit" id="m_category"><input name="componenteAfetadoEdit" id="m_component"><input name="fotoOcorrenciaBase64" id="m_occurrencePhoto"><input name="fotoOcorrenciaNome" id="m_occurrencePhotoName"><input name="fotoOcorrenciaMime" id="m_occurrencePhotoMime"><input name="fotoConclusaoBase64" id="m_photo"><input name="fotoConclusaoNome" id="m_photoName"><input name="fotoConclusaoMime" id="m_photoMime"></form>
 <iframe id="manageFrame" name="manageFrame"></iframe>
-<div class="footer">QRManut • Versão 7.5.0.5</div>
+<div class="footer">QRManut • Versão 7.6.0</div>
 </div>
 <script>
 const API_URL="https://script.google.com/macros/s/AKfycbx4tpC42Q6WdkNhTUTAGoZWvG5M24zwlNscnwbDP5B3Q5pWo8B32-Lf0rQ2Xtua1AFMAQ/exec";
@@ -906,6 +989,7 @@ async function clearPendingFilters(){
 }
 
 async function loadPreventiveControl(){if(!$("controlCompetence").value)$("controlCompetence").value=currentCompetence();qrRefreshLocalizedDateControls();const provider=["MASTER","GESTOR"].includes(systemSession?.perfil)?$("controlProvider").value:"";const r=await api({action:"preventivecontrol",competencia:$("controlCompetence").value,prestador:provider,systemSession:systemSession.systemSessionToken});if(!r.ok){clearSystemSession();showMenuGate();return}preventiveControlData=r.data;renderPreventiveControl()}
+    ["MASTER","GESTOR"].includes(systemSession?.perfil)?show("tabAssetManagement"):hide("tabAssetManagement");
 function aguardarPinturaTela(){return new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))}
 async function refreshPreventiveControl(){const btn=$("controlRefresh");if(!btn||btn.dataset.loading==="1")return;const inicio=Date.now();btn.dataset.loading="1";btn.disabled=true;btn.textContent="Atualizando...";await aguardarPinturaTela();try{await loadPreventiveControl()}catch(e){$("controlListStatus").textContent="Erro ao atualizar as preventivas."}finally{const decorrido=Date.now()-inicio;if(decorrido<700)await new Promise(resolve=>setTimeout(resolve,700-decorrido));btn.textContent="Atualizar";btn.disabled=false;delete btn.dataset.loading}}
 function renderPreventiveControl(){const d=preventiveControlData,s=d.summary;$("preventiveLoggedInfo").innerHTML=`Acesso: <b>${esc(systemSession.usuario)}</b> • Perfil: <b>${esc(systemSession.perfil)}</b> • Prestador: <b>${esc(systemSession.prestador)}</b>`;$("controlTitle").textContent="Preventivas – "+d.competenciaDescricao;$("controlSummary").innerHTML=`<div class="control-summary-card"><strong>${s.previstas}</strong>Previstas</div><div class="control-summary-card"><strong>✅ ${s.realizadas}</strong>Realizadas</div><div class="control-summary-card"><strong>🔴 ${s.pendentes}</strong>Pendentes</div><div class="control-summary-card"><strong>${s.percentual}%</strong>Conclusão</div>`;$("progressText").textContent=s.percentual+"%";$("progressFill").style.width=s.percentual+"%";if(["MASTER","GESTOR"].includes(systemSession.perfil)){const atual=$("controlProvider").value;if(!atual||$("controlProvider").options.length<=1){$("controlProvider").innerHTML='<option value="">Todos os prestadores</option>'+d.prestadores.map(p=>`<option value="${esc(p.prestador)}">${esc(p.prestador)}</option>`).join("")}$("controlProvider").disabled=false}else{$("controlProvider").innerHTML=`<option value="${esc(systemSession.prestador)}">${esc(systemSession.prestador)}</option>`;$("controlProvider").disabled=true}$("providerSummary").innerHTML=d.prestadores.map(p=>`<div class="provider-card"><b>${esc(p.prestador)}</b><br>Previstas: ${p.previstas} • Realizadas: ${p.realizadas} • Pendentes: ${p.pendentes} • ${p.percentual}%</div>`).join("");renderControlList()}
@@ -1922,6 +2006,123 @@ function clearMaintenancePendingFilters(){
 function togglePreventiveActionFields(){
   if($("preventiveNeedsAction").checked)show("preventiveActionFields");
   else hide("preventiveActionFields");
+}
+
+
+
+let qrAssets760=[],qrAssetTypes760=[];
+
+function assetApi760(action,payload={}){
+  return apiPost({action,...payload});
+}
+
+function assetBuildId760(){
+  const prefix=$("assetPrefix").value||"EQ";
+  const base=String($("assetBaseNumber").value||"").replace(/\D/g,"").padStart(3,"0");
+  const type=$("assetTypeCode").value||"";
+  const floor=$("assetFloorCode").value||"";
+  $("assetSuggestedId").textContent=(base==="000"||!base)?"—":prefix+base+type+floor;
+}
+
+function assetFillTypes760(){
+  const sel=$("assetTypeCode");
+  sel.innerHTML='<option value="">—</option>'+qrAssetTypes760.map(t=>`<option value="${esc(t.codigo)}">${esc(t.codigo)} - ${esc(t.descricao)}</option>`).join("");
+}
+
+async function loadAssets760(){
+  const r=await assetApi760("listassets760");
+  if(!r.ok)throw new Error(r.error||"Erro ao carregar ativos.");
+  qrAssets760=r.items||[];
+  qrAssetTypes760=r.types||[];
+  assetFillTypes760();
+  renderAssets760();
+}
+
+function renderAssets760(){
+  const q=String($("assetSearch").value||"").toLowerCase();
+  const items=qrAssets760.filter(a=>(a.id+" "+a.nome+" "+a.localizacao+" "+a.categoria).toLowerCase().includes(q));
+  $("assetList").innerHTML=items.length?items.map(a=>`
+    <div class="card" style="margin-bottom:8px">
+      <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap">
+        <div>
+          <div style="font-weight:800">${esc(a.id)}</div>
+          <div>${esc(a.nome||"")}</div>
+          <div class="muted">${esc(a.pavimento||"")} ${a.localizacao?"• "+esc(a.localizacao):""}</div>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <button class="btn btn-secondary" onclick="editAsset760(${Number(a.row)})">Editar</button>
+          <button class="btn btn-secondary" onclick="toggleAsset760(${Number(a.row)},${String(a.status).toLowerCase()!=="inativo"})">${String(a.status).toLowerCase()==="inativo"?"Ativar":"Inativar"}</button>
+        </div>
+      </div>
+    </div>`).join(""):'<div class="muted">Nenhum ativo encontrado.</div>';
+}
+
+function openAssetModal760(a){
+  $("assetRow").value=a?.row||"";
+  $("assetEditTitle").textContent=a?"Editar Ativo":"Novo Ativo";
+  $("assetPrefix").value="EQ";
+  $("assetBaseNumber").value="";
+  $("assetTypeCode").value="";
+  $("assetFloorCode").value="1P";
+  $("assetName").value=a?.nome||"";
+  $("assetCategory").value=a?.categoria||"";
+  $("assetFloor").value=a?.pavimento||"";
+  $("assetLocation").value=a?.localizacao||"";
+  $("assetStatus").value=a?.status||"Ativo";
+  $("assetSuggestedId").textContent=a?.id||"—";
+  $("assetEditModal").classList.add("show");
+}
+
+function editAsset760(row){
+  const a=qrAssets760.find(x=>Number(x.row)===Number(row));
+  if(a)openAssetModal760(a);
+}
+
+async function suggestAssetNumber760(){
+  const r=await assetApi760("nextassetbase760",{prefix:$("assetPrefix").value||"EQ"});
+  if(!r.ok)throw new Error(r.error||"Erro ao sugerir número.");
+  $("assetBaseNumber").value=r.numeroBase||"";
+  assetBuildId760();
+}
+
+async function saveAsset760(){
+  const row=Number($("assetRow").value||0);
+  const existing=row?qrAssets760.find(x=>Number(x.row)===row):null;
+  const id=existing?.id||$("assetSuggestedId").textContent;
+  if(!existing && (!id||id==="—"))return alert(qrLanguage?.startsWith("en")?"Generate the asset ID before saving.":"Gere o ID do ativo antes de salvar.");
+
+  const r=await assetApi760("saveasset760",{
+    row,
+    id,
+    prefix:$("assetPrefix").value,
+    numeroBase:$("assetBaseNumber").value,
+    tipoCodigo:$("assetTypeCode").value,
+    pavimentoCodigo:$("assetFloorCode").value,
+    nome:$("assetName").value,
+    categoria:$("assetCategory").value,
+    pavimento:$("assetFloor").value,
+    localizacao:$("assetLocation").value,
+    status:$("assetStatus").value
+  });
+  if(!r.ok)return alert(r.error||"Erro ao salvar ativo.");
+  $("assetEditModal").classList.remove("show");
+  await loadAssets760();
+  alert((qrLanguage?.startsWith("en")?"Asset saved: ":"Ativo salvo: ")+r.id);
+}
+
+async function toggleAsset760(row,isActive){
+  const r=await assetApi760("setassetactive760",{row,active:!isActive});
+  if(!r.ok)return alert(r.error||"Erro ao atualizar ativo.");
+  await loadAssets760();
+}
+
+function openAssetManagement760(){
+  if(!["MASTER","GESTOR"].includes(systemSession?.perfil)){
+    return alert(qrLanguage?.startsWith("en")?"Your profile does not have permission to manage assets.":"Seu perfil não possui permissão para gerenciar ativos.");
+  }
+  document.querySelectorAll("main section").forEach(s=>s.classList.add("hidden"));
+  $("assetManagementPanel").classList.remove("hidden");
+  loadAssets760().catch(e=>alert(e.message));
 }
 
 
@@ -2970,6 +3171,18 @@ qrTranslateAttributes(document.body);
 
 qrInstallLocalizedDateControls();
 async function main(){buildManageDropdowns();setupPasswordToggles();readPreventiveSession();readSystemSession();setupInstallExperience();await loadPublicAppConfig();qrApplyLanguage(qrLanguage);if(await openSetPasswordFromUrl())return;$("controlCompetence").value=currentCompetence();setDefaultOccurrenceReportDates();const id=getId();if(!id||id==="EQBUSCA"){clearOriginAsset();show("searchScreen");if(await systemSessionIsValid())openMainMenu();else showMenuGate();return}await loadAsset(id)}main();
+
+$("tabAssetManagement").onclick=openAssetManagement760;
+$("assetNewButton").onclick=()=>openAssetModal760(null);
+$("assetCancel").onclick=()=>$("assetEditModal").classList.remove("show");
+$("assetSave").onclick=()=>saveAsset760().catch(e=>alert(e.message));
+$("assetSuggestNumber").onclick=()=>suggestAssetNumber760().catch(e=>alert(e.message));
+$("assetSearch").oninput=renderAssets760;
+["assetPrefix","assetBaseNumber","assetTypeCode","assetFloorCode"].forEach(id=>{
+  $(id).addEventListener("input",assetBuildId760);
+  $(id).addEventListener("change",assetBuildId760);
+});
+
 </script>
 
 </body>
