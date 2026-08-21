@@ -740,7 +740,7 @@ html,body{max-width:100%;overflow-x:hidden}
 
 <form id="manageForm" method="POST" target="manageFrame" style="display:none"><input name="action" value="updateOccurrence"><input name="systemSessionToken" id="m_system_session"><input name="token" id="m_token"><input name="ocorrencia" id="m_occurrence"><input name="status" id="m_status"><input name="responsavel" id="m_responsible"><input name="solucao" id="m_solution"><input name="alteradoPor" id="m_changedBy"><input name="descricaoOcorrencia" id="m_description"><input name="categoriaOcorrenciaEdit" id="m_category"><input name="componenteAfetadoEdit" id="m_component"><input name="fotoOcorrenciaBase64" id="m_occurrencePhoto"><input name="fotoOcorrenciaNome" id="m_occurrencePhotoName"><input name="fotoOcorrenciaMime" id="m_occurrencePhotoMime"><input name="fotoConclusaoBase64" id="m_photo"><input name="fotoConclusaoNome" id="m_photoName"><input name="fotoConclusaoMime" id="m_photoMime"></form>
 <iframe id="manageFrame" name="manageFrame"></iframe>
-<div class="footer">QRManut • Versão 7.6.0.6</div>
+<div class="footer">QRManut • Versão 7.6.0.7</div>
 </div>
 <script>
 const API_URL="https://script.google.com/macros/s/AKfycbx4tpC42Q6WdkNhTUTAGoZWvG5M24zwlNscnwbDP5B3Q5pWo8B32-Lf0rQ2Xtua1AFMAQ/exec";
@@ -1304,6 +1304,199 @@ async function loadPreventiveHistory(){
     </div>`;
   }).join("");
 }
+
+const PREVENTIVE_DOCUMENT_MAX_BYTES=8*1024*1024;
+const PREVENTIVE_DOCUMENT_TYPES=[
+  "Relatório do prestador",
+  "Checklist de manutenção",
+  "Relatório técnico",
+  "Certificado",
+  "Laudo",
+  "Ordem de serviço externa",
+  "Outro"
+];
+
+function preventiveDocumentTypeLabel7606(v){
+  if(qrLanguage!=="en-US")return v;
+  const map={
+    "Relatório do prestador":"Service provider report",
+    "Checklist de manutenção":"Maintenance checklist",
+    "Relatório técnico":"Technical report",
+    "Certificado":"Certificate",
+    "Laudo":"Technical assessment",
+    "Ordem de serviço externa":"External work order",
+    "Outro":"Other"
+  };
+  return map[v]||v;
+}
+
+function refreshPreventiveDocumentsUi7606(){
+  if(!$("preventiveDocumentsTitle"))return;
+
+  $("preventiveDocumentsTitle").textContent=qrLanguage==="en-US"
+    ?"📎 Preventive maintenance documents (optional)"
+    :"📎 Documentos da preventiva (opcional)";
+
+  $("preventiveDocumentsHelp").textContent=qrLanguage==="en-US"
+    ?"Attach a service provider report, checklist, technical assessment or other PDF evidence."
+    :"Anexe relatório do prestador, checklist, laudo ou outra evidência em PDF.";
+
+  $("preventiveDocumentAddButton").textContent=qrLanguage==="en-US"
+    ?"📎 Attach PDF document"
+    :"📎 Anexar documento PDF";
+}
+
+function resetPreventiveDocuments7606(){
+  preventiveDocumentFiles=[];
+  if($("preventiveDocumentInput"))$("preventiveDocumentInput").value="";
+  renderPreventiveDocuments7606();
+}
+
+function renderPreventiveDocuments7606(){
+  if(!$("preventiveDocumentList"))return;
+
+  refreshPreventiveDocumentsUi7606();
+
+  const t=(pt,en)=>qrLanguage==="en-US"?en:pt;
+  const list=$("preventiveDocumentList");
+
+  if(!preventiveDocumentFiles.length){
+    list.innerHTML=`<div class="muted">${t("Nenhum documento anexado.","No document attached.")}</div>`;
+    return;
+  }
+
+  list.innerHTML=preventiveDocumentFiles.map((d,i)=>`
+    <div style="border:1px solid #e5e7eb;border-radius:10px;padding:10px;margin-top:8px;background:#fff">
+      <div style="display:flex;justify-content:space-between;gap:8px;align-items:flex-start">
+        <div>
+          <b>📄 ${esc(d.file.name)}</b>
+          <div class="muted">${(d.file.size/1024/1024).toFixed(2)} MB</div>
+        </div>
+        <button type="button" class="btn btn-secondary" style="padding:6px 9px" onclick="removePreventiveDocument7606(${i})">✕</button>
+      </div>
+
+      <label style="margin-top:8px">${t("Tipo de documento","Document type")}
+        <select onchange="setPreventiveDocumentType7606(${i},this.value)">
+          ${PREVENTIVE_DOCUMENT_TYPES.map(x=>`<option value="${esc(x)}" ${x===d.type?"selected":""}>${esc(preventiveDocumentTypeLabel7606(x))}</option>`).join("")}
+        </select>
+      </label>
+
+      <label>${t("Descrição (opcional)","Description (optional)")}
+        <input value="${esc(d.description||"")}" oninput="setPreventiveDocumentDescription7606(${i},this.value)">
+      </label>
+    </div>
+  `).join("");
+}
+
+function setPreventiveDocumentType7606(i,v){
+  if(preventiveDocumentFiles[i])preventiveDocumentFiles[i].type=v;
+}
+
+function setPreventiveDocumentDescription7606(i,v){
+  if(preventiveDocumentFiles[i])preventiveDocumentFiles[i].description=v;
+}
+
+function removePreventiveDocument7606(i){
+  preventiveDocumentFiles.splice(i,1);
+  renderPreventiveDocuments7606();
+}
+
+function addPreventiveDocuments7606(files){
+  const t=(pt,en)=>qrLanguage==="en-US"?en:pt;
+  const errors=[];
+
+  Array.from(files||[]).forEach(file=>{
+    const isPdf=file.type==="application/pdf"||/\.pdf$/i.test(file.name||"");
+
+    if(!isPdf){
+      errors.push(`${file.name}: ${t("somente PDF é permitido","PDF files only")}`);
+      return;
+    }
+
+    if(file.size>PREVENTIVE_DOCUMENT_MAX_BYTES){
+      errors.push(`${file.name}: ${t("arquivo acima de 8 MB","file exceeds 8 MB")}`);
+      return;
+    }
+
+    const duplicate=preventiveDocumentFiles.some(d=>
+      d.file.name===file.name &&
+      d.file.size===file.size &&
+      d.file.lastModified===file.lastModified
+    );
+
+    if(!duplicate){
+      preventiveDocumentFiles.push({
+        file,
+        type:"Relatório do prestador",
+        description:""
+      });
+    }
+  });
+
+  if($("preventiveDocumentInput"))$("preventiveDocumentInput").value="";
+  renderPreventiveDocuments7606();
+
+  if(errors.length){
+    showPreventiveError(errors.join("\n"));
+  }
+}
+
+async function uploadPreventiveDocuments7606(registro){
+  if(!preventiveDocumentFiles.length){
+    return {ok:true,total:0,uploaded:0,failed:[]};
+  }
+
+  const t=(pt,en)=>qrLanguage==="en-US"?en:pt;
+  const failed=[];
+  let uploaded=0;
+
+  for(let i=0;i<preventiveDocumentFiles.length;i++){
+    const item=preventiveDocumentFiles[i];
+
+    $("preventiveMessage").className="message loading";
+    $("preventiveMessage").textContent=
+      `${t("Enviando documento","Uploading document")} ${i+1}/${preventiveDocumentFiles.length}: ${item.file.name}`;
+
+    try{
+      const dataUrl=await readUploadPdf(item.file);
+
+      const r=await apiPost({
+        action:"uploadPreventiveDocument",
+        systemSessionToken:systemSession.systemSessionToken,
+        preventiveDocumentRecord:registro,
+        preventiveDocumentType:item.type,
+        preventiveDocumentDescription:item.description||"",
+        preventiveDocumentFileName:item.file.name,
+        preventiveDocumentMime:"application/pdf",
+        preventiveDocumentBase64:dataUrl
+      });
+
+      if(!r.ok){
+        throw new Error(
+          r.detail||
+          t("Falha no envio do documento.","Document upload failed.")
+        );
+      }
+
+      uploaded++;
+
+    }catch(e){
+      failed.push({
+        name:item.file.name,
+        error:e.message
+      });
+    }
+  }
+
+  return {
+    ok:failed.length===0,
+    total:preventiveDocumentFiles.length,
+    uploaded,
+    failed
+  };
+}
+
+
 function requestPreventive(){requirePreventiveLogin(async()=>{await openPreventive();loadPreventiveHistory()},currentAsset.prestador)}
 async function openPreventive(){preventivePhotoData=null;resetPreventiveDocuments7606();signatureDirty=false;$("preventivePhotoInput").value="";$("preventivePhotoPreview").style.display="none";$("preventiveMessage").className="message";$("preventiveAsset").textContent=currentAsset.id+" – "+currentAsset.nome_do_equipamento;$("preventivePeriodicity").textContent=currentAsset.periodicidade||"Não informada";$("preventiveProvider").textContent=currentAsset.prestador||"Não informado";$("preventiveCompetence").textContent=currentCompetence();$("preventiveResponsible").value=getSavedResponsible();$("preventiveObservation").value="";$("preventiveNeedsAction").checked=false;hide("preventiveActionFields");$("preventiveActionType").value="";$("preventiveActionDescription").value="";$("preventiveActionPriority").value="Média";$("preventiveActionMaterial").value="";$("preventiveActionQuantity").value="";$("preventiveActionOperation").value="";const r=await api({action:"preventiverequirements",id:currentAsset.id,systemSession:systemSession.systemSessionToken});if(!r.ok){alert(r.detail||"Não foi possível carregar as regras.");return}preventiveRequirements=r.data;renderPreventiveRequirements();$("preventiveModal").style.display="flex";if(!$("signatureBox").classList.contains("hidden"))requestAnimationFrame(setupSignatureCanvas)}
 function renderPreventiveRequirements(){const r=preventiveRequirements;$("preventiveRequirements").innerHTML=`<b>Requisitos deste registro</b><div class="requirement ${r.exigirAssinatura?"required-yes":"required-no"}">${r.exigirAssinatura?"● Assinatura obrigatória":"✓ Assinatura não obrigatória"}</div><div class="requirement ${r.fotoObrigatoria?"required-yes":"required-no"}">${r.fotoObrigatoria?"● Foto obrigatória":"✓ Foto opcional"}</div><div class="requirement ${r.observacaoObrigatoria?"required-yes":"required-no"}">${r.observacaoObrigatoria?"● Observação obrigatória":"✓ Observação opcional"}</div>`;if(r.exigirAssinatura){show("signatureBox");$("signatureRequiredText").textContent=" * obrigatório"}else hide("signatureBox")}
