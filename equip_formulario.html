@@ -812,7 +812,7 @@ html,body{max-width:100%;overflow-x:hidden}
 
 <form id="manageForm" method="POST" target="manageFrame" style="display:none"><input name="action" value="updateOccurrence"><input name="systemSessionToken" id="m_system_session"><input name="token" id="m_token"><input name="ocorrencia" id="m_occurrence"><input name="status" id="m_status"><input name="responsavel" id="m_responsible"><input name="solucao" id="m_solution"><input name="alteradoPor" id="m_changedBy"><input name="descricaoOcorrencia" id="m_description"><input name="categoriaOcorrenciaEdit" id="m_category"><input name="componenteAfetadoEdit" id="m_component"><input name="fotoOcorrenciaBase64" id="m_occurrencePhoto"><input name="fotoOcorrenciaNome" id="m_occurrencePhotoName"><input name="fotoOcorrenciaMime" id="m_occurrencePhotoMime"><input name="fotoConclusaoBase64" id="m_photo"><input name="fotoConclusaoNome" id="m_photoName"><input name="fotoConclusaoMime" id="m_photoMime"></form>
 <iframe id="manageFrame" name="manageFrame"></iframe>
-<div class="footer">QRManut • Versão 7.6.1.0</div>
+<div class="footer">QRManut • Versão 7.6.1.1</div>
 </div>
 <script>
 const API_URL="https://script.google.com/macros/s/AKfycbx4tpC42Q6WdkNhTUTAGoZWvG5M24zwlNscnwbDP5B3Q5pWo8B32-Lf0rQ2Xtua1AFMAQ/exec";
@@ -2582,6 +2582,9 @@ function renderAssets760(){
       </div>
     </div>`;
   }).join(""):'<div class="muted">Nenhum ativo encontrado.</div>';
+
+  qrTranslateElementTree($("assetManagementPanel"));
+  qrTranslateAttributes($("assetManagementPanel"));
 }
 
 function openAssetModal760(a){
@@ -2637,6 +2640,8 @@ function openAssetModal760(a){
   $("assetNotes").value=a?.observacoes||"";
 
   $("assetEditModal").style.display="flex";
+  qrTranslateElementTree($("assetEditModal"));
+  qrTranslateAttributes($("assetEditModal"));
   setTimeout(()=>$("assetName").focus(),80);
 }
 
@@ -3110,6 +3115,102 @@ const QR_ROUTINE_PT_EN={
   "novembro":"November",
   "dezembro":"December",
   "Visão MASTER: utilize os filtros abaixo para consultar as OCs pendentes.":"MASTER view: use the filters below to view pending work orders.",
+  "Gestão de Ativos":"Asset Management",
+  "Cadastre, edite e inative ativos sem alterar diretamente a planilha.":"Create, edit and deactivate assets without changing the spreadsheet directly.",
+  "Novo Ativo":"New Asset",
+  "Editar Ativo":"Edit Asset",
+  "Buscar ativo...":"Search asset...",
+  "Nenhum ativo encontrado.":"No assets found.",
+  "Editar":"Edit",
+  "ID do ativo":"Asset ID",
+  "O ID é preservado durante a edição para manter o histórico, QR Code e documentos vinculados.":"The asset ID is preserved during editing to keep history, QR Code and linked documents intact.",
+  "1. Identificação":"1. Identification",
+  "Monte o código do ativo e informe sua identificação principal.":"Build the asset code and enter its main identification information.",
+  "Família / Prefixo":"Family / Prefix",
+  "Número-base":"Base Number",
+  "Sugerir":"Suggest",
+  "Tipo / Sigla":"Type / Code",
+  "Pavimento / código do ID":"Floor / ID Code",
+  "ID sugerido":"Suggested ID",
+  "2. Classificação e localização":"2. Classification and Location",
+  "Nome do Equipamento *":"Equipment Name *",
+  "Categoria do Ativo":"Asset Category",
+  "Classe de Manutenção":"Maintenance Class",
+  "Pavimento":"Floor",
+  "Localização":"Location",
+  "Local Detalhado":"Detailed Location",
+  "3. Dados técnicos":"3. Technical Data",
+  "Dados técnicos":"Technical Data",
+  "Fabricante":"Manufacturer",
+  "Modelo":"Model",
+  "Número de Série":"Serial Number",
+  "Capacidade":"Capacity",
+  "Amperagem Nominal (FLA)":"Rated Current (FLA)",
+  "Amperagem de Partida (FLR)":"Starting Current (FLR)",
+  "Amperagem Medida":"Measured Current",
+  "Voltagem":"Voltage",
+  "Peso":"Weight",
+  "Ano de Aquisição":"Acquisition Year",
+  "Vida Útil Estimada":"Estimated Useful Life",
+  "4. Manutenção":"4. Maintenance",
+  "Prestador":"Service Provider",
+  "Periodicidade":"Frequency",
+  "Sem prestador":"No service provider",
+  "Sem periodicidade":"No frequency",
+  "Salvar Ativo":"Save Asset",
+  "Informe a nova categoria":"Enter the new category",
+  "Informe a classe de manutenção":"Enter the maintenance class",
+  "Informe o pavimento":"Enter the floor",
+  "Informe a localização":"Enter the location",
+  "Informe a periodicidade":"Enter the frequency",
+  "Ex.: Casa de máquinas, ao lado do quadro elétrico":"E.g.: Mechanical room, next to the electrical panel",
+  "Equipamento":"Equipment",
+  "Infraestrutura":"Infrastructure",
+  "Sistema":"System",
+  "Ambiente":"Environment",
+  "TÉRREO":"GROUND FLOOR",
+  "1º PISO":"1ST FLOOR",
+  "2º PISO":"2ND FLOOR",
+  "3º PISO":"3RD FLOOR",
+  "EXTERNO":"EXTERIOR",
+  "1º Piso (1P)":"1st Floor (1P)",
+  "2º Piso (2P)":"2nd Floor (2P)",
+  "3º Piso (3P)":"3rd Floor (3P)",
+  "Externo (EX)":"Exterior (EX)",
+  "Externo/Térreo (ET)":"Exterior/Ground Floor (ET)",
+  "Desativado":"Deactivated",
+  "Estq Manut":"Maintenance Stock",
+  "Crítica":"Critical",
+  "Preventiva":"Preventive",
+  "Corretiva":"Corrective",
+  "Preditiva":"Predictive",
+  "Inspeção":"Inspection",
+  "Equipamento com manutenção terceirizada":"Equipment with outsourced maintenance",
+  "Bimestral":"Every two months",
+  "Bomba Hidráulica":"Hydraulic Pump",
+  "Ventilador":"Fan",
+  "Condensador":"Condenser",
+  "Evaporadora":"Evaporator",
+  "Compressor":"Compressor",
+  "Ar-condicionado":"Air Conditioner",
+  "Exaustor":"Exhaust Fan",
+  "Piso Teto":"Floor-Ceiling Unit",
+  "Cassete":"Cassette Unit",
+  "Chiller":"Chiller",
+  "Gerador":"Generator",
+  "Vaso de Pressão":"Pressure Vessel",
+  "Vaso/Reservatório":"Vessel/Reservoir",
+  "Manômetro":"Pressure Gauge",
+  "Válvula de Segurança":"Safety Valve",
+  "Climatizador":"Air Cooler",
+  "Câmara":"Chamber",
+  "Seladora":"Sealer",
+  "Split":"Split Unit",
+  "Transformador":"Transformer",
+  "Cabine Blindada":"Metal-Enclosed Switchgear",
+  "Bebedouro":"Drinking Fountain",
+  "Liofilizador":"Freeze Dryer",
+  "Monta Carga":"Dumbwaiter",
   "Tipo de Ativo":"Asset Type",
   "Subcategoria":"Subcategory",
   "Criticidade":"Criticality",
@@ -3176,6 +3277,16 @@ function qrTranslateCompositeText(text){
   // Exact match first
   const exact=qrTranslateExactText(t);
   if(exact!==t)return exact;
+
+  // Asset type/code options, e.g. "BH - Bomba Hidráulica".
+  // Only visible text changes; the internal option value is preserved.
+  let assetCodeMatch=t.match(/^([A-Z0-9_]+)\s+-\s+(.+)$/i);
+  if(assetCodeMatch){
+    const translatedDescription=qrTranslateExactText(assetCodeMatch[2]);
+    if(translatedDescription!==assetCodeMatch[2]){
+      return assetCodeMatch[1]+" - "+translatedDescription;
+    }
+  }
 
   if(qrLanguage==="en-US"){
     const prefixes=[
@@ -3337,7 +3448,8 @@ function qrTranslateRoutineScreens(){
     "documentUploadArea","companyArea","providersAdminArea","auditArea",
     "usersArea","preventiveControlArea","assetScreen","systemLoginModal",
     "forgotPasswordModal","setPasswordModal","userModal","providerModal",
-    "preventiveModal","reportModal","manageModal"
+    "preventiveModal","reportModal","manageModal",
+    "assetManagementPanel","assetEditModal"
   ].forEach(id=>{
     const el=document.getElementById(id);
     if(el){qrTranslateElementTree(el);qrTranslateAttributes(el);}
