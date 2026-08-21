@@ -287,6 +287,22 @@ html,body{max-width:100%;overflow-x:hidden}
 }
 #qrAlertOk:active{transform:translateY(1px)}
 
+
+/* ============================================================
+ * QRManut 7.6.1.0 - Cadastro completo de ativos
+ * ============================================================ */
+.asset-form-section{margin-top:14px;padding:14px;border:1px solid #e2e8f0;border-radius:13px;background:#fff}
+.asset-form-section h3{margin:0 0 4px;color:#0b315e}
+.asset-form-help{font-size:.8rem;color:#64748b;margin-bottom:8px}
+.asset-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 12px}
+.asset-form-grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.asset-form-grid .full{grid-column:1/-1}
+.asset-id-card{margin:12px 0;background:#f8fafc;border:1px solid #cbd5e1;border-radius:12px;padding:12px}
+.asset-id-value{font-size:1.35rem;font-weight:800;color:#0b315e;word-break:break-all}
+.asset-existing-id{padding:10px 12px;border:1px solid #bfdbfe;background:#eff6ff;border-radius:10px;margin:8px 0 2px}
+.asset-other-input.hidden{display:none!important}
+@media(max-width:720px){.asset-form-grid,.asset-form-grid.three{grid-template-columns:1fr}.asset-form-grid .full{grid-column:auto}}
+
 </style>
 </head>
 <body>
@@ -606,65 +622,121 @@ html,body{max-width:100%;overflow-x:hidden}
 </section>
 
 <div id="assetEditModal" class="modal">
-  <div class="modal-box" style="max-width:720px">
-    <h2 id="assetEditTitle" data-i18n="newAsset">Novo Ativo</h2>
+  <div class="modal-box" style="max-width:920px">
+    <h2 id="assetEditTitle">Novo Ativo</h2>
     <input id="assetRow" type="hidden">
-    <div class="grid">
-      <label>Família / Prefixo
-        <select id="assetPrefix">
-          <option value="EQ">EQ - Equipamento</option>
-          <option value="AC">AC - Ar-condicionado</option>
-          <option value="CD">CD - Condensador</option>
-          <option value="EX">EX - Exaustor</option>
-          <option value="VT">VT - Ventilador</option>
-          <option value="ATP">ATP - Estrutura predial</option>
-          <option value="BAN">BAN - Banheiro</option>
-          <option value="AMB">AMB - Ambiente</option>
-        </select>
-      </label>
-      <label>Número-base
-        <div style="display:flex;gap:8px">
-          <input id="assetBaseNumber" maxlength="3" inputmode="numeric">
-          <button id="assetSuggestNumber" class="btn btn-secondary" type="button">Sugerir</button>
-        </div>
-      </label>
-      <label>Tipo / Sigla
-        <select id="assetTypeCode"></select>
-      </label>
-      <label>Pavimento / código
-        <select id="assetFloorCode">
-          <option value="1P">1º Piso (1P)</option>
-          <option value="2P">2º Piso (2P)</option>
-          <option value="3P">3º Piso (3P)</option>
-          <option value="EX">Externo (EX)</option>
-          <option value="ET">Externo/Térreo (ET)</option>
-        </select>
-      </label>
+
+    <div id="assetExistingIdBox" class="asset-existing-id hidden">
+      <div class="muted">ID do ativo</div>
+      <div id="assetExistingId" class="asset-id-value">—</div>
+      <div class="muted" style="margin-top:3px">O ID é preservado durante a edição para manter o histórico, QR Code e documentos vinculados.</div>
     </div>
-    <div class="card" style="margin:12px 0;background:#f8fafc">
-      <div class="muted">ID sugerido</div>
-      <div id="assetSuggestedId" style="font-size:1.35rem;font-weight:800;color:#0b315e">—</div>
+
+    <div id="assetIdBuilderSection" class="asset-form-section">
+      <h3>1. Identificação</h3>
+      <div class="asset-form-help">Monte o código do ativo e informe sua identificação principal.</div>
+      <div class="asset-form-grid three">
+        <label>Família / Prefixo
+          <select id="assetPrefix">
+            <option value="EQ">EQ - Equipamento</option>
+            <option value="AC">AC - Ar-condicionado</option>
+            <option value="CD">CD - Condensador</option>
+            <option value="EX">EX - Exaustor</option>
+            <option value="VT">VT - Ventilador</option>
+            <option value="ATP">ATP - Estrutura predial</option>
+            <option value="BAN">BAN - Banheiro</option>
+            <option value="AMB">AMB - Ambiente</option>
+          </select>
+        </label>
+        <label>Número-base
+          <div style="display:flex;gap:8px">
+            <input id="assetBaseNumber" maxlength="3" inputmode="numeric">
+            <button id="assetSuggestNumber" class="btn btn-secondary" type="button">Sugerir</button>
+          </div>
+        </label>
+        <label>Tipo / Sigla
+          <select id="assetTypeCode"></select>
+        </label>
+        <label>Pavimento / código do ID
+          <select id="assetFloorCode">
+            <option value="1P">1º Piso (1P)</option>
+            <option value="2P">2º Piso (2P)</option>
+            <option value="3P">3º Piso (3P)</option>
+            <option value="EX">Externo (EX)</option>
+            <option value="ET">Externo/Térreo (ET)</option>
+          </select>
+        </label>
+      </div>
+      <div class="asset-id-card">
+        <div class="muted">ID sugerido</div>
+        <div id="assetSuggestedId" class="asset-id-value">—</div>
+      </div>
     </div>
-    <div class="grid">
-      <label>Nome do Equipamento
-        <input id="assetName">
-      </label>
-      <label>Categoria
-        <input id="assetCategory">
-      </label>
-      <label>Pavimento
-        <input id="assetFloor">
-      </label>
-      <label>Localização
-        <input id="assetLocation">
-      </label>
-      <label>Status
-        <select id="assetStatus"><option>Ativo</option><option>Inativo</option></select>
-      </label>
+
+    <div class="asset-form-section">
+      <h3>2. Classificação e localização</h3>
+      <div class="asset-form-grid">
+        <label>Nome do Equipamento *<input id="assetName"></label>
+        <label>Status<select id="assetStatus"></select></label>
+        <label>Tipo de Ativo<select id="assetAssetType"></select></label>
+        <label>Categoria do Ativo
+          <select id="assetCategory"></select>
+          <input id="assetCategoryOther" class="asset-other-input hidden" placeholder="Informe a nova categoria">
+        </label>
+        <label>Subcategoria<input id="assetSubcategory"></label>
+        <label>Criticidade<select id="assetCriticality"></select></label>
+        <label>Classe de Manutenção
+          <select id="assetMaintenanceClass"></select>
+          <input id="assetMaintenanceClassOther" class="asset-other-input hidden" placeholder="Informe a classe de manutenção">
+        </label>
+        <label>Área<input id="assetArea"></label>
+        <label>Ambiente<input id="assetEnvironment"></label>
+        <label>Componente / Elemento<input id="assetComponentElement"></label>
+        <label>Pavimento
+          <select id="assetFloor"></select>
+          <input id="assetFloorOther" class="asset-other-input hidden" placeholder="Informe o pavimento">
+        </label>
+        <label>Localização
+          <select id="assetLocation"></select>
+          <input id="assetLocationOther" class="asset-other-input hidden" placeholder="Informe a localização">
+        </label>
+        <label class="full">Local Detalhado<input id="assetDetailedLocation" placeholder="Ex.: Casa de máquinas, ao lado do quadro elétrico"></label>
+      </div>
     </div>
+
+    <div class="asset-form-section">
+      <h3>3. Dados técnicos</h3>
+      <div class="asset-form-grid three">
+        <label>Fabricante<input id="assetManufacturer"></label>
+        <label>Modelo<input id="assetModel"></label>
+        <label>Número de Série<input id="assetSerialNumber"></label>
+        <label>Capacidade<input id="assetCapacity"></label>
+        <label>Amperagem Nominal (FLA)<input id="assetRatedCurrent"></label>
+        <label>Amperagem de Partida (FLR)<input id="assetStartingCurrent"></label>
+        <label>Amperagem Medida<input id="assetMeasuredCurrent"></label>
+        <label>Voltagem<input id="assetVoltage"></label>
+        <label>Peso<input id="assetWeight"></label>
+        <label>Ano de Aquisição<input id="assetAcquisitionYear"></label>
+        <label>Vida Útil Estimada<input id="assetUsefulLife"></label>
+      </div>
+    </div>
+
+    <div class="asset-form-section">
+      <h3>4. Manutenção</h3>
+      <div class="asset-form-grid">
+        <label>Prestador<select id="assetProvider"><option value="">Sem prestador</option></select></label>
+        <label>Periodicidade
+          <select id="assetPeriodicity"></select>
+          <input id="assetPeriodicityOther" class="asset-other-input hidden" placeholder="Informe a periodicidade">
+        </label>
+        <label class="full">Observações<textarea id="assetNotes" rows="4"></textarea></label>
+      </div>
+    </div>
+
+    <div id="assetSaveMessage" class="message"></div>
     <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:16px">
       <button id="assetCancel" class="btn btn-secondary" type="button">Cancelar</button>
-      <button id="assetSave" class="btn btn-primary" type="button">Salvar Ativo</button>
+      <button id="assetSave" class="btn btn-blue" type="button">Salvar Ativo</button>
     </div>
   </div>
 </div>
@@ -740,7 +812,7 @@ html,body{max-width:100%;overflow-x:hidden}
 
 <form id="manageForm" method="POST" target="manageFrame" style="display:none"><input name="action" value="updateOccurrence"><input name="systemSessionToken" id="m_system_session"><input name="token" id="m_token"><input name="ocorrencia" id="m_occurrence"><input name="status" id="m_status"><input name="responsavel" id="m_responsible"><input name="solucao" id="m_solution"><input name="alteradoPor" id="m_changedBy"><input name="descricaoOcorrencia" id="m_description"><input name="categoriaOcorrenciaEdit" id="m_category"><input name="componenteAfetadoEdit" id="m_component"><input name="fotoOcorrenciaBase64" id="m_occurrencePhoto"><input name="fotoOcorrenciaNome" id="m_occurrencePhotoName"><input name="fotoOcorrenciaMime" id="m_occurrencePhotoMime"><input name="fotoConclusaoBase64" id="m_photo"><input name="fotoConclusaoNome" id="m_photoName"><input name="fotoConclusaoMime" id="m_photoMime"></form>
 <iframe id="manageFrame" name="manageFrame"></iframe>
-<div class="footer">QRManut • Versão 7.6.0.8</div>
+<div class="footer">QRManut • Versão 7.6.1.0</div>
 </div>
 <script>
 const API_URL="https://script.google.com/macros/s/AKfycbx4tpC42Q6WdkNhTUTAGoZWvG5M24zwlNscnwbDP5B3Q5pWo8B32-Lf0rQ2Xtua1AFMAQ/exec";
@@ -2348,7 +2420,7 @@ function togglePreventiveActionFields(){
 
 
 
-let qrAssets760=[],qrAssetTypes760=[];
+let qrAssets760=[],qrAssetTypes760=[],qrAssetOptions7610={};
 
 function assetApi760(action,payload={}){
   if(!systemSession?.systemSessionToken){
@@ -2379,48 +2451,193 @@ function assetFillTypes760(){
   sel.innerHTML='<option value="">—</option>'+qrAssetTypes760.map(t=>`<option value="${esc(t.codigo)}">${esc(t.codigo)} - ${esc(t.descricao)}</option>`).join("");
 }
 
+function assetFillSelect7610(id,values,placeholder,allowOther=true){
+  const sel=$(id);
+  if(!sel)return;
+  const uniq=[];
+  const seen=new Set();
+  (values||[]).forEach(v=>{
+    const s=String(v||"").trim();
+    const k=s.toLocaleLowerCase();
+    if(!s||seen.has(k))return;
+    seen.add(k);uniq.push(s);
+  });
+  sel.innerHTML=`<option value="">${esc(placeholder||"Selecione...")}</option>`+
+    uniq.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join("")+
+    (allowOther?`<option value="__OTHER__">${qrLanguage==="en-US"?"Other...":"Outro..."}</option>`:"");
+}
+
+function assetSetAssistedValue7610(selectId,otherId,value){
+  const sel=$(selectId),other=$(otherId);
+  if(!sel)return;
+  const val=String(value||"").trim();
+  const exists=[...sel.options].some(o=>o.value===val);
+  if(!val){sel.value="";if(other){other.value="";hide(otherId);}return;}
+  if(exists){sel.value=val;if(other){other.value="";hide(otherId);}return;}
+  const otherOption=[...sel.options].find(o=>o.value==="__OTHER__");
+  if(otherOption){sel.value="__OTHER__";if(other){other.value=val;show(otherId);}}
+  else{
+    const op=document.createElement("option");op.value=val;op.textContent=val;sel.appendChild(op);sel.value=val;
+  }
+}
+
+function assetGetAssistedValue7610(selectId,otherId){
+  const sel=$(selectId);
+  if(!sel)return "";
+  return sel.value==="__OTHER__"?String($(otherId)?.value||"").trim():String(sel.value||"").trim();
+}
+
+function assetToggleOther7610(selectId,otherId){
+  const other=$(otherId);
+  if(!other)return;
+  if($(selectId).value==="__OTHER__")show(otherId);else{hide(otherId);other.value="";}
+}
+
+function assetFillManagementOptions7610(){
+  const o=qrAssetOptions7610||{};
+  assetFillSelect7610("assetAssetType",o.assetTypes||["Equipamento"],qrLanguage==="en-US"?"Select...":"Selecione...",false);
+  assetFillSelect7610("assetCategory",o.categories||[],qrLanguage==="en-US"?"Select...":"Selecione...",true);
+  assetFillSelect7610("assetCriticality",o.criticalities||[],qrLanguage==="en-US"?"Select...":"Selecione...",false);
+  assetFillSelect7610("assetMaintenanceClass",o.maintenanceClasses||[],qrLanguage==="en-US"?"Select...":"Selecione...",true);
+  assetFillSelect7610("assetFloor",o.floors||[],qrLanguage==="en-US"?"Select...":"Selecione...",true);
+  assetFillSelect7610("assetPeriodicity",o.periodicities||[],qrLanguage==="en-US"?"No frequency":"Sem periodicidade",true);
+  assetFillSelect7610("assetStatus",o.statuses||["Ativo","Inativo"],qrLanguage==="en-US"?"Select...":"Selecione...",false);
+
+  const p=$("assetProvider");
+  if(p){
+    p.innerHTML=`<option value="">${qrLanguage==="en-US"?"No service provider":"Sem prestador"}</option>`+
+      (o.providers||[]).map(x=>`<option value="${esc(x.idPrestador)}">${esc(x.display||x.nomeFantasia||x.nome)}</option>`).join("");
+  }
+  assetRefreshLocations7610("");
+}
+
+function assetResolvedFloor7610(){return assetGetAssistedValue7610("assetFloor","assetFloorOther");}
+
+function assetRefreshLocations7610(currentValue){
+  const o=qrAssetOptions7610||{};
+  const floor=assetResolvedFloor7610();
+  const map=o.locationsByFloor||{};
+  let values=floor&&Array.isArray(map[floor])?map[floor]:(o.locationsAll||[]);
+  assetFillSelect7610("assetLocation",values,qrLanguage==="en-US"?"Select...":"Selecione...",true);
+  assetSetAssistedValue7610("assetLocation","assetLocationOther",currentValue||"");
+}
+
+function assetSetProvider7610(a){
+  const sel=$("assetProvider");
+  if(!sel)return;
+  const id=String(a?.idPrestador||"").trim();
+  const name=String(a?.prestador||"").trim();
+  if(id&&[...sel.options].some(o=>o.value===id)){sel.value=id;return;}
+  if(name){
+    const p=(qrAssetOptions7610.providers||[]).find(x=>String(x.display||x.nomeFantasia||x.nome).trim().toLowerCase()===name.toLowerCase());
+    if(p){sel.value=p.idPrestador;return;}
+    const legacy="__LEGACY__"+name;
+    const op=document.createElement("option");op.value=legacy;op.textContent=name+" (cadastro legado)";sel.appendChild(op);sel.value=legacy;return;
+  }
+  sel.value="";
+}
+
+function assetProviderPayload7610(){
+  const val=String($("assetProvider").value||"");
+  if(val.startsWith("__LEGACY__"))return{idPrestador:"",prestador:val.slice(10)};
+  const p=(qrAssetOptions7610.providers||[]).find(x=>x.idPrestador===val);
+  return{idPrestador:val,prestador:p?String(p.display||p.nomeFantasia||p.nome):""};
+}
+
+
 async function loadAssets760(){
   const r=await assetApi760("listassets760");
   if(!r.ok)throw new Error(r.detail||r.error||"Erro ao carregar ativos.");
   qrAssets760=r.items||[];
   qrAssetTypes760=r.types||[];
+  qrAssetOptions7610=r.options||{};
   assetFillTypes760();
+  assetFillManagementOptions7610();
   renderAssets760();
 }
 
 function renderAssets760(){
   const q=String($("assetSearch").value||"").toLowerCase();
-  const items=qrAssets760.filter(a=>(a.id+" "+a.nome+" "+a.localizacao+" "+a.categoria).toLowerCase().includes(q));
-  $("assetList").innerHTML=items.length?items.map(a=>`
-    <div class="card" style="margin-bottom:8px">
+  const items=qrAssets760.filter(a=>[
+    a.id,a.nome,a.fabricante,a.modelo,a.numeroSerie,a.categoria,a.tipoDeAtivo,
+    a.subcategoria,a.area,a.ambiente,a.componenteElemento,a.pavimento,
+    a.localizacao,a.localDetalhado,a.prestador,a.periodicidade,a.status
+  ].join(" ").toLowerCase().includes(q));
+
+  $("assetList").innerHTML=items.length?items.map(a=>{
+    const inactive=["inativo","desativado"].includes(String(a.status||"").trim().toLowerCase());
+    return `<div class="card" style="margin-bottom:8px">
       <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap">
         <div>
           <div style="font-weight:800">${esc(a.id)}</div>
           <div>${esc(a.nome||"")}</div>
-          <div class="muted">${esc(a.pavimento||"")} ${a.localizacao?"• "+esc(a.localizacao):""}</div>
+          <div class="muted">${esc(a.tipoDeAtivo||"")}${a.categoria?` • ${esc(a.categoria)}`:""}</div>
+          <div class="muted">${esc(a.pavimento||"")} ${a.localizacao?"• "+esc(a.localizacao):""}${a.prestador?` • ${esc(a.prestador)}`:""}</div>
+          <span class="tag">${esc(a.status||"Ativo")}</span>
         </div>
         <div style="display:flex;gap:6px;flex-wrap:wrap">
           <button class="btn btn-secondary" onclick="editAsset760(${Number(a.row)})">Editar</button>
-          <button class="btn btn-secondary" onclick="toggleAsset760(${Number(a.row)},${String(a.status).toLowerCase()!=="inativo"})">${String(a.status).toLowerCase()==="inativo"?"Ativar":"Inativar"}</button>
+          <button class="btn btn-secondary" onclick="toggleAsset760(${Number(a.row)},${!inactive})">${inactive?"Ativar":"Inativar"}</button>
         </div>
       </div>
-    </div>`).join(""):'<div class="muted">Nenhum ativo encontrado.</div>';
+    </div>`;
+  }).join(""):'<div class="muted">Nenhum ativo encontrado.</div>';
 }
 
 function openAssetModal760(a){
+  assetFillTypes760();
+  assetFillManagementOptions7610();
+
   $("assetRow").value=a?.row||"";
-  $("assetEditTitle").textContent=a?"Editar Ativo":"Novo Ativo";
-  $("assetPrefix").value="EQ";
-  $("assetBaseNumber").value="";
-  $("assetTypeCode").value="";
-  $("assetFloorCode").value="1P";
+  $("assetEditTitle").textContent=a?(qrLanguage==="en-US"?"Edit Asset":"Editar Ativo"):(qrLanguage==="en-US"?"New Asset":"Novo Ativo");
+  $("assetSaveMessage").className="message";
+  $("assetSaveMessage").textContent="";
+
+  if(a){
+    hide("assetIdBuilderSection");show("assetExistingIdBox");
+    $("assetExistingId").textContent=a.id||"—";
+    $("assetSuggestedId").textContent=a.id||"—";
+  }else{
+    show("assetIdBuilderSection");hide("assetExistingIdBox");
+    $("assetPrefix").value="EQ";
+    $("assetBaseNumber").value="";
+    $("assetTypeCode").value="";
+    $("assetFloorCode").value="1P";
+    $("assetSuggestedId").textContent="—";
+  }
+
   $("assetName").value=a?.nome||"";
-  $("assetCategory").value=a?.categoria||"";
-  $("assetFloor").value=a?.pavimento||"";
-  $("assetLocation").value=a?.localizacao||"";
-  $("assetStatus").value=a?.status||"Ativo";
-  $("assetSuggestedId").textContent=a?.id||"—";
+  assetSetAssistedValue7610("assetStatus",null,a?.status||"Ativo");
+  assetSetAssistedValue7610("assetAssetType",null,a?.tipoDeAtivo||"Equipamento");
+  assetSetAssistedValue7610("assetCategory","assetCategoryOther",a?.categoria||"");
+  $("assetSubcategory").value=a?.subcategoria||"";
+  assetSetAssistedValue7610("assetCriticality",null,a?.criticidade||"");
+  assetSetAssistedValue7610("assetMaintenanceClass","assetMaintenanceClassOther",a?.classeManutencao||"");
+  $("assetArea").value=a?.area||"";
+  $("assetEnvironment").value=a?.ambiente||"";
+  $("assetComponentElement").value=a?.componenteElemento||"";
+  assetSetAssistedValue7610("assetFloor","assetFloorOther",a?.pavimento||"");
+  assetRefreshLocations7610(a?.localizacao||"");
+  $("assetDetailedLocation").value=a?.localDetalhado||"";
+
+  $("assetManufacturer").value=a?.fabricante||"";
+  $("assetModel").value=a?.modelo||"";
+  $("assetSerialNumber").value=a?.numeroSerie||"";
+  $("assetCapacity").value=a?.capacidade||"";
+  $("assetRatedCurrent").value=a?.amperagemNominal||"";
+  $("assetStartingCurrent").value=a?.amperagemPartida||"";
+  $("assetMeasuredCurrent").value=a?.amperagemMedida||"";
+  $("assetVoltage").value=a?.voltagem||"";
+  $("assetWeight").value=a?.peso||"";
+  $("assetAcquisitionYear").value=a?.anoAquisicao||"";
+  $("assetUsefulLife").value=a?.vidaUtil||"";
+
+  assetSetProvider7610(a);
+  assetSetAssistedValue7610("assetPeriodicity","assetPeriodicityOther",a?.periodicidade||"");
+  $("assetNotes").value=a?.observacoes||"";
+
   $("assetEditModal").style.display="flex";
+  setTimeout(()=>$("assetName").focus(),80);
 }
 
 function editAsset760(row){
@@ -2439,25 +2656,67 @@ async function saveAsset760(){
   const row=Number($("assetRow").value||0);
   const existing=row?qrAssets760.find(x=>Number(x.row)===row):null;
   const id=existing?.id||$("assetSuggestedId").textContent;
-  if(!existing && (!id||id==="—"))return alert(qrLanguage?.startsWith("en")?"Generate the asset ID before saving.":"Gere o ID do ativo antes de salvar.");
+  const name=String($("assetName").value||"").trim();
+  if(!name)return alert(qrLanguage==="en-US"?"Enter the asset name.":"Informe o nome do equipamento.");
+  if(!existing&&!$("assetTypeCode").value)return alert(qrLanguage==="en-US"?"Select the asset type/code before saving.":"Selecione o tipo/sigla do ativo antes de salvar.");
+  if(!existing&&(!id||id==="—"))return alert(qrLanguage==="en-US"?"Generate the asset ID before saving.":"Gere o ID do ativo antes de salvar.");
 
-  const r=await assetApi760("saveasset760",{
-    row,
-    id,
-    prefix:$("assetPrefix").value,
-    numeroBase:$("assetBaseNumber").value,
-    tipoCodigo:$("assetTypeCode").value,
-    pavimentoCodigo:$("assetFloorCode").value,
-    nome:$("assetName").value,
-    categoria:$("assetCategory").value,
-    pavimento:$("assetFloor").value,
-    localizacao:$("assetLocation").value,
-    status:$("assetStatus").value
-  });
-  if(!r.ok)return alert(r.detail||r.error||"Erro ao salvar ativo.");
-  $("assetEditModal").style.display="none";
-  await loadAssets760();
-  alert((qrLanguage?.startsWith("en")?"Asset saved: ":"Ativo salvo: ")+r.id);
+  const provider=assetProviderPayload7610();
+  const btn=$("assetSave");
+  btn.disabled=true;
+  btn.textContent=qrLanguage==="en-US"?"Saving...":"Salvando...";
+  $("assetSaveMessage").className="message loading";
+  $("assetSaveMessage").textContent=qrLanguage==="en-US"?"Saving asset data...":"Salvando cadastro do ativo...";
+
+  try{
+    const r=await assetApi760("saveasset760",{
+      row,id,
+      prefix:$("assetPrefix").value,
+      numeroBase:$("assetBaseNumber").value,
+      tipoCodigo:$("assetTypeCode").value,
+      pavimentoCodigo:$("assetFloorCode").value,
+      nome:name,
+      status:$("assetStatus").value,
+      tipoDeAtivo:$("assetAssetType").value,
+      categoria:assetGetAssistedValue7610("assetCategory","assetCategoryOther"),
+      subcategoria:$("assetSubcategory").value,
+      criticidade:$("assetCriticality").value,
+      classeManutencao:assetGetAssistedValue7610("assetMaintenanceClass","assetMaintenanceClassOther"),
+      area:$("assetArea").value,
+      ambiente:$("assetEnvironment").value,
+      componenteElemento:$("assetComponentElement").value,
+      pavimento:assetResolvedFloor7610(),
+      localizacao:assetGetAssistedValue7610("assetLocation","assetLocationOther"),
+      localDetalhado:$("assetDetailedLocation").value,
+      fabricante:$("assetManufacturer").value,
+      modelo:$("assetModel").value,
+      numeroSerie:$("assetSerialNumber").value,
+      capacidade:$("assetCapacity").value,
+      amperagemNominal:$("assetRatedCurrent").value,
+      amperagemPartida:$("assetStartingCurrent").value,
+      amperagemMedida:$("assetMeasuredCurrent").value,
+      voltagem:$("assetVoltage").value,
+      peso:$("assetWeight").value,
+      anoAquisicao:$("assetAcquisitionYear").value,
+      vidaUtil:$("assetUsefulLife").value,
+      idPrestador:provider.idPrestador,
+      prestador:provider.prestador,
+      periodicidade:assetGetAssistedValue7610("assetPeriodicity","assetPeriodicityOther"),
+      observacoes:$("assetNotes").value
+    });
+    if(!r.ok)throw new Error(r.detail||r.error||"Erro ao salvar ativo.");
+
+    $("assetSaveMessage").className="message success";
+    $("assetSaveMessage").textContent=(qrLanguage==="en-US"?"Asset saved: ":"Ativo salvo: ")+r.id;
+    await loadAssets760();
+    setTimeout(()=>{$("assetEditModal").style.display="none";},450);
+  }catch(e){
+    $("assetSaveMessage").className="message error";
+    $("assetSaveMessage").textContent=e.message||"Erro ao salvar ativo.";
+  }finally{
+    btn.disabled=false;
+    btn.textContent=qrLanguage==="en-US"?"Save Asset":"Salvar Ativo";
+  }
 }
 
 async function toggleAsset760(row,isActive){
@@ -3535,6 +3794,15 @@ $("assetSearch").oninput=renderAssets760;
   $(id).addEventListener("input",assetBuildId760);
   $(id).addEventListener("change",assetBuildId760);
 });
+$("assetCategory").addEventListener("change",()=>assetToggleOther7610("assetCategory","assetCategoryOther"));
+$("assetMaintenanceClass").addEventListener("change",()=>assetToggleOther7610("assetMaintenanceClass","assetMaintenanceClassOther"));
+$("assetPeriodicity").addEventListener("change",()=>assetToggleOther7610("assetPeriodicity","assetPeriodicityOther"));
+$("assetFloor").addEventListener("change",()=>{
+  assetToggleOther7610("assetFloor","assetFloorOther");
+  assetRefreshLocations7610("");
+});
+$("assetFloorOther").addEventListener("input",()=>assetRefreshLocations7610(""));
+$("assetLocation").addEventListener("change",()=>assetToggleOther7610("assetLocation","assetLocationOther"));
 
 </script>
 
