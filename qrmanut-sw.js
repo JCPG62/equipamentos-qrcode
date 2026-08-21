@@ -1,4 +1,4 @@
-const CACHE_NAME="qrmanut-static-7.6.0.8";
+const CACHE_NAME="qrmanut-static-7.6.1.0";
 const STATIC_ASSETS=["./equip_formulario.html","./manifest.webmanifest","./qrmanut-180.png","./qrmanut-192.png","./qrmanut-512.png"];
 self.addEventListener("install",e=>e.waitUntil(caches.open(CACHE_NAME).then(c=>c.addAll(STATIC_ASSETS)).then(()=>self.skipWaiting())));
 self.addEventListener("activate",e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith("qrmanut-static-")&&k!==CACHE_NAME).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
