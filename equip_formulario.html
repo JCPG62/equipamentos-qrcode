@@ -718,7 +718,15 @@ html,body{max-width:100%;overflow-x:hidden}
   </select></label>
   <div class="muted" id="preventiveActionNotice">Ao salvar a preventiva, esta necessidade será registrada em Pendências / Providências e comunicada aos responsáveis.</div>
 </div>
-<label>Foto / evidência<input id="preventivePhotoInput" type="file" accept="image/*" capture="environment"></label><img id="preventivePhotoPreview" class="photo-preview"><div id="signatureBox" class="signature-box hidden"><div class="signature-title">✍️ Assinatura do responsável <span id="signatureRequiredText" class="required-yes"></span></div><div class="signature-help">Assine no quadro usando o dedo ou mouse.</div><div class="signature-canvas-wrap"><canvas id="signatureCanvas"></canvas></div><button id="clearSignature" type="button" class="btn btn-secondary" style="margin-top:8px">Limpar assinatura</button></div><div id="preventiveMessage" class="message"></div><div class="modal-actions"><button id="cancelPreventive" class="btn btn-secondary">Cancelar</button><button id="savePreventive" class="btn btn-green">Registrar Preventiva</button></div></div></div>
+<label>Foto / evidência<input id="preventivePhotoInput" type="file" accept="image/*" capture="environment"></label><img id="preventivePhotoPreview" class="photo-preview">
+<div id="preventiveDocumentsBox" style="margin-top:14px;padding:12px;border:1px solid #dbeafe;background:#f8fbff;border-radius:12px">
+  <div id="preventiveDocumentsTitle" style="font-weight:800">📎 Documentos da preventiva (opcional)</div>
+  <div id="preventiveDocumentsHelp" class="muted" style="margin-top:4px">Anexe relatório do prestador, checklist, laudo ou outra evidência em PDF.</div>
+  <button id="preventiveDocumentAddButton" type="button" class="btn btn-secondary" style="margin-top:9px">📎 Anexar documento PDF</button>
+  <input id="preventiveDocumentInput" type="file" accept="application/pdf,.pdf" multiple class="photo-source-hidden">
+  <div id="preventiveDocumentList" style="margin-top:10px"></div>
+</div>
+<div id="signatureBox" class="signature-box hidden"><div class="signature-title">✍️ Assinatura do responsável <span id="signatureRequiredText" class="required-yes"></span></div><div class="signature-help">Assine no quadro usando o dedo ou mouse.</div><div class="signature-canvas-wrap"><canvas id="signatureCanvas"></canvas></div><button id="clearSignature" type="button" class="btn btn-secondary" style="margin-top:8px">Limpar assinatura</button></div><div id="preventiveMessage" class="message"></div><div class="modal-actions"><button id="cancelPreventive" class="btn btn-secondary">Cancelar</button><button id="savePreventive" class="btn btn-green">Registrar Preventiva</button></div></div></div>
 
 <div id="reportModal" class="modal"><div class="modal-box"><h2>Reportar Serviço / Anomalia / Reparo</h2><label>Seu nome *<input id="reporterName"></label><label>Contato<input id="reporterContact"></label><label><span id="reportCategoryLabel">Categoria *</span><select id="category"><option value="">Selecione...</option></select></label><label><span id="reportComponentLabel">Componente *</span><select id="component"><option value="">Selecione...</option></select></label><label>Descrição *<textarea id="description" rows="5"></textarea></label><label>Foto<input id="photoInput" type="file" accept="image/*" capture="environment"></label><img id="photoPreview" class="photo-preview"><div id="reportMessage" class="message"></div><div class="modal-actions"><button id="cancelReport" class="btn btn-secondary">Cancelar</button><button id="sendReport" class="btn">Gravar ocorrência</button></div></div></div>
 
@@ -732,12 +740,12 @@ html,body{max-width:100%;overflow-x:hidden}
 
 <form id="manageForm" method="POST" target="manageFrame" style="display:none"><input name="action" value="updateOccurrence"><input name="systemSessionToken" id="m_system_session"><input name="token" id="m_token"><input name="ocorrencia" id="m_occurrence"><input name="status" id="m_status"><input name="responsavel" id="m_responsible"><input name="solucao" id="m_solution"><input name="alteradoPor" id="m_changedBy"><input name="descricaoOcorrencia" id="m_description"><input name="categoriaOcorrenciaEdit" id="m_category"><input name="componenteAfetadoEdit" id="m_component"><input name="fotoOcorrenciaBase64" id="m_occurrencePhoto"><input name="fotoOcorrenciaNome" id="m_occurrencePhotoName"><input name="fotoOcorrenciaMime" id="m_occurrencePhotoMime"><input name="fotoConclusaoBase64" id="m_photo"><input name="fotoConclusaoNome" id="m_photoName"><input name="fotoConclusaoMime" id="m_photoMime"></form>
 <iframe id="manageFrame" name="manageFrame"></iframe>
-<div class="footer">QRManut • Versão 7.6.0.5</div>
+<div class="footer">QRManut • Versão 7.6.0.6</div>
 </div>
 <script>
 const API_URL="https://script.google.com/macros/s/AKfycbx4tpC42Q6WdkNhTUTAGoZWvG5M24zwlNscnwbDP5B3Q5pWo8B32-Lf0rQ2Xtua1AFMAQ/exec";
 const TOKEN="";const SYSTEM_SESSION_KEY="qrmanut_system_session";const RESPONSIBLE_KEY="qrmanut_responsavel";const PREVENTIVE_SESSION_KEY="qrmanut_preventive_session";const ORIGIN_ASSET_KEY="qrmanut_origin_asset";const MAX_DIM=1280;const QUALITY=.72;
-let systemSession=null,systemLoginNextAction=null,currentAsset=null,currentAssetStatus=null,history=[],selectedOccurrence=null,preventiveControlData=null,preventiveControlMode="all",preventiveSession=null,preventiveRequirements=null,loginNextAction=null,photoData=null,preventivePhotoData=null,correctionPhotoData=null,conclusionPhotoData=null,reportPosting=false,preventivePosting=false,managePosting=false,signatureDirty=false,signatureDrawing=false,signatureCtx=null,occurrenceReportData=null,occurrenceReportFiltersLoaded=false,pendingFiltersLoaded=false,auditFiltersLoaded=false,companyConfigLoaded=false,providersAdminData=[];
+let systemSession=null,systemLoginNextAction=null,currentAsset=null,currentAssetStatus=null,history=[],selectedOccurrence=null,preventiveControlData=null,preventiveControlMode="all",preventiveSession=null,preventiveRequirements=null,loginNextAction=null,photoData=null,preventivePhotoData=null,preventiveDocumentFiles=[],correctionPhotoData=null,conclusionPhotoData=null,reportPosting=false,preventivePosting=false,managePosting=false,signatureDirty=false,signatureDrawing=false,signatureCtx=null,occurrenceReportData=null,occurrenceReportFiltersLoaded=false,pendingFiltersLoaded=false,auditFiltersLoaded=false,companyConfigLoaded=false,providersAdminData=[];
 const $=id=>document.getElementById(id);
 
 const qrNativeAlert=window.alert.bind(window);
@@ -1267,14 +1275,37 @@ function renderHistoryItem(i){
 async function loadPreventiveHistory(){
   const r=await api({action:"preventivehistory",id:currentAsset.id,systemSession:systemSession.systemSessionToken});
   if(!r.ok)return;
+
   const items=r.preventives||[],t=(pt,en)=>qrLanguage==="en-US"?en:pt;
   $("preventiveHistoryStatus").textContent=items.length
     ? (qrLanguage==="en-US"?`${items.length} preventive maintenance record(s)`:`${items.length} preventiva(s) registrada(s)`)
     : t("Nenhuma preventiva registrada.","No preventive maintenance recorded.");
-  $("preventiveHistory").innerHTML=items.map(item=>`<div class="preventive-card"><div class="preventive-id">${esc(item.registro)}</div><div class="muted">${esc(formatDate(item.data))}</div><div style="margin-top:7px"><b>${t("Competência","Period")}:</b> ${esc(item.competencia)}<br><b>${t("Prestador","Service Provider")}:</b> ${esc(item.prestador)}<br><b>${t("Responsável","Responsible")}:</b> ${esc(item.responsavel)}</div>${item.observacao?`<div style="margin-top:8px"><b>${t("Observação da preventiva","Preventive maintenance note")}:</b><br>${esc(item.observacao)}</div>`:""}${item.foto?`<div style="margin-top:8px"><a href="${esc(item.foto)}" target="_blank">📷 ${t("Ver evidência","View evidence")}</a></div>`:""}${item.assinatura?`<div style="margin-top:8px"><a href="${esc(item.assinatura)}" target="_blank">✍️ ${t("Ver assinatura","View signature")}</a></div>`:""}</div>`).join("");
+
+  $("preventiveHistory").innerHTML=items.map(item=>{
+    const docs=(item.documentos||[]);
+    const docsHtml=docs.length
+      ? `<div style="margin-top:9px"><b>📎 ${t("Documentos da preventiva","Preventive maintenance documents")}:</b>`+
+        docs.map(d=>`<div style="margin-top:4px"><a href="${esc(d.linkDrive)}" target="_blank" rel="noopener">📄 ${esc(qrLanguage==="en-US"?preventiveDocumentTypeLabel7606(d.tipo):d.tipo)}${d.nomeArquivo?` — ${esc(d.nomeArquivo)}`:""}</a>${d.descricao?`<div class="muted">${esc(d.descricao)}</div>`:""}</div>`).join("")+
+        `</div>`
+      :"";
+
+    return `<div class="preventive-card">
+      <div class="preventive-id">${esc(item.registro)}</div>
+      <div class="muted">${esc(formatDate(item.data))}</div>
+      <div style="margin-top:7px">
+        <b>${t("Competência","Period")}:</b> ${esc(item.competencia)}<br>
+        <b>${t("Prestador","Service Provider")}:</b> ${esc(item.prestador)}<br>
+        <b>${t("Responsável","Responsible")}:</b> ${esc(item.responsavel)}
+      </div>
+      ${item.observacao?`<div style="margin-top:8px"><b>${t("Observação da preventiva","Preventive maintenance note")}:</b><br>${esc(item.observacao)}</div>`:""}
+      ${item.foto?`<div style="margin-top:8px"><a href="${esc(item.foto)}" target="_blank" rel="noopener">📷 ${t("Ver evidência","View evidence")}</a></div>`:""}
+      ${item.assinatura?`<div style="margin-top:8px"><a href="${esc(item.assinatura)}" target="_blank" rel="noopener">✍️ ${t("Ver assinatura","View signature")}</a></div>`:""}
+      ${docsHtml}
+    </div>`;
+  }).join("");
 }
 function requestPreventive(){requirePreventiveLogin(async()=>{await openPreventive();loadPreventiveHistory()},currentAsset.prestador)}
-async function openPreventive(){preventivePhotoData=null;signatureDirty=false;$("preventivePhotoInput").value="";$("preventivePhotoPreview").style.display="none";$("preventiveMessage").className="message";$("preventiveAsset").textContent=currentAsset.id+" – "+currentAsset.nome_do_equipamento;$("preventivePeriodicity").textContent=currentAsset.periodicidade||"Não informada";$("preventiveProvider").textContent=currentAsset.prestador||"Não informado";$("preventiveCompetence").textContent=currentCompetence();$("preventiveResponsible").value=getSavedResponsible();$("preventiveObservation").value="";$("preventiveNeedsAction").checked=false;hide("preventiveActionFields");$("preventiveActionType").value="";$("preventiveActionDescription").value="";$("preventiveActionPriority").value="Média";$("preventiveActionMaterial").value="";$("preventiveActionQuantity").value="";$("preventiveActionOperation").value="";const r=await api({action:"preventiverequirements",id:currentAsset.id,systemSession:systemSession.systemSessionToken});if(!r.ok){alert(r.detail||"Não foi possível carregar as regras.");return}preventiveRequirements=r.data;renderPreventiveRequirements();$("preventiveModal").style.display="flex";if(!$("signatureBox").classList.contains("hidden"))requestAnimationFrame(setupSignatureCanvas)}
+async function openPreventive(){preventivePhotoData=null;resetPreventiveDocuments7606();signatureDirty=false;$("preventivePhotoInput").value="";$("preventivePhotoPreview").style.display="none";$("preventiveMessage").className="message";$("preventiveAsset").textContent=currentAsset.id+" – "+currentAsset.nome_do_equipamento;$("preventivePeriodicity").textContent=currentAsset.periodicidade||"Não informada";$("preventiveProvider").textContent=currentAsset.prestador||"Não informado";$("preventiveCompetence").textContent=currentCompetence();$("preventiveResponsible").value=getSavedResponsible();$("preventiveObservation").value="";$("preventiveNeedsAction").checked=false;hide("preventiveActionFields");$("preventiveActionType").value="";$("preventiveActionDescription").value="";$("preventiveActionPriority").value="Média";$("preventiveActionMaterial").value="";$("preventiveActionQuantity").value="";$("preventiveActionOperation").value="";const r=await api({action:"preventiverequirements",id:currentAsset.id,systemSession:systemSession.systemSessionToken});if(!r.ok){alert(r.detail||"Não foi possível carregar as regras.");return}preventiveRequirements=r.data;renderPreventiveRequirements();$("preventiveModal").style.display="flex";if(!$("signatureBox").classList.contains("hidden"))requestAnimationFrame(setupSignatureCanvas)}
 function renderPreventiveRequirements(){const r=preventiveRequirements;$("preventiveRequirements").innerHTML=`<b>Requisitos deste registro</b><div class="requirement ${r.exigirAssinatura?"required-yes":"required-no"}">${r.exigirAssinatura?"● Assinatura obrigatória":"✓ Assinatura não obrigatória"}</div><div class="requirement ${r.fotoObrigatoria?"required-yes":"required-no"}">${r.fotoObrigatoria?"● Foto obrigatória":"✓ Foto opcional"}</div><div class="requirement ${r.observacaoObrigatoria?"required-yes":"required-no"}">${r.observacaoObrigatoria?"● Observação obrigatória":"✓ Observação opcional"}</div>`;if(r.exigirAssinatura){show("signatureBox");$("signatureRequiredText").textContent=" * obrigatório"}else hide("signatureBox")}
 async function savePreventive(){
   if(preventivePosting)return;
@@ -1327,16 +1358,41 @@ async function savePreventive(){
 
     if(!r.ok)throw new Error(r.detail||"Não foi possível registrar a preventiva.");
 
-    $("preventiveMessage").className="message success";
+    const documentResult=await uploadPreventiveDocuments7606(r.registro);
 
-    if(r.duplicatePrevented){
-      $("preventiveMessage").innerHTML=qrLanguage==="en-US"
+    $("preventiveMessage").className=documentResult.ok?"message success":"message error";
+
+    let baseMessage=r.duplicatePrevented
+      ?(qrLanguage==="en-US"
         ?`✅ Preventive maintenance <b>${esc(r.registro)}</b> was already recorded.`
-        :`✅ Preventiva <b>${esc(r.registro)}</b> já estava registrada.`;
-    }else{
-      $("preventiveMessage").innerHTML=qrLanguage==="en-US"
+        :`✅ Preventiva <b>${esc(r.registro)}</b> já estava registrada.`)
+      :(qrLanguage==="en-US"
         ?`✅ Preventive maintenance <b>${esc(r.registro)}</b> saved successfully.`
-        :`✅ Preventiva <b>${esc(r.registro)}</b> registrada com sucesso.`;
+        :`✅ Preventiva <b>${esc(r.registro)}</b> registrada com sucesso.`);
+
+    if(documentResult.total){
+      if(documentResult.ok){
+        baseMessage+=qrLanguage==="en-US"
+          ?`<br>📎 ${documentResult.uploaded} document(s) attached successfully.`
+          :`<br>📎 ${documentResult.uploaded} documento(s) anexado(s) com sucesso.`;
+      }else{
+        baseMessage+=qrLanguage==="en-US"
+          ?`<br>⚠️ The preventive maintenance was saved, but ${documentResult.failed.length} document(s) could not be uploaded. You may press Save again to retry the documents.`
+          :`<br>⚠️ A preventiva foi gravada, mas ${documentResult.failed.length} documento(s) não puderam ser enviados. Você pode pressionar Salvar novamente para tentar reenviar os documentos.`;
+        baseMessage+=`<br><small>${documentResult.failed.map(x=>esc(x.name)+": "+esc(x.error)).join("<br>")}</small>`;
+      }
+    }
+
+    $("preventiveMessage").innerHTML=baseMessage;
+
+    if(!documentResult.ok){
+      preventivePosting=false;
+      $("savePreventive").disabled=false;
+      $("cancelPreventive").disabled=false;
+      $("savePreventive").textContent=qrLanguage==="en-US"
+        ?"Retry document upload"
+        :"Tentar enviar documentos novamente";
+      return;
     }
 
     // 7.4.6.2:
@@ -1351,6 +1407,7 @@ async function savePreventive(){
         :"Registrar Preventiva";
       preventivePosting=false;
       preventivePhotoData=null;
+      preventiveDocumentFiles=[];
       signatureDirty=false;
 
       Promise.resolve()
@@ -1534,7 +1591,7 @@ async function saveManage(){
     $("manageMessage").textContent=e.message;
   }
 }
-$("photoInput").onchange=async function(){if(!this.files[0]){photoData=null;$("photoPreview").style.display="none";return}photoData=await processPhoto(this.files[0]);$("photoPreview").src=photoData.dataUrl;$("photoPreview").style.display="block"};$("preventivePhotoInput").onchange=async function(){if(!this.files[0]){preventivePhotoData=null;$("preventivePhotoPreview").style.display="none";return}preventivePhotoData=await processPhoto(this.files[0]);$("preventivePhotoPreview").src=preventivePhotoData.dataUrl;$("preventivePhotoPreview").style.display="block"};async function handleManageSelectedImage(file,kind){
+$("photoInput").onchange=async function(){if(!this.files[0]){photoData=null;$("photoPreview").style.display="none";return}photoData=await processPhoto(this.files[0]);$("photoPreview").src=photoData.dataUrl;$("photoPreview").style.display="block"};$("preventivePhotoInput").onchange=async function(){if(!this.files[0]){preventivePhotoData=null;$("preventivePhotoPreview").style.display="none";return}preventivePhotoData=await processPhoto(this.files[0]);$("preventivePhotoPreview").src=preventivePhotoData.dataUrl;$("preventivePhotoPreview").style.display="block"};$("preventiveDocumentAddButton").onclick=()=>$("preventiveDocumentInput").click();$("preventiveDocumentInput").onchange=function(){addPreventiveDocuments7606(this.files)};async function handleManageSelectedImage(file,kind){
   if(!file)return;
 
   const isConclusion=kind==="conclusion";
