@@ -814,7 +814,7 @@ html,body{max-width:100%;overflow-x:hidden}
 
 <form id="manageForm" method="POST" target="manageFrame" style="display:none"><input name="action" value="updateOccurrence"><input name="systemSessionToken" id="m_system_session"><input name="token" id="m_token"><input name="ocorrencia" id="m_occurrence"><input name="status" id="m_status"><input name="responsavel" id="m_responsible"><input name="solucao" id="m_solution"><input name="alteradoPor" id="m_changedBy"><input name="descricaoOcorrencia" id="m_description"><input name="categoriaOcorrenciaEdit" id="m_category"><input name="componenteAfetadoEdit" id="m_component"><input name="fotoOcorrenciaBase64" id="m_occurrencePhoto"><input name="fotoOcorrenciaNome" id="m_occurrencePhotoName"><input name="fotoOcorrenciaMime" id="m_occurrencePhotoMime"><input name="fotoConclusaoBase64" id="m_photo"><input name="fotoConclusaoNome" id="m_photoName"><input name="fotoConclusaoMime" id="m_photoMime"></form>
 <iframe id="manageFrame" name="manageFrame"></iframe>
-<div class="footer">QRManut • Versão 7.6.1.2</div>
+<div class="footer">QRManut • Versão 7.6.1.3</div>
 </div>
 <script>
 const API_URL="https://script.google.com/macros/s/AKfycbx4tpC42Q6WdkNhTUTAGoZWvG5M24zwlNscnwbDP5B3Q5pWo8B32-Lf0rQ2Xtua1AFMAQ/exec";
@@ -963,10 +963,238 @@ async function showAuditTab(){if(systemSession?.perfil!=="MASTER"){alert("Soment
 function isoDateLocal(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
 function setDefaultOccurrenceReportDates(){if($("occReportStart").value&&$("occReportEnd").value){qrRefreshLocalizedDateControls();return}const hoje=new Date(),inicio=new Date(hoje.getFullYear(),hoje.getMonth(),1);$("occReportStart").value=isoDateLocal(inicio);$("occReportEnd").value=isoDateLocal(hoje);qrRefreshLocalizedDateControls()}
 function fillSelect(id,items,firstLabel){const atual=$(id).value;$(id).innerHTML=`<option value="">${esc(firstLabel)}</option>`+(items||[]).map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join("");if([...$(id).options].some(o=>o.value===atual))$(id).value=atual}
-async function loadOccurrenceReportFilters(){if(occurrenceReportFiltersLoaded)return;try{const r=await menuApi({action:"occurrencereportfilters"});if(!r.ok)throw new Error(r.detail||"Erro ao carregar filtros.");const f=r.filters||{};fillSelect("occReportProvider",f.prestadores,"Todos os prestadores");fillSelect("occReportCategory",f.categorias,"Todas as categorias");fillSelect("occReportComponent",f.componentes,"Todos os componentes");fillSelect("occReportFloor",f.pavimentos,"Todos os pavimentos");fillSelect("occReportLocation",f.localizacoes,"Todas as localizações");if(systemSession?.perfil==="PRESTADOR"){$("occReportProvider").value=systemSession.prestador;$('occReportProvider').disabled=true}else{$("occReportProvider").disabled=false}occurrenceReportFiltersLoaded=true}catch(e){$("occReportStatus").textContent=e.message}}
+async function loadOccurrenceReportFilters(){if(occurrenceReportFiltersLoaded)return;try{const r=await menuApi({action:"occurrencereportfilters"});if(!r.ok)throw new Error(r.detail||"Erro ao carregar filtros.");const f=r.filters||{};
+qrFillTranslatedSelect7613("occReportProvider",f.prestadores,qrLanguage==="en-US"?"All service providers":"Todos os prestadores");
+qrFillTranslatedSelect7613("occReportCategory",f.categorias,qrLanguage==="en-US"?"All categories":"Todas as categorias");
+qrFillTranslatedSelect7613("occReportComponent",f.componentes,qrLanguage==="en-US"?"All components":"Todos os componentes");
+qrFillTranslatedSelect7613("occReportFloor",f.pavimentos,qrLanguage==="en-US"?"All floors":"Todos os pavimentos");
+qrFillTranslatedSelect7613("occReportLocation",f.localizacoes,qrLanguage==="en-US"?"All locations":"Todas as localizações");if(systemSession?.perfil==="PRESTADOR"){$("occReportProvider").value=systemSession.prestador;$('occReportProvider').disabled=true}else{$("occReportProvider").disabled=false}occurrenceReportFiltersLoaded=true}catch(e){$("occReportStatus").textContent=e.message}}
 function occurrenceReportParams(){return{dataInicial:$("occReportStart").value,dataFinal:$("occReportEnd").value,prestador:$("occReportProvider").value,categoria:$("occReportCategory").value,componente:$("occReportComponent").value,pavimento:$("occReportFloor").value,localizacao:$("occReportLocation").value}}function markOccurrenceReportDirty(){occurrenceReportData=null;$("occReportPdf").disabled=true;hide("occPdfBox");$("occReportStatus").textContent="Filtros alterados. Clique em Consultar para atualizar o relatório.";$("occReportSummary").innerHTML="";$("occCategorySummary").innerHTML="";$("occReportResults").innerHTML=""}
-function formatDurationHours(v){if(v===null||v===undefined||v==="")return"-";const h=Number(v);if(!Number.isFinite(h))return"-";if(h<24)return h.toFixed(1).replace(".",",")+" h";return(h/24).toFixed(1).replace(".",",")+" dia(s)"}
-function renderOccurrenceReport(){const d=occurrenceReportData;if(!d)return;const s=d.summary||{};$("occReportStatus").textContent=`${s.total||0} OC(s) concluída(s) no período ${d.periodo?.descricao||""}`;$("occReportSummary").innerHTML=`<div class="occ-report-summary-card"><strong>${s.total||0}</strong>OCs concluídas</div><div class="occ-report-summary-card"><strong>${esc(formatDurationHours(s.tempoMedioHoras))}</strong>Tempo médio</div><div class="occ-report-summary-card"><strong>${s.categorias||0}</strong>Categorias</div><div class="occ-report-summary-card"><strong>${s.prestadores||0}</strong>Prestadores</div>`;$("occCategorySummary").innerHTML=(d.categorias||[]).map(x=>`<span class="occ-category-chip">${esc(x.nome)}: ${x.total}</span>`).join("");const items=d.ocorrencias||[];if(!items.length){$("occReportResults").innerHTML='<div class="document-empty">Nenhuma OC concluída encontrada para o período e filtros informados.</div>';$("occReportPdf").disabled=true;return}$("occReportPdf").disabled=false;$("occReportResults").innerHTML=items.map(item=>`<div class="occ-report-card"><div class="occ-report-head"><div><b>${esc(item.ocorrencia)}</b><div>${esc(item.id)} – ${esc(item.equipamento)}</div></div><span class="control-status done">✅ Concluída</span></div><div class="occ-report-meta"><b>Abertura:</b> ${esc(formatDate(item.dataAbertura))}<br><b>Conclusão:</b> ${esc(formatDate(item.dataConclusao))}<br><b>Tempo até a conclusão:</b> ${esc(formatDurationHours(item.tempoHoras))}<br>${item.prestador?`<b>Prestador:</b> ${esc(item.prestador)}<br>`:""}${item.pavimento?`<b>Pavimento:</b> ${esc(item.pavimento)}<br>`:""}${item.localizacao?`<b>Localização:</b> ${esc(item.localizacao)}<br>`:""}${item.categoria?`<b>Categoria:</b> ${esc(item.categoria)}<br>`:""}${item.componente?`<b>Componente:</b> ${esc(item.componente)}<br>`:""}${item.responsavel?`<b>Responsável:</b> ${esc(item.responsavel)}<br>`:""}${item.descricao?`<br><b>Descrição:</b><br>${esc(item.descricao)}<br>`:""}${item.solucao?`<br><b>Solução:</b><br>${esc(item.solucao)}`:""}</div><div class="occ-report-links">${item.fotoAbertura?`<a href="${esc(item.fotoAbertura)}" target="_blank" rel="noopener">📷 Foto da abertura</a>`:""}${item.fotoConclusao?`<a href="${esc(item.fotoConclusao)}" target="_blank" rel="noopener">📷 Foto da conclusão</a>`:""}</div><a class="open-button" href="?id=${encodeURIComponent(normalizeId(item.id))}">Abrir ficha</a></div>`).join("")}
+
+const QR_STRUCTURED_PT_EN_7613={
+  // Categorias / componentes
+  "Equipamento":"Equipment",
+  "Refrigeração":"Refrigeration",
+  "Climatização":"HVAC",
+  "Elétrica":"Electrical",
+  "Hidráulica":"Plumbing",
+  "Mobiliário":"Furniture",
+  "Civil":"Civil",
+  "Sanitário":"Plumbing Fixtures",
+  "Utilidades":"Utilities",
+  "Segurança":"Safety",
+  "Outros":"Other",
+  "Outro":"Other",
+  "Geral":"General",
+  "Piso":"Floor",
+  "Parede":"Wall",
+  "Teto":"Ceiling",
+  "Porta":"Door",
+  "Janela":"Window",
+  "Vaso Sanitário":"Toilet",
+  "Pia":"Sink",
+  "Torneira":"Faucet",
+  "Descarga":"Flush Valve",
+  "Mictório":"Urinal",
+  "Ralo":"Drain",
+  "Luminária":"Light Fixture",
+  "Tomada":"Outlet",
+  "Interruptor":"Switch",
+  "Tubulação":"Piping",
+  "Registro":"Valve",
+  "Bomba":"Pump",
+  "Motor":"Motor",
+  "Painel":"Panel",
+  "Ar-condicionado":"Air Conditioner",
+
+  // Documentos técnicos
+  "Procedimento":"Procedure",
+  "Diagrama":"Diagram",
+  "Planta / Mapa":"Drawing / Map",
+  "Manual":"Manual",
+  "Relatório":"Report",
+  "Certificado":"Certificate",
+  "Laudo":"Technical Assessment",
+  "Elétrica":"Electrical",
+  "Refrigeração":"Refrigeration",
+  "Climatização":"HVAC",
+  "Hidráulica":"Plumbing",
+  "Segurança":"Safety",
+  "Civil":"Civil",
+  "Extintores e Hidrantes":"Fire Extinguishers and Hydrants",
+  "Condensadoras":"Condensing Units",
+  "Evaporadoras":"Evaporator Units",
+  "Alarmes":"Alarms",
+
+  // Pavimentos / localizações comuns
+  "TÉRREO":"GROUND FLOOR",
+  "TERREO":"GROUND FLOOR",
+  "1º PISO":"1ST FLOOR",
+  "2º PISO":"2ND FLOOR",
+  "3º PISO":"3RD FLOOR",
+  "ÁREA EXTERNA":"EXTERIOR AREA",
+  "AREA EXTERNA":"EXTERIOR AREA",
+  "EXTERNO":"EXTERIOR"
+};
+
+function qrStructuredValue7613(v){
+  const original=String(v??"");
+  if(qrLanguage!=="en-US" || !original)return original;
+
+  const trimmed=original.trim();
+  if(QR_STRUCTURED_PT_EN_7613[trimmed]){
+    return QR_STRUCTURED_PT_EN_7613[trimmed];
+  }
+
+  // Traduções seguras de termos estruturais dentro de valores compostos.
+  let s=trimmed;
+  const replacements=[
+    [/\bTérreo\b/gi,"Ground Floor"],
+    [/\bTerreo\b/gi,"Ground Floor"],
+    [/\b3º\s*Piso\b/gi,"3rd Floor"],
+    [/\b2º\s*Piso\b/gi,"2nd Floor"],
+    [/\b1º\s*Piso\b/gi,"1st Floor"],
+    [/\b3\s*Piso\b/gi,"3rd Floor"],
+    [/\b2\s*Piso\b/gi,"2nd Floor"],
+    [/\b1\s*Piso\b/gi,"1st Floor"],
+    [/\bÁrea Externa\b/gi,"Exterior Area"],
+    [/\bArea Externa\b/gi,"Exterior Area"],
+    [/\bRefrigeração\b/gi,"Refrigeration"],
+    [/\bClimatização\b/gi,"HVAC"],
+    [/\bElétrica\b/gi,"Electrical"],
+    [/\bHidráulica\b/gi,"Plumbing"],
+    [/\bSegurança\b/gi,"Safety"],
+    [/\bMobiliário\b/gi,"Furniture"],
+    [/\bEquipamento\b/gi,"Equipment"],
+    [/\bOutros\b/gi,"Other"],
+    [/\bOutro\b/gi,"Other"]
+  ];
+  replacements.forEach(([rx,en])=>{s=s.replace(rx,en);});
+  return s;
+}
+
+function qrDocumentTitle7613(v){
+  const original=String(v??"");
+  if(qrLanguage!=="en-US" || !original)return original;
+
+  let s=original;
+  const replacements=[
+    [/\bEsquema Elétrico\b/gi,"Electrical Diagram"],
+    [/\bExtintor Hidrante\b/gi,"Fire Extinguisher / Hydrant"],
+    [/\bExtintores e Hidrantes\b/gi,"Fire Extinguishers and Hydrants"],
+    [/\bCondensadoras\b/gi,"Condensing Units"],
+    [/\bEvaporadora\b/gi,"Evaporator Unit"],
+    [/\bEvaporadoras\b/gi,"Evaporator Units"],
+    [/\bAlarmes\b/gi,"Alarms"],
+    [/\b3º?\s*Piso\b/gi,"3rd Floor"],
+    [/\b2º?\s*Piso\b/gi,"2nd Floor"],
+    [/\b1º?\s*Piso\b/gi,"1st Floor"],
+    [/\bPatio\b/gi,"Patio"]
+  ];
+  replacements.forEach(([rx,en])=>{s=s.replace(rx,en);});
+  return s;
+}
+
+function qrDocumentNotes7613(v){
+  const original=String(v??"");
+  if(qrLanguage!=="en-US" || !original)return original;
+
+  const exact={
+    "Classificação inicial gerada automaticamente pelo nome do arquivo. Revisar se necessário.":
+      "Initial classification automatically generated from the file name. Review if necessary."
+  };
+  return exact[original.trim()]||original;
+}
+
+function qrFillTranslatedSelect7613(id,items,firstLabel){
+  const el=$(id);
+  if(!el)return;
+  const atual=el.value;
+  el.innerHTML=`<option value="">${esc(firstLabel)}</option>`+
+    (items||[]).map(v=>`<option value="${esc(v)}">${esc(qrStructuredValue7613(v))}</option>`).join("");
+  if([...el.options].some(o=>o.value===atual))el.value=atual;
+}
+
+function formatDurationHours(v){
+  if(v===null||v===undefined||v==="")return"-";
+  const h=Number(v);
+  if(!Number.isFinite(h))return"-";
+  const locale=qrLanguage==="en-US"?"en-US":"pt-BR";
+  const number=(n)=>new Intl.NumberFormat(locale,{minimumFractionDigits:1,maximumFractionDigits:1}).format(n);
+  if(h<24)return number(h)+" h";
+  return number(h/24)+" "+(qrLanguage==="en-US"?"day(s)":"dia(s)");
+}
+function renderOccurrenceReport(){
+  const d=occurrenceReportData;
+  if(!d)return;
+
+  const t=(pt,en)=>qrLanguage==="en-US"?en:pt;
+  const s=d.summary||{};
+
+  let periodDescription=d.periodo?.descricao||"";
+  if(qrLanguage==="en-US"){
+    periodDescription=periodDescription
+      .replace(/\s+a\s+/gi," to ")
+      .replace(/\s+até\s+/gi," to ");
+  }
+
+  $("occReportStatus").textContent=
+    qrLanguage==="en-US"
+      ?`${s.total||0} work order(s) completed in the period ${periodDescription}`
+      :`${s.total||0} OC(s) concluída(s) no período ${periodDescription}`;
+
+  $("occReportSummary").innerHTML=
+    `<div class="occ-report-summary-card"><strong>${s.total||0}</strong>${t("OCs concluídas","Completed work orders")}</div>`+
+    `<div class="occ-report-summary-card"><strong>${esc(formatDurationHours(s.tempoMedioHoras))}</strong>${t("Tempo médio","Average time")}</div>`+
+    `<div class="occ-report-summary-card"><strong>${s.categorias||0}</strong>${t("Categorias","Categories")}</div>`+
+    `<div class="occ-report-summary-card"><strong>${s.prestadores||0}</strong>${t("Prestadores","Service providers")}</div>`;
+
+  $("occCategorySummary").innerHTML=
+    (d.categorias||[]).map(x=>
+      `<span class="occ-category-chip">${esc(qrStructuredValue7613(x.nome))}: ${x.total}</span>`
+    ).join("");
+
+  const items=d.ocorrencias||[];
+
+  if(!items.length){
+    $("occReportResults").innerHTML=
+      `<div class="document-empty">${t(
+        "Nenhuma OC concluída encontrada para o período e filtros informados.",
+        "No completed work orders were found for the selected period and filters."
+      )}</div>`;
+    $("occReportPdf").disabled=true;
+    return;
+  }
+
+  $("occReportPdf").disabled=false;
+
+  $("occReportResults").innerHTML=items.map(item=>
+    `<div class="occ-report-card">`+
+      `<div class="occ-report-head">`+
+        `<div><b>${esc(item.ocorrencia)}</b><div>${esc(item.id)} – ${esc(item.equipamento)}</div></div>`+
+        `<span class="control-status done">✅ ${t("Concluída","Completed")}</span>`+
+      `</div>`+
+      `<div class="occ-report-meta">`+
+        `<b>${t("Abertura","Opened")}:</b> ${esc(formatDate(item.dataAbertura))}<br>`+
+        `<b>${t("Conclusão","Completed")}:</b> ${esc(formatDate(item.dataConclusao))}<br>`+
+        `<b>${t("Tempo até a conclusão","Time to completion")}:</b> ${esc(formatDurationHours(item.tempoHoras))}<br>`+
+        `${item.prestador?`<b>${t("Prestador","Service Provider")}:</b> ${esc(item.prestador)}<br>`:""}`+
+        `${item.pavimento?`<b>${t("Pavimento","Floor")}:</b> ${esc(qrStructuredValue7613(item.pavimento))}<br>`:""}`+
+        `${item.localizacao?`<b>${t("Localização","Location")}:</b> ${esc(qrStructuredValue7613(item.localizacao))}<br>`:""}`+
+        `${item.categoria?`<b>${t("Categoria","Category")}:</b> ${esc(qrStructuredValue7613(item.categoria))}<br>`:""}`+
+        `${item.componente?`<b>${t("Componente","Component")}:</b> ${esc(qrStructuredValue7613(item.componente))}<br>`:""}`+
+        `${item.responsavel?`<b>${t("Responsável","Responsible")}:</b> ${esc(item.responsavel)}<br>`:""}`+
+        `${item.descricao?`<br><b>${t("Descrição","Description")}:</b><br>${esc(item.descricao)}<br>`:""}`+
+        `${item.solucao?`<br><b>${t("Solução","Solution")}:</b><br>${esc(item.solucao)}`:""}`+
+      `</div>`+
+      `<div class="occ-report-links">`+
+        `${item.fotoAbertura?`<a href="${esc(item.fotoAbertura)}" target="_blank" rel="noopener">📷 ${t("Foto da abertura","Opening photo")}</a>`:""}`+
+        `${item.fotoConclusao?`<a href="${esc(item.fotoConclusao)}" target="_blank" rel="noopener">📷 ${t("Foto da conclusão","Completion photo")}</a>`:""}`+
+      `</div>`+
+      `<a class="open-button" href="?id=${encodeURIComponent(normalizeId(item.id))}">${t("Abrir ficha","Open record")}</a>`+
+    `</div>`
+  ).join("");
+}
 async function loadOccurrenceReport(){setDefaultOccurrenceReportDates();const p=occurrenceReportParams(),btn=$("occReportRefresh");if(!p.dataInicial||!p.dataFinal){$("occReportStatus").textContent="Informe a data inicial e a data final.";return}btn.disabled=true;btn.textContent="Consultando...";$("occReportStatus").textContent="Consultando OCs concluídas...";$("occReportPdf").disabled=true;hide("occPdfBox");try{const r=await menuApi({action:"occurrencereport",...p});if(!r.ok)throw new Error(r.detail||"Não foi possível gerar o relatório.");occurrenceReportData=r.data;renderOccurrenceReport()}catch(e){occurrenceReportData=null;$("occReportStatus").textContent=e.message;$("occReportSummary").innerHTML="";$("occCategorySummary").innerHTML="";$("occReportResults").innerHTML=""}finally{btn.disabled=false;btn.textContent="Consultar"}}
 async function generateOccurrenceReportPdf(){if(!occurrenceReportData)return;const p=occurrenceReportParams(),btn=$("occReportPdf");btn.disabled=true;btn.textContent="Gerando PDF...";show("occPdfBox");$("occPdfMessage").textContent="Gerando o arquivo PDF...";$("occPdfLinkWrap").innerHTML="";try{const r=await menuApiPost({action:"generateOccurrenceReportPdf",dataInicial:p.dataInicial,dataFinal:p.dataFinal,occProvider:p.prestador,occCategory:p.categoria,occComponent:p.componente,occFloor:p.pavimento,occLocation:p.localizacao});if(!r.ok)throw new Error(r.detail||"Não foi possível gerar o PDF.");$("occPdfMessage").textContent=`PDF gerado com ${r.summary.total} OC(s) concluída(s).`;$("occPdfLinkWrap").innerHTML=`<a class="occ-pdf-link" href="${esc(r.url)}" target="_blank" rel="noopener">📄 Abrir PDF</a>`}catch(e){$("occPdfMessage").textContent=e.message}finally{btn.disabled=false;btn.textContent="📄 Gerar PDF"}}
 
@@ -976,25 +1204,92 @@ async function loadDocumentFilters(){
   try{
     const r=await menuApi({action:"documentfilters"});
     if(!r.ok)return;
+
     const f=r.filters||{};
-    $("documentTypeFilter").innerHTML='<option value="">Todos</option>'+((f.tipos||[]).map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join(""));
-    $("documentDisciplineFilter").innerHTML='<option value="">Todas</option>'+((f.disciplinas||[]).map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join(""));
-    $("documentFloorFilter").innerHTML='<option value="">Todos</option>'+((f.pavimentos||[]).map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join(""));
+
+    qrFillTranslatedSelect7613(
+      "documentTypeFilter",
+      f.tipos||[],
+      qrLanguage==="en-US"?"All":"Todos"
+    );
+    qrFillTranslatedSelect7613(
+      "documentDisciplineFilter",
+      f.disciplinas||[],
+      qrLanguage==="en-US"?"All":"Todas"
+    );
+    qrFillTranslatedSelect7613(
+      "documentFloorFilter",
+      f.pavimentos||[],
+      qrLanguage==="en-US"?"All":"Todos"
+    );
+
     documentFiltersLoaded=true;
   }catch(e){}
 }
 async function searchDocuments(){
+  const t=(pt,en)=>qrLanguage==="en-US"?en:pt;
   const q=$("documentSearchInput").value.trim();
-  $("documentStatus").textContent="Buscando documentos...";
+
+  $("documentStatus").textContent=t("Buscando documentos...","Searching documents...");
   $("documentResults").innerHTML="";
+
   try{
-    const r=await menuApi({action:"documents",q:q,tipo:$("documentTypeFilter").value,disciplina:$("documentDisciplineFilter").value,pavimento:$("documentFloorFilter").value});
-    if(!r.ok)throw new Error(r.detail||"Erro ao consultar documentos.");
+    const r=await menuApi({
+      action:"documents",
+      q:q,
+      tipo:$("documentTypeFilter").value,
+      disciplina:$("documentDisciplineFilter").value,
+      pavimento:$("documentFloorFilter").value
+    });
+
+    if(!r.ok){
+      throw new Error(
+        r.detail||t("Erro ao consultar documentos.","Error searching documents.")
+      );
+    }
+
     const items=r.documents||[];
-    $("documentStatus").textContent=items.length+" documento(s) encontrado(s)";
-    if(!items.length){$("documentResults").innerHTML='<div class="document-empty">Nenhum documento encontrado para os filtros informados.</div>';return}
-    $("documentResults").innerHTML=items.map(d=>`<div class="document-card"><div class="document-title">📄 ${esc(d.titulo)}</div><div class="document-meta">${d.idDocumento?`<b>ID:</b> ${esc(d.idDocumento)}<br>`:""}${d.tipoDocumento?`<b>Tipo:</b> ${esc(d.tipoDocumento)}<br>`:""}${d.disciplina?`<b>Disciplina:</b> ${esc(d.disciplina)}<br>`:""}${d.assunto?`<b>Assunto:</b> ${esc(d.assunto)}<br>`:""}${d.pavimento?`<b>Pavimento:</b> ${esc(d.pavimento)}<br>`:""}${d.ambiente?`<b>Ambiente:</b> ${esc(d.ambiente)}<br>`:""}${d.prestador?`<b>Prestador:</b> ${esc(d.prestador)}<br>`:""}${d.idAtivo?`<b>Ativo:</b> ${esc(d.idAtivo)}<br>`:""}${d.revisao?`<b>Revisão:</b> ${esc(d.revisao)}<br>`:""}${d.observacoes?`<b>Observações:</b> ${esc(d.observacoes)}`:""}</div>${d.linkPdf?`<a class="document-open" href="${esc(d.linkPdf)}" target="_blank" rel="noopener">👁️ Abrir PDF</a>`:""}</div>`).join("");
-  }catch(e){$("documentStatus").textContent="";$("documentResults").innerHTML=`<div class="message error" style="display:block">${esc(e.message||"Erro ao buscar documentos.")}</div>`}
+
+    $("documentStatus").textContent=
+      qrLanguage==="en-US"
+        ?`${items.length} document(s) found`
+        :`${items.length} documento(s) encontrado(s)`;
+
+    if(!items.length){
+      $("documentResults").innerHTML=
+        `<div class="document-empty">${t(
+          "Nenhum documento encontrado para os filtros informados.",
+          "No documents were found for the selected filters."
+        )}</div>`;
+      return;
+    }
+
+    $("documentResults").innerHTML=items.map(d=>
+      `<div class="document-card">`+
+        `<div class="document-title">📄 ${esc(qrDocumentTitle7613(d.titulo))}</div>`+
+        `<div class="document-meta">`+
+          `${d.idDocumento?`<b>ID:</b> ${esc(d.idDocumento)}<br>`:""}`+
+          `${d.tipoDocumento?`<b>${t("Tipo","Type")}:</b> ${esc(qrStructuredValue7613(d.tipoDocumento))}<br>`:""}`+
+          `${d.disciplina?`<b>${t("Disciplina","Discipline")}:</b> ${esc(qrStructuredValue7613(d.disciplina))}<br>`:""}`+
+          `${d.assunto?`<b>${t("Assunto","Subject")}:</b> ${esc(qrStructuredValue7613(d.assunto))}<br>`:""}`+
+          `${d.pavimento?`<b>${t("Pavimento","Floor")}:</b> ${esc(qrStructuredValue7613(d.pavimento))}<br>`:""}`+
+          `${d.ambiente?`<b>${t("Ambiente","Environment")}:</b> ${esc(qrStructuredValue7613(d.ambiente))}<br>`:""}`+
+          `${d.prestador?`<b>${t("Prestador","Service Provider")}:</b> ${esc(d.prestador)}<br>`:""}`+
+          `${d.idAtivo?`<b>${t("Ativo","Asset")}:</b> ${esc(d.idAtivo)}<br>`:""}`+
+          `${d.revisao?`<b>${t("Revisão","Revision")}:</b> ${esc(d.revisao)}<br>`:""}`+
+          `${d.observacoes?`<b>${t("Observações","Notes")}:</b> ${esc(qrDocumentNotes7613(d.observacoes))}`:""}`+
+        `</div>`+
+        `${d.linkPdf?`<a class="document-open" href="${esc(d.linkPdf)}" target="_blank" rel="noopener">👁️ ${t("Abrir PDF","Open PDF")}</a>`:""}`+
+      `</div>`
+    ).join("");
+
+  }catch(e){
+    $("documentStatus").textContent="";
+    $("documentResults").innerHTML=
+      `<div class="message error" style="display:block">${esc(
+        e.message||t("Erro ao buscar documentos.","Error searching documents.")
+      )}</div>`;
+  }
 }
 
 async function searchAssets(){let q=$("searchInput").value.trim();if(!q){$("searchStatus").textContent="Digite o ID, nome do equipamento, ambiente ou localização que deseja localizar.";focusSearchInput();return}if(q.length<2){$("searchStatus").textContent="Digite pelo menos 2 caracteres.";focusSearchInput();return}if(/^[a-z0-9_-]+$/i.test(q))q=normalizeId(q);$("searchStatus").textContent="Buscando...";try{const d=await menuApi({action:"search",q});const items=d.results||[];$("searchStatus").textContent=items.length+" resultado(s)";$("searchResults").innerHTML=items.map(item=>`<div class="search-result"><div class="search-result-id">${esc(item.id)}</div><div class="search-result-name">${esc(item.nome)}</div><div class="search-result-data">${item.pavimento?`<div><b>Pavimento:</b> ${esc(item.pavimento)}</div>`:""}${item.localizacao?`<div><b>Localização:</b> ${esc(item.localizacao)}</div>`:""}${item.prestador?`<div><b>Prestador:</b> ${esc(item.prestador)}</div>`:""}${item.periodicidade?`<div><b>Periodicidade:</b> ${esc(item.periodicidade)}</div>`:""}</div><a class="open-button" href="?id=${encodeURIComponent(normalizeId(item.id))}">Abrir ficha</a></div>`).join("")}catch(e){$("searchStatus").textContent="Erro ao realizar busca."}}
@@ -3914,6 +4209,11 @@ function qrApplyLanguage(lang){
   if(occurrenceCatalogAdminData)renderOccurrenceCatalogAdmin();
   if(occurrenceCatalogData&&$("category"))populateOccurrenceCategorySelect($("category").value,$("component").value);
   if(preventiveControlData)renderPreventiveControl();
+  if(occurrenceReportData)renderOccurrenceReport();
+  if($("documentsArea")&&!$("documentsArea").classList.contains("hidden")){
+    documentFiltersLoaded=false;
+    loadDocumentFilters().then(()=>searchDocuments()).catch(()=>{});
+  }
   if($("uploadDocumentFileLabel"))$("uploadDocumentFileLabel").textContent=qrLanguage==="en-US"?"PDF File *":"Arquivo PDF *";
   if($("uploadDocumentChooseFileButton"))$("uploadDocumentChooseFileButton").textContent=qrLanguage==="en-US"?"📎 Choose PDF File":"📎 Escolher arquivo PDF";
   if($("uploadDocumentFileName")&&!documentUploadFileData)$("uploadDocumentFileName").textContent=qrLanguage==="en-US"?"No file selected.":"Nenhum arquivo selecionado.";
