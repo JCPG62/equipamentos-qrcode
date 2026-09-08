@@ -814,7 +814,7 @@ html,body{max-width:100%;overflow-x:hidden}
 
 <form id="manageForm" method="POST" target="manageFrame" style="display:none"><input name="action" value="updateOccurrence"><input name="systemSessionToken" id="m_system_session"><input name="token" id="m_token"><input name="ocorrencia" id="m_occurrence"><input name="status" id="m_status"><input name="responsavel" id="m_responsible"><input name="solucao" id="m_solution"><input name="alteradoPor" id="m_changedBy"><input name="descricaoOcorrencia" id="m_description"><input name="categoriaOcorrenciaEdit" id="m_category"><input name="componenteAfetadoEdit" id="m_component"><input name="fotoOcorrenciaBase64" id="m_occurrencePhoto"><input name="fotoOcorrenciaNome" id="m_occurrencePhotoName"><input name="fotoOcorrenciaMime" id="m_occurrencePhotoMime"><input name="fotoConclusaoBase64" id="m_photo"><input name="fotoConclusaoNome" id="m_photoName"><input name="fotoConclusaoMime" id="m_photoMime"></form>
 <iframe id="manageFrame" name="manageFrame"></iframe>
-<div class="footer">QRManut • Versão 7.6.6.8</div>
+<div class="footer">QRManut • Versão 7.6.6.9</div>
 </div>
 <script>
 const API_URL="https://script.google.com/macros/s/AKfycbx4tpC42Q6WdkNhTUTAGoZWvG5M24zwlNscnwbDP5B3Q5pWo8B32-Lf0rQ2Xtua1AFMAQ/exec";
@@ -2287,8 +2287,63 @@ async function saveCompanyConfig(){
   }
 }
 async function showProvidersAdminTab(){if(systemSession?.perfil!=="MASTER"){alert("Somente MASTER pode administrar prestadores.");return}clearTabs();$("tabProvidersAdmin").classList.add("active");showOnly("providersAdminArea");await loadProvidersAdmin()}
+function providerPhoneDigits7669(value){
+  return String(value||"").replace(/\D/g,"");
+}
+function providerTelHref7669(value){
+  const raw=String(value||"").trim();
+  if(!raw)return "";
+  const plus=raw.startsWith("+")?"+":"";
+  const digits=providerPhoneDigits7669(raw);
+  return digits?"tel:"+plus+digits:"";
+}
+function providerWhatsappHref7669(value){
+  let digits=providerPhoneDigits7669(value);
+  if(!digits)return "";
+  // Se o telefone brasileiro tiver DDD + número, acrescenta o código do país.
+  if((digits.length===10||digits.length===11)&&!digits.startsWith("55"))digits="55"+digits;
+  return "https://wa.me/"+digits;
+}
+function providerContactActions7669(p){
+  if(!p?.telefone)return "";
+  const t=qrT7612;
+  const tel=providerTelHref7669(p.telefone);
+  const wa=providerWhatsappHref7669(p.telefone);
+  return `<div style="display:flex;gap:7px;flex-wrap:wrap;margin:7px 0 3px">`+
+    (tel?`<a class="btn btn-secondary" style="text-decoration:none;padding:8px 11px" href="${esc(tel)}">📞 ${t("Ligar","Call")}</a>`:"")+
+    (wa?`<a class="btn btn-green" style="text-decoration:none;padding:8px 11px" href="${esc(wa)}" target="_blank" rel="noopener">💬 WhatsApp</a>`:"")+
+    `</div>`;
+}
 async function loadProvidersAdmin(){
-  const t=qrT7612;try{const r=await menuApi({action:"providersadmin"});if(!r.ok)throw new Error(r.detail||t("Erro ao carregar.","Error loading service providers."));providersAdminData=r.providers||[];$("providersAdminStatus").textContent=`${providersAdminData.length} ${t("prestador(es)","service provider(s)")}`;$("providersAdminList").innerHTML=providersAdminData.map((p,i)=>`<div class="provider-admin-card"><b>${esc(p.nomeFantasia||p.nome)}</b><div class="search-result-data"><b>ID:</b> ${esc(p.idPrestador)}<br><b>Status:</b> ${p.ativo?t("Ativo","Active"):t("Inativo","Inactive")}<br>${p.responsavel?`<b>${t("Responsável / Contato principal","Responsible / Main Contact")}:</b> ${esc(p.responsavel)}<br>`:""}${p.telefone?`<b>${t("Telefone / WhatsApp","Phone / WhatsApp")}:</b> ${esc(p.telefone)}<br>`:""}${p.emailContato?`<b>${t("E-mail de Contato","Contact Email")}:</b> ${esc(p.emailContato)}<br>`:""}<b>${t("Preventiva","Preventive Maintenance")}:</b> ${qrYN7612(p.podeRegistrarPreventiva)} • <b>${t("Atender OC","Handle Work Orders")}:</b> ${qrYN7612(p.podeAtenderOC)}<br><b>${t("Assinatura","Signature")}:</b> ${qrReq7612(p.exigirAssinatura)} • <b>${t("Foto","Photo")}:</b> ${qrReq7612(p.fotoObrigatoria)}<br><b>${t("Notificar OC","Notify Work Order")}:</b> ${qrYN7612(p.notificarOC)}${p.emailOC?` • ${esc(p.emailOC)}`:""}<br><b>${t("Relatório","Report")}:</b> ${qrYN7612(p.enviarRelatorio)}${p.emailRelatorio?` • ${esc(p.emailRelatorio)}`:""}</div><button class="btn btn-blue" style="margin-top:10px" onclick="openProviderModal(${i})">${t("Editar","Edit")}</button></div>`).join("")}catch(e){$("providersAdminStatus").textContent=e.message}
+  const t=qrT7612;
+  try{
+    const r=await menuApi({action:"providersadmin"});
+    if(!r.ok)throw new Error(r.detail||t("Erro ao carregar.","Error loading service providers."));
+    if(r.backendVersion!=="7.6.6.9")throw new Error(t(
+      "O HTML 7.6.6.9 está atualizado, mas o Apps Script ainda está em uma versão anterior. Atualize o arquivo .gs e faça uma nova versão da implantação.",
+      "The 7.6.6.9 HTML is updated, but Apps Script is still on an older version. Update the .gs file and deploy a new version."
+    ));
+    providersAdminData=r.providers||[];
+    $("providersAdminStatus").textContent=`${providersAdminData.length} ${t("prestador(es)","service provider(s)")}`;
+    $("providersAdminList").innerHTML=providersAdminData.map((p,i)=>`
+      <div class="provider-admin-card">
+        <b>${esc(p.nomeFantasia||p.nome)}</b>
+        <div class="search-result-data">
+          <b>ID:</b> ${esc(p.idPrestador)}<br>
+          <b>Status:</b> ${p.ativo?t("Ativo","Active"):t("Inativo","Inactive")}<br>
+          ${p.responsavel?`<b>${t("Responsável / Contato principal","Responsible / Main Contact")}:</b> ${esc(p.responsavel)}<br>`:""}
+          ${p.telefone?`<b>${t("Telefone / WhatsApp","Phone / WhatsApp")}:</b> <a href="${esc(providerTelHref7669(p.telefone))}">${esc(p.telefone)}</a><br>${providerContactActions7669(p)}`:""}
+          ${p.emailContato?`<b>${t("E-mail de Contato","Contact Email")}:</b> <a href="mailto:${esc(p.emailContato)}">${esc(p.emailContato)}</a><br>`:""}
+          <b>${t("Preventiva","Preventive Maintenance")}:</b> ${qrYN7612(p.podeRegistrarPreventiva)} • <b>${t("Atender OC","Handle Work Orders")}:</b> ${qrYN7612(p.podeAtenderOC)}<br>
+          <b>${t("Assinatura","Signature")}:</b> ${qrReq7612(p.exigirAssinatura)} • <b>${t("Foto","Photo")}:</b> ${qrReq7612(p.fotoObrigatoria)}<br>
+          <b>${t("Notificar OC","Notify Work Order")}:</b> ${qrYN7612(p.notificarOC)}${p.emailOC?` • ${esc(p.emailOC)}`:""}<br>
+          <b>${t("Relatório","Report")}:</b> ${qrYN7612(p.enviarRelatorio)}${p.emailRelatorio?` • ${esc(p.emailRelatorio)}`:""}
+        </div>
+        <button class="btn btn-blue" style="margin-top:10px" onclick="openProviderModal(${i})">${t("Editar","Edit")}</button>
+      </div>`).join("");
+  }catch(e){
+    $("providersAdminStatus").textContent=e.message;
+  }
 }
 
 function openProviderModal(i){const p=(i===null||i===undefined)?null:providersAdminData[i];$("providerModalTitle").textContent=p?(qrLanguage==="en-US"?"🏢 Edit Service Provider":"🏢 Editar Prestador"):(qrLanguage==="en-US"?"🏢 New Service Provider":"🏢 Novo Prestador");$("providerId").value=p?.idPrestador||"";$("providerName").value=p?.nome||"";$("providerTradeName").value=p?.nomeFantasia||"";$("providerResponsible").value=p?.responsavel||"";$("providerPhone").value=p?.telefone||"";$("providerContactEmail").value=p?.emailContato||"";$("providerActive").checked=p?!!p.ativo:true;$("providerRequireSignature").checked=p?!!p.exigirAssinatura:false;$("providerPhotoRequired").checked=p?!!p.fotoObrigatoria:false;$("providerObservationRequired").checked=p?!!p.observacaoObrigatoria:false;$("providerCanPreventive").checked=p?!!p.podeRegistrarPreventiva:true;$("providerCanOccurrence").checked=p?!!p.podeAtenderOC:true;$("providerNotifyOccurrence").checked=p?!!p.notificarOC:false;$("providerOccurrenceEmail").value=p?.emailOC||"";$("providerSendReport").checked=p?!!p.enviarRelatorio:false;$("providerReportEmail").value=p?.emailRelatorio||"";$("providerNotes").value=p?.observacoes||"";$("providerMessage").className="message";$("providerModal").style.display="flex"}
