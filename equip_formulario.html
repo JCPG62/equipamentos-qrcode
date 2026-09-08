@@ -305,7 +305,7 @@ html,body{max-width:100%;overflow-x:hidden}
 
 
 /* ============================================================
- * QRManut 7.6.6.13 - Permissões configuráveis por perfil
+ * QRManut 7.6.6.14 - Correção do acesso MASTER às Permissões de Perfis
  * ============================================================ */
 .menu-button.permissions.active{background:#6d28d9;border-color:#6d28d9;color:#fff}
 .permissions-note{margin:12px 0;padding:12px 14px;border:1px solid #c4b5fd;background:#f5f3ff;color:#4c1d95;border-radius:12px;line-height:1.5}
@@ -352,7 +352,7 @@ html,body{max-width:100%;overflow-x:hidden}
 
     <button id="tabDocumentUpload" class="menu-button upload-doc hidden">📤 Upload de Documentos</button>
     <button id="tabUsers" class="menu-button users hidden">👥 Gestão de Usuários</button>
-    <button id="tabPermissions" class="menu-button permissions hidden">🔐 Permissões de Perfis</button>
+    <button id="tabPermissions" type="button" class="menu-button permissions hidden">🔐 Permissões de Perfis</button>
     <button id="tabAudit" class="menu-button audit hidden">🧾 Auditoria</button>
     <button id="tabProvidersAdmin" class="menu-button providers-admin hidden">🏢 Prestadores</button>
     <button id="tabCompany" class="menu-button company hidden">⚙️ Empresa</button>
@@ -855,7 +855,7 @@ html,body{max-width:100%;overflow-x:hidden}
 
 <form id="manageForm" method="POST" target="manageFrame" style="display:none"><input name="action" value="updateOccurrence"><input name="systemSessionToken" id="m_system_session"><input name="token" id="m_token"><input name="ocorrencia" id="m_occurrence"><input name="status" id="m_status"><input name="responsavel" id="m_responsible"><input name="solucao" id="m_solution"><input name="alteradoPor" id="m_changedBy"><input name="descricaoOcorrencia" id="m_description"><input name="categoriaOcorrenciaEdit" id="m_category"><input name="componenteAfetadoEdit" id="m_component"><input name="fotoOcorrenciaBase64" id="m_occurrencePhoto"><input name="fotoOcorrenciaNome" id="m_occurrencePhotoName"><input name="fotoOcorrenciaMime" id="m_occurrencePhotoMime"><input name="fotoConclusaoBase64" id="m_photo"><input name="fotoConclusaoNome" id="m_photoName"><input name="fotoConclusaoMime" id="m_photoMime"></form>
 <iframe id="manageFrame" name="manageFrame"></iframe>
-<div class="footer">QRManut • Versão 7.6.6.13</div>
+<div class="footer">QRManut • Versão 7.6.6.14</div>
 </div>
 <script>
 const API_URL="https://script.google.com/macros/s/AKfycbx4tpC42Q6WdkNhTUTAGoZWvG5M24zwlNscnwbDP5B3Q5pWo8B32-Lf0rQ2Xtua1AFMAQ/exec";
@@ -986,14 +986,14 @@ function menuApiPost(params){if(!systemSession?.systemSessionToken)return Promis
 function renderSystemAccess(){if(!systemSession){hide("systemAccessInfo");return}show("systemAccessInfo");$("systemAccessText").innerHTML=`Acesso: <b>${esc(systemSession.nome||systemSession.usuario)}</b> • Perfil: <b>${esc(systemSession.perfil)}</b>${systemSession.prestador?` • Prestador: <b>${esc(systemSession.prestador)}</b>`:""}`}
 function hasProfilePermission(key){
   if(!systemSession)return false;
-  if(systemSession.perfil==="MASTER")return true;
+  if(String(systemSession.perfil||"").trim().toUpperCase()==="MASTER")return true;
   return !!(systemSession.permissions&&systemSession.permissions[key]);
 }
 function permissionDeniedMessage(pt,en){alert(qrLanguage==="en-US"?en:pt);return false}
 function requireUiPermission(key,pt,en){return hasProfilePermission(key)||permissionDeniedMessage(pt,en)}
 function updateRoleUi(){
   if(!systemSession)return;
-  const isMaster=systemSession.perfil==="MASTER";
+  const isMaster=String(systemSession.perfil||"").trim().toUpperCase()==="MASTER";
   const toggle=(id,key)=>hasProfilePermission(key)?show(id):hide(id);
   toggle("tabSearch","BUSCAR_ATIVOS");
   toggle("tabPending","OC_PENDENTES");
@@ -2393,8 +2393,24 @@ async function saveCompanyConfig(){
   }
 }
 async function showProfilePermissionsTab(){
-  if(systemSession?.perfil!=="MASTER")return permissionDeniedMessage("Somente MASTER pode gerenciar as permissões dos perfis.","Only MASTER can manage profile permissions.");
-  clearTabs();$("tabPermissions").classList.add("active");showOnly("permissionsArea");await loadProfilePermissionsAdmin();
+  /* 7.6.6.14: garante sessão atualizada antes de validar o perfil MASTER. */
+  if(!systemSession?.systemSessionToken){
+    return requireSystemLogin(showProfilePermissionsTab);
+  }
+  const valid=await systemSessionIsValid();
+  if(!valid){
+    showMenuGate();
+    return;
+  }
+  const profile=String(systemSession?.perfil||"").trim().toUpperCase();
+  if(profile!=="MASTER")return permissionDeniedMessage("Somente MASTER pode gerenciar as permissões dos perfis.","Only MASTER can manage profile permissions.");
+
+  clearTabs();
+  $("tabPermissions").classList.add("active");
+  showOnly("permissionsArea");
+  $("permissionsStatus").textContent=qrLanguage==="en-US"?"Loading permissions...":"Carregando permissões...";
+  $("permissionsMatrix").innerHTML="";
+  await loadProfilePermissionsAdmin();
 }
 function permissionCheckboxId76613(profile,key){return "perm_"+profile+"_"+key}
 function renderProfilePermissionsAdmin(){
@@ -2424,6 +2440,9 @@ async function loadProfilePermissionsAdmin(){
   try{
     const r=await menuApi({action:"profilepermissionsadmin"});
     if(!r.ok)throw new Error(r.detail||"Erro ao carregar permissões.");
+    if(r.backendVersion!=="7.6.6.14")throw new Error(qrLanguage==="en-US"
+      ?"The HTML is updated, but Apps Script is still on an older deployment. Update the .gs file and deploy a new version."
+      :"O HTML está atualizado, mas o Apps Script ainda está em uma implantação anterior. Atualize o arquivo .gs e faça uma nova versão da implantação.");
     profilePermissionsAdminData=r.data;
     renderProfilePermissionsAdmin();
     $("permissionsStatus").textContent=qrLanguage==="en-US"?"Permissions loaded. Changes only take effect after you click Save Permissions.":"Permissões carregadas. As alterações só entram em vigor após clicar em Salvar permissões.";
@@ -2495,9 +2514,9 @@ async function loadProvidersAdmin(){
   try{
     const r=await menuApi({action:"providersadmin"});
     if(!r.ok)throw new Error(r.detail||t("Erro ao carregar.","Error loading service providers."));
-    if(r.backendVersion!=="7.6.6.13")throw new Error(t(
-      "O HTML 7.6.6.13 está atualizado, mas o Apps Script ainda está em uma versão anterior. Atualize o arquivo .gs e faça uma nova versão da implantação.",
-      "The 7.6.6.13 HTML is updated, but Apps Script is still on an older version. Update the .gs file and deploy a new version."
+    if(r.backendVersion!=="7.6.6.14")throw new Error(t(
+      "O HTML 7.6.6.14 está atualizado, mas o Apps Script ainda está em uma versão anterior. Atualize o arquivo .gs e faça uma nova versão da implantação.",
+      "The 7.6.6.14 HTML is updated, but Apps Script is still on an older version. Update the .gs file and deploy a new version."
     ));
     providersAdminData=r.providers||[];
     $("providersAdminStatus").textContent=`${providersAdminData.length} ${t("prestador(es)","service provider(s)")}`;
