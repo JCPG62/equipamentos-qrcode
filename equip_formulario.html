@@ -303,6 +303,27 @@ html,body{max-width:100%;overflow-x:hidden}
 .asset-other-input.hidden{display:none!important}
 @media(max-width:720px){.asset-form-grid,.asset-form-grid.three{grid-template-columns:1fr}.asset-form-grid .full{grid-column:auto}}
 
+
+/* ============================================================
+ * QRManut 7.6.6.13 - Permissões configuráveis por perfil
+ * ============================================================ */
+.menu-button.permissions.active{background:#6d28d9;border-color:#6d28d9;color:#fff}
+.permissions-note{margin:12px 0;padding:12px 14px;border:1px solid #c4b5fd;background:#f5f3ff;color:#4c1d95;border-radius:12px;line-height:1.5}
+.permissions-table-wrap{width:100%;overflow:auto;border:1px solid #e5e7eb;border-radius:12px;margin-top:14px}
+.permissions-table{width:100%;min-width:780px;border-collapse:collapse;background:#fff}
+.permissions-table th,.permissions-table td{padding:10px 12px;border-bottom:1px solid #e5e7eb;border-right:1px solid #f1f5f9;text-align:center;vertical-align:middle}
+.permissions-table th{position:sticky;top:0;background:#f8fafc;z-index:2;color:#334155;font-size:.84rem}
+.permissions-table th:first-child,.permissions-table td:first-child{text-align:left;position:sticky;left:0;background:#fff;z-index:1;min-width:270px}
+.permissions-table th:first-child{background:#f8fafc;z-index:3}
+.permissions-group td{background:#eef2ff!important;color:#3730a3;font-weight:800;text-align:left!important;position:static!important}
+.permissions-name{font-weight:750;color:#111827}
+.permissions-description{display:block;margin-top:3px;font-size:.76rem;color:#64748b;font-weight:400;line-height:1.35}
+.permission-check{width:22px;height:22px;accent-color:#0b315e;cursor:pointer}
+.permission-check:disabled{cursor:not-allowed;opacity:.7}
+.permission-master-lock{display:inline-flex;align-items:center;gap:5px;color:#166534;font-weight:800;font-size:.8rem}
+.permissions-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+@media(max-width:700px){.permissions-table{min-width:720px}.permissions-actions .btn{flex:1;min-width:180px}}
+
 </style>
 </head>
 <body>
@@ -331,6 +352,7 @@ html,body{max-width:100%;overflow-x:hidden}
 
     <button id="tabDocumentUpload" class="menu-button upload-doc hidden">📤 Upload de Documentos</button>
     <button id="tabUsers" class="menu-button users hidden">👥 Gestão de Usuários</button>
+    <button id="tabPermissions" class="menu-button permissions hidden">🔐 Permissões de Perfis</button>
     <button id="tabAudit" class="menu-button audit hidden">🧾 Auditoria</button>
     <button id="tabProvidersAdmin" class="menu-button providers-admin hidden">🏢 Prestadores</button>
     <button id="tabCompany" class="menu-button company hidden">⚙️ Empresa</button>
@@ -496,7 +518,7 @@ html,body{max-width:100%;overflow-x:hidden}
     <div class="card">
       <div class="back-asset-wrap"><button id="documentUploadBackMenu" class="back-asset-btn">← Voltar ao Menu Principal</button></div>
       <h2 style="margin-bottom:5px">📤 Upload de Documentos</h2>
-      <div class="muted">Disponível para MASTER e GESTOR. Somente PDF, até 8 MB.</div>
+      <div class="muted">Disponibilidade definida em Permissões de Perfis. Somente PDF, até 8 MB.</div>
       <div class="document-upload-grid">
         <label>Título *<input id="uploadDocumentTitle"></label>
         <label>Tipo *<select id="uploadDocumentType"><option value="">Selecione</option></select></label>
@@ -525,11 +547,11 @@ html,body{max-width:100%;overflow-x:hidden}
   </div>
 
 <div id="companyArea" class="hidden"><div class="card"><div class="back-asset-wrap"><button id="companyBackMenu" class="back-asset-btn">← Voltar ao Menu Principal</button></div><h2>⚙️ Configuração da Empresa</h2><div class="muted">Dados institucionais desta implantação dedicada.</div><div class="admin-grid"><label>ID Empresa<input id="companyId"></label><label>Nome da Empresa *<input id="companyName"></label><label>Nome Fantasia<input id="companyTradeName"></label><label>CNPJ<input id="companyCnpj"></label><label>E-mail de Manutenção<input id="companyMaintenanceEmail"></label><label>E-mail Administrativo<input id="companyAdminEmail"></label><label>Nome do Sistema *<input id="companySystemName"></label><label>Cor Principal<input id="companyPrimaryColor" type="color" value="#0b315e"></label><label>Fuso Horário<input id="companyTimezone"></label><label>URL Principal<input id="companyMainUrl"></label><label>E-mail de Relatórios<input id="companyReportsEmail"></label><label>Logo (URL)<input id="companyLogo"></label><label class="full">Observações<textarea id="companyNotes" rows="4"></textarea></label></div><label class="switch-row"><input id="companyActive" type="checkbox"> Empresa ativa</label><div class="company-preview"><b>Pré-visualização</b><div id="companyPreviewName" style="margin-top:6px;font-size:1.1rem;font-weight:800"></div><img id="companyLogoPreview" class="company-logo-preview hidden"></div><div id="companyMessage" class="message"></div><div class="occ-report-actions"><button id="saveCompanyConfig" class="btn btn-blue">Salvar configuração</button></div></div></div>
-  <div id="providersAdminArea" class="hidden"><div class="card"><div class="back-asset-wrap"><button id="providersBackMenu" class="back-asset-btn">← Voltar ao Menu Principal</button></div><div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap"><div><h2>🏢 Prestadores</h2><div class="muted">Consulte responsáveis e canais de contato dos prestadores. Somente o perfil MASTER pode cadastrar ou editar.</div></div><button id="newProviderButton" class="btn btn-blue hidden">+ Novo prestador</button></div><div id="providersAdminStatus" class="muted" style="margin-top:12px"></div><div id="providersAdminList"></div></div></div>
+  <div id="providersAdminArea" class="hidden"><div class="card"><div class="back-asset-wrap"><button id="providersBackMenu" class="back-asset-btn">← Voltar ao Menu Principal</button></div><div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap"><div><h2>🏢 Prestadores</h2><div class="muted">Consulte responsáveis e canais de contato dos prestadores. Cadastro e edição obedecem às Permissões de Perfis definidas pelo MASTER.</div></div><button id="newProviderButton" class="btn btn-blue hidden">+ Novo prestador</button></div><div id="providersAdminStatus" class="muted" style="margin-top:12px"></div><div id="providersAdminList"></div></div></div>
   <div id="auditArea" class="hidden">
     <div class="card">
       <h2 style="margin-bottom:5px">🧾 Auditoria</h2>
-      <div class="muted">Trilha de eventos administrativos e operacionais. Consulta exclusiva do perfil MASTER.</div>
+      <div class="muted">Trilha de eventos administrativos e operacionais. Acesso controlado pelas Permissões de Perfis.</div>
       <div class="audit-filters">
         <label>Data inicial<input id="auditStart" type="date"></label>
         <label>Data final<input id="auditEnd" type="date"></label>
@@ -555,6 +577,23 @@ html,body{max-width:100%;overflow-x:hidden}
       <div id="usersStatus" class="muted" style="margin-top:12px"></div><div id="usersList"></div>
     </div>
   </div>
+  <div id="permissionsArea" class="hidden">
+    <div class="card">
+      <div class="back-asset-wrap"><button id="permissionsBackMenu" class="back-asset-btn">← Voltar ao Menu Principal</button></div>
+      <h2 id="permissionsTitle">🔐 Permissões de Perfis</h2>
+      <div class="permissions-note" id="permissionsHelp">
+        Defina quais rotinas cada categoria de usuário pode utilizar. O perfil MASTER permanece com acesso total e não pode ser restringido. As regras também são validadas no servidor.
+      </div>
+      <div id="permissionsStatus" class="muted">Carregando permissões...</div>
+      <div id="permissionsMatrix" class="permissions-table-wrap"></div>
+      <div class="permissions-actions">
+        <button id="saveProfilePermissions" class="btn btn-blue" type="button">💾 Salvar permissões</button>
+        <button id="resetProfilePermissions" class="btn btn-secondary" type="button">↩️ Restaurar padrão</button>
+      </div>
+      <div id="permissionsMessage" class="message"></div>
+    </div>
+  </div>
+
   <div id="preventiveControlArea" class="hidden">
     <div class="card">
       <div id="preventiveLoggedInfo" class="preventive-login-info"></div>
@@ -816,12 +855,12 @@ html,body{max-width:100%;overflow-x:hidden}
 
 <form id="manageForm" method="POST" target="manageFrame" style="display:none"><input name="action" value="updateOccurrence"><input name="systemSessionToken" id="m_system_session"><input name="token" id="m_token"><input name="ocorrencia" id="m_occurrence"><input name="status" id="m_status"><input name="responsavel" id="m_responsible"><input name="solucao" id="m_solution"><input name="alteradoPor" id="m_changedBy"><input name="descricaoOcorrencia" id="m_description"><input name="categoriaOcorrenciaEdit" id="m_category"><input name="componenteAfetadoEdit" id="m_component"><input name="fotoOcorrenciaBase64" id="m_occurrencePhoto"><input name="fotoOcorrenciaNome" id="m_occurrencePhotoName"><input name="fotoOcorrenciaMime" id="m_occurrencePhotoMime"><input name="fotoConclusaoBase64" id="m_photo"><input name="fotoConclusaoNome" id="m_photoName"><input name="fotoConclusaoMime" id="m_photoMime"></form>
 <iframe id="manageFrame" name="manageFrame"></iframe>
-<div class="footer">QRManut • Versão 7.6.6.12</div>
+<div class="footer">QRManut • Versão 7.6.6.13</div>
 </div>
 <script>
 const API_URL="https://script.google.com/macros/s/AKfycbx4tpC42Q6WdkNhTUTAGoZWvG5M24zwlNscnwbDP5B3Q5pWo8B32-Lf0rQ2Xtua1AFMAQ/exec";
 const TOKEN="";const SYSTEM_SESSION_KEY="qrmanut_system_session";const RESPONSIBLE_KEY="qrmanut_responsavel";const PREVENTIVE_SESSION_KEY="qrmanut_preventive_session";const ORIGIN_ASSET_KEY="qrmanut_origin_asset";const MAX_DIM=1280;const QUALITY=.72;
-let systemSession=null,systemLoginNextAction=null,currentAsset=null,currentAssetStatus=null,history=[],selectedOccurrence=null,preventiveControlData=null,preventiveControlMode="all",preventiveSession=null,preventiveRequirements=null,loginNextAction=null,photoData=null,reportAttachmentData=null,preventivePhotoData=null,preventiveDocumentFiles=[],correctionPhotoData=null,manageAttachmentData=null,conclusionPhotoData=null,reportPosting=false,preventivePosting=false,managePosting=false,signatureDirty=false,signatureDrawing=false,signatureCtx=null,occurrenceReportData=null,occurrenceReportFiltersLoaded=false,pendingFiltersLoaded=false,auditFiltersLoaded=false,companyConfigLoaded=false,providersAdminData=[],usersAdminData=[];
+let systemSession=null,systemLoginNextAction=null,currentAsset=null,currentAssetStatus=null,history=[],selectedOccurrence=null,preventiveControlData=null,preventiveControlMode="all",preventiveSession=null,preventiveRequirements=null,loginNextAction=null,photoData=null,reportAttachmentData=null,preventivePhotoData=null,preventiveDocumentFiles=[],correctionPhotoData=null,manageAttachmentData=null,conclusionPhotoData=null,reportPosting=false,preventivePosting=false,managePosting=false,signatureDirty=false,signatureDrawing=false,signatureCtx=null,occurrenceReportData=null,occurrenceReportFiltersLoaded=false,pendingFiltersLoaded=false,auditFiltersLoaded=false,companyConfigLoaded=false,providersAdminData=[],usersAdminData=[],profilePermissionsAdminData=null;
 const $=id=>document.getElementById(id);
 
 const qrNativeAlert=window.alert.bind(window);
@@ -945,9 +984,48 @@ async function systemSessionIsValid(){if(!systemSession?.systemSessionToken)retu
 function menuApi(params){if(!systemSession?.systemSessionToken)return Promise.reject(new Error("Faça login no Menu Principal."));return api({...params,systemSession:systemSession.systemSessionToken})}
 function menuApiPost(params){if(!systemSession?.systemSessionToken)return Promise.reject(new Error("Faça login no Menu Principal."));return apiPost({...params,systemSessionToken:systemSession.systemSessionToken})}
 function renderSystemAccess(){if(!systemSession){hide("systemAccessInfo");return}show("systemAccessInfo");$("systemAccessText").innerHTML=`Acesso: <b>${esc(systemSession.nome||systemSession.usuario)}</b> • Perfil: <b>${esc(systemSession.perfil)}</b>${systemSession.prestador?` • Prestador: <b>${esc(systemSession.prestador)}</b>`:""}`}
-function updateRoleUi(){if(!systemSession)return;const isMaster=systemSession.perfil==="MASTER";isMaster?show("tabUsers"):hide("tabUsers");$("userProfile").innerHTML='<option value="PRESTADOR">PRESTADOR</option><option value="CONSULTA">CONSULTA</option><option value="GESTOR">GESTOR</option><option value="MASTER">MASTER</option>';isMaster?show("tabAudit"):hide("tabAudit");show("tabProvidersAdmin");isMaster?show("newProviderButton"):hide("newProviderButton");isMaster?show("tabCompany"):hide("tabCompany");isMaster?show("tabDocumentUpload"):hide("tabDocumentUpload");isMaster?show("tabOccurrenceCatalog"):hide("tabOccurrenceCatalog");["MASTER","GESTOR","PRESTADOR"].includes(systemSession.perfil)?show("tabMaintenancePending"):hide("tabMaintenancePending");isMaster?show("tabAssetManagement"):hide("tabAssetManagement")}
-function showMenuGate(){show("searchScreen");hide("mainMenuButtons");["searchArea","pendingArea","occurrenceReportArea","preventiveControlArea","documentsArea","usersArea","auditArea","companyArea","providersAdminArea","documentUploadArea"].forEach(hide);hide("systemAccessInfo");show("menuLockedCard")}
-function openMainMenu(){hide("menuLockedCard");show("mainMenuButtons");renderSystemAccess();updateRoleUi();showSearchTab();if(systemSession?.perfil==="PRESTADOR"){$("occReportProvider").disabled=true}else{$("occReportProvider").disabled=false}}
+function hasProfilePermission(key){
+  if(!systemSession)return false;
+  if(systemSession.perfil==="MASTER")return true;
+  return !!(systemSession.permissions&&systemSession.permissions[key]);
+}
+function permissionDeniedMessage(pt,en){alert(qrLanguage==="en-US"?en:pt);return false}
+function requireUiPermission(key,pt,en){return hasProfilePermission(key)||permissionDeniedMessage(pt,en)}
+function updateRoleUi(){
+  if(!systemSession)return;
+  const isMaster=systemSession.perfil==="MASTER";
+  const toggle=(id,key)=>hasProfilePermission(key)?show(id):hide(id);
+  toggle("tabSearch","BUSCAR_ATIVOS");
+  toggle("tabPending","OC_PENDENTES");
+  toggle("tabOccurrenceReport","RELATORIO_OC");
+  toggle("tabPreventive","PREVENTIVA_CONSULTAR");
+  toggle("tabDocuments","DOCUMENTOS_CONSULTAR");
+  toggle("tabUsers","GESTAO_USUARIOS");
+  isMaster?show("tabPermissions"):hide("tabPermissions");
+  toggle("tabAudit","AUDITORIA");
+  toggle("tabProvidersAdmin","PRESTADORES_CONSULTAR");
+  toggle("tabCompany","CONFIGURACAO_EMPRESA");
+  toggle("tabDocumentUpload","UPLOAD_DOCUMENTOS");
+  toggle("tabOccurrenceCatalog","CATEGORIAS_COMPONENTES");
+  toggle("tabMaintenancePending","PENDENCIAS");
+  toggle("tabAssetManagement","GESTAO_ATIVOS");
+  hasProfilePermission("PRESTADORES_EDITAR")?show("newProviderButton"):hide("newProviderButton");
+  $("userProfile").innerHTML=isMaster
+    ?'<option value="PRESTADOR">PRESTADOR</option><option value="CONSULTA">CONSULTA</option><option value="GESTOR">GESTOR</option><option value="MASTER">MASTER</option>'
+    :'<option value="PRESTADOR">PRESTADOR</option><option value="CONSULTA">CONSULTA</option><option value="GESTOR">GESTOR</option>';
+}
+function showMenuGate(){show("searchScreen");hide("mainMenuButtons");["searchArea","pendingArea","occurrenceReportArea","preventiveControlArea","documentsArea","usersArea","permissionsArea","auditArea","companyArea","providersAdminArea","documentUploadArea","occurrenceCatalogArea","maintenancePendingArea","assetManagementPanel"].forEach(hide);hide("systemAccessInfo");show("menuLockedCard")}
+function openDefaultAllowedTab(){
+  if(hasProfilePermission("BUSCAR_ATIVOS"))return showSearchTab();
+  if(hasProfilePermission("OC_PENDENTES"))return showPendingTab();
+  if(hasProfilePermission("RELATORIO_OC"))return showOccurrenceReportTab();
+  if(hasProfilePermission("PREVENTIVA_CONSULTAR"))return showPreventiveTab();
+  if(hasProfilePermission("DOCUMENTOS_CONSULTAR"))return showDocumentsTab();
+  if(hasProfilePermission("PENDENCIAS"))return showMaintenancePendingTab();
+  if(hasProfilePermission("PRESTADORES_CONSULTAR"))return showProvidersAdminTab();
+  clearTabs();showOnly("searchArea");$("searchResults").innerHTML='<div class="document-empty">Seu perfil não possui nenhuma rotina de menu habilitada. Contate o administrador MASTER.</div>';
+}
+function openMainMenu(){hide("menuLockedCard");show("mainMenuButtons");renderSystemAccess();updateRoleUi();openDefaultAllowedTab();if(systemSession?.perfil==="PRESTADOR"){$("occReportProvider").disabled=true}else{$("occReportProvider").disabled=false}}
 async function requireSystemLogin(nextAction){if(await systemSessionIsValid()){nextAction();return}systemLoginNextAction=nextAction;$("systemUsername").value="";$("systemPassword").value="";$("systemLoginMessage").className="message";$("systemLoginModal").style.display="flex";setTimeout(()=>$("systemUsername").focus(),80)}
 async function doSystemLogin(){const user=$("systemUsername").value.trim(),password=$("systemPassword").value;if(!user||!password){$("systemLoginMessage").className="message error";$("systemLoginMessage").textContent="Informe usuário e senha.";return}$("sendSystemLogin").disabled=true;$("sendSystemLogin").textContent="Entrando...";try{const r=await apiPost({action:"systemLogin",systemUsername:user,systemPassword:password});if(!r.ok)throw new Error(r.detail||"Usuário ou senha inválidos.");saveSystemSession(r);$("systemLoginModal").style.display="none";occurrenceReportFiltersLoaded=false;documentFiltersLoaded=false;pendingFiltersLoaded=false;if(systemLoginNextAction){const fn=systemLoginNextAction;systemLoginNextAction=null;fn()}else openMainMenu()}catch(e){$("systemLoginMessage").className="message error";$("systemLoginMessage").textContent=e.message}finally{$("sendSystemLogin").disabled=false;$("sendSystemLogin").textContent="Entrar"}}
 async function logoutSystemMenu(){try{if(systemSession?.systemSessionToken)await apiPost({action:"systemLogout",systemSessionToken:systemSession.systemSessionToken})}catch(e){}clearSystemSession();clearPreventiveSession();preventiveControlData=null;occurrenceReportData=null;occurrenceReportFiltersLoaded=false;documentFiltersLoaded=false;pendingFiltersLoaded=false;showMenuGate()}
@@ -956,12 +1034,19 @@ async function sessionIsValid(){return systemSessionIsValid()}
 function getOriginAsset(){try{return sessionStorage.getItem(ORIGIN_ASSET_KEY)||""}catch(e){return""}}function setOriginAsset(id){try{sessionStorage.setItem(ORIGIN_ASSET_KEY,normalizeId(id))}catch(e){}}function clearOriginAsset(){try{sessionStorage.removeItem(ORIGIN_ASSET_KEY)}catch(e){}}
 function updateBackAssetButton(){const id=getOriginAsset();if(id){show("backAssetWrap");$("backAssetButton").textContent=qrLanguage==="en-US"?"← Back to "+id:"← Voltar para "+id}else hide("backAssetWrap")}
 function focusSearchInput(){setTimeout(()=>{try{$("searchInput").focus()}catch(e){}},80)}function focusBackAssetButton(){setTimeout(()=>{try{if(!$("backAssetWrap").classList.contains("hidden"))$("backAssetButton").focus()}catch(e){}},100)}
-async function requirePreventiveLogin(nextAction,provider){await requireSystemLogin(()=>{if(systemSession?.perfil==="CONSULTA"){alert("Seu perfil possui acesso somente leitura.");return}if(systemSession?.perfil==="PRESTADOR"&&provider&&String(systemSession.prestador||"").trim().toLowerCase()!==String(provider).trim().toLowerCase()){alert("Este equipamento não pertence ao escopo do seu prestador.");return}nextAction()})}
+async function requirePreventiveLogin(nextAction,provider){await requireSystemLogin(()=>{if(systemSession?.perfil==="PRESTADOR"&&provider&&String(systemSession.prestador||"").trim().toLowerCase()!==String(provider).trim().toLowerCase()){alert("Este equipamento não pertence ao escopo do seu prestador.");return}nextAction()})}
 function processPhoto(file){return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=e=>{const img=new Image();img.onload=()=>{let w=img.width,h=img.height;if(w>MAX_DIM||h>MAX_DIM){if(w>h){h=Math.round(h*MAX_DIM/w);w=MAX_DIM}else{w=Math.round(w*MAX_DIM/h);h=MAX_DIM}}const c=document.createElement("canvas");c.width=w;c.height=h;c.getContext("2d").drawImage(img,0,0,w,h);const url=c.toDataURL("image/jpeg",QUALITY);resolve({base64:url.split(",")[1],dataUrl:url,mime:"image/jpeg",name:"foto_"+Date.now()+".jpg"})};img.src=e.target.result};reader.onerror=reject;reader.readAsDataURL(file)})}
 function processAttachment(file){return new Promise((resolve,reject)=>{if(!file)return resolve(null);if(file.size>8*1024*1024)return reject(new Error("O arquivo ultrapassa o limite de 8 MB."));const reader=new FileReader();reader.onload=()=>{const raw=String(reader.result||"");resolve({base64:raw.includes(",")?raw.split(",")[1]:raw,mime:file.type||"application/octet-stream",name:file.name||("arquivo_"+Date.now())})};reader.onerror=()=>reject(new Error("Não foi possível ler o arquivo."));reader.readAsDataURL(file)})}
 function setupSignatureCanvas(){const c=$("signatureCanvas"),rect=c.getBoundingClientRect(),ratio=window.devicePixelRatio||1;c.width=Math.floor(rect.width*ratio);c.height=Math.floor(180*ratio);signatureCtx=c.getContext("2d");signatureCtx.scale(ratio,ratio);signatureCtx.lineWidth=2;signatureCtx.lineCap="round";signatureCtx.lineJoin="round";clearSignatureCanvas()}function clearSignatureCanvas(){const c=$("signatureCanvas");if(!signatureCtx)return;signatureCtx.save();signatureCtx.setTransform(1,0,0,1,0,0);signatureCtx.fillStyle="#fff";signatureCtx.fillRect(0,0,c.width,c.height);signatureCtx.restore();signatureDirty=false}function signaturePoint(e){const r=$("signatureCanvas").getBoundingClientRect();return{x:e.clientX-r.left,y:e.clientY-r.top}}function signatureStart(e){e.preventDefault();signatureDrawing=true;const p=signaturePoint(e);signatureCtx.beginPath();signatureCtx.moveTo(p.x,p.y);signatureDirty=true}function signatureMove(e){if(!signatureDrawing)return;e.preventDefault();const p=signaturePoint(e);signatureCtx.lineTo(p.x,p.y);signatureCtx.stroke()}function signatureEnd(){signatureDrawing=false}function getSignatureData(){if(!signatureDirty)return null;const u=$("signatureCanvas").toDataURL("image/png");return{base64:u.split(",")[1],mime:"image/png"}}
-function showOnly(a){["searchArea","pendingArea","occurrenceReportArea","preventiveControlArea","documentsArea","usersArea","auditArea","companyArea","providersAdminArea","documentUploadArea","occurrenceCatalogArea","maintenancePendingArea","assetManagementPanel"].forEach(hide);show(a)}function clearTabs(){["tabSearch","tabPending","tabOccurrenceReport","tabPreventive","tabDocuments","tabUsers","tabAudit","tabProvidersAdmin","tabCompany","tabDocumentUpload","tabOccurrenceCatalog","tabMaintenancePending","tabAssetManagement"].forEach(id=>$(id).classList.remove("active"))}function showSearchTab(){clearTabs();$("tabSearch").classList.add("active");showOnly("searchArea");updateBackAssetButton();focusSearchInput()}async function showPendingTab(){clearTabs();$("tabPending").classList.add("active");showOnly("pendingArea");await loadPendingFilters();await loadPending()}async function showOccurrenceReportTab(){clearTabs();$("tabOccurrenceReport").classList.add("active");showOnly("occurrenceReportArea");setDefaultOccurrenceReportDates();await loadOccurrenceReportFilters();if(!occurrenceReportData)await loadOccurrenceReport()}function showPreventiveTab(){requireSystemLogin(()=>{clearTabs();$("tabPreventive").classList.add("active");showOnly("preventiveControlArea");loadPreventiveControl()})}async function showDocumentsTab(){clearTabs();$("tabDocuments").classList.add("active");showOnly("documentsArea");await loadDocumentFilters();await searchDocuments()}async function showUsersTab(){if(systemSession?.perfil!=="MASTER"){alert(qrLanguage==="en-US"?"Only MASTER can manage users.":"Somente MASTER pode acessar a Gestão de Usuários.");return}clearTabs();$("tabUsers").classList.add("active");showOnly("usersArea");await loadUsers()}
-async function showAuditTab(){if(systemSession?.perfil!=="MASTER"){alert("Somente MASTER pode consultar a auditoria.");return}clearTabs();$("tabAudit").classList.add("active");showOnly("auditArea");setDefaultAuditDates();await loadAuditFilters();await loadAudit()}
+function showOnly(a){["searchArea","pendingArea","occurrenceReportArea","preventiveControlArea","documentsArea","usersArea","permissionsArea","auditArea","companyArea","providersAdminArea","documentUploadArea","occurrenceCatalogArea","maintenancePendingArea","assetManagementPanel"].forEach(hide);show(a)}
+function clearTabs(){["tabSearch","tabPending","tabOccurrenceReport","tabPreventive","tabDocuments","tabUsers","tabPermissions","tabAudit","tabProvidersAdmin","tabCompany","tabDocumentUpload","tabOccurrenceCatalog","tabMaintenancePending","tabAssetManagement"].forEach(id=>$(id).classList.remove("active"))}
+function showSearchTab(){if(!requireUiPermission("BUSCAR_ATIVOS","Seu perfil não possui permissão para buscar ativos.","Your profile is not allowed to search assets."))return;clearTabs();$("tabSearch").classList.add("active");showOnly("searchArea");updateBackAssetButton();focusSearchInput()}
+async function showPendingTab(){if(!requireUiPermission("OC_PENDENTES","Seu perfil não possui permissão para consultar OCs pendentes.","Your profile is not allowed to view pending work orders."))return;clearTabs();$("tabPending").classList.add("active");showOnly("pendingArea");await loadPendingFilters();await loadPending()}
+async function showOccurrenceReportTab(){if(!requireUiPermission("RELATORIO_OC","Seu perfil não possui permissão para acessar o Relatório de OCs.","Your profile is not allowed to access the work order report."))return;clearTabs();$("tabOccurrenceReport").classList.add("active");showOnly("occurrenceReportArea");setDefaultOccurrenceReportDates();await loadOccurrenceReportFilters();if(!occurrenceReportData)await loadOccurrenceReport()}
+function showPreventiveTab(){requireSystemLogin(()=>{if(!requireUiPermission("PREVENTIVA_CONSULTAR","Seu perfil não possui permissão para consultar preventivas.","Your profile is not allowed to view preventive maintenance."))return;clearTabs();$("tabPreventive").classList.add("active");showOnly("preventiveControlArea");loadPreventiveControl()})}
+async function showDocumentsTab(){if(!requireUiPermission("DOCUMENTOS_CONSULTAR","Seu perfil não possui permissão para consultar documentos técnicos.","Your profile is not allowed to view technical documents."))return;clearTabs();$("tabDocuments").classList.add("active");showOnly("documentsArea");await loadDocumentFilters();await searchDocuments()}
+async function showUsersTab(){if(!requireUiPermission("GESTAO_USUARIOS","Seu perfil não possui permissão para acessar a Gestão de Usuários.","Your profile is not allowed to manage users."))return;clearTabs();$("tabUsers").classList.add("active");showOnly("usersArea");await loadUsers()}
+async function showAuditTab(){if(!requireUiPermission("AUDITORIA","Seu perfil não possui permissão para consultar a auditoria.","Your profile is not allowed to view the audit trail."))return;clearTabs();$("tabAudit").classList.add("active");showOnly("auditArea");setDefaultAuditDates();await loadAuditFilters();await loadAudit()}
 
 function isoDateLocal(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
 function setDefaultOccurrenceReportDates(){if($("occReportStart").value&&$("occReportEnd").value){qrRefreshLocalizedDateControls();return}const hoje=new Date(),inicio=new Date(hoje.getFullYear(),hoje.getMonth(),1);$("occReportStart").value=isoDateLocal(inicio);$("occReportEnd").value=isoDateLocal(hoje);qrRefreshLocalizedDateControls()}
@@ -1528,7 +1613,7 @@ async function loadAsset(id){
       try{
         const sessionOk=await sessionIsValid();
 
-        if(sessionOk&&(
+        if(sessionOk&&hasProfilePermission("PREVENTIVA_CONSULTAR")&&(
           ["MASTER","GESTOR"].includes(systemSession.perfil)||
           !systemSession.prestador||
           String(systemSession.prestador).toLowerCase()===String(currentAsset.prestador).toLowerCase()
@@ -1558,7 +1643,7 @@ async function loadAsset(id){
 
     sessionIsValid()
       .then(ok=>{
-        if(ok&&(
+        if(ok&&hasProfilePermission("PREVENTIVA_CONSULTAR")&&(
           ["MASTER","GESTOR"].includes(systemSession.perfil)||
           !systemSession.prestador||
           String(systemSession.prestador).toLowerCase()===String(currentAsset.prestador).toLowerCase()
@@ -1636,8 +1721,11 @@ function renderAsset(a){
   const h2=document.querySelector("#locationSection h3");if(h2)h2.textContent=t("Localização","Location");
   const h3=document.querySelector("#technicalSection h3");if(h3)h3.textContent=t("Características Técnicas","Technical Specifications");
 
-  if(a.periodicidade){show("preventiveButton");show("preventiveHistorySection")}
-  else{hide("preventiveButton");hide("preventiveHistorySection")}
+  if(systemSession&&!hasProfilePermission("OC_REGISTRAR"))hide("reportButton");else show("reportButton");
+  if(a.periodicidade){
+    if(!systemSession||hasProfilePermission("PREVENTIVA_REGISTRAR"))show("preventiveButton");else hide("preventiveButton");
+    if(!systemSession||hasProfilePermission("PREVENTIVA_CONSULTAR"))show("preventiveHistorySection");else hide("preventiveHistorySection");
+  }else{hide("preventiveButton");hide("preventiveHistorySection")}
 }
 function renderStatus(s){
   const t=(pt,en)=>qrLanguage==="en-US"?en:pt;
@@ -1669,7 +1757,7 @@ function renderHistory(items){
 function renderHistoryItem(i){
   const x=history[i];if(!x)return;selectedOccurrence=x;
   const t=(pt,en)=>qrLanguage==="en-US"?en:pt;
-  $("historyDetail").innerHTML=`<div class="history-card"><b>${esc(x.ocorrencia)}</b><div class="muted">${esc(formatDate(x.data))}</div><span class="tag">${esc(qrLanguage==="en-US"?qrTranslateExactText(x.status):x.status)}</span>${x.categoriaOcorrencia?`<span class="tag">${esc(x.categoriaOcorrencia)}</span>`:""}${x.componenteAfetado?`<span class="tag">${esc(x.componenteAfetado)}</span>`:""}<div style="margin-top:8px"><b>${t("Descrição","Description")}:</b><br>${esc(x.descricao)}</div>${x.foto?`<div style="margin-top:8px"><a href="${esc(x.foto)}" target="_blank">📷 ${t("Ver foto","View photo")}</a></div>`:""}${(x.anexos||[]).length?`<div style="margin-top:8px"><b>📎 ${t("Arquivos","Files")}:</b> ${(x.anexos||[]).map(a=>`<a href="${esc(a.linkDrive)}" target="_blank" rel="noopener" style="display:block;margin-top:4px">${esc(a.nomeArquivo)}</a>`).join("")}</div>`:""}${x.solucao?`<div style="margin-top:8px"><b>${t("Solução","Solution")}:</b><br>${esc(x.solucao)}</div>`:""}${systemSession&&systemSession.perfil!=="CONSULTA"&&(["MASTER","GESTOR"].includes(systemSession.perfil)||systemSession.podeAtenderOC)?`<button class="btn" style="width:100%;margin-top:12px" onclick="openManage(${i})">${t("Gerenciar ocorrência","Manage Work Order")}</button>`:""}</div>`;
+  $("historyDetail").innerHTML=`<div class="history-card"><b>${esc(x.ocorrencia)}</b><div class="muted">${esc(formatDate(x.data))}</div><span class="tag">${esc(qrLanguage==="en-US"?qrTranslateExactText(x.status):x.status)}</span>${x.categoriaOcorrencia?`<span class="tag">${esc(x.categoriaOcorrencia)}</span>`:""}${x.componenteAfetado?`<span class="tag">${esc(x.componenteAfetado)}</span>`:""}<div style="margin-top:8px"><b>${t("Descrição","Description")}:</b><br>${esc(x.descricao)}</div>${x.foto?`<div style="margin-top:8px"><a href="${esc(x.foto)}" target="_blank">📷 ${t("Ver foto","View photo")}</a></div>`:""}${(x.anexos||[]).length?`<div style="margin-top:8px"><b>📎 ${t("Arquivos","Files")}:</b> ${(x.anexos||[]).map(a=>`<a href="${esc(a.linkDrive)}" target="_blank" rel="noopener" style="display:block;margin-top:4px">${esc(a.nomeArquivo)}</a>`).join("")}</div>`:""}${x.solucao?`<div style="margin-top:8px"><b>${t("Solução","Solution")}:</b><br>${esc(x.solucao)}</div>`:""}${systemSession&&hasProfilePermission("OC_CONSULTAR")&&(hasProfilePermission("OC_ALTERAR")||hasProfilePermission("OC_CONCLUIR"))&&(systemSession.perfil!=="PRESTADOR"||systemSession.podeAtenderOC)?`<button class="btn" style="width:100%;margin-top:12px" onclick="openManage(${i})">${t("Gerenciar ocorrência","Manage Work Order")}</button>`:""}</div>`;
 }
 async function loadPreventiveHistory(){
   const r=await api({action:"preventivehistory",id:currentAsset.id,systemSession:systemSession.systemSessionToken});
@@ -1699,7 +1787,7 @@ async function loadPreventiveHistory(){
       ${item.observacao?`<div style="margin-top:8px"><b>${t("Observação da preventiva","Preventive maintenance note")}:</b><br>${esc(item.observacao)}</div>`:""}
       ${item.foto?`<div style="margin-top:8px"><a href="${esc(item.foto)}" target="_blank" rel="noopener">📷 ${t("Ver evidência","View evidence")}</a></div>`:""}
       ${item.assinatura?`<div style="margin-top:8px"><a href="${esc(item.assinatura)}" target="_blank" rel="noopener">✍️ ${t("Ver assinatura","View signature")}</a></div>`:""}
-      ${docsHtml}${["MASTER","GESTOR"].includes(systemSession?.perfil)?`<button class="btn btn-danger" style="width:100%;margin-top:10px" onclick="deletePreventiveRecord('${esc(item.registro)}')">🗑️ ${t("Excluir preventiva","Delete preventive maintenance")}</button>`:""}
+      ${docsHtml}${hasProfilePermission("PREVENTIVA_EXCLUIR")?`<button class="btn btn-danger" style="width:100%;margin-top:10px" onclick="deletePreventiveRecord('${esc(item.registro)}')">🗑️ ${t("Excluir preventiva","Delete preventive maintenance")}</button>`:""}
     </div>`;
   }).join("");
 }
@@ -1896,7 +1984,7 @@ async function uploadPreventiveDocuments7606(registro){
 }
 
 
-function requestPreventive(){requirePreventiveLogin(async()=>{await openPreventive();loadPreventiveHistory()},currentAsset.prestador)}
+function requestPreventive(){requirePreventiveLogin(async()=>{if(!requireUiPermission("PREVENTIVA_REGISTRAR","Seu perfil não possui permissão para registrar preventivas.","Your profile is not allowed to record preventive maintenance."))return;await openPreventive();loadPreventiveHistory()},currentAsset.prestador)}
 async function openPreventive(){preventivePhotoData=null;resetPreventiveDocuments7606();signatureDirty=false;$("preventivePhotoInput").value="";$("preventivePhotoPreview").style.display="none";$("preventiveMessage").className="message";$("preventiveAsset").textContent=currentAsset.id+" – "+currentAsset.nome_do_equipamento;$("preventivePeriodicity").textContent=currentAsset.periodicidade||"Não informada";$("preventiveProvider").textContent=currentAsset.prestador||"Não informado";$("preventiveCompetence").textContent=currentCompetence();$("preventiveResponsible").value=getSavedResponsible();$("preventiveObservation").value="";$("preventiveNeedsAction").checked=false;hide("preventiveActionFields");$("preventiveActionType").value="";$("preventiveActionDescription").value="";$("preventiveActionPriority").value="Média";$("preventiveActionMaterial").value="";$("preventiveActionQuantity").value="";$("preventiveActionOperation").value="";const r=await api({action:"preventiverequirements",id:currentAsset.id,systemSession:systemSession.systemSessionToken});if(!r.ok){alert(r.detail||"Não foi possível carregar as regras.");return}preventiveRequirements=r.data;renderPreventiveRequirements();$("preventiveModal").style.display="flex";if(!$("signatureBox").classList.contains("hidden"))requestAnimationFrame(setupSignatureCanvas)}
 function renderPreventiveRequirements(){const r=preventiveRequirements;$("preventiveRequirements").innerHTML=`<b>Requisitos deste registro</b><div class="requirement ${r.exigirAssinatura?"required-yes":"required-no"}">${r.exigirAssinatura?"● Assinatura obrigatória":"✓ Assinatura não obrigatória"}</div><div class="requirement ${r.fotoObrigatoria?"required-yes":"required-no"}">${r.fotoObrigatoria?"● Foto obrigatória":"✓ Foto opcional"}</div><div class="requirement ${r.observacaoObrigatoria?"required-yes":"required-no"}">${r.observacaoObrigatoria?"● Observação obrigatória":"✓ Observação opcional"}</div>`;if(r.exigirAssinatura){show("signatureBox");$("signatureRequiredText").textContent=" * obrigatório"}else hide("signatureBox")}
 async function savePreventive(){
@@ -2018,7 +2106,7 @@ async function savePreventive(){
   }
 }
 function showPreventiveError(m){$("preventiveMessage").className="message error";$("preventiveMessage").textContent=m}
-async function openReport(){photoData=null;reportAttachmentData=null;if($("reportCameraInput"))$("reportCameraInput").value="";if($("photoInput"))$("photoInput").value="";if($("reportAttachmentInput"))$("reportAttachmentInput").value="";if($("reportPhotoStatus"))$("reportPhotoStatus").textContent="";if($("reportAttachmentName"))$("reportAttachmentName").textContent="Nenhum arquivo selecionado.";$("photoPreview").style.display="none";await populateOccurrenceCategorySelect();$("reporterName").value=getSavedResponsible();$("reportMessage").className="message";$("reportMessage").innerHTML="";$("sendReport").disabled=false;$("sendReport").textContent="Gravar ocorrência";$("cancelReport").textContent="Cancelar";$("reportModal").style.display="flex"}
+async function openReport(){if(systemSession&&!hasProfilePermission("OC_REGISTRAR"))return permissionDeniedMessage("Seu perfil não possui permissão para registrar ocorrências.","Your profile is not allowed to create work orders.");photoData=null;reportAttachmentData=null;if($("reportCameraInput"))$("reportCameraInput").value="";if($("photoInput"))$("photoInput").value="";if($("reportAttachmentInput"))$("reportAttachmentInput").value="";if($("reportPhotoStatus"))$("reportPhotoStatus").textContent="";if($("reportAttachmentName"))$("reportAttachmentName").textContent="Nenhum arquivo selecionado.";$("photoPreview").style.display="none";await populateOccurrenceCategorySelect();$("reporterName").value=getSavedResponsible();$("reportMessage").className="message";$("reportMessage").innerHTML="";$("sendReport").disabled=false;$("sendReport").textContent="Gravar ocorrência";$("cancelReport").textContent="Cancelar";$("reportModal").style.display="flex"}
 async function sendReport(){if(reportPosting)return;const name=$("reporterName").value.trim(),description=$("description").value.trim();if(!name||!$("category").value||!$("component").value||!description){$("reportMessage").className="message error";$("reportMessage").textContent="Preencha os campos obrigatórios.";return}saveResponsible(name);reportPosting=true;$("sendReport").disabled=true;$("sendReport").textContent="Gravando...";$("reportMessage").className="message loading";$("reportMessage").textContent="Registrando ocorrência...";try{const r=await apiPost({action:"reportOccurrence",id:currentAsset.id,reportadoPor:name,contato:$("reporterContact").value,categoriaOcorrencia:$("category").value,componenteAfetado:$("component").value,descricao:description,fotoBase64:photoData?.base64||"",fotoNome:photoData?.name||"",fotoMime:photoData?.mime||"",attachmentBase64:reportAttachmentData?.base64||"",attachmentNome:reportAttachmentData?.name||"",attachmentMime:reportAttachmentData?.mime||""});if(!r.ok)throw new Error(r.detail||"Não foi possível registrar a ocorrência.");let n="";if(r.notificacaoPrestador==="Sim")n=`<br><br>📧 <b>Prestador notificado:</b><br>${esc(r.emailPrestador)}`;else if(r.notificacaoPrestador==="Não - sem e-mail")n="<br><br>⚠️ Prestador configurado para receber a ocorrência, mas sem e-mail cadastrado.";else if(r.notificacaoPrestador==="Erro")n="<br><br>⚠️ A ocorrência foi registrada, mas houve erro ao notificar o prestador.";else n="<br><br>ℹ️ Este prestador não está configurado para receber notificações de ocorrência.";$("reportMessage").className="message success";$("reportMessage").innerHTML=`✅ Ocorrência <b>${esc(r.ocorrencia)}</b> registrada com sucesso.${n}`;$("sendReport").textContent="Ocorrência gravada";$("cancelReport").textContent="Fechar"}catch(e){reportPosting=false;$("sendReport").disabled=false;$("sendReport").textContent="Gravar ocorrência";$("reportMessage").className="message error";$("reportMessage").textContent=e.message}}
 const CATEGORIES=["Civil","Sanitário","Elétrica","Hidráulica","Climatização","Refrigeração","Utilidades","Segurança","Mobiliário","Equipamento","Outros"],COMPONENTS=["Geral","Piso","Parede","Teto","Porta","Janela","Vaso Sanitário","Pia","Torneira","Descarga","Mictório","Ralo","Luminária","Tomada","Interruptor","Tubulação","Registro","Bomba","Motor","Painel","Ar-condicionado","Mobiliário","Outro"];
 function buildManageDropdowns(){/* 7.4.6: opções carregadas da planilha */}
@@ -2100,7 +2188,20 @@ function openManage(i){
     }
   }
 
-  if($("manageExistingAttachments"))$("manageExistingAttachments").innerHTML=(selectedOccurrence.anexos||[]).length?"<b>Arquivos já anexados:</b>"+(selectedOccurrence.anexos||[]).map(a=>`<a href="${esc(a.linkDrive)}" target="_blank" rel="noopener" style="display:block;margin-top:4px">📎 ${esc(a.nomeArquivo)}</a>`).join(""):""; if(["MASTER","GESTOR"].includes(systemSession?.perfil))show("deleteOccurrence");else hide("deleteOccurrence");
+  if($("manageExistingAttachments"))$("manageExistingAttachments").innerHTML=(selectedOccurrence.anexos||[]).length?"<b>Arquivos já anexados:</b>"+(selectedOccurrence.anexos||[]).map(a=>`<a href="${esc(a.linkDrive)}" target="_blank" rel="noopener" style="display:block;margin-top:4px">📎 ${esc(a.nomeArquivo)}</a>`).join(""):"";
+  hasProfilePermission("OC_EXCLUIR")?show("deleteOccurrence"):hide("deleteOccurrence");
+  const canAlter=hasProfilePermission("OC_ALTERAR"),canConclude=hasProfilePermission("OC_CONCLUIR");
+  ["manageCategory","manageComponent","manageDescription","manageResponsible"].forEach(id=>{if($(id))$(id).disabled=!canAlter;});
+  if($("manageSolution"))$("manageSolution").disabled=!(canAlter||canConclude);
+  if($("manageOccurrenceCameraButton"))$("manageOccurrenceCameraButton").disabled=!canAlter;
+  if($("manageOccurrenceAttachButton"))$("manageOccurrenceAttachButton").disabled=!canAlter;
+  if($("manageAttachmentButton"))$("manageAttachmentButton").disabled=!canAlter;
+  if($("conclusionCameraButton"))$("conclusionCameraButton").disabled=!canConclude;
+  if($("conclusionAttachButton"))$("conclusionAttachButton").disabled=!canConclude;
+  if($("manageStatus"))Array.from($("manageStatus").options).forEach(opt=>{
+    const isCurrent=String(opt.value)===String(selectedOccurrence?.status||"");
+    opt.disabled=!isCurrent&&(opt.value==="Concluída"?!canConclude:!canAlter);
+  });
   toggleConclusion();
   $("manageMessage").className="message";
   $("manageMessage").textContent="";
@@ -2117,6 +2218,9 @@ async function saveManage(){
   }
 
   const changedBy=$("manageChangedBy").value.trim();
+  const wantsConclude=$("manageStatus").value==="Concluída"&&String(selectedOccurrence?.status||"")!=="Concluída";
+  if(wantsConclude&&!hasProfilePermission("OC_CONCLUIR")){return permissionDeniedMessage("Seu perfil não possui permissão para concluir ocorrências.","Your profile is not allowed to complete work orders.");}
+  if(!wantsConclude&&!hasProfilePermission("OC_ALTERAR")){return permissionDeniedMessage("Seu perfil não possui permissão para alterar ocorrências.","Your profile is not allowed to edit work orders.");}
 
   if(!changedBy){
     $("manageMessage").className="message error";
@@ -2229,8 +2333,8 @@ $("conclusionPhotoInput").onchange=function(){handleManageSelectedImage(this.fil
 $("manageFrame").onload=function(){if(!managePosting)return;managePosting=false;$("manageModal").style.display="none";location.reload()};
 
 
-async function deleteOccurrenceRecord(){if(!selectedOccurrence||!["MASTER","GESTOR"].includes(systemSession?.perfil))return;if(!confirm(`Excluir definitivamente a ocorrência ${selectedOccurrence.ocorrencia}?\n\nEsta ação remove o registro do aplicativo e ficará registrada na auditoria.`))return;const btn=$("deleteOccurrence");btn.disabled=true;btn.textContent="Excluindo...";try{const r=await menuApiPost({action:"deleteOccurrence",ocorrencia:selectedOccurrence.ocorrencia});if(!r.ok)throw new Error(r.detail||"Não foi possível excluir a ocorrência.");$("manageModal").style.display="none";location.reload()}catch(e){alert(e.message);btn.disabled=false;btn.textContent="🗑️ Excluir ocorrência"}}
-async function deletePreventiveRecord(registro){if(!["MASTER","GESTOR"].includes(systemSession?.perfil))return;if(!confirm(`Excluir definitivamente a preventiva ${registro}?\n\nEsta ação ficará registrada na auditoria.`))return;try{const r=await menuApiPost({action:"deletePreventive",registro:registro});if(!r.ok)throw new Error(r.detail||"Não foi possível excluir a preventiva.");await loadPreventiveHistory()}catch(e){alert(e.message)}}
+async function deleteOccurrenceRecord(){if(!selectedOccurrence||!hasProfilePermission("OC_EXCLUIR"))return;if(!confirm(`Excluir definitivamente a ocorrência ${selectedOccurrence.ocorrencia}?\n\nEsta ação remove o registro do aplicativo e ficará registrada na auditoria.`))return;const btn=$("deleteOccurrence");btn.disabled=true;btn.textContent="Excluindo...";try{const r=await menuApiPost({action:"deleteOccurrence",ocorrencia:selectedOccurrence.ocorrencia});if(!r.ok)throw new Error(r.detail||"Não foi possível excluir a ocorrência.");$("manageModal").style.display="none";location.reload()}catch(e){alert(e.message);btn.disabled=false;btn.textContent="🗑️ Excluir ocorrência"}}
+async function deletePreventiveRecord(registro){if(!hasProfilePermission("PREVENTIVA_EXCLUIR"))return;if(!confirm(`Excluir definitivamente a preventiva ${registro}?\n\nEsta ação ficará registrada na auditoria.`))return;try{const r=await menuApiPost({action:"deletePreventive",registro:registro});if(!r.ok)throw new Error(r.detail||"Não foi possível excluir a preventiva.");await loadPreventiveHistory()}catch(e){alert(e.message)}}
 const PASSWORD_EYE_OPEN=`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path><circle cx="12" cy="12" r="2.8"></circle></svg>`;
 const PASSWORD_EYE_CLOSED=`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3l18 18"></path><path d="M10.6 6.2A10.7 10.7 0 0 1 12 6c7 0 10 6 10 6a17.8 17.8 0 0 1-2.4 3.1"></path><path d="M6.4 6.4C3.5 8.2 2 12 2 12s3.5 6 10 6a10 10 0 0 0 4.1-.9"></path><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"></path></svg>`;
 function setupPasswordToggles(){document.querySelectorAll(".password-toggle").forEach(btn=>{btn.onclick=()=>{const input=document.getElementById(btn.dataset.passwordTarget);if(!input)return;const vis=input.type==="text";input.type=vis?"password":"text";btn.innerHTML=vis?PASSWORD_EYE_OPEN:PASSWORD_EYE_CLOSED;btn.setAttribute("aria-label",vis?"Mostrar senha":"Ocultar senha");btn.title=vis?"Mostrar senha":"Ocultar senha";input.focus()}})}
@@ -2246,7 +2350,7 @@ async function loadAudit(){
 async function clearAuditFilters(){$("auditAction").value="";$("auditResult").value="";$("auditUser").value="";$("auditSearch").value="";$("auditStart").value="";$("auditEnd").value="";setDefaultAuditDates();await loadAudit()}
 
 async function loadPublicAppConfig(){try{const r=await api({action:"appconfig"});if(!r.ok||!r.app)return;const a=r.app;document.title=a.nomeSistema||"QRManut";const meta=document.querySelector('meta[name="theme-color"]');if(meta&&a.corPrincipal)meta.setAttribute("content",a.corPrincipal);const t=document.querySelector(".search-title");if(t&&a.nomeSistema)t.textContent=a.nomeSistema;const sub=document.getElementById("qrAppSubtitle");if(sub)sub.textContent=qrLanguage==="en-US"?"Quick Maintenance Management":"Gestão rápida de manutenção"}catch(e){}}
-async function showCompanyTab(){if(systemSession?.perfil!=="MASTER"){alert("Somente MASTER pode acessar esta área.");return}clearTabs();$("tabCompany").classList.add("active");showOnly("companyArea");await loadCompanyConfig()}
+async function showCompanyTab(){if(!requireUiPermission("CONFIGURACAO_EMPRESA","Seu perfil não possui permissão para acessar a configuração da empresa.","Your profile is not allowed to access company settings."))return;clearTabs();$("tabCompany").classList.add("active");showOnly("companyArea");await loadCompanyConfig()}
 async function loadCompanyConfig(){try{const r=await menuApi({action:"companyconfig"});if(!r.ok)throw new Error(r.detail||"Erro ao carregar configuração.");const c=r.config||{};$("companyId").value=c.idEmpresa||"EMP-0001";$("companyName").value=c.nomeEmpresa||"";$("companyTradeName").value=c.nomeFantasia||"";$("companyCnpj").value=c.cnpj||"";$("companyMaintenanceEmail").value=c.emailManutencao||"";$("companyAdminEmail").value=c.emailAdministrativo||"";$("companyLogo").value=c.logo||"";$("companyPrimaryColor").value=/^#[0-9a-f]{6}$/i.test(c.corPrincipal||"")?c.corPrincipal:"#0b315e";$("companyTimezone").value=c.fusoHorario||"America/Sao_Paulo";$("companySystemName").value=c.nomeSistema||"QRManut";$("companyActive").checked=!!c.empresaAtiva;$("companyMainUrl").value=c.urlPrincipal||"";$("companyReportsEmail").value=c.emailRelatorios||"";$("companyNotes").value=c.observacoes||"";updateCompanyPreview()}catch(e){$("companyMessage").className="message error";$("companyMessage").textContent=e.message}}
 function updateCompanyPreview(){$("companyPreviewName").textContent=($("companySystemName").value||"QRManut")+" • "+($("companyTradeName").value||$("companyName").value||"");const l=$("companyLogo").value.trim();if(l){$("companyLogoPreview").src=l;show("companyLogoPreview")}else hide("companyLogoPreview")}
 async function saveCompanyConfig(){
@@ -2288,7 +2392,77 @@ async function saveCompanyConfig(){
     delete b.dataset.loading;
   }
 }
-async function showProvidersAdminTab(){if(!systemSession){return requireSystemLogin(showProvidersAdminTab)}clearTabs();$("tabProvidersAdmin").classList.add("active");showOnly("providersAdminArea");systemSession.perfil==="MASTER"?show("newProviderButton"):hide("newProviderButton");await loadProvidersAdmin()}
+async function showProfilePermissionsTab(){
+  if(systemSession?.perfil!=="MASTER")return permissionDeniedMessage("Somente MASTER pode gerenciar as permissões dos perfis.","Only MASTER can manage profile permissions.");
+  clearTabs();$("tabPermissions").classList.add("active");showOnly("permissionsArea");await loadProfilePermissionsAdmin();
+}
+function permissionCheckboxId76613(profile,key){return "perm_"+profile+"_"+key}
+function renderProfilePermissionsAdmin(){
+  const d=profilePermissionsAdminData;if(!d)return;
+  const t=(pt,en)=>qrLanguage==="en-US"?en:pt;
+  const profiles=d.profiles||["MASTER","GESTOR","PRESTADOR","CONSULTA"];
+  let html=`<table class="permissions-table"><thead><tr><th>${t("Rotina / Permissão","Routine / Permission")}</th>${profiles.map(p=>`<th>${esc(p)}</th>`).join("")}</tr></thead><tbody>`;
+  let group="";
+  (d.definitions||[]).forEach(def=>{
+    const g=qrLanguage==="en-US"?(def.groupEn||def.groupPt):(def.groupPt||def.groupEn);
+    if(g!==group){group=g;html+=`<tr class="permissions-group"><td colspan="${profiles.length+1}">${esc(g)}</td></tr>`;}
+    const label=qrLanguage==="en-US"?(def.labelEn||def.labelPt):(def.labelPt||def.labelEn);
+    const desc=qrLanguage==="en-US"?(def.descriptionEn||def.descriptionPt):(def.descriptionPt||def.descriptionEn);
+    html+=`<tr><td><span class="permissions-name">${esc(label)}</span>${desc?`<span class="permissions-description">${esc(desc)}</span>`:""}</td>`;
+    profiles.forEach(profile=>{
+      const checked=profile==="MASTER"?true:!!(d.matrix?.[profile]?.[def.key]);
+      html+=`<td>${profile==="MASTER"?'<span class="permission-master-lock">🔒 ✓</span>':`<input class="permission-check" type="checkbox" id="${esc(permissionCheckboxId76613(profile,def.key))}" ${checked?"checked":""} aria-label="${esc(profile+" - "+label)}">`}</td>`;
+    });
+    html+='</tr>';
+  });
+  html+='</tbody></table>';
+  $("permissionsMatrix").innerHTML=html;
+}
+async function loadProfilePermissionsAdmin(){
+  $("permissionsStatus").textContent=qrLanguage==="en-US"?"Loading permissions...":"Carregando permissões...";
+  $("permissionsMessage").className="message";
+  try{
+    const r=await menuApi({action:"profilepermissionsadmin"});
+    if(!r.ok)throw new Error(r.detail||"Erro ao carregar permissões.");
+    profilePermissionsAdminData=r.data;
+    renderProfilePermissionsAdmin();
+    $("permissionsStatus").textContent=qrLanguage==="en-US"?"Permissions loaded. Changes only take effect after you click Save Permissions.":"Permissões carregadas. As alterações só entram em vigor após clicar em Salvar permissões.";
+  }catch(e){$("permissionsStatus").textContent=e.message;$("permissionsMatrix").innerHTML="";}
+}
+function collectProfilePermissions76613(){
+  const d=profilePermissionsAdminData||{},matrix={};
+  (d.profiles||[]).filter(p=>p!=="MASTER").forEach(profile=>{
+    matrix[profile]={};
+    (d.definitions||[]).forEach(def=>{matrix[profile][def.key]=!!$(permissionCheckboxId76613(profile,def.key))?.checked;});
+  });
+  return matrix;
+}
+async function saveProfilePermissions76613(){
+  if(systemSession?.perfil!=="MASTER")return;
+  const btn=$("saveProfilePermissions");btn.disabled=true;btn.textContent=qrLanguage==="en-US"?"Saving...":"Salvando...";
+  $("permissionsMessage").className="message loading";$("permissionsMessage").textContent=qrLanguage==="en-US"?"Saving the permission matrix...":"Salvando a matriz de permissões...";
+  try{
+    const r=await menuApiPost({action:"saveProfilePermissions",permissionsJson:JSON.stringify(collectProfilePermissions76613())});
+    if(!r.ok)throw new Error(r.detail||"Não foi possível salvar as permissões.");
+    profilePermissionsAdminData=r.data||profilePermissionsAdminData;renderProfilePermissionsAdmin();
+    $("permissionsMessage").className="message success";$("permissionsMessage").textContent=qrLanguage==="en-US"?"✅ Permissions saved. Active sessions for changed profiles were invalidated so the new rules are applied on the next sign-in.":"✅ Permissões salvas. As sessões ativas dos perfis alterados foram invalidadas para que as novas regras sejam aplicadas no próximo login.";
+  }catch(e){$("permissionsMessage").className="message error";$("permissionsMessage").textContent=e.message;}
+  finally{btn.disabled=false;btn.textContent=qrLanguage==="en-US"?"💾 Save permissions":"💾 Salvar permissões";}
+}
+async function resetProfilePermissions76613(){
+  if(systemSession?.perfil!=="MASTER")return;
+  if(!confirm(qrLanguage==="en-US"?"Restore the default QRManut permission matrix for MANAGER, SERVICE PROVIDER and VIEWER?":"Restaurar a matriz padrão de permissões do QRManut para GESTOR, PRESTADOR e CONSULTA?"))return;
+  const btn=$("resetProfilePermissions");btn.disabled=true;btn.textContent=qrLanguage==="en-US"?"Restoring...":"Restaurando...";
+  try{
+    const r=await menuApiPost({action:"resetProfilePermissions"});
+    if(!r.ok)throw new Error(r.detail||"Não foi possível restaurar as permissões.");
+    profilePermissionsAdminData=r.data;renderProfilePermissionsAdmin();
+    $("permissionsMessage").className="message success";$("permissionsMessage").textContent=qrLanguage==="en-US"?"✅ Default permissions restored.":"✅ Permissões padrão restauradas.";
+  }catch(e){$("permissionsMessage").className="message error";$("permissionsMessage").textContent=e.message;}
+  finally{btn.disabled=false;btn.textContent=qrLanguage==="en-US"?"↩️ Restore defaults":"↩️ Restaurar padrão";}
+}
+
+async function showProvidersAdminTab(){if(!systemSession){return requireSystemLogin(showProvidersAdminTab)}if(!requireUiPermission("PRESTADORES_CONSULTAR","Seu perfil não possui permissão para consultar prestadores.","Your profile is not allowed to view service providers."))return;clearTabs();$("tabProvidersAdmin").classList.add("active");showOnly("providersAdminArea");hasProfilePermission("PRESTADORES_EDITAR")?show("newProviderButton"):hide("newProviderButton");await loadProvidersAdmin()}
 function providerPhoneDigits7669(value){
   return String(value||"").replace(/\D/g,"");
 }
@@ -2321,13 +2495,13 @@ async function loadProvidersAdmin(){
   try{
     const r=await menuApi({action:"providersadmin"});
     if(!r.ok)throw new Error(r.detail||t("Erro ao carregar.","Error loading service providers."));
-    if(r.backendVersion!=="7.6.6.12")throw new Error(t(
-      "O HTML 7.6.6.12 está atualizado, mas o Apps Script ainda está em uma versão anterior. Atualize o arquivo .gs e faça uma nova versão da implantação.",
-      "The 7.6.6.12 HTML is updated, but Apps Script is still on an older version. Update the .gs file and deploy a new version."
+    if(r.backendVersion!=="7.6.6.13")throw new Error(t(
+      "O HTML 7.6.6.13 está atualizado, mas o Apps Script ainda está em uma versão anterior. Atualize o arquivo .gs e faça uma nova versão da implantação.",
+      "The 7.6.6.13 HTML is updated, but Apps Script is still on an older version. Update the .gs file and deploy a new version."
     ));
     providersAdminData=r.providers||[];
     $("providersAdminStatus").textContent=`${providersAdminData.length} ${t("prestador(es)","service provider(s)")}`;
-    const canEdit=systemSession?.perfil==="MASTER";
+    const canEdit=hasProfilePermission("PRESTADORES_EDITAR");
     $("providersAdminList").innerHTML=providersAdminData.map((p,i)=>`
       <div class="provider-admin-card">
         <b>${esc(p.nomeFantasia||p.nome)}</b>
@@ -2367,8 +2541,8 @@ function openProviderConsult(i){
 }
 
 function openProviderModal(i){
-  if(systemSession?.perfil!=="MASTER"){
-    alert(qrLanguage==="en-US"?"Only MASTER can edit service providers.":"Somente o perfil MASTER pode editar prestadores.");
+  if(!hasProfilePermission("PRESTADORES_EDITAR")){
+    alert(qrLanguage==="en-US"?"Your profile is not allowed to edit service providers.":"Seu perfil não possui permissão para editar prestadores.");
     return;
   }
   const p=(i===null||i===undefined)?null:providersAdminData[i];
@@ -2376,7 +2550,7 @@ function openProviderModal(i){
   $("providerId").value=p?.idPrestador||"";$("providerName").value=p?.nome||"";$("providerTradeName").value=p?.nomeFantasia||"";$("providerResponsible").value=p?.responsavel||"";$("providerPhone").value=p?.telefone||"";$("providerContactEmail").value=p?.emailContato||"";$("providerActive").checked=p?!!p.ativo:true;$("providerRequireSignature").checked=p?!!p.exigirAssinatura:false;$("providerPhotoRequired").checked=p?!!p.fotoObrigatoria:false;$("providerObservationRequired").checked=p?!!p.observacaoObrigatoria:false;$("providerCanPreventive").checked=p?!!p.podeRegistrarPreventiva:true;$("providerCanOccurrence").checked=p?!!p.podeAtenderOC:true;$("providerNotifyOccurrence").checked=p?!!p.notificarOC:false;$("providerOccurrenceEmail").value=p?.emailOC||"";$("providerSendReport").checked=p?!!p.enviarRelatorio:false;$("providerReportEmail").value=p?.emailRelatorio||"";$("providerNotes").value=p?.observacoes||"";$("providerMessage").className="message";$("providerModal").style.display="flex";
 }
 async function saveProviderAdmin(){
-  if(systemSession?.perfil!=="MASTER")return alert(qrLanguage==="en-US"?"Only MASTER can save service providers.":"Somente o perfil MASTER pode salvar prestadores.");
+  if(!hasProfilePermission("PRESTADORES_EDITAR"))return alert(qrLanguage==="en-US"?"Your profile is not allowed to save service providers.":"Seu perfil não possui permissão para salvar prestadores.");
   const b=$("saveProvider");
   if(!b || b.dataset.loading==="1")return;
   b.dataset.loading="1";
@@ -2427,7 +2601,7 @@ let documentUploadMetaLoaded=false;
 let documentUploadFileData=null;
 
 async function showDocumentUploadTab(){
-  if(systemSession?.perfil!=="MASTER"){alert(qrLanguage==="en-US"?"Only MASTER can upload technical documents.":"Somente MASTER pode realizar Upload de Documentos.");return}
+  if(!requireUiPermission("UPLOAD_DOCUMENTOS","Seu perfil não possui permissão para realizar Upload de Documentos.","Your profile is not allowed to upload technical documents."))return;
   clearTabs();$("tabDocumentUpload").classList.add("active");showOnly("documentUploadArea");await loadDocumentUploadMeta();
 }
 
@@ -2538,7 +2712,7 @@ async function populateManageCatalog(selectedCategory="",selectedComponent=""){
 }
 
 async function showOccurrenceCatalogTab(){
-  if(systemSession?.perfil!=="MASTER"){alert(qrLanguage==="en-US"?"Only MASTER can manage categories and components.":"Somente MASTER pode administrar Categorias e Componentes.");return}
+  if(!requireUiPermission("CATEGORIAS_COMPONENTES","Seu perfil não possui permissão para administrar Categorias e Componentes.","Your profile is not allowed to manage categories and components."))return;
   clearTabs();$("tabOccurrenceCatalog").classList.add("active");showOnly("occurrenceCatalogArea");await loadOccurrenceCatalogAdmin();
 }
 
@@ -2694,6 +2868,7 @@ async function moveCatalogComponent(id,direction){
 
 async function showMaintenancePendingTab(){
   requireSystemLogin(async ()=>{
+    if(!requireUiPermission("PENDENCIAS","Seu perfil não possui permissão para acessar Pendências / Providências.","Your profile is not allowed to access Pending Actions."))return;
     clearTabs();
     $("tabMaintenancePending").classList.add("active");
     showOnly("maintenancePendingArea");
@@ -2746,7 +2921,7 @@ async function loadMaintenancePending(){
 
     $("maintenancePendingResults").innerHTML=items.map(x=>{
       const pClass=x.prioridade==="Crítica"?"error":x.prioridade==="Alta"?"warning":"";
-      const canGenerate=["MASTER","GESTOR"].includes(systemSession?.perfil)&&!x.ocRelacionada&&x.status!=="Resolvida";
+      const canGenerate=hasProfilePermission("OC_REGISTRAR")&&!x.ocRelacionada&&x.status!=="Resolvida";
       return `<div class="pending-card">
         <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap">
           <div>
@@ -3158,8 +3333,8 @@ async function toggleAsset760(row,isActive){
 }
 
 function openAssetManagement760(){
-  if(systemSession?.perfil!=="MASTER"){
-    return alert(qrLanguage?.startsWith("en")?"Only MASTER can manage assets.":"Somente MASTER pode acessar a Gestão de Ativos.");
+  if(!hasProfilePermission("GESTAO_ATIVOS")){
+    return alert(qrLanguage?.startsWith("en")?"Your profile is not allowed to manage assets.":"Seu perfil não possui permissão para acessar a Gestão de Ativos.");
   }
   clearTabs();
   $("tabAssetManagement").classList.add("active");
@@ -3183,8 +3358,10 @@ async function loadUsers(){
     usersAdminData=u.users||[];
     $("usersStatus").textContent=`${usersAdminData.length} ${t("usuário(s)","user(s)")}`;
     const isMaster=systemSession?.perfil==="MASTER";
+    const canManageUsers=hasProfilePermission("GESTAO_USUARIOS");
     $("usersList").innerHTML=usersAdminData.map(x=>{
-      const editButtons=isMaster
+      const canManageThis=canManageUsers&&(isMaster||x.perfil!=="MASTER");
+      const editButtons=canManageThis
         ?`<button class="btn btn-secondary" type="button" onclick="openEditUser('${esc(x.idUsuario)}')">✏️ ${t("Editar","Edit")}</button>${x.status!=="Inativo"?`<button class="btn btn-secondary" type="button" onclick="resendInviteUser('${esc(x.idUsuario)}')">✉️ ${t("Reenviar convite","Resend invite")}</button>`:""}`
         :"";
       const statusButton=x.status!=="Inativo"
@@ -3196,6 +3373,7 @@ async function loadUsers(){
 }
 
 function openNewUser(){
+  if(!hasProfilePermission("GESTAO_USUARIOS"))return permissionDeniedMessage("Seu perfil não possui permissão para criar usuários.","Your profile is not allowed to create users.");
   $("userEditId").value="";
   $("userModalTitle").textContent=qrLanguage==="en-US"?"👤 New User":"👤 Novo usuário";
   $("userName").value="";$("userLogin").value="";$("userEmail").value="";$("userProvider").value="";$("userProfile").value="PRESTADOR";$("userMessage").className="message";
@@ -3204,11 +3382,12 @@ function openNewUser(){
 }
 
 function openEditUser(id){
-  if(systemSession?.perfil!=="MASTER"){
-    alert(qrLanguage==="en-US"?"Only MASTER can edit users.":"Somente o perfil MASTER pode editar usuários.");
+  if(!hasProfilePermission("GESTAO_USUARIOS")){
+    alert(qrLanguage==="en-US"?"Your profile is not allowed to edit users.":"Seu perfil não possui permissão para editar usuários.");
     return;
   }
   const x=usersAdminData.find(u=>String(u.idUsuario)===String(id));
+  if(x&&x.perfil==="MASTER"&&systemSession?.perfil!=="MASTER")return alert(qrLanguage==="en-US"?"Only MASTER can edit another MASTER account.":"Somente MASTER pode editar outro usuário MASTER.");
   if(!x)return alert(qrLanguage==="en-US"?"User not found.":"Usuário não encontrado.");
   $("userEditId").value=x.idUsuario;
   $("userModalTitle").textContent=qrLanguage==="en-US"?"✏️ Edit User":"✏️ Editar usuário";
@@ -3219,7 +3398,7 @@ function openEditUser(id){
 
 async function saveUser(){
   const b=$("saveUser"),editId=$("userEditId").value.trim(),isEdit=!!editId;
-  if(isEdit&&systemSession?.perfil!=="MASTER")return alert(qrLanguage==="en-US"?"Only MASTER can edit users.":"Somente o perfil MASTER pode editar usuários.");
+  if(!hasProfilePermission("GESTAO_USUARIOS"))return alert(qrLanguage==="en-US"?"Your profile is not allowed to manage users.":"Seu perfil não possui permissão para gerenciar usuários.");
   b.disabled=true;b.textContent=qrLanguage==="en-US"?(isEdit?"Saving...":"Creating..."):(isEdit?"Salvando...":"Criando...");
   try{
     const r=await menuApiPost({action:isEdit?"updateUser":"createUser",userId:editId,userName:$("userName").value.trim(),userLogin:$("userLogin").value.trim(),userEmail:$("userEmail").value.trim(),userProviderId:$("userProvider").value,userProfile:$("userProfile").value});
@@ -3234,7 +3413,7 @@ async function saveUser(){
   finally{b.disabled=false;b.textContent=isEdit?(qrLanguage==="en-US"?"Save changes":"Salvar alterações"):(qrLanguage==="en-US"?"Create and send invite":"Criar e enviar convite")}
 }
 async function setUserStatus(id,status){const lbl=qrStatus7612(status);if(!confirm(qrLanguage==="en-US"?`Change the user status to ${lbl}?`:`Alterar o status do usuário para ${lbl}?`))return;try{const r=await menuApiPost({action:"updateUserStatus",userId:id,userStatus:status});if(!r.ok)throw new Error(r.detail||(qrLanguage==="en-US"?"Error updating user.":"Erro ao alterar usuário."));await loadUsers()}catch(e){alert(e.message)}}
-async function resendInviteUser(id){if(systemSession?.perfil!=="MASTER")return alert(qrLanguage==="en-US"?"Only MASTER can resend invitations.":"Somente o perfil MASTER pode reenviar convites.");try{const r=await menuApiPost({action:"resendInvite",userId:id});if(!r.ok)throw new Error(r.detail||(qrLanguage==="en-US"?"Error sending invite.":"Erro ao enviar convite."));alert(qrLanguage==="en-US"?"Invite sent.":"Convite enviado.")}catch(e){alert(e.message)}}
+async function resendInviteUser(id){if(!hasProfilePermission("GESTAO_USUARIOS"))return alert(qrLanguage==="en-US"?"Your profile is not allowed to resend invitations.":"Seu perfil não possui permissão para reenviar convites.");const target=usersAdminData.find(u=>String(u.idUsuario)===String(id));if(target?.perfil==="MASTER"&&systemSession?.perfil!=="MASTER")return alert(qrLanguage==="en-US"?"Only MASTER can resend an invitation to another MASTER account.":"Somente MASTER pode reenviar convite para outro usuário MASTER.");try{const r=await menuApiPost({action:"resendInvite",userId:id});if(!r.ok)throw new Error(r.detail||(qrLanguage==="en-US"?"Error sending invite.":"Erro ao enviar convite."));alert(qrLanguage==="en-US"?"Invite sent.":"Convite enviado.")}catch(e){alert(e.message)}}
 
 const QR_LANG_KEY="qrmanut_language";
 let qrLanguage="pt-BR";
@@ -3251,6 +3430,7 @@ const QR_TEXT={
     tabAssetManagement:"🏷️ Gestão de Ativos",
     tabDocumentUpload:"📤 Upload de Documentos",
     tabUsers:"👥 Gestão de Usuários",
+    tabPermissions:"🔐 Permissões de Perfis",
     tabAudit:"🧾 Auditoria",
     tabProvidersAdmin:"🏢 Prestadores",
     tabCompany:"⚙️ Empresa",
@@ -3293,6 +3473,7 @@ const QR_TEXT={
     tabAssetManagement:"🏷️ Asset Management",
     tabDocumentUpload:"📤 Upload Documents",
     tabUsers:"👥 User Management",
+    tabPermissions:"🔐 Profile Permissions",
     tabAudit:"🧾 Audit",
     tabProvidersAdmin:"🏢 Service Providers",
     tabCompany:"⚙️ Company",
@@ -3376,7 +3557,7 @@ const QR_ROUTINE_PT_EN={
   "Todas":"All",
 
   "📤 Upload de Documentos":"📤 Upload Documents",
-  "Disponível para MASTER e GESTOR. Somente PDF, até 8 MB.":"Available to MASTER and MANAGER. PDF only, up to 8 MB.",
+  "Disponibilidade definida em Permissões de Perfis. Somente PDF, até 8 MB.":"Availability is defined in Profile Permissions. PDF only, up to 8 MB.",
   "Título *":"Title *",
   "Tipo *":"Type *",
   "Ambiente":"Environment",
@@ -3410,11 +3591,12 @@ const QR_ROUTINE_PT_EN={
   "Salvar configuração":"Save Configuration",
 
   "🏢 Prestadores":"🏢 Service Providers",
+  "Consulte responsáveis e canais de contato dos prestadores. Cadastro e edição obedecem às Permissões de Perfis definidas pelo MASTER.":"View service provider contacts. Registration and editing follow Profile Permissions defined by MASTER.",
   "Regras operacionais herdadas pelos usuários.":"Operational rules inherited by linked users.",
   "+ Novo prestador":"+ New provider",
 
   "🧾 Auditoria":"🧾 Audit",
-  "Trilha de eventos administrativos e operacionais. Consulta exclusiva do perfil MASTER.":"Administrative and operational event trail. MASTER access only.",
+  "Trilha de eventos administrativos e operacionais. Acesso controlado pelas Permissões de Perfis.":"Administrative and operational event trail. Access is controlled by Profile Permissions.",
   "Ação":"Action",
   "Resultado":"Result",
   "Usuário":"User",
@@ -4399,11 +4581,11 @@ document.getElementById("qrLangEn").addEventListener("click",function(){
   qrTranslateRoutineScreens();
 });
 
-$("openSystemLoginButton").onclick=()=>requireSystemLogin(openMainMenu);$("forgotPasswordButton").onclick=openForgotPassword;$("cancelRecovery").onclick=()=>{$("forgotPasswordModal").style.display="none";$("systemLoginModal").style.display="flex"};$("sendRecovery").onclick=sendRecovery;$("saveNewPassword").onclick=savePasswordFromToken;$("tabUsers").onclick=showUsersTab;$("newUserButton").onclick=openNewUser;$("tabAudit").onclick=showAuditTab;$("tabProvidersAdmin").onclick=showProvidersAdminTab;$("tabCompany").onclick=showCompanyTab;$("companyBackMenu").onclick=showSearchTab;$("providersBackMenu").onclick=showSearchTab;$("newProviderButton").onclick=()=>openProviderModal(null);$("cancelProvider").onclick=()=>{$("providerModal").style.display="none"};$("closeProviderConsult").onclick=()=>{$("providerConsultModal").style.display="none"};$("saveProvider").onclick=saveProviderAdmin;$("saveCompanyConfig").onclick=saveCompanyConfig;["companyName","companyTradeName","companySystemName","companyLogo"].forEach(id=>$(id).oninput=updateCompanyPreview);$("auditRefresh").onclick=loadAudit;$("auditClear").onclick=clearAuditFilters;$("auditSearch").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();loadAudit()}};$("cancelUser").onclick=()=>{$("userModal").style.display="none"};$("saveUser").onclick=saveUser;$("sendSystemLogin").onclick=doSystemLogin;$("systemPassword").onkeydown=e=>{if(e.key==="Enter")doSystemLogin()};$("cancelSystemLogin").onclick=()=>{systemLoginNextAction=null;$("systemLoginModal").style.display="none";if(!systemSession)showMenuGate()};$("systemLogoutButton").onclick=logoutSystemMenu;$("installAppButton").onclick=installQRManut;$("tabSearch").onclick=showSearchTab;$("tabPending").onclick=showPendingTab;$("pendingApplyFilters").onclick=loadPending;$("pendingClearFilters").onclick=clearPendingFilters;$("tabOccurrenceReport").onclick=showOccurrenceReportTab;$("tabPreventive").onclick=showPreventiveTab;$("tabDocuments").onclick=showDocumentsTab;$("tabMaintenancePending").onclick=showMaintenancePendingTab;$("maintenancePendingBackMenu").onclick=showSearchTab;$("maintenancePendingRefresh").onclick=loadMaintenancePending;$("maintenancePendingClear").onclick=clearMaintenancePendingFilters;$("maintenancePendingSearch").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();loadMaintenancePending()}};$("maintenancePendingStatusFilter").onchange=loadMaintenancePending;$("maintenancePendingPriorityFilter").onchange=loadMaintenancePending;$("preventiveNeedsAction").onchange=togglePreventiveActionFields;$("tabOccurrenceCatalog").onclick=showOccurrenceCatalogTab;$("occurrenceCatalogBackMenu").onclick=showSearchTab;$("saveCatalogCategory").onclick=saveCatalogCategory;$("clearCatalogCategory").onclick=clearCatalogCategoryForm;$("saveCatalogComponent").onclick=saveCatalogComponent;$("clearCatalogComponent").onclick=clearCatalogComponentForm;$("category").onchange=()=>populateOccurrenceComponentSelect();$("manageCategory").onchange=()=>populateManageCatalog($("manageCategory").value,"");$("tabDocumentUpload").onclick=showDocumentUploadTab;$("documentUploadBackMenu").onclick=cancelDocumentUpload;$("uploadDocumentChooseFileButton").onclick=()=>$("uploadDocumentFile").click();$("uploadDocumentFile").onchange=prepareDocumentUploadFile;$("sendDocumentUpload").onclick=sendDocumentUpload;$("clearDocumentUpload").onclick=clearDocumentUploadForm;$("searchButton").onclick=searchAssets;$("searchInput").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();searchAssets()}};$("documentSearchButton").onclick=searchDocuments;$("documentSearchInput").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();searchDocuments()}};$("documentTypeFilter").onchange=searchDocuments;$("documentDisciplineFilter").onchange=searchDocuments;$("documentFloorFilter").onchange=searchDocuments;$("reportButton").onclick=openReport;$("preventiveButton").onclick=requestPreventive;
+$("openSystemLoginButton").onclick=()=>requireSystemLogin(openMainMenu);$("forgotPasswordButton").onclick=openForgotPassword;$("cancelRecovery").onclick=()=>{$("forgotPasswordModal").style.display="none";$("systemLoginModal").style.display="flex"};$("sendRecovery").onclick=sendRecovery;$("saveNewPassword").onclick=savePasswordFromToken;$("tabUsers").onclick=showUsersTab;$("newUserButton").onclick=openNewUser;$("tabPermissions").onclick=showProfilePermissionsTab;$("permissionsBackMenu").onclick=openDefaultAllowedTab;$("saveProfilePermissions").onclick=saveProfilePermissions76613;$("resetProfilePermissions").onclick=resetProfilePermissions76613;$("tabAudit").onclick=showAuditTab;$("tabProvidersAdmin").onclick=showProvidersAdminTab;$("tabCompany").onclick=showCompanyTab;$("companyBackMenu").onclick=openDefaultAllowedTab;$("providersBackMenu").onclick=openDefaultAllowedTab;$("newProviderButton").onclick=()=>openProviderModal(null);$("cancelProvider").onclick=()=>{$("providerModal").style.display="none"};$("closeProviderConsult").onclick=()=>{$("providerConsultModal").style.display="none"};$("saveProvider").onclick=saveProviderAdmin;$("saveCompanyConfig").onclick=saveCompanyConfig;["companyName","companyTradeName","companySystemName","companyLogo"].forEach(id=>$(id).oninput=updateCompanyPreview);$("auditRefresh").onclick=loadAudit;$("auditClear").onclick=clearAuditFilters;$("auditSearch").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();loadAudit()}};$("cancelUser").onclick=()=>{$("userModal").style.display="none"};$("saveUser").onclick=saveUser;$("sendSystemLogin").onclick=doSystemLogin;$("systemPassword").onkeydown=e=>{if(e.key==="Enter")doSystemLogin()};$("cancelSystemLogin").onclick=()=>{systemLoginNextAction=null;$("systemLoginModal").style.display="none";if(!systemSession)showMenuGate()};$("systemLogoutButton").onclick=logoutSystemMenu;$("installAppButton").onclick=installQRManut;$("tabSearch").onclick=showSearchTab;$("tabPending").onclick=showPendingTab;$("pendingApplyFilters").onclick=loadPending;$("pendingClearFilters").onclick=clearPendingFilters;$("tabOccurrenceReport").onclick=showOccurrenceReportTab;$("tabPreventive").onclick=showPreventiveTab;$("tabDocuments").onclick=showDocumentsTab;$("tabMaintenancePending").onclick=showMaintenancePendingTab;$("maintenancePendingBackMenu").onclick=openDefaultAllowedTab;$("maintenancePendingRefresh").onclick=loadMaintenancePending;$("maintenancePendingClear").onclick=clearMaintenancePendingFilters;$("maintenancePendingSearch").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();loadMaintenancePending()}};$("maintenancePendingStatusFilter").onchange=loadMaintenancePending;$("maintenancePendingPriorityFilter").onchange=loadMaintenancePending;$("preventiveNeedsAction").onchange=togglePreventiveActionFields;$("tabOccurrenceCatalog").onclick=showOccurrenceCatalogTab;$("occurrenceCatalogBackMenu").onclick=openDefaultAllowedTab;$("saveCatalogCategory").onclick=saveCatalogCategory;$("clearCatalogCategory").onclick=clearCatalogCategoryForm;$("saveCatalogComponent").onclick=saveCatalogComponent;$("clearCatalogComponent").onclick=clearCatalogComponentForm;$("category").onchange=()=>populateOccurrenceComponentSelect();$("manageCategory").onchange=()=>populateManageCatalog($("manageCategory").value,"");$("tabDocumentUpload").onclick=showDocumentUploadTab;$("documentUploadBackMenu").onclick=cancelDocumentUpload;$("uploadDocumentChooseFileButton").onclick=()=>$("uploadDocumentFile").click();$("uploadDocumentFile").onchange=prepareDocumentUploadFile;$("sendDocumentUpload").onclick=sendDocumentUpload;$("clearDocumentUpload").onclick=clearDocumentUploadForm;$("searchButton").onclick=searchAssets;$("searchInput").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();searchAssets()}};$("documentSearchButton").onclick=searchDocuments;$("documentSearchInput").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();searchDocuments()}};$("documentTypeFilter").onchange=searchDocuments;$("documentDisciplineFilter").onchange=searchDocuments;$("documentFloorFilter").onchange=searchDocuments;$("reportButton").onclick=openReport;$("preventiveButton").onclick=requestPreventive;
 $("searchAssetsButton").onclick=function(){if(currentAsset?.id)setOriginAsset(currentAsset.id);requireSystemLogin(()=>{hide("assetScreen");show("searchScreen");openMainMenu();focusBackAssetButton()})};
 $("backAssetButton").onclick=function(){const id=getOriginAsset();if(!id)return;clearOriginAsset();location.href="?id="+encodeURIComponent(id)};
 $("occReportRefresh").onclick=loadOccurrenceReport;$("occReportPdf").onclick=generateOccurrenceReportPdf;["occReportStart","occReportEnd","occReportProvider","occReportCategory","occReportComponent","occReportFloor","occReportLocation"].forEach(id=>$(id).onchange=markOccurrenceReportDirty);$("controlRefresh").onclick=refreshPreventiveControl;$("controlCompetence").onchange=loadPreventiveControl;$("controlProvider").onchange=()=>{if(["MASTER","GESTOR"].includes(systemSession?.perfil))loadPreventiveControl();else renderControlList()};$("controlAll").onclick=()=>setControlMode("all");$("controlPending").onclick=()=>setControlMode("pending");$("controlDone").onclick=()=>setControlMode("done");$("sendMonthlyReport").onclick=sendMonthlyPreventiveReport;
-$("preventiveLogout").onclick=()=>showSearchTab();$("cancelPreventive").onclick=()=>{if(!preventivePosting)$("preventiveModal").style.display="none"};$("savePreventive").onclick=savePreventive;$("cancelReport").onclick=function(){if(reportPosting){if($("sendReport").textContent==="Ocorrência gravada"){reportPosting=false;$("reportModal").style.display="none";location.reload()}return}$("reportModal").style.display="none"};$("sendReport").onclick=sendReport;$("historySelect").onchange=function(){renderHistoryItem(Number(this.value))};$("manageStatus").onchange=toggleConclusion;$("cancelManage").onclick=()=>{if(!managePosting)$("manageModal").style.display="none"};$("saveManage").onclick=saveManage;$("deleteOccurrence").onclick=deleteOccurrenceRecord;$("signatureCanvas").addEventListener("pointerdown",signatureStart);$("signatureCanvas").addEventListener("pointermove",signatureMove);window.addEventListener("pointerup",signatureEnd);$("clearSignature").onclick=clearSignatureCanvas;
+$("preventiveLogout").onclick=()=>openDefaultAllowedTab();$("cancelPreventive").onclick=()=>{if(!preventivePosting)$("preventiveModal").style.display="none"};$("savePreventive").onclick=savePreventive;$("cancelReport").onclick=function(){if(reportPosting){if($("sendReport").textContent==="Ocorrência gravada"){reportPosting=false;$("reportModal").style.display="none";location.reload()}return}$("reportModal").style.display="none"};$("sendReport").onclick=sendReport;$("historySelect").onchange=function(){renderHistoryItem(Number(this.value))};$("manageStatus").onchange=toggleConclusion;$("cancelManage").onclick=()=>{if(!managePosting)$("manageModal").style.display="none"};$("saveManage").onclick=saveManage;$("deleteOccurrence").onclick=deleteOccurrenceRecord;$("signatureCanvas").addEventListener("pointerdown",signatureStart);$("signatureCanvas").addEventListener("pointermove",signatureMove);window.addEventListener("pointerup",signatureEnd);$("clearSignature").onclick=clearSignatureCanvas;
 qrLoadLanguage();
 qrInstallRoutineObserver();
 qrTranslateRoutineScreens();
@@ -4412,7 +4594,7 @@ qrTranslateAttributes(document.body);
 
 [
   "tabSearch","tabPending","tabOccurrenceReport","tabPreventive",
-  "tabDocuments","tabDocumentUpload","tabUsers","tabAudit",
+  "tabDocuments","tabDocumentUpload","tabUsers","tabPermissions","tabAudit",
   "tabProvidersAdmin","tabCompany","reportButton","preventiveButton"
 ].forEach(id=>{
   const el=document.getElementById(id);
