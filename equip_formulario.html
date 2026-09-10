@@ -1006,7 +1006,7 @@ window.addEventListener("appinstalled",()=>{
 if("serviceWorker" in navigator){
   window.addEventListener("load",()=>{
     navigator.serviceWorker
-      .register("./qrmanutsw.js")
+      .register("./qrmanut-sw.js")
       .catch(error=>{
         console.warn("Service Worker do QRManut não registrado.",error);
         let warning=document.getElementById("qrServiceWorkerWarning");
@@ -1014,7 +1014,7 @@ if("serviceWorker" in navigator){
           warning=document.createElement("div");
           warning.id="qrServiceWorkerWarning";
           warning.className="install-hint";
-          warning.textContent="⚠️ O modo offline do QRManut não pôde ser ativado. Verifique se o arquivo qrmanutsw.js foi publicado corretamente.";
+          warning.textContent="⚠️ O modo offline do QRManut não pôde ser ativado. Verifique se o arquivo qrmanut-sw.js foi publicado corretamente.";
           const host=document.querySelector(".container");
           if(host)host.prepend(warning);
         }
