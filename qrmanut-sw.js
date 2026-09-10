@@ -1,4 +1,4 @@
-const CACHE_NAME="qrmanut-static-7.6.6.19";
+const CACHE_NAME="qrmanut-static-7.6.6.20";
 const STATIC_ASSETS=[
   "./equip_formulario.html",
   "./manifest.webmanifest",
