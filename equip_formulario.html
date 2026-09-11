@@ -2542,6 +2542,12 @@ async function saveCompanyConfig(){
     $("companyMessage").className="message success";
     $("companyMessage").textContent="✅ Configuração atualizada.";
     await loadPublicAppConfig();
+
+    // CORREÇÃO 7.6.6.24 — após salvar com sucesso, fecha a tela de
+    // Configuração da Empresa e retorna ao primeiro menu permitido ao usuário.
+    setTimeout(()=>{
+      openDefaultAllowedTab();
+    },500);
   }catch(e){
     $("companyMessage").className="message error";
     $("companyMessage").textContent=e.message;
