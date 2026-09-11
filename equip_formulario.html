@@ -1,4 +1,4 @@
-<!-- QRManut 7.6.6.24.12: Onda 2A + R10 Login + R11 Cor Principal + R12 Solicitações de Manutenção / SOL -->
+<!-- QRManut 7.6.6.24.12: R12 SOL + HOTFIX UX — fechamento automático da janela após envio -->
 <!doctype html>
 <html lang="pt-br">
 <head>
@@ -2774,9 +2774,39 @@ async function sendPublicSolicitation7662412(){
       solPhotoBase64:solPhotoData?.base64||"",solPhotoMime:solPhotoData?.mime||"",solPhotoName:solPhotoData?.name||""
     });
     if(!r.ok)throw new Error(r.detail||solT7662412("Não foi possível registrar a solicitação.","Unable to register the request."));
+    const protocol=String(r.idSolicitacao||"").trim();
     $("solPublicMessage").className="message success";
-    $("solPublicMessage").innerHTML=`<div class="sol-protocol-success"><b>${solT7662412("Solicitação registrada com sucesso.","Request registered successfully.")}</b><br>${solT7662412("Protocolo","Protocol")}: <b>${esc(r.idSolicitacao)}</b><br><span class="muted">${solT7662412("A equipe de manutenção fará a triagem antes da criação de uma OC.","The maintenance team will review it before a work order is created.")}</span></div>`;
-    $("sendSolPublic").textContent=solT7662412("Solicitação enviada","Request submitted");
+    $("solPublicMessage").textContent=solT7662412("Solicitação registrada com sucesso.","Request registered successfully.");
+
+    // 7.6.6.24.12 — Hotfix UX:
+    // após a gravação confirmada pelo backend, fecha o formulário público,
+    // limpa os dados temporários e exibe o protocolo no aviso padrão do QRManut.
+    $("solPublicModal").style.display="none";
+    solPublicPosting=false;
+    $("sendSolPublic").disabled=false;
+    $("cancelSolPublic").disabled=false;
+    $("sendSolPublic").textContent=solT7662412("Enviar solicitação","Submit request");
+    $("solContact").value="";
+    $("solFloor").value="";
+    populateSolLocation7662412();
+    $("solLocation").value="";
+    $("solOtherLocation").value="";
+    hide("solOtherLocationWrap");
+    $("solDescription").value="";
+    solPhotoData=null;
+    $("solCameraInput").value="";
+    $("solPhotoInput").value="";
+    $("solPhotoStatus").textContent="";
+    $("solPhotoPreview").removeAttribute("src");
+    $("solPhotoPreview").style.display="none";
+
+    qrShowAlert(
+      solT7662412(
+        "Solicitação registrada com sucesso.\n\nProtocolo: "+protocol+"\n\nA equipe de manutenção fará a triagem antes da criação de uma OC.",
+        "Request registered successfully.\n\nProtocol: "+protocol+"\n\nThe maintenance team will review it before a work order is created."
+      ),
+      "QRManut"
+    );
   }catch(e){
     $("solPublicMessage").className="message error";$("solPublicMessage").textContent=e.message;
     $("sendSolPublic").disabled=false;$("cancelSolPublic").disabled=false;$("sendSolPublic").textContent=solT7662412("Enviar solicitação","Submit request");
