@@ -1,4 +1,4 @@
-<!-- QRManut 7.6.6.24.11: Onda 2A + CONFIG-UX-R3 + OC-PERFORMANCE-R4/R5 + MIGRATION-R6 + RECOVERY-R8 + LOGIN-R10 + PRIMARY-COLOR-R11 -->
+<!-- QRManut 7.6.6.24.12: Onda 2A + R10 Login + R11 Cor Principal + R12 Solicitações de Manutenção / SOL -->
 <!doctype html>
 <html lang="pt-br">
 <head>
@@ -426,6 +426,33 @@ html,body{max-width:100%;overflow-x:hidden}
 }
 .company-color-preview-label b{color:var(--qr-primary)}
 
+
+/* ============================================================
+ * QRManut 7.6.6.24.12 — SOLICITAÇÕES DE MANUTENÇÃO / SOL
+ * ============================================================ */
+.other-problem-box{margin-top:12px;padding:13px;border:1px dashed #94a3b8;border-radius:12px;background:#f8fafc;text-align:center}
+.other-problem-box .muted{margin-bottom:8px}
+.btn-sol-public{background:#fff7ed;color:#9a3412;border:1px solid #fdba74;border-radius:999px;padding:11px 16px;font-weight:800;cursor:pointer;min-height:44px}
+.menu-button.solicitations.active{background:#9a3412;border-color:#9a3412;color:#fff}
+.sol-filters{display:grid;grid-template-columns:1fr 1fr 2fr auto;gap:9px;align-items:end}
+.sol-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0}
+.sol-summary-card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:11px;text-align:center}
+.sol-summary-card strong{display:block;font-size:1.3rem}
+.sol-card{margin-top:11px;padding:14px;border:1px solid #e5e7eb;border-left:5px solid #ea580c;border-radius:13px;background:#fff}
+.sol-card.new{border-left-color:#dc2626}.sol-card.analysis{border-left-color:#f59e0b}.sol-card.converted{border-left-color:#059669}.sol-card.closed{border-left-color:#94a3b8}
+.sol-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.sol-status{display:inline-block;padding:4px 8px;border-radius:999px;font-size:.75rem;font-weight:800;background:#fff7ed;color:#9a3412}
+.sol-meta{margin-top:8px;line-height:1.55;color:#4b5563;font-size:.86rem}
+.sol-description{margin-top:9px;padding:9px 10px;border-radius:9px;background:#f8fafc;white-space:pre-wrap;word-break:break-word}
+.sol-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:11px}
+.sol-detail-box{padding:11px;border:1px solid #e5e7eb;border-radius:10px;background:#f8fafc;line-height:1.55}
+.sol-asset-search-results{max-height:310px;overflow:auto;margin-top:10px;border:1px solid #e5e7eb;border-radius:12px;padding:7px;background:#fff}
+.sol-asset-option{display:block;width:100%;text-align:left;border:1px solid #e5e7eb;background:#fff;border-radius:10px;padding:10px;margin:6px 0;cursor:pointer;color:#111827}
+.sol-asset-option.selected{border-color:var(--qr-primary);box-shadow:0 0 0 2px var(--qr-primary-soft)}
+.sol-asset-option b{display:block;color:var(--qr-primary)}
+.sol-protocol-success{margin-top:10px;padding:13px;border:1px solid #86efac;background:#f0fdf4;border-radius:12px}
+@media(max-width:760px){.sol-filters{grid-template-columns:1fr}.sol-summary{grid-template-columns:repeat(2,1fr)}}
+
 </style>
 </head>
 <body>
@@ -445,6 +472,7 @@ html,body{max-width:100%;overflow-x:hidden}
   <div id="mainMenuButtons" class="menu-busca">
     <button id="tabSearch" class="menu-button active">🔎 Buscar ativos</button>
     <button id="tabPending" class="menu-button">⚠️ OCs pendentes</button>
+    <button id="tabSolicitations" class="menu-button solicitations hidden">📥 Solicitações de Manutenção</button>
     <button id="tabOccurrenceReport" class="menu-button reports">📊 Relatório de OCs</button>
     <button id="tabPreventive" class="menu-button preventive">🛠️ Status das Preventivas</button>
     <button id="tabDocuments" class="menu-button documents">📄 Documentos Técnicos</button>
@@ -491,6 +519,31 @@ html,body{max-width:100%;overflow-x:hidden}
     <div id="pendingSummary" class="pending-summary"></div>
     <div id="pendingResults"></div>
   </div>
+
+  <div id="solicitationsArea" class="hidden">
+    <div class="card">
+      <div class="back-asset-wrap"><button id="solicitationsBackMenu" class="back-asset-btn">← Voltar ao Menu Principal</button></div>
+      <h2>📥 Solicitações de Manutenção</h2>
+      <div class="muted">Caixa de entrada para problemas informados pelo acesso público. A solicitação só vira OC após a triagem.</div>
+      <div class="sol-filters" style="margin-top:12px">
+        <label style="margin-top:0">Situação<select id="solStatusFilter">
+          <option value="OPEN">Em aberto</option>
+          <option value="">Todas</option>
+          <option value="Nova">Nova</option>
+          <option value="Em análise">Em análise</option>
+          <option value="OC criada">OC criada</option>
+          <option value="Encerrada sem OC">Encerrada sem OC</option>
+        </select></label>
+        <label style="margin-top:0">Pavimento<select id="solFloorFilter"><option value="">Todos os pavimentos</option></select></label>
+        <label style="margin-top:0">Busca<input id="solSearch" placeholder="Protocolo, local, solicitante, QR ou OC"></label>
+        <button id="solRefresh" class="btn btn-blue">Atualizar</button>
+      </div>
+      <div id="solStatusText" class="muted" style="margin-top:12px"></div>
+    </div>
+    <div id="solSummary" class="sol-summary"></div>
+    <div id="solResults"></div>
+  </div>
+
   <div id="occurrenceReportArea" class="hidden">
     <div class="card">
       <h2 style="margin-bottom:6px">📊 Relatório de OCs Concluídas</h2>
@@ -648,7 +701,7 @@ html,body{max-width:100%;overflow-x:hidden}
     </div>
   </div>
 
-<div id="companyArea" class="hidden"><div class="card"><div class="back-asset-wrap"><button id="companyBackMenu" class="back-asset-btn">← Voltar ao Menu Principal</button></div><h2>⚙️ Configuração da Empresa</h2><div class="muted">Dados institucionais desta implantação dedicada.</div><div class="admin-grid"><label>ID Empresa<input id="companyId"></label><label>Nome da Empresa *<input id="companyName"></label><label>Nome Fantasia<input id="companyTradeName"></label><label>CNPJ<input id="companyCnpj"></label><label class="company-long-field">E-mail de Manutenção<input id="companyMaintenanceEmail" type="email" autocomplete="email"></label><label class="company-long-field">E-mail Administrativo<input id="companyAdminEmail" type="email" autocomplete="email"></label><label>Nome do Sistema *<input id="companySystemName"></label><label>Cor Principal<input id="companyPrimaryColor" type="color" value="#0b315e"></label><label>Fuso Horário<input id="companyTimezone" placeholder="America/New_York"><small class="muted">Ex.: America/New_York (Eastern Time, com ajuste automático de horário de verão)</small></label><label class="company-long-field">URL Principal<input id="companyMainUrl" type="url" inputmode="url"></label><label class="company-long-field">E-mail de Relatórios<input id="companyReportsEmail"></label><label class="company-long-field">E-mail principal das OCs *<input id="companyOccurrenceEmailTo" placeholder="manutencao@empresa.com"></label><label class="company-long-field">E-mail CC das OCs<input id="companyOccurrenceEmailCc" placeholder="gestor@empresa.com; outro@empresa.com"><small class="muted">Opcional. Separe vários e-mails por vírgula ou ponto e vírgula.</small></label><label class="company-long-field">Logo (URL)<input id="companyLogo" type="url" inputmode="url"></label><label class="full">Observações<textarea id="companyNotes" rows="5"></textarea></label></div><label class="switch-row"><input id="companyActive" type="checkbox"> Empresa ativa</label><div class="company-preview"><b>Pré-visualização</b><div id="companyPreviewName" style="margin-top:6px;font-size:1.1rem;font-weight:800"></div><div id="companyColorPreview" class="company-color-preview"><span class="company-color-preview-swatch" id="companyColorPreviewSwatch"></span><div class="company-color-preview-label"><b id="companyColorPreviewHex">#0b315e</b><br><span>Cor aplicada aos principais botões e destaques do QRManut.</span></div></div><img id="companyLogoPreview" class="company-logo-preview hidden"></div><div id="companyMessage" class="message"></div><div class="occ-report-actions"><button id="saveCompanyConfig" class="btn btn-blue">Salvar configuração</button></div></div></div>
+<div id="companyArea" class="hidden"><div class="card"><div class="back-asset-wrap"><button id="companyBackMenu" class="back-asset-btn">← Voltar ao Menu Principal</button></div><h2>⚙️ Configuração da Empresa</h2><div class="muted">Dados institucionais desta implantação dedicada.</div><div class="admin-grid"><label>ID Empresa<input id="companyId"></label><label>Nome da Empresa *<input id="companyName"></label><label>Nome Fantasia<input id="companyTradeName"></label><label>CNPJ<input id="companyCnpj"></label><label class="company-long-field">E-mail de Manutenção<input id="companyMaintenanceEmail" type="email" autocomplete="email"></label><label class="company-long-field">E-mail Administrativo<input id="companyAdminEmail" type="email" autocomplete="email"></label><label>Nome do Sistema *<input id="companySystemName"></label><label>Cor Principal<input id="companyPrimaryColor" type="color" value="#0b315e"></label><label>Fuso Horário<input id="companyTimezone" placeholder="America/New_York"><small class="muted">Ex.: America/New_York (Eastern Time, com ajuste automático de horário de verão)</small></label><label class="company-long-field">URL Principal<input id="companyMainUrl" type="url" inputmode="url"></label><label class="company-long-field">E-mail de Relatórios<input id="companyReportsEmail"></label><label class="company-long-field">E-mail principal das OCs *<input id="companyOccurrenceEmailTo" placeholder="manutencao@empresa.com"></label><label class="company-long-field">E-mail CC das OCs<input id="companyOccurrenceEmailCc" placeholder="gestor@empresa.com; outro@empresa.com"><small class="muted">Opcional. Separe vários e-mails por vírgula ou ponto e vírgula.</small></label><label class="company-long-field">E-mail de Triagem de Solicitações<input id="companySolTriageEmailTo" placeholder="manutencao@empresa.com"><small class="muted">Opcional. Se vazio, o QRManut usa o e-mail principal das OCs/manutenção.</small></label><label class="company-long-field">E-mail CC da Triagem de Solicitações<input id="companySolTriageEmailCc" placeholder="gestor@empresa.com"><small class="muted">Opcional. Separe vários e-mails por vírgula ou ponto e vírgula.</small></label><label class="company-long-field">Logo (URL)<input id="companyLogo" type="url" inputmode="url"></label><label class="full">Observações<textarea id="companyNotes" rows="5"></textarea></label></div><label class="switch-row"><input id="companyActive" type="checkbox"> Empresa ativa</label><div class="company-preview"><b>Pré-visualização</b><div id="companyPreviewName" style="margin-top:6px;font-size:1.1rem;font-weight:800"></div><div id="companyColorPreview" class="company-color-preview"><span class="company-color-preview-swatch" id="companyColorPreviewSwatch"></span><div class="company-color-preview-label"><b id="companyColorPreviewHex">#0b315e</b><br><span>Cor aplicada aos principais botões e destaques do QRManut.</span></div></div><img id="companyLogoPreview" class="company-logo-preview hidden"></div><div id="companyMessage" class="message"></div><div class="occ-report-actions"><button id="saveCompanyConfig" class="btn btn-blue">Salvar configuração</button></div></div></div>
   <div id="providersAdminArea" class="hidden"><div class="card"><div class="back-asset-wrap"><button id="providersBackMenu" class="back-asset-btn">← Voltar ao Menu Principal</button></div><div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap"><div><h2>🏢 Prestadores</h2><div class="muted">Consulte responsáveis e canais de contato dos prestadores. Cadastro e edição obedecem às Permissões de Perfis definidas pelo MASTER.</div></div><button id="newProviderButton" class="btn btn-blue hidden">+ Novo prestador</button></div><div id="providersAdminStatus" class="muted" style="margin-top:12px"></div><div id="providersAdminList"></div></div></div>
   <div id="auditArea" class="hidden">
     <div class="card">
@@ -733,6 +786,7 @@ html,body{max-width:100%;overflow-x:hidden}
     <div class="section"><h3>Gestão do Ativo</h3><div id="management"></div></div>
     <div id="assetDocumentsSection" class="section hidden"><h3>📚 Documentos do Equipamento</h3><div id="assetDocumentsStatus" class="muted"></div><div id="assetDocuments" class="asset-document-list"></div></div>
     <div class="actions"><button id="reportButton" class="chip">Reportar Serviço / Anomalia / Reparo</button><button id="preventiveButton" class="btn-preventive hidden">🛠️ Registrar Preventiva</button><button id="searchAssetsButton" class="btn-search">☰ Menu Principal</button></div>
+    <div class="other-problem-box"><div class="muted">O problema não é neste equipamento?</div><button id="otherProblemButton" class="btn-sol-public" type="button">📍 Problema em outro equipamento ou ambiente</button></div>
     <div class="section"><h3>Histórico de Manutenção</h3><div id="historyStatus" class="muted"></div><select id="historySelect" class="hidden"></select><div id="historyDetail"></div></div>
     <div id="preventiveHistorySection" class="section hidden"><h3>🛠️ Histórico de Preventivas</h3><div id="preventiveHistoryStatus" class="muted">Login necessário para visualizar.</div><div id="preventiveHistory"></div></div>
   </div>
@@ -957,6 +1011,55 @@ html,body{max-width:100%;overflow-x:hidden}
 </div>
 <div id="signatureBox" class="signature-box hidden"><div class="signature-title">✍️ Assinatura do responsável <span id="signatureRequiredText" class="required-yes"></span></div><div class="signature-help">Assine no quadro usando o dedo ou mouse.</div><div class="signature-canvas-wrap"><canvas id="signatureCanvas"></canvas></div><button id="clearSignature" type="button" class="btn btn-secondary" style="margin-top:8px">Limpar assinatura</button></div><div id="preventiveMessage" class="message"></div><div class="modal-actions"><button id="cancelPreventive" class="btn btn-secondary">Cancelar</button><button id="savePreventive" class="btn btn-green">Registrar Preventiva</button></div></div></div>
 
+
+<div id="solPublicModal" class="modal"><div class="modal-box">
+  <h2>📍 Solicitação de Manutenção</h2>
+  <div class="muted">Use este formulário quando o problema estiver em outro equipamento ou ambiente. Esta solicitação será analisada pela equipe de manutenção antes de virar uma OC.</div>
+  <div id="solOriginInfo" class="sol-detail-box" style="margin-top:12px"></div>
+  <label>Seu nome *<input id="solReporterName"></label>
+  <label>Contato / telefone / e-mail *<input id="solContact" placeholder="Informe pelo menos um meio de contato"></label>
+  <label>Pavimento *<select id="solFloor"><option value="">Selecione...</option></select></label>
+  <label>Local / Ambiente *<select id="solLocation"><option value="">Selecione o pavimento primeiro</option></select></label>
+  <label id="solOtherLocationWrap" class="hidden">Informe o local *<input id="solOtherLocation"></label>
+  <label>Descreva o problema *<textarea id="solDescription" rows="5" placeholder="Explique de forma simples o que está acontecendo."></textarea></label>
+  <label>Foto / evidência (opcional)</label>
+  <div class="photo-source-actions"><button type="button" id="solCameraButton" class="btn btn-blue">📷 Tirar foto</button><button type="button" id="solGalleryButton" class="btn btn-secondary">🖼️ Escolher imagem</button></div>
+  <input id="solCameraInput" class="photo-source-hidden" type="file" accept="image/*" capture="environment">
+  <input id="solPhotoInput" class="photo-source-hidden" type="file" accept="image/*">
+  <div id="solPhotoStatus" class="muted" style="margin-top:5px"></div>
+  <img id="solPhotoPreview" class="photo-preview">
+  <div id="solPublicMessage" class="message"></div>
+  <div class="modal-actions"><button id="cancelSolPublic" class="btn btn-secondary">Cancelar</button><button id="sendSolPublic" class="btn btn-blue">Enviar solicitação</button></div>
+</div></div>
+
+<div id="solDetailModal" class="modal"><div class="modal-box">
+  <h2>📥 Detalhes da Solicitação</h2>
+  <div id="solDetailContent"></div>
+  <div class="modal-actions"><button id="closeSolDetail" class="btn btn-secondary">Fechar</button></div>
+</div></div>
+
+<div id="solConvertModal" class="modal"><div class="modal-box">
+  <h2>🧰 Criar OC a partir da Solicitação</h2>
+  <div id="solConvertSummary" class="sol-detail-box"></div>
+  <label>Buscar ativo cadastrado *<input id="solAssetSearch" placeholder="ID, equipamento, pavimento, local ou componente"></label>
+  <div id="solAssetSelected" class="message"></div>
+  <div id="solAssetResults" class="sol-asset-search-results"></div>
+  <h3 style="margin-bottom:4px">Classificação inicial da OC</h3>
+  <div class="muted">A classificação pode ser alterada posteriormente na própria OC.</div>
+  <label>Categoria *<select id="solOccurrenceCategory"><option value="">Selecione...</option></select></label>
+  <label>Componente *<select id="solOccurrenceComponent"><option value="">Selecione...</option></select></label>
+  <div id="solConvertMessage" class="message"></div>
+  <div class="modal-actions"><button id="cancelSolConvert" class="btn btn-secondary">Cancelar</button><button id="confirmSolConvert" class="btn btn-green">Criar OC</button></div>
+</div></div>
+
+<div id="solCloseModal" class="modal"><div class="modal-box">
+  <h2>Encerrar solicitação sem OC</h2>
+  <div id="solCloseSummary" class="sol-detail-box"></div>
+  <label>Motivo do encerramento *<textarea id="solCloseReason" rows="4" placeholder="Ex.: solicitação duplicada, problema já resolvido, informação insuficiente..."></textarea></label>
+  <div id="solCloseMessage" class="message"></div>
+  <div class="modal-actions"><button id="cancelSolClose" class="btn btn-secondary">Cancelar</button><button id="confirmSolClose" class="btn">Encerrar sem OC</button></div>
+</div></div>
+
 <div id="reportModal" class="modal"><div class="modal-box"><h2>Reportar Serviço / Anomalia / Reparo</h2><label>Seu nome *<input id="reporterName"></label><label>Contato<input id="reporterContact"></label><label><span id="reportCategoryLabel">Categoria *</span><select id="category"><option value="">Selecione...</option></select></label><label><span id="reportComponentLabel">Componente *</span><select id="component"><option value="">Selecione...</option></select></label><label>Descrição *<textarea id="description" rows="5"></textarea></label><label>Imagem / evidência (opcional)</label><div class="photo-source-actions"><button type="button" id="reportCameraButton" class="btn btn-blue">📷 Tirar foto</button><button type="button" id="reportGalleryButton" class="btn btn-secondary">🖼️ Escolher imagem do celular</button></div><input id="reportCameraInput" class="photo-source-hidden" type="file" accept="image/*" capture="environment"><input id="photoInput" class="photo-source-hidden" type="file" accept="image/*"><div id="reportPhotoStatus" class="muted" style="margin-top:5px"></div><img id="photoPreview" class="photo-preview"><div class="upload-file-box" style="margin-top:12px"><div style="font-weight:800">📎 Arquivo da ocorrência (opcional)</div><div class="muted" style="margin-top:4px">PDF, Word, Excel ou outro arquivo de evidência, até 8 MB.</div><button id="reportAttachmentButton" type="button" class="btn btn-secondary" style="margin-top:8px">📎 Escolher arquivo</button><input id="reportAttachmentInput" class="photo-source-hidden" type="file"><div id="reportAttachmentName" class="upload-file-name">Nenhum arquivo selecionado.</div></div><div id="reportMessage" class="message"></div><div class="modal-actions"><button id="cancelReport" class="btn btn-secondary">Cancelar</button><button id="sendReport" class="btn">Gravar ocorrência</button></div></div></div>
 
 <div id="manageModal" class="modal"><div class="modal-box"><h2>Gerenciar ocorrência</h2><label>Alterado por *<input id="manageChangedBy"></label><label>Categoria<select id="manageCategory"></select></label><label>Componente<select id="manageComponent"></select></label><label>Descrição<textarea id="manageDescription" rows="4"></textarea></label><label>Status<select id="manageStatus"><option>Aberta</option><option>Em atendimento</option><option>Aguardando peça</option><option>Concluída</option><option>Cancelada</option></select></label><label>Responsável<input id="manageResponsible"></label><label>Solução<textarea id="manageSolution" rows="4"></textarea></label><div id="existingOccurrencePhotoBox" class="hidden" style="margin-top:14px;padding:12px;border:1px solid #bfdbfe;background:#eff6ff;border-radius:12px">
@@ -967,12 +1070,13 @@ html,body{max-width:100%;overflow-x:hidden}
 </div>
 <label>Adicionar nova foto da ocorrência / correção</label><div class="photo-source-actions"><button type="button" id="manageOccurrenceCameraButton" class="btn btn-blue">📷 Tirar foto</button><button type="button" id="manageOccurrenceAttachButton" class="btn btn-secondary">🖼️ Anexar imagem</button></div><input id="manageOccurrenceCameraInput" class="photo-source-hidden" type="file" accept="image/*" capture="environment"><input id="manageOccurrencePhotoInput" class="photo-source-hidden" type="file" accept="image/*"><div id="manageOccurrencePhotoStatus" class="muted" style="margin-top:5px"></div><img id="manageOccurrencePhotoPreview" class="photo-preview"><div class="upload-file-box" style="margin-top:12px"><div style="font-weight:800">📎 Adicionar arquivo à ocorrência</div><div class="muted" style="margin-top:4px">PDF, Word, Excel ou outro arquivo de evidência, até 8 MB.</div><button id="manageAttachmentButton" type="button" class="btn btn-secondary" style="margin-top:8px">📎 Escolher arquivo</button><input id="manageAttachmentInput" class="photo-source-hidden" type="file"><div id="manageAttachmentName" class="upload-file-name">Nenhum arquivo selecionado.</div><div id="manageExistingAttachments" style="margin-top:8px"></div></div><div id="conclusionPhotoArea" class="hidden"><label>Foto da conclusão</label><div class="photo-source-actions"><button type="button" id="conclusionCameraButton" class="btn btn-blue">📷 Tirar foto</button><button type="button" id="conclusionAttachButton" class="btn btn-secondary">🖼️ Anexar imagem</button></div><input id="conclusionCameraInput" class="photo-source-hidden" type="file" accept="image/*" capture="environment"><input id="conclusionPhotoInput" class="photo-source-hidden" type="file" accept="image/*"><div id="conclusionPhotoStatus" class="muted" style="margin-top:5px"></div><img id="conclusionPhotoPreview" class="photo-preview"></div><div id="manageMessage" class="message"></div><div class="modal-actions" style="justify-content:space-between;flex-wrap:wrap"><button id="deleteOccurrence" class="btn btn-danger hidden" type="button">🗑️ Excluir ocorrência</button><div style="display:flex;gap:8px;flex-wrap:wrap"><button id="cancelManage" class="btn btn-secondary">Cancelar</button><button id="saveManage" class="btn">Salvar alterações</button></div></div></div></div>
 
-<div class="footer">QRManut • Versão 7.6.6.24.11</div>
+<div class="footer">QRManut • Versão 7.6.6.24.12</div>
 </div>
 <script>
 const API_URL="https://script.google.com/macros/s/AKfycbx4tpC42Q6WdkNhTUTAGoZWvG5M24zwlNscnwbDP5B3Q5pWo8B32-Lf0rQ2Xtua1AFMAQ/exec";
 const TOKEN="";const SYSTEM_SESSION_KEY="qrmanut_system_session";const RESPONSIBLE_KEY="qrmanut_responsavel";const PREVENTIVE_SESSION_KEY="qrmanut_preventive_session";const ORIGIN_ASSET_KEY="qrmanut_origin_asset";const MAX_DIM=1280;const QUALITY=.72;
-let systemSession=null,systemLoginNextAction=null,currentAsset=null,currentAssetStatus=null,history=[],selectedOccurrence=null,preventiveControlData=null,preventiveControlMode="all",preventiveSession=null,preventiveRequirements=null,loginNextAction=null,photoData=null,reportAttachmentData=null,preventivePhotoData=null,preventiveDocumentFiles=[],correctionPhotoData=null,manageAttachmentData=null,conclusionPhotoData=null,reportPosting=false,reportCompleted=false,preventivePosting=false,managePosting=false,signatureDirty=false,signatureDrawing=false,signatureCtx=null,occurrenceReportData=null,occurrenceReportFiltersLoaded=false,pendingFiltersLoaded=false,auditFiltersLoaded=false,companyConfigLoaded=false,providersAdminData=[],usersAdminData=[],profilePermissionsAdminData=null;
+let systemSession=null,systemLoginNextAction=null,currentAsset=null,currentAssetStatus=null,history=[],selectedOccurrence=null,preventiveControlData=null,preventiveControlMode="all",preventiveSession=null,preventiveRequirements=null,loginNextAction=null,photoData=null,reportAttachmentData=null,preventivePhotoData=null,preventiveDocumentFiles=[],correctionPhotoData=null,manageAttachmentData=null,conclusionPhotoData=null,reportPosting=false,reportCompleted=false,preventivePosting=false,managePosting=false,signatureDirty=false,signatureDrawing=false,signatureCtx=null,occurrenceReportData=null,occurrenceReportFiltersLoaded=false,pendingFiltersLoaded=false,auditFiltersLoaded=false,companyConfigLoaded=false,providersAdminData=[],usersAdminData=[],profilePermissionsAdminData=null,solPublicMeta=null,solPhotoData=null,solTriageData=null,solTriageMeta=null,solSelected=null,solSelectedAssetId="",solPublicPosting=false,solActionPosting=false;
+const SOL_TARGET_OC_KEY="qrmanut_sol_target_oc";
 const $=id=>document.getElementById(id);
 
 const qrNativeAlert=window.alert.bind(window);
@@ -1140,6 +1244,7 @@ function updateRoleUi(){
   const toggle=(id,key)=>hasProfilePermission(key)?show(id):hide(id);
   toggle("tabSearch","BUSCAR_ATIVOS");
   toggle("tabPending","OC_PENDENTES");
+  toggle("tabSolicitations","SOLICITACOES_TRIAGEM");
   toggle("tabOccurrenceReport","RELATORIO_OC");
   toggle("tabPreventive","PREVENTIVA_CONSULTAR");
   toggle("tabDocuments","DOCUMENTOS_CONSULTAR");
@@ -1157,10 +1262,11 @@ function updateRoleUi(){
     ?'<option value="PRESTADOR">PRESTADOR</option><option value="CONSULTA">CONSULTA</option><option value="GESTOR">GESTOR</option><option value="MASTER">MASTER</option>'
     :'<option value="PRESTADOR">PRESTADOR</option><option value="CONSULTA">CONSULTA</option><option value="GESTOR">GESTOR</option>';
 }
-function showMenuGate(){show("searchScreen");hide("mainMenuButtons");["searchArea","pendingArea","occurrenceReportArea","preventiveControlArea","documentsArea","usersArea","permissionsArea","auditArea","companyArea","providersAdminArea","documentUploadArea","occurrenceCatalogArea","maintenancePendingArea","assetManagementPanel"].forEach(hide);hide("systemAccessInfo");show("menuLockedCard")}
+function showMenuGate(){show("searchScreen");hide("mainMenuButtons");["searchArea","pendingArea","solicitationsArea","occurrenceReportArea","preventiveControlArea","documentsArea","usersArea","permissionsArea","auditArea","companyArea","providersAdminArea","documentUploadArea","occurrenceCatalogArea","maintenancePendingArea","assetManagementPanel"].forEach(hide);hide("systemAccessInfo");show("menuLockedCard")}
 function openDefaultAllowedTab(){
   if(hasProfilePermission("BUSCAR_ATIVOS"))return showSearchTab();
   if(hasProfilePermission("OC_PENDENTES"))return showPendingTab();
+  if(hasProfilePermission("SOLICITACOES_TRIAGEM"))return showSolicitationsTab7662412();
   if(hasProfilePermission("RELATORIO_OC"))return showOccurrenceReportTab();
   if(hasProfilePermission("PREVENTIVA_CONSULTAR"))return showPreventiveTab();
   if(hasProfilePermission("DOCUMENTOS_CONSULTAR"))return showDocumentsTab();
@@ -1168,7 +1274,7 @@ function openDefaultAllowedTab(){
   if(hasProfilePermission("PRESTADORES_CONSULTAR"))return showProvidersAdminTab();
   clearTabs();showOnly("searchArea");$("searchResults").innerHTML='<div class="document-empty">Seu perfil não possui nenhuma rotina de menu habilitada. Contate o administrador MASTER.</div>';
 }
-function openMainMenu(){hide("menuLockedCard");show("mainMenuButtons");renderSystemAccess();updateRoleUi();openDefaultAllowedTab();refreshAccessRequestMenuBadge76616();if(systemSession?.perfil==="PRESTADOR"){$("occReportProvider").disabled=true}else{$("occReportProvider").disabled=false}}
+function openMainMenu(){hide("menuLockedCard");show("mainMenuButtons");renderSystemAccess();updateRoleUi();openDefaultAllowedTab();refreshAccessRequestMenuBadge76616();refreshSolMenuBadge7662412();if(systemSession?.perfil==="PRESTADOR"){$("occReportProvider").disabled=true}else{$("occReportProvider").disabled=false}}
 async function refreshAccessRequestMenuBadge76616(){const el=$("tabUsers");if(!el)return;const base=qrLanguage==="en-US"?"👥 User Management":"👥 Gestão de Usuários";if(systemSession?.perfil!=="MASTER"){el.textContent=base;return}try{const r=await menuApi({action:"accessrequests"});const n=(r.requests||[]).filter(x=>x.status==="Pendente").length;el.textContent=base+(n?` 🔴 ${n}`:"")}catch(e){el.textContent=base}}
 async function requireSystemLogin(nextAction){if(await systemSessionIsValid()){nextAction();return}systemLoginNextAction=nextAction;$("systemUsername").value="";$("systemPassword").value="";$("systemLoginMessage").className="message";$("systemLoginModal").style.display="flex";setTimeout(()=>$("systemUsername").focus(),80)}
 async function doSystemLogin(){const user=$("systemUsername").value.trim(),password=$("systemPassword").value;if(!user||!password){$("systemLoginMessage").className="message error";$("systemLoginMessage").textContent="Informe usuário e senha.";return}$("sendSystemLogin").disabled=true;$("sendSystemLogin").textContent="Entrando...";try{const r=await apiPost({action:"systemLogin",systemUsername:user,systemPassword:password});if(!r.ok)throw new Error(r.detail||"Usuário ou senha inválidos.");saveSystemSession(r);$("systemLoginModal").style.display="none";occurrenceReportFiltersLoaded=false;documentFiltersLoaded=false;pendingFiltersLoaded=false;if(systemLoginNextAction){const fn=systemLoginNextAction;systemLoginNextAction=null;fn()}else openMainMenu()}catch(e){$("systemLoginMessage").className="message error";$("systemLoginMessage").textContent=e.message}finally{$("sendSystemLogin").disabled=false;$("sendSystemLogin").textContent="Entrar"}}
@@ -1182,8 +1288,8 @@ async function requirePreventiveLogin(nextAction,provider){await requireSystemLo
 function processPhoto(file){return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=e=>{const img=new Image();img.onload=()=>{let w=img.width,h=img.height;if(w>MAX_DIM||h>MAX_DIM){if(w>h){h=Math.round(h*MAX_DIM/w);w=MAX_DIM}else{w=Math.round(w*MAX_DIM/h);h=MAX_DIM}}const c=document.createElement("canvas");c.width=w;c.height=h;c.getContext("2d").drawImage(img,0,0,w,h);const url=c.toDataURL("image/jpeg",QUALITY);resolve({base64:url.split(",")[1],dataUrl:url,mime:"image/jpeg",name:"foto_"+Date.now()+".jpg"})};img.src=e.target.result};reader.onerror=reject;reader.readAsDataURL(file)})}
 function processAttachment(file){return new Promise((resolve,reject)=>{if(!file)return resolve(null);if(file.size>8*1024*1024)return reject(new Error("O arquivo ultrapassa o limite de 8 MB."));const reader=new FileReader();reader.onload=()=>{const raw=String(reader.result||"");resolve({base64:raw.includes(",")?raw.split(",")[1]:raw,mime:file.type||"application/octet-stream",name:file.name||("arquivo_"+Date.now())})};reader.onerror=()=>reject(new Error("Não foi possível ler o arquivo."));reader.readAsDataURL(file)})}
 function setupSignatureCanvas(){const c=$("signatureCanvas"),rect=c.getBoundingClientRect(),ratio=window.devicePixelRatio||1;c.width=Math.floor(rect.width*ratio);c.height=Math.floor(180*ratio);signatureCtx=c.getContext("2d");signatureCtx.scale(ratio,ratio);signatureCtx.lineWidth=2;signatureCtx.lineCap="round";signatureCtx.lineJoin="round";clearSignatureCanvas()}function clearSignatureCanvas(){const c=$("signatureCanvas");if(!signatureCtx)return;signatureCtx.save();signatureCtx.setTransform(1,0,0,1,0,0);signatureCtx.fillStyle="#fff";signatureCtx.fillRect(0,0,c.width,c.height);signatureCtx.restore();signatureDirty=false}function signaturePoint(e){const r=$("signatureCanvas").getBoundingClientRect();return{x:e.clientX-r.left,y:e.clientY-r.top}}function signatureStart(e){e.preventDefault();signatureDrawing=true;const p=signaturePoint(e);signatureCtx.beginPath();signatureCtx.moveTo(p.x,p.y);signatureDirty=true}function signatureMove(e){if(!signatureDrawing)return;e.preventDefault();const p=signaturePoint(e);signatureCtx.lineTo(p.x,p.y);signatureCtx.stroke()}function signatureEnd(){signatureDrawing=false}function getSignatureData(){if(!signatureDirty)return null;const u=$("signatureCanvas").toDataURL("image/png");return{base64:u.split(",")[1],mime:"image/png"}}
-function showOnly(a){["searchArea","pendingArea","occurrenceReportArea","preventiveControlArea","documentsArea","usersArea","permissionsArea","auditArea","companyArea","providersAdminArea","documentUploadArea","occurrenceCatalogArea","maintenancePendingArea","assetManagementPanel"].forEach(hide);show(a)}
-function clearTabs(){["tabSearch","tabPending","tabOccurrenceReport","tabPreventive","tabDocuments","tabUsers","tabPermissions","tabAudit","tabProvidersAdmin","tabCompany","tabDocumentUpload","tabOccurrenceCatalog","tabMaintenancePending","tabAssetManagement"].forEach(id=>$(id).classList.remove("active"))}
+function showOnly(a){["searchArea","pendingArea","solicitationsArea","occurrenceReportArea","preventiveControlArea","documentsArea","usersArea","permissionsArea","auditArea","companyArea","providersAdminArea","documentUploadArea","occurrenceCatalogArea","maintenancePendingArea","assetManagementPanel"].forEach(hide);show(a)}
+function clearTabs(){["tabSearch","tabPending","tabSolicitations","tabOccurrenceReport","tabPreventive","tabDocuments","tabUsers","tabPermissions","tabAudit","tabProvidersAdmin","tabCompany","tabDocumentUpload","tabOccurrenceCatalog","tabMaintenancePending","tabAssetManagement"].forEach(id=>$(id).classList.remove("active"))}
 function showSearchTab(){if(!requireUiPermission("BUSCAR_ATIVOS","Seu perfil não possui permissão para buscar ativos.","Your profile is not allowed to search assets."))return;clearTabs();$("tabSearch").classList.add("active");showOnly("searchArea");updateBackAssetButton();focusSearchInput()}
 async function showPendingTab(){if(!requireUiPermission("OC_PENDENTES","Seu perfil não possui permissão para consultar OCs pendentes.","Your profile is not allowed to view pending work orders."))return;clearTabs();$("tabPending").classList.add("active");showOnly("pendingArea");await loadPendingFilters();await loadPending()}
 async function showOccurrenceReportTab(){if(!requireUiPermission("RELATORIO_OC","Seu perfil não possui permissão para acessar o Relatório de OCs.","Your profile is not allowed to access the work order report."))return;clearTabs();$("tabOccurrenceReport").classList.add("active");showOnly("occurrenceReportArea");setDefaultOccurrenceReportDates();await loadOccurrenceReportFilters();if(!occurrenceReportData)await loadOccurrenceReport()}
@@ -1912,12 +2018,15 @@ function renderHistory(items){
   show("historySelect");
   $("historyStatus").textContent=qrLanguage==="en-US"?`${items.length} record(s)`:`${items.length} registro(s)`;
   $("historySelect").innerHTML=items.map((x,i)=>`<option value="${i}">${esc(x.ocorrencia)} | ${esc(qrLanguage==="en-US"?qrTranslateExactText(x.status):x.status)}</option>`).join("");
-  renderHistoryItem(0);
+  let targetOc="";try{targetOc=sessionStorage.getItem(SOL_TARGET_OC_KEY)||""}catch(e){}
+  const targetIndex=targetOc?items.findIndex(x=>String(x.ocorrencia||"").toUpperCase()===String(targetOc).toUpperCase()):-1;
+  if(targetIndex>=0){$("historySelect").value=String(targetIndex);renderHistoryItem(targetIndex);try{sessionStorage.removeItem(SOL_TARGET_OC_KEY)}catch(e){}}
+  else renderHistoryItem(0);
 }
 function renderHistoryItem(i){
   const x=history[i];if(!x)return;selectedOccurrence=x;
   const t=(pt,en)=>qrLanguage==="en-US"?en:pt;
-  $("historyDetail").innerHTML=`<div class="history-card"><b>${esc(x.ocorrencia)}</b><div class="muted">${esc(formatDate(x.data))}</div><span class="tag">${esc(qrLanguage==="en-US"?qrTranslateExactText(x.status):x.status)}</span>${x.categoriaOcorrencia?`<span class="tag">${esc(x.categoriaOcorrencia)}</span>`:""}${x.componenteAfetado?`<span class="tag">${esc(x.componenteAfetado)}</span>`:""}<div style="margin-top:8px"><b>${t("Descrição","Description")}:</b><br>${esc(x.descricao)}</div>${x.foto?`<div style="margin-top:8px"><button type="button" class="document-open" onclick="openSecureFile76624('occurrencePhoto','${esc(x.ocorrencia)}','opening')">📷 ${t("Ver foto","View photo")}</button></div>`:""}${(x.anexos||[]).length?`<div style="margin-top:8px"><b>📎 ${t("Arquivos","Files")}:</b> ${(x.anexos||[]).map(a=>`<button type="button" class="auth-link" onclick="openSecureFile76624('occurrenceDocument','${esc(a.idDocumento)}')" style="display:block;margin-top:4px">📎 ${esc(a.nomeArquivo)}</button>`).join("")}</div>`:""}${x.solucao?`<div style="margin-top:8px"><b>${t("Solução","Solution")}:</b><br>${esc(x.solucao)}</div>`:""}${systemSession&&hasProfilePermission("OC_CONSULTAR")&&(hasProfilePermission("OC_ALTERAR")||hasProfilePermission("OC_CONCLUIR"))&&(systemSession.perfil!=="PRESTADOR"||systemSession.podeAtenderOC)?`<button class="btn" style="width:100%;margin-top:12px" onclick="openManage(${i})">${t("Gerenciar ocorrência","Manage Work Order")}</button>`:""}</div>`;
+  $("historyDetail").innerHTML=`<div class="history-card"><b>${esc(x.ocorrencia)}</b><div class="muted">${esc(formatDate(x.data))}</div><span class="tag">${esc(qrLanguage==="en-US"?qrTranslateExactText(x.status):x.status)}</span>${x.categoriaOcorrencia?`<span class="tag">${esc(x.categoriaOcorrencia)}</span>`:""}${x.componenteAfetado?`<span class="tag">${esc(x.componenteAfetado)}</span>`:""}${x.solOrigem?`<div style="margin-top:7px"><b>${t("Origem","Origin")}:</b> ${esc(x.solOrigem)}</div>`:""}<div style="margin-top:8px"><b>${t("Descrição","Description")}:</b><br>${esc(x.descricao)}</div>${x.foto?`<div style="margin-top:8px"><button type="button" class="document-open" onclick="openSecureFile76624('occurrencePhoto','${esc(x.ocorrencia)}','opening')">📷 ${t("Ver foto","View photo")}</button></div>`:""}${(x.anexos||[]).length?`<div style="margin-top:8px"><b>📎 ${t("Arquivos","Files")}:</b> ${(x.anexos||[]).map(a=>`<button type="button" class="auth-link" onclick="openSecureFile76624('occurrenceDocument','${esc(a.idDocumento)}')" style="display:block;margin-top:4px">📎 ${esc(a.nomeArquivo)}</button>`).join("")}</div>`:""}${x.solucao?`<div style="margin-top:8px"><b>${t("Solução","Solution")}:</b><br>${esc(x.solucao)}</div>`:""}${systemSession&&hasProfilePermission("OC_CONSULTAR")&&(hasProfilePermission("OC_ALTERAR")||hasProfilePermission("OC_CONCLUIR"))&&(systemSession.perfil!=="PRESTADOR"||systemSession.podeAtenderOC)?`<button class="btn" style="width:100%;margin-top:12px" onclick="openManage(${i})">${t("Gerenciar ocorrência","Manage Work Order")}</button>`:""}</div>`;
 }
 async function loadPreventiveHistory(){
   const r=await menuApi({action:"preventivehistory",id:currentAsset.id});
@@ -2567,6 +2676,315 @@ const PASSWORD_EYE_OPEN=`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2
 const PASSWORD_EYE_CLOSED=`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3l18 18"></path><path d="M10.6 6.2A10.7 10.7 0 0 1 12 6c7 0 10 6 10 6a17.8 17.8 0 0 1-2.4 3.1"></path><path d="M6.4 6.4C3.5 8.2 2 12 2 12s3.5 6 10 6a10 10 0 0 0 4.1-.9"></path><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"></path></svg>`;
 function setupPasswordToggles(){document.querySelectorAll(".password-toggle").forEach(btn=>{btn.onclick=()=>{const input=document.getElementById(btn.dataset.passwordTarget);if(!input)return;const vis=input.type==="text";input.type=vis?"password":"text";btn.innerHTML=vis?PASSWORD_EYE_OPEN:PASSWORD_EYE_CLOSED;btn.setAttribute("aria-label",vis?"Mostrar senha":"Ocultar senha");btn.title=vis?"Mostrar senha":"Ocultar senha";input.focus()}})}
 function setDefaultAuditDates(){if($("auditStart").value&&$("auditEnd").value){qrRefreshLocalizedDateControls();return}const h=new Date(),i=new Date(h.getFullYear(),h.getMonth(),1);$("auditStart").value=isoDateLocal(i);$("auditEnd").value=isoDateLocal(h);qrRefreshLocalizedDateControls()}
+
+/* ============================================================
+ * SOLICITAÇÕES DE MANUTENÇÃO / SOL — 7.6.6.24.12
+ * ============================================================ */
+
+function solT7662412(pt,en){return qrLanguage==="en-US"?en:pt}
+
+async function loadSolPublicMeta7662412(){
+  if(solPublicMeta)return solPublicMeta;
+  const r=await api({action:"solpublicmeta"});
+  if(!r.ok)throw new Error(r.detail||solT7662412("Não foi possível carregar pavimentos e locais.","Unable to load floors and locations."));
+  solPublicMeta=r.data||{floors:[],locationsByFloor:{}};
+  return solPublicMeta;
+}
+
+function populateSolFloor7662412(){
+  const floors=solPublicMeta?.floors||[];
+  $("solFloor").innerHTML=`<option value="">${solT7662412("Selecione...","Select...")}</option>`+floors.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join("");
+  populateSolLocation7662412();
+}
+
+function populateSolLocation7662412(){
+  const floor=$("solFloor").value;
+  const items=(solPublicMeta?.locationsByFloor||{})[floor]||[];
+  $("solOtherLocation").value="";
+  hide("solOtherLocationWrap");
+  if(!floor){
+    $("solLocation").innerHTML=`<option value="">${solT7662412("Selecione o pavimento primeiro","Select the floor first")}</option>`;
+    return;
+  }
+  $("solLocation").innerHTML=`<option value="">${solT7662412("Selecione...","Select...")}</option>`+
+    items.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join("")+
+    `<option value="__OTHER__">${solT7662412("Outro local","Other location")}</option>`;
+}
+
+function updateSolOtherLocation7662412(){
+  $("solLocation").value==="__OTHER__"?show("solOtherLocationWrap"):hide("solOtherLocationWrap");
+}
+
+async function openPublicSolicitation7662412(){
+  if(!currentAsset?.id)return alert(solT7662412("Não foi possível identificar o QR de origem.","Unable to identify the source QR."));
+  solPhotoData=null;solPublicPosting=false;
+  $("solReporterName").value=getSavedResponsible();
+  $("solContact").value="";
+  $("solDescription").value="";
+  $("solPhotoStatus").textContent="";
+  $("solPhotoPreview").style.display="none";
+  $("solCameraInput").value="";$("solPhotoInput").value="";
+  $("solPublicMessage").className="message";$("solPublicMessage").innerHTML="";
+  $("solOriginInfo").innerHTML=`<b>${solT7662412("QR utilizado como entrada","QR used as entry point")}:</b> ${esc(currentAsset.id)}<br><span class="muted">${solT7662412("O problema não será associado automaticamente a este equipamento.","The issue will not be automatically linked to this asset.")}</span>`;
+  $("sendSolPublic").disabled=true;
+  $("sendSolPublic").textContent=solT7662412("Carregando...","Loading...");
+  $("solPublicModal").style.display="flex";
+  try{
+    await loadSolPublicMeta7662412();
+    populateSolFloor7662412();
+    $("sendSolPublic").disabled=false;
+    $("sendSolPublic").textContent=solT7662412("Enviar solicitação","Submit request");
+    qrTranslateElementTree($("solPublicModal"));qrTranslateAttributes($("solPublicModal"));
+  }catch(e){
+    $("solPublicMessage").className="message error";$("solPublicMessage").textContent=e.message;
+  }
+}
+
+async function handleSolPublicImage7662412(file){
+  if(!file){solPhotoData=null;$("solPhotoPreview").style.display="none";$("solPhotoStatus").textContent="";return}
+  try{
+    solPhotoData=await processPhoto(file);
+    $("solPhotoPreview").src=solPhotoData.dataUrl;$("solPhotoPreview").style.display="block";
+    $("solPhotoStatus").textContent=solT7662412("Imagem selecionada: ","Selected image: ")+(file.name||"foto.jpg");
+  }catch(e){solPhotoData=null;alert(e.message)}
+}
+
+async function sendPublicSolicitation7662412(){
+  if(solPublicPosting)return;
+  const name=$("solReporterName").value.trim();
+  const contact=$("solContact").value.trim();
+  const floor=$("solFloor").value;
+  const location=$("solLocation").value==="__OTHER__"?$("solOtherLocation").value.trim():$("solLocation").value;
+  const description=$("solDescription").value.trim();
+  if(!name||!contact||!floor||!location||!description){
+    $("solPublicMessage").className="message error";
+    $("solPublicMessage").textContent=solT7662412("Preencha os campos obrigatórios.","Please complete all required fields.");
+    return;
+  }
+  saveResponsible(name);
+  solPublicPosting=true;$("sendSolPublic").disabled=true;$("cancelSolPublic").disabled=true;
+  $("sendSolPublic").textContent=solT7662412("Enviando...","Submitting...");
+  $("solPublicMessage").className="message loading";
+  $("solPublicMessage").textContent=solT7662412("Registrando solicitação...","Registering request...");
+  try{
+    const r=await apiPost({
+      action:"createsolicitation",
+      solOriginAssetId:currentAsset.id,
+      solReporterName:name,solContact:contact,solFloor:floor,solLocation:location,solDescription:description,
+      solPhotoBase64:solPhotoData?.base64||"",solPhotoMime:solPhotoData?.mime||"",solPhotoName:solPhotoData?.name||""
+    });
+    if(!r.ok)throw new Error(r.detail||solT7662412("Não foi possível registrar a solicitação.","Unable to register the request."));
+    $("solPublicMessage").className="message success";
+    $("solPublicMessage").innerHTML=`<div class="sol-protocol-success"><b>${solT7662412("Solicitação registrada com sucesso.","Request registered successfully.")}</b><br>${solT7662412("Protocolo","Protocol")}: <b>${esc(r.idSolicitacao)}</b><br><span class="muted">${solT7662412("A equipe de manutenção fará a triagem antes da criação de uma OC.","The maintenance team will review it before a work order is created.")}</span></div>`;
+    $("sendSolPublic").textContent=solT7662412("Solicitação enviada","Request submitted");
+  }catch(e){
+    $("solPublicMessage").className="message error";$("solPublicMessage").textContent=e.message;
+    $("sendSolPublic").disabled=false;$("cancelSolPublic").disabled=false;$("sendSolPublic").textContent=solT7662412("Enviar solicitação","Submit request");
+    solPublicPosting=false;
+  }
+}
+
+function solStatusClass7662412(status){
+  if(status==="Nova")return"new";
+  if(status==="Em análise")return"analysis";
+  if(status==="OC criada")return"converted";
+  return"closed";
+}
+
+function solStatusLabel7662412(status){
+  if(qrLanguage!=="en-US")return status;
+  return {"Nova":"New","Em análise":"Under review","OC criada":"Work order created","Encerrada sem OC":"Closed without work order"}[status]||status;
+}
+
+function solOpenLinkedOccurrence7662412(assetId,oc){
+  try{sessionStorage.setItem(SOL_TARGET_OC_KEY,String(oc||""))}catch(e){}
+  location.href="?id="+encodeURIComponent(assetId);
+}
+
+async function refreshSolMenuBadge7662412(){
+  const el=$("tabSolicitations");
+  if(!el)return;
+  const base=solT7662412("📥 Solicitações de Manutenção","📥 Maintenance Requests");
+  if(!hasProfilePermission("SOLICITACOES_TRIAGEM")){el.textContent=base;return}
+  try{
+    const r=await menuApi({action:"solsummary"});
+    const n=Number(r.summary?.abertas||0);
+    el.textContent=base+(n?` 🔴 ${n}`:"");
+  }catch(e){el.textContent=base}
+}
+
+async function showSolicitationsTab7662412(){
+  if(!requireUiPermission("SOLICITACOES_TRIAGEM","Seu perfil não possui permissão para acessar Solicitações de Manutenção.","Your profile is not allowed to access Maintenance Requests."))return;
+  clearTabs();$("tabSolicitations").classList.add("active");showOnly("solicitationsArea");
+  await loadSolicitations7662412();
+}
+
+async function loadSolicitations7662412(){
+  const b=$("solRefresh");b.disabled=true;b.textContent=solT7662412("Atualizando...","Refreshing...");
+  $("solStatusText").textContent=solT7662412("Carregando solicitações...","Loading requests...");
+  try{
+    const r=await menuApi({action:"solicitations",status:$("solStatusFilter").value,floor:$("solFloorFilter").value,q:$("solSearch").value.trim()});
+    if(!r.ok)throw new Error(r.detail||solT7662412("Não foi possível carregar as solicitações.","Unable to load requests."));
+    solTriageData=r.data||{items:[],summary:{},filters:{floors:[]}};
+    const currentFloor=$("solFloorFilter").value;
+    $("solFloorFilter").innerHTML=`<option value="">${solT7662412("Todos os pavimentos","All floors")}</option>`+
+      (solTriageData.filters?.floors||[]).map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join("");
+    if([...$("solFloorFilter").options].some(o=>o.value===currentFloor))$("solFloorFilter").value=currentFloor;
+    renderSolSummary7662412(solTriageData.summary||{});
+    renderSolicitations7662412(solTriageData.items||[]);
+    $("solStatusText").textContent=solT7662412(`${(solTriageData.items||[]).length} solicitação(ões) exibida(s).`,`${(solTriageData.items||[]).length} request(s) displayed.`);
+    refreshSolMenuBadge7662412();
+  }catch(e){$("solStatusText").textContent=e.message;$("solResults").innerHTML=""}
+  finally{b.disabled=false;b.textContent=solT7662412("Atualizar","Refresh")}
+}
+
+function renderSolSummary7662412(s){
+  $("solSummary").innerHTML=[
+    [solT7662412("Novas","New"),s.nova||0],
+    [solT7662412("Em análise","Under review"),s.emAnalise||0],
+    [solT7662412("OC criada","Work order created"),s.ocCriada||0],
+    [solT7662412("Encerradas sem OC","Closed without WO"),s.encerradaSemOc||0]
+  ].map(x=>`<div class="sol-summary-card"><strong>${esc(x[1])}</strong><span>${esc(x[0])}</span></div>`).join("");
+}
+
+function renderSolicitations7662412(items){
+  if(!items.length){$("solResults").innerHTML=`<div class="document-empty">${solT7662412("Nenhuma solicitação encontrada.","No requests found.")}</div>`;return}
+  $("solResults").innerHTML=items.map(x=>{
+    const open=x.status==="Nova"||x.status==="Em análise";
+    const actions=open
+      ?`<button class="btn btn-secondary" onclick="openSolDetail7662412('${esc(x.idSolicitacao)}')">${solT7662412("Ver detalhes","View details")}</button>
+        <button class="btn btn-green" onclick="openSolConvert7662412('${esc(x.idSolicitacao)}')">${solT7662412("Criar OC","Create work order")}</button>
+        <button class="btn" onclick="openSolClose7662412('${esc(x.idSolicitacao)}')">${solT7662412("Encerrar sem OC","Close without WO")}</button>`
+      :(x.ocVinculada&&x.idAtivoVinculado
+        ?`<button class="btn btn-blue" onclick="solOpenLinkedOccurrence7662412('${esc(x.idAtivoVinculado)}','${esc(x.ocVinculada)}')">${solT7662412("Abrir OC vinculada","Open linked work order")}</button>
+          <button class="btn btn-secondary" onclick="openSolDetail7662412('${esc(x.idSolicitacao)}')">${solT7662412("Ver detalhes","View details")}</button>`
+        :`<button class="btn btn-secondary" onclick="openSolDetail7662412('${esc(x.idSolicitacao)}')">${solT7662412("Ver detalhes","View details")}</button>`);
+    return `<div class="sol-card ${solStatusClass7662412(x.status)}">
+      <div class="sol-head"><div><b>${esc(x.idSolicitacao)}</b><div class="muted">${esc(formatDate(x.data))}</div></div><span class="sol-status">${esc(solStatusLabel7662412(x.status))}</span></div>
+      <div class="sol-meta"><b>${solT7662412("Local","Location")}:</b> ${esc(x.pavimento)} — ${esc(x.local)}<br><b>${solT7662412("Solicitante","Requester")}:</b> ${esc(x.nome)}${x.contato?` • ${esc(x.contato)}`:""}<br><b>${solT7662412("QR de origem","Source QR")}:</b> ${esc(x.qrOrigem||"-")}${x.ocVinculada?`<br><b>OC:</b> ${esc(x.ocVinculada)}${x.idAtivoVinculado?` • ${esc(x.idAtivoVinculado)}`:""}`:""}</div>
+      <div class="sol-description">${esc(x.descricao)}</div>
+      <div class="sol-actions">${actions}</div>
+    </div>`;
+  }).join("");
+}
+
+function getSolFromLoaded7662412(id){
+  return (solTriageData?.items||[]).find(x=>String(x.idSolicitacao).toUpperCase()===String(id).toUpperCase())||null;
+}
+
+async function openSolDetail7662412(id){
+  let x=getSolFromLoaded7662412(id);if(!x)return;
+  if(x.status==="Nova"){
+    try{const r=await menuApiPost({action:"marksolanalysis",solId:id});if(r.ok&&r.solicitation)x=r.solicitation}catch(e){}
+  }
+  solSelected=x;
+  $("solDetailContent").innerHTML=`<div class="sol-detail-box"><b>${esc(x.idSolicitacao)}</b> • ${esc(solStatusLabel7662412(x.status))}<br><b>${solT7662412("Data","Date")}:</b> ${esc(formatDate(x.data))}<br><b>${solT7662412("Solicitante","Requester")}:</b> ${esc(x.nome)}<br><b>${solT7662412("Contato","Contact")}:</b> ${esc(x.contato)}<br><b>${solT7662412("Pavimento","Floor")}:</b> ${esc(x.pavimento)}<br><b>${solT7662412("Local / Ambiente","Location / Environment")}:</b> ${esc(x.local)}<br><b>${solT7662412("QR de origem","Source QR")}:</b> ${esc(x.qrOrigem||"-")}${x.ocVinculada?`<br><b>OC:</b> ${esc(x.ocVinculada)} • ${esc(x.idAtivoVinculado||"")}`:""}${x.motivoEncerramento?`<br><b>${solT7662412("Motivo do encerramento","Closing reason")}:</b> ${esc(x.motivoEncerramento)}`:""}<div class="sol-description"><b>${solT7662412("Descrição","Description")}:</b><br>${esc(x.descricao)}</div>${x.temFoto?`<button type="button" class="document-open" onclick="openSecureFile76624('solicitationPhoto','${esc(x.idSolicitacao)}')">📷 ${solT7662412("Abrir foto","Open photo")}</button>`:""}</div>`;
+  $("solDetailModal").style.display="flex";
+  await loadSolicitations7662412();
+}
+
+async function ensureSolTriageMeta7662412(){
+  if(solTriageMeta)return solTriageMeta;
+  const r=await menuApi({action:"soltriagemmeta"});
+  if(!r.ok)throw new Error(r.detail||solT7662412("Não foi possível carregar os ativos.","Unable to load assets."));
+  solTriageMeta=r.data||{assets:[],catalog:{categorias:[],componentes:[]}};
+  return solTriageMeta;
+}
+
+function renderSolAssetOptions7662412(){
+  const q=normalizarBuscaUi7662412($("solAssetSearch").value);
+  const sol=solSelected||{};
+  const assets=(solTriageMeta?.assets||[]).slice();
+  assets.sort((a,b)=>{
+    const score=x=>(normalizarBuscaUi7662412(x.pavimento)===normalizarBuscaUi7662412(sol.pavimento)?2:0)+(normalizarBuscaUi7662412(x.localizacao||x.ambiente||x.localDetalhado)===normalizarBuscaUi7662412(sol.local)?4:0);
+    return score(b)-score(a)||String(a.id).localeCompare(String(b.id),undefined,{numeric:true});
+  });
+  const filtered=assets.filter(a=>{
+    if(!q)return true;
+    return normalizarBuscaUi7662412([a.id,a.nome,a.categoria,a.componente,a.pavimento,a.localizacao,a.ambiente,a.localDetalhado,a.prestador].join(" ")).includes(q);
+  }).slice(0,80);
+  $("solAssetResults").innerHTML=filtered.length?filtered.map(a=>`<button type="button" class="sol-asset-option ${solSelectedAssetId===a.id?"selected":""}" onclick="selectSolAsset7662412('${esc(a.id)}')"><b>${esc(a.id)} — ${esc(a.nome||"")}</b><span>${esc([a.pavimento,a.localizacao||a.ambiente||a.localDetalhado,a.categoria,a.componente].filter(Boolean).join(" • "))}</span></button>`).join(""):`<div class="document-empty">${solT7662412("Nenhum ativo encontrado.","No asset found.")}</div>`;
+}
+
+function normalizarBuscaUi7662412(v){
+  return String(v||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim();
+}
+
+function selectSolAsset7662412(id){
+  solSelectedAssetId=id;
+  const a=(solTriageMeta?.assets||[]).find(x=>x.id===id);
+  $("solAssetSelected").className="message success";
+  $("solAssetSelected").textContent=a?solT7662412(`Ativo selecionado: ${a.id} — ${a.nome}`,`Selected asset: ${a.id} — ${a.nome}`):"";
+  renderSolAssetOptions7662412();
+}
+
+function populateSolOccurrenceCategories7662412(){
+  const cats=solTriageMeta?.catalog?.categorias||[],comps=solTriageMeta?.catalog?.componentes||[];
+  $("solOccurrenceCategory").innerHTML=`<option value="">${solT7662412("Selecione...","Select...")}</option>`+cats.map(c=>`<option value="${esc(c.nomePt)}">${esc(qrLanguage==="en-US"?(c.nomeEn||c.nomePt):c.nomePt)}</option>`).join("");
+  const other=cats.find(c=>normalizarBuscaUi7662412(c.nomePt)==="outros");
+  if(other)$("solOccurrenceCategory").value=other.nomePt;
+  populateSolOccurrenceComponents7662412();
+  if(other){
+    const general=comps.find(c=>c.idCategoria===other.idCategoria&&normalizarBuscaUi7662412(c.nomePt)==="geral");
+    if(general)$("solOccurrenceComponent").value=general.nomePt;
+  }
+}
+
+function populateSolOccurrenceComponents7662412(){
+  const cats=solTriageMeta?.catalog?.categorias||[],comps=solTriageMeta?.catalog?.componentes||[];
+  const cat=cats.find(c=>c.nomePt===$("solOccurrenceCategory").value);
+  const items=cat?comps.filter(c=>c.idCategoria===cat.idCategoria):[];
+  $("solOccurrenceComponent").innerHTML=`<option value="">${solT7662412("Selecione...","Select...")}</option>`+items.map(c=>`<option value="${esc(c.nomePt)}">${esc(qrLanguage==="en-US"?(c.nomeEn||c.nomePt):c.nomePt)}</option>`).join("");
+}
+
+async function openSolConvert7662412(id){
+  solSelected=getSolFromLoaded7662412(id);if(!solSelected)return;
+  solSelectedAssetId="";$("solAssetSearch").value="";$("solAssetSelected").className="message";$("solAssetSelected").textContent="";$("solConvertMessage").className="message";$("solConvertMessage").textContent="";
+  $("solConvertSummary").innerHTML=`<b>${esc(solSelected.idSolicitacao)}</b><br>${esc(solSelected.pavimento)} — ${esc(solSelected.local)}<div class="sol-description">${esc(solSelected.descricao)}</div>`;
+  $("solConvertModal").style.display="flex";
+  try{
+    await ensureSolTriageMeta7662412();
+    renderSolAssetOptions7662412();populateSolOccurrenceCategories7662412();
+  }catch(e){$("solConvertMessage").className="message error";$("solConvertMessage").textContent=e.message}
+}
+
+async function confirmSolConvert7662412(){
+  if(solActionPosting)return;
+  if(!solSelected||!solSelectedAssetId||!$("solOccurrenceCategory").value||!$("solOccurrenceComponent").value){
+    $("solConvertMessage").className="message error";$("solConvertMessage").textContent=solT7662412("Selecione o ativo, a categoria e o componente.","Select the asset, category and component.");return;
+  }
+  solActionPosting=true;$("confirmSolConvert").disabled=true;$("cancelSolConvert").disabled=true;$("confirmSolConvert").textContent=solT7662412("Criando OC...","Creating work order...");
+  try{
+    const r=await menuApiPost({action:"convertsoltooccurrence",solId:solSelected.idSolicitacao,solAssetId:solSelectedAssetId,solOccurrenceCategory:$("solOccurrenceCategory").value,solOccurrenceComponent:$("solOccurrenceComponent").value});
+    if(!r.ok)throw new Error(r.detail||solT7662412("Não foi possível criar a OC.","Unable to create the work order."));
+    $("solConvertMessage").className="message success";$("solConvertMessage").textContent=solT7662412(`OC ${r.ocorrencia} criada e vinculada à ${solSelected.idSolicitacao}.`,`Work order ${r.ocorrencia} created and linked to ${solSelected.idSolicitacao}.`);
+    setTimeout(async()=>{$("solConvertModal").style.display="none";await loadSolicitations7662412()},900);
+  }catch(e){$("solConvertMessage").className="message error";$("solConvertMessage").textContent=e.message}
+  finally{solActionPosting=false;$("confirmSolConvert").disabled=false;$("cancelSolConvert").disabled=false;$("confirmSolConvert").textContent=solT7662412("Criar OC","Create work order")}
+}
+
+function openSolClose7662412(id){
+  solSelected=getSolFromLoaded7662412(id);if(!solSelected)return;
+  $("solCloseReason").value="";$("solCloseMessage").className="message";$("solCloseMessage").textContent="";
+  $("solCloseSummary").innerHTML=`<b>${esc(solSelected.idSolicitacao)}</b><br>${esc(solSelected.pavimento)} — ${esc(solSelected.local)}<div class="sol-description">${esc(solSelected.descricao)}</div>`;
+  $("solCloseModal").style.display="flex";
+}
+
+async function confirmSolClose7662412(){
+  if(solActionPosting)return;
+  const reason=$("solCloseReason").value.trim();
+  if(!reason){$("solCloseMessage").className="message error";$("solCloseMessage").textContent=solT7662412("Informe o motivo do encerramento.","Enter the closing reason.");return}
+  solActionPosting=true;$("confirmSolClose").disabled=true;$("cancelSolClose").disabled=true;
+  try{
+    const r=await menuApiPost({action:"closesolwithoutoccurrence",solId:solSelected.idSolicitacao,solCloseReason:reason});
+    if(!r.ok)throw new Error(r.detail||solT7662412("Não foi possível encerrar a solicitação.","Unable to close the request."));
+    $("solCloseMessage").className="message success";$("solCloseMessage").textContent=solT7662412("Solicitação encerrada sem OC.","Request closed without a work order.");
+    setTimeout(async()=>{$("solCloseModal").style.display="none";await loadSolicitations7662412()},700);
+  }catch(e){$("solCloseMessage").className="message error";$("solCloseMessage").textContent=e.message}
+  finally{solActionPosting=false;$("confirmSolClose").disabled=false;$("cancelSolClose").disabled=false}
+}
+
+
 async function loadAuditFilters(){if(auditFiltersLoaded)return;try{const r=await menuApi({action:"auditfilters"});if(!r.ok)throw new Error(r.detail||"Erro ao carregar filtros.");const f=r.filters||{};fillSelect("auditAction",f.actions||[],"Todas as ações");fillSelect("auditResult",f.results||[],"Todos os resultados");$("auditUser").innerHTML='<option value="">Todos os usuários</option>'+(f.users||[]).map(u=>`<option value="${esc(u.idUsuario||u.nome||"")}">${esc((u.nome||u.idUsuario||"")+(u.idUsuario&&u.nome?` (${u.idUsuario})`:""))}</option>`).join("");auditFiltersLoaded=true}catch(e){$("auditStatus").textContent=e.message}}
 function auditParams(){return{dataInicial:$("auditStart").value,dataFinal:$("auditEnd").value,acao:$("auditAction").value,resultado:$("auditResult").value,usuario:$("auditUser").value,q:$("auditSearch").value.trim()}}
 function auditResultClass(v){const n=String(v||"").toLowerCase();if(n.includes("sucesso"))return"success";if(n.includes("bloq"))return"blocked";return"fail"}
@@ -2623,7 +3041,7 @@ async function loadPublicAppConfig(){
   }catch(e){}
 }
 async function showCompanyTab(){if(!requireUiPermission("CONFIGURACAO_EMPRESA","Seu perfil não possui permissão para acessar a configuração da empresa.","Your profile is not allowed to access company settings."))return;clearTabs();$("tabCompany").classList.add("active");showOnly("companyArea");await loadCompanyConfig()}
-async function loadCompanyConfig(){try{const r=await menuApi({action:"companyconfig"});if(!r.ok)throw new Error(r.detail||"Erro ao carregar configuração.");const c=r.config||{};$("companyId").value=c.idEmpresa||"EMP-0001";$("companyName").value=c.nomeEmpresa||"";$("companyTradeName").value=c.nomeFantasia||"";$("companyCnpj").value=c.cnpj||"";$("companyMaintenanceEmail").value=c.emailManutencao||"";$("companyAdminEmail").value=c.emailAdministrativo||"";$("companyLogo").value=c.logo||"";$("companyPrimaryColor").value=/^#[0-9a-f]{6}$/i.test(c.corPrincipal||"")?c.corPrincipal:"#0b315e";$("companyTimezone").value=c.fusoHorario||"America/New_York";$("companySystemName").value=c.nomeSistema||"QRManut";$("companyActive").checked=!!c.empresaAtiva;$("companyMainUrl").value=c.urlPrincipal||"";$("companyReportsEmail").value=c.emailRelatorios||"";$("companyOccurrenceEmailTo").value=c.emailOcPrincipal||c.emailManutencao||"";$("companyOccurrenceEmailCc").value=c.emailOcCc||"";$("companyNotes").value=c.observacoes||"";updateCompanyPreview()}catch(e){$("companyMessage").className="message error";$("companyMessage").textContent=e.message}}
+async function loadCompanyConfig(){try{const r=await menuApi({action:"companyconfig"});if(!r.ok)throw new Error(r.detail||"Erro ao carregar configuração.");const c=r.config||{};$("companyId").value=c.idEmpresa||"EMP-0001";$("companyName").value=c.nomeEmpresa||"";$("companyTradeName").value=c.nomeFantasia||"";$("companyCnpj").value=c.cnpj||"";$("companyMaintenanceEmail").value=c.emailManutencao||"";$("companyAdminEmail").value=c.emailAdministrativo||"";$("companyLogo").value=c.logo||"";$("companyPrimaryColor").value=/^#[0-9a-f]{6}$/i.test(c.corPrincipal||"")?c.corPrincipal:"#0b315e";$("companyTimezone").value=c.fusoHorario||"America/New_York";$("companySystemName").value=c.nomeSistema||"QRManut";$("companyActive").checked=!!c.empresaAtiva;$("companyMainUrl").value=c.urlPrincipal||"";$("companyReportsEmail").value=c.emailRelatorios||"";$("companyOccurrenceEmailTo").value=c.emailOcPrincipal||c.emailManutencao||"";$("companyOccurrenceEmailCc").value=c.emailOcCc||"";$("companySolTriageEmailTo").value=c.emailSolTriagem||"";$("companySolTriageEmailCc").value=c.emailSolTriagemCc||"";$("companyNotes").value=c.observacoes||"";updateCompanyPreview()}catch(e){$("companyMessage").className="message error";$("companyMessage").textContent=e.message}}
 function updateCompanyPreview(){
   $("companyPreviewName").textContent=($("companySystemName").value||"QRManut")+" • "+($("companyTradeName").value||$("companyName").value||"");
   applyPrimaryColor7662411_($("companyPrimaryColor").value||"#0b315e");
@@ -2656,6 +3074,8 @@ async function saveCompanyConfig(){
       companyReportsEmail:$("companyReportsEmail").value.trim(),
       companyOccurrenceEmailTo:$("companyOccurrenceEmailTo").value.trim(),
       companyOccurrenceEmailCc:$("companyOccurrenceEmailCc").value.trim(),
+      companySolTriageEmailTo:$("companySolTriageEmailTo").value.trim(),
+      companySolTriageEmailCc:$("companySolTriageEmailCc").value.trim(),
       companyNotes:$("companyNotes").value.trim()
     });
     if(!r.ok)throw new Error(r.detail||"Erro ao salvar.");
@@ -2746,7 +3166,7 @@ async function loadProfilePermissionsAdmin(){
   try{
     const r=await menuApi({action:"profilepermissionsadmin"});
     if(!r.ok)throw new Error(r.detail||"Erro ao carregar permissões.");
-    if(r.backendVersion!=="7.6.6.24.11")throw new Error(qrLanguage==="en-US"
+    if(r.backendVersion!=="7.6.6.24.12")throw new Error(qrLanguage==="en-US"
       ?"The HTML is updated, but Apps Script is still on an older deployment. Update the .gs file and deploy a new version."
       :"O HTML está atualizado, mas o Apps Script ainda está em uma implantação anterior. Atualize o arquivo .gs e faça uma nova versão da implantação.");
     profilePermissionsAdminData=r.data;
@@ -2820,9 +3240,9 @@ async function loadProvidersAdmin(){
   try{
     const r=await menuApi({action:"providersadmin"});
     if(!r.ok)throw new Error(r.detail||t("Erro ao carregar.","Error loading service providers."));
-    if(r.backendVersion!=="7.6.6.24.11")throw new Error(t(
-      "O HTML 7.6.6.24.11 está atualizado, mas o Apps Script ainda está em uma versão anterior. Atualize o arquivo .gs e faça uma nova versão da implantação.",
-      "The 7.6.6.24.11 HTML is updated, but Apps Script is still on an older version. Update the .gs file and deploy a new version."
+    if(r.backendVersion!=="7.6.6.24.12")throw new Error(t(
+      "O HTML 7.6.6.24.12 está atualizado, mas o Apps Script ainda está em uma versão anterior. Atualize o arquivo .gs e faça uma nova versão da implantação.",
+      "The 7.6.6.24.12 HTML is updated, but Apps Script is still on an older version. Update the .gs file and deploy a new version."
     ));
     providersAdminData=r.providers||[];
     $("providersAdminStatus").textContent=`${providersAdminData.length} ${t("prestador(es)","service provider(s)")}`;
@@ -3981,6 +4401,7 @@ const QR_TEXT={
   "pt-BR":{
     tabSearch:"🔎 Buscar ativos",
     tabPending:"⚠️ OCs Pendentes",
+    tabSolicitations:"📥 Solicitações de Manutenção",
     tabOccurrenceReport:"📊 Relatório de OCs",
     tabPreventive:"🛠️ Status das Preventivas",
     tabDocuments:"📄 Documentos Técnicos",
@@ -4024,6 +4445,7 @@ const QR_TEXT={
   "en-US":{
     tabSearch:"🔎 Search Assets",
     tabPending:"⚠️ Pending Work Orders",
+    tabSolicitations:"📥 Maintenance Requests",
     tabOccurrenceReport:"📊 Work Order Report",
     tabPreventive:"🛠️ Preventive Maintenance Status",
     tabDocuments:"📄 Technical Documents",
@@ -4146,6 +4568,9 @@ const QR_ROUTINE_PT_EN={
   "E-mail de Relatórios":"Reports Email",
   "E-mail principal das OCs *":"Main Work Order Notification Email *",
   "E-mail CC das OCs":"Work Order Notification CC",
+  "E-mail de Triagem de Solicitações":"Maintenance Request Triage Email",
+  "E-mail CC da Triagem de Solicitações":"Maintenance Request Triage CC",
+  "Opcional. Se vazio, o QRManut usa o e-mail principal das OCs/manutenção.":"Optional. If blank, QRManut uses the main work order/maintenance email.",
   "Opcional. Separe vários e-mails por vírgula ou ponto e vírgula.":"Optional. Separate multiple emails with commas or semicolons.",
   "Logo (URL)":"Logo (URL)",
   "Empresa ativa":"Active company",
@@ -4187,6 +4612,23 @@ const QR_ROUTINE_PT_EN={
   "Gestão do Ativo":"Asset Management",
   "📚 Documentos do Equipamento":"📚 Equipment Documents",
   "Reportar Serviço / Anomalia / Reparo":"Report Service / Issue / Repair",
+  "O problema não é neste equipamento?":"Is the issue on another asset?",
+  "📍 Problema em outro equipamento ou ambiente":"📍 Issue on another asset or environment",
+  "📍 Solicitação de Manutenção":"📍 Maintenance Request",
+  "Seu nome *":"Your name *",
+  "Contato / telefone / e-mail *":"Contact / phone / email *",
+  "Local / Ambiente *":"Location / Environment *",
+  "Informe o local *":"Enter the location *",
+  "Descreva o problema *":"Describe the issue *",
+  "Foto / evidência (opcional)":"Photo / evidence (optional)",
+  "Enviar solicitação":"Submit request",
+  "📥 Solicitações de Manutenção":"📥 Maintenance Requests",
+  "Situação":"Status",
+  "Em aberto":"Open",
+  "Nova":"New",
+  "Em análise":"Under review",
+  "OC criada":"Work order created",
+  "Encerrada sem OC":"Closed without work order",
   "🛠️ Registrar Preventiva":"🛠️ Register Preventive Maintenance",
   "Histórico de Manutenção":"Maintenance History",
 
@@ -5153,6 +5595,28 @@ document.getElementById("qrLangEn").addEventListener("click",function(){
   qrTranslateRoutineScreens();
 });
 
+$("otherProblemButton").onclick=openPublicSolicitation7662412;
+$("cancelSolPublic").onclick=()=>{if(!solPublicPosting)$("solPublicModal").style.display="none"};
+$("sendSolPublic").onclick=sendPublicSolicitation7662412;
+$("solFloor").onchange=populateSolLocation7662412;
+$("solLocation").onchange=updateSolOtherLocation7662412;
+$("solCameraButton").onclick=()=>$("solCameraInput").click();
+$("solGalleryButton").onclick=()=>$("solPhotoInput").click();
+$("solCameraInput").onchange=function(){handleSolPublicImage7662412(this.files?.[0])};
+$("solPhotoInput").onchange=function(){handleSolPublicImage7662412(this.files?.[0])};
+$("tabSolicitations").onclick=showSolicitationsTab7662412;
+$("solicitationsBackMenu").onclick=openDefaultAllowedTab;
+$("solRefresh").onclick=loadSolicitations7662412;
+$("solStatusFilter").onchange=loadSolicitations7662412;
+$("solFloorFilter").onchange=loadSolicitations7662412;
+$("solSearch").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();loadSolicitations7662412()}};
+$("closeSolDetail").onclick=()=>{$("solDetailModal").style.display="none"};
+$("solAssetSearch").oninput=renderSolAssetOptions7662412;
+$("solOccurrenceCategory").onchange=populateSolOccurrenceComponents7662412;
+$("cancelSolConvert").onclick=()=>{if(!solActionPosting)$("solConvertModal").style.display="none"};
+$("confirmSolConvert").onclick=confirmSolConvert7662412;
+$("cancelSolClose").onclick=()=>{if(!solActionPosting)$("solCloseModal").style.display="none"};
+$("confirmSolClose").onclick=confirmSolClose7662412;
 $("openSystemLoginButton").onclick=()=>requireSystemLogin(openMainMenu);$("forgotPasswordButton").onclick=openForgotPassword;$("cancelRecovery").onclick=()=>{$("forgotPasswordModal").style.display="none";$("systemLoginModal").style.display="flex"};$("sendRecovery").onclick=sendRecovery;$("openAccessRequestButton").onclick=openAccessRequestForm76616;$("cancelAccessRequestButton").onclick=()=>{hide("accessRequestForm");show("recoveryNotRegisteredBox")};$("sendAccessRequestButton").onclick=sendAccessRequest76616;$("accessRequestBackToLoginButton").onclick=backToLoginAfterAccessRequest76617;$("resendPendingInviteButton").onclick=resendPendingInvite76616;$("saveNewPassword").onclick=savePasswordFromToken;$("tabUsers").onclick=showUsersTab;$("newUserButton").onclick=openNewUser;$("tabPermissions").onclick=showProfilePermissionsTab;$("permissionsBackMenu").onclick=openDefaultAllowedTab;$("saveProfilePermissions").onclick=saveProfilePermissions76613;$("resetProfilePermissions").onclick=resetProfilePermissions76613;$("tabAudit").onclick=showAuditTab;$("tabProvidersAdmin").onclick=showProvidersAdminTab;$("tabCompany").onclick=showCompanyTab;$("companyBackMenu").onclick=openDefaultAllowedTab;$("providersBackMenu").onclick=openDefaultAllowedTab;$("newProviderButton").onclick=()=>openProviderModal(null);$("cancelProvider").onclick=()=>{$("providerModal").style.display="none"};$("closeProviderConsult").onclick=()=>{$("providerConsultModal").style.display="none"};$("saveProvider").onclick=saveProviderAdmin;$("saveCompanyConfig").onclick=saveCompanyConfig;["companyName","companyTradeName","companySystemName","companyLogo"].forEach(id=>$(id).oninput=updateCompanyPreview);
 $("companyPrimaryColor").addEventListener("input",updateCompanyPreview);
 $("companyPrimaryColor").addEventListener("change",updateCompanyPreview);$("auditRefresh").onclick=loadAudit;$("auditClear").onclick=clearAuditFilters;$("auditSearch").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();loadAudit()}};$("cancelUser").onclick=()=>{$("userModal").style.display="none"};$("saveUser").onclick=saveUser;$("userEmail").oninput=updateUserPrimaryAction76617;$("cancelAdminUserPassword").onclick=()=>{$("adminUserPasswordModal").style.display="none"};$("saveAdminUserPassword").onclick=saveAdminUserPassword76617;$("sendSystemLogin").onclick=doSystemLogin;$("systemPassword").onkeydown=e=>{if(e.key==="Enter")doSystemLogin()};$("cancelSystemLogin").onclick=()=>{systemLoginNextAction=null;$("systemLoginModal").style.display="none";if(!systemSession)showMenuGate()};$("systemLogoutButton").onclick=logoutSystemMenu;$("installAppButton").onclick=installQRManut;$("tabSearch").onclick=showSearchTab;$("tabPending").onclick=showPendingTab;$("pendingApplyFilters").onclick=loadPending;$("pendingClearFilters").onclick=clearPendingFilters;$("tabOccurrenceReport").onclick=showOccurrenceReportTab;$("tabPreventive").onclick=showPreventiveTab;$("tabDocuments").onclick=showDocumentsTab;$("tabMaintenancePending").onclick=showMaintenancePendingTab;$("maintenancePendingBackMenu").onclick=openDefaultAllowedTab;$("maintenancePendingRefresh").onclick=loadMaintenancePending;$("maintenancePendingClear").onclick=clearMaintenancePendingFilters;$("maintenancePendingSearch").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();loadMaintenancePending()}};$("maintenancePendingStatusFilter").onchange=loadMaintenancePending;$("maintenancePendingPriorityFilter").onchange=loadMaintenancePending;$("preventiveNeedsAction").onchange=togglePreventiveActionFields;$("tabOccurrenceCatalog").onclick=showOccurrenceCatalogTab;$("occurrenceCatalogBackMenu").onclick=openDefaultAllowedTab;$("saveCatalogCategory").onclick=saveCatalogCategory;$("clearCatalogCategory").onclick=clearCatalogCategoryForm;$("saveCatalogComponent").onclick=saveCatalogComponent;$("clearCatalogComponent").onclick=clearCatalogComponentForm;$("category").onchange=()=>populateOccurrenceComponentSelect();$("manageCategory").onchange=()=>populateManageCatalog($("manageCategory").value,"");$("tabDocumentUpload").onclick=showDocumentUploadTab;$("documentUploadBackMenu").onclick=cancelDocumentUpload;$("uploadDocumentChooseFileButton").onclick=()=>$("uploadDocumentFile").click();$("uploadDocumentFile").onchange=prepareDocumentUploadFile;$("sendDocumentUpload").onclick=sendDocumentUpload;$("clearDocumentUpload").onclick=clearDocumentUploadForm;$("searchButton").onclick=searchAssets;$("searchInput").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();searchAssets()}};$("documentSearchButton").onclick=searchDocuments;$("documentSearchInput").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();searchDocuments()}};$("documentTypeFilter").onchange=searchDocuments;$("documentDisciplineFilter").onchange=searchDocuments;$("documentFloorFilter").onchange=searchDocuments;$("reportButton").onclick=openReport;$("preventiveButton").onclick=requestPreventive;
@@ -5167,9 +5631,9 @@ qrTranslateElementTree(document.body);
 qrTranslateAttributes(document.body);
 
 [
-  "tabSearch","tabPending","tabOccurrenceReport","tabPreventive",
+  "tabSearch","tabPending","tabSolicitations","tabOccurrenceReport","tabPreventive",
   "tabDocuments","tabDocumentUpload","tabUsers","tabPermissions","tabAudit",
-  "tabProvidersAdmin","tabCompany","reportButton","preventiveButton"
+  "tabProvidersAdmin","tabCompany","reportButton","otherProblemButton","preventiveButton"
 ].forEach(id=>{
   const el=document.getElementById(id);
   if(el)el.addEventListener("click",()=>{
