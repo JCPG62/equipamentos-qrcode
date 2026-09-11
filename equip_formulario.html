@@ -577,7 +577,7 @@ html,body{max-width:100%;overflow-x:hidden}
     </div>
   </div>
 
-<div id="companyArea" class="hidden"><div class="card"><div class="back-asset-wrap"><button id="companyBackMenu" class="back-asset-btn">← Voltar ao Menu Principal</button></div><h2>⚙️ Configuração da Empresa</h2><div class="muted">Dados institucionais desta implantação dedicada.</div><div class="admin-grid"><label>ID Empresa<input id="companyId"></label><label>Nome da Empresa *<input id="companyName"></label><label>Nome Fantasia<input id="companyTradeName"></label><label>CNPJ<input id="companyCnpj"></label><label>E-mail de Manutenção<input id="companyMaintenanceEmail"></label><label>E-mail Administrativo<input id="companyAdminEmail"></label><label>Nome do Sistema *<input id="companySystemName"></label><label>Cor Principal<input id="companyPrimaryColor" type="color" value="#0b315e"></label><label>Fuso Horário<input id="companyTimezone" placeholder="America/New_York"><small class="muted">Ex.: America/New_York (Eastern Time, com ajuste automático de horário de verão)</small></label><label>URL Principal<input id="companyMainUrl"></label><label>E-mail de Relatórios<input id="companyReportsEmail"></label><label>Logo (URL)<input id="companyLogo"></label><label class="full">Observações<textarea id="companyNotes" rows="4"></textarea></label></div><label class="switch-row"><input id="companyActive" type="checkbox"> Empresa ativa</label><div class="company-preview"><b>Pré-visualização</b><div id="companyPreviewName" style="margin-top:6px;font-size:1.1rem;font-weight:800"></div><img id="companyLogoPreview" class="company-logo-preview hidden"></div><div id="companyMessage" class="message"></div><div class="occ-report-actions"><button id="saveCompanyConfig" class="btn btn-blue">Salvar configuração</button></div></div></div>
+<div id="companyArea" class="hidden"><div class="card"><div class="back-asset-wrap"><button id="companyBackMenu" class="back-asset-btn">← Voltar ao Menu Principal</button></div><h2>⚙️ Configuração da Empresa</h2><div class="muted">Dados institucionais desta implantação dedicada.</div><div class="admin-grid"><label>ID Empresa<input id="companyId"></label><label>Nome da Empresa *<input id="companyName"></label><label>Nome Fantasia<input id="companyTradeName"></label><label>CNPJ<input id="companyCnpj"></label><label>E-mail de Manutenção<input id="companyMaintenanceEmail"></label><label>E-mail Administrativo<input id="companyAdminEmail"></label><label>Nome do Sistema *<input id="companySystemName"></label><label>Cor Principal<input id="companyPrimaryColor" type="color" value="#0b315e"></label><label>Fuso Horário<input id="companyTimezone" placeholder="America/New_York"><small class="muted">Ex.: America/New_York (Eastern Time, com ajuste automático de horário de verão)</small></label><label>URL Principal<input id="companyMainUrl"></label><label>E-mail de Relatórios<input id="companyReportsEmail"></label><label>E-mail principal das OCs *<input id="companyOccurrenceEmailTo" placeholder="manutencao@empresa.com"></label><label>E-mail CC das OCs<input id="companyOccurrenceEmailCc" placeholder="gestor@empresa.com; outro@empresa.com"><small class="muted">Opcional. Separe vários e-mails por vírgula ou ponto e vírgula.</small></label><label>Logo (URL)<input id="companyLogo"></label><label class="full">Observações<textarea id="companyNotes" rows="4"></textarea></label></div><label class="switch-row"><input id="companyActive" type="checkbox"> Empresa ativa</label><div class="company-preview"><b>Pré-visualização</b><div id="companyPreviewName" style="margin-top:6px;font-size:1.1rem;font-weight:800"></div><img id="companyLogoPreview" class="company-logo-preview hidden"></div><div id="companyMessage" class="message"></div><div class="occ-report-actions"><button id="saveCompanyConfig" class="btn btn-blue">Salvar configuração</button></div></div></div>
   <div id="providersAdminArea" class="hidden"><div class="card"><div class="back-asset-wrap"><button id="providersBackMenu" class="back-asset-btn">← Voltar ao Menu Principal</button></div><div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap"><div><h2>🏢 Prestadores</h2><div class="muted">Consulte responsáveis e canais de contato dos prestadores. Cadastro e edição obedecem às Permissões de Perfis definidas pelo MASTER.</div></div><button id="newProviderButton" class="btn btn-blue hidden">+ Novo prestador</button></div><div id="providersAdminStatus" class="muted" style="margin-top:12px"></div><div id="providersAdminList"></div></div></div>
   <div id="auditArea" class="hidden">
     <div class="card">
@@ -821,7 +821,7 @@ html,body{max-width:100%;overflow-x:hidden}
 
 <div id="systemLoginModal" class="modal"><div class="modal-box"><h2>🔐 Acesso ao QRManut</h2><div class="system-login-note">O acesso ao Menu Principal é individual e controlado por perfil e escopo.</div><label>Usuário ou e-mail<input id="systemUsername" autocomplete="username"></label><label>Senha<div class="password-wrap"><input id="systemPassword" type="password" autocomplete="current-password"><button type="button" class="password-toggle" data-password-target="systemPassword" aria-label="Mostrar senha" title="Mostrar senha"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path><circle cx="12" cy="12" r="2.8"></circle></svg></button></div></label><button id="forgotPasswordButton" class="auth-link" type="button">Esqueci minha senha</button><div id="systemLoginMessage" class="message"></div><div class="modal-actions"><button id="cancelSystemLogin" class="btn btn-secondary">Cancelar</button><button id="sendSystemLogin" class="btn btn-blue">Entrar</button></div></div></div>
 
-<div id="forgotPasswordModal" class="modal"><div class="modal-box"><h2>🔑 Recuperar senha</h2><div class="muted">Informe seu usuário ou e-mail. O QRManut verificará o cadastro antes de enviar as instruções.</div><label>Usuário ou e-mail<input id="recoveryIdentifier"></label><div id="recoveryMessage" class="message"></div>
+<div id="forgotPasswordModal" class="modal"><div class="modal-box"><h2>🔑 Recuperar senha</h2><div class="muted">Informe seu usuário ou e-mail. Por segurança, o QRManut não informa se o usuário ou e-mail existe. Se houver uma conta elegível, as instruções serão enviadas ao endereço cadastrado.</div><label>Usuário ou e-mail<input id="recoveryIdentifier"></label><div id="recoveryMessage" class="message"></div>
 <div id="recoveryNotRegisteredBox" class="access-request-box hidden"><h3>👤 Usuário não cadastrado</h3><div id="recoveryNotRegisteredText" class="muted">Para utilizar o QRManut é necessário solicitar seu cadastro ao administrador.</div><button id="openAccessRequestButton" type="button" class="btn btn-blue" style="margin-top:10px">📧 Solicitar cadastro</button></div>
 <div id="pendingInviteBox" class="access-request-box hidden"><h3>✉️ Convite pendente</h3><div class="muted">Este usuário já foi cadastrado, mas ainda não concluiu a criação da senha.</div><button id="resendPendingInviteButton" type="button" class="btn btn-blue" style="margin-top:10px">✉️ Reenviar convite</button></div>
 <div id="accessRequestForm" class="access-request-box hidden"><h3>📥 Solicitação de acesso</h3><div class="muted">Preencha seus dados. A solicitação será enviada aos administradores MASTER para análise.</div><label>Nome completo *<input id="accessRequestName" autocomplete="name"></label><label>Login desejado *<input id="accessRequestLogin" autocomplete="username"></label><label>E-mail *<input id="accessRequestEmail" type="email" autocomplete="email"></label><label>Telefone<input id="accessRequestPhone" type="tel" autocomplete="tel"></label><div id="accessRequestMessage" class="message"></div><div id="accessRequestActions" class="access-request-actions"><button id="cancelAccessRequestButton" type="button" class="btn btn-secondary">Cancelar solicitação</button><button id="sendAccessRequestButton" type="button" class="btn btn-blue">📧 Enviar solicitação</button></div><button id="accessRequestBackToLoginButton" type="button" class="btn btn-blue hidden" style="width:100%;margin-top:12px">🔐 Voltar ao login</button></div>
@@ -896,7 +896,7 @@ html,body{max-width:100%;overflow-x:hidden}
 </div>
 <label>Adicionar nova foto da ocorrência / correção</label><div class="photo-source-actions"><button type="button" id="manageOccurrenceCameraButton" class="btn btn-blue">📷 Tirar foto</button><button type="button" id="manageOccurrenceAttachButton" class="btn btn-secondary">🖼️ Anexar imagem</button></div><input id="manageOccurrenceCameraInput" class="photo-source-hidden" type="file" accept="image/*" capture="environment"><input id="manageOccurrencePhotoInput" class="photo-source-hidden" type="file" accept="image/*"><div id="manageOccurrencePhotoStatus" class="muted" style="margin-top:5px"></div><img id="manageOccurrencePhotoPreview" class="photo-preview"><div class="upload-file-box" style="margin-top:12px"><div style="font-weight:800">📎 Adicionar arquivo à ocorrência</div><div class="muted" style="margin-top:4px">PDF, Word, Excel ou outro arquivo de evidência, até 8 MB.</div><button id="manageAttachmentButton" type="button" class="btn btn-secondary" style="margin-top:8px">📎 Escolher arquivo</button><input id="manageAttachmentInput" class="photo-source-hidden" type="file"><div id="manageAttachmentName" class="upload-file-name">Nenhum arquivo selecionado.</div><div id="manageExistingAttachments" style="margin-top:8px"></div></div><div id="conclusionPhotoArea" class="hidden"><label>Foto da conclusão</label><div class="photo-source-actions"><button type="button" id="conclusionCameraButton" class="btn btn-blue">📷 Tirar foto</button><button type="button" id="conclusionAttachButton" class="btn btn-secondary">🖼️ Anexar imagem</button></div><input id="conclusionCameraInput" class="photo-source-hidden" type="file" accept="image/*" capture="environment"><input id="conclusionPhotoInput" class="photo-source-hidden" type="file" accept="image/*"><div id="conclusionPhotoStatus" class="muted" style="margin-top:5px"></div><img id="conclusionPhotoPreview" class="photo-preview"></div><div id="manageMessage" class="message"></div><div class="modal-actions" style="justify-content:space-between;flex-wrap:wrap"><button id="deleteOccurrence" class="btn btn-danger hidden" type="button">🗑️ Excluir ocorrência</button><div style="display:flex;gap:8px;flex-wrap:wrap"><button id="cancelManage" class="btn btn-secondary">Cancelar</button><button id="saveManage" class="btn">Salvar alterações</button></div></div></div></div>
 
-<div class="footer">QRManut • Versão 7.6.6.23</div>
+<div class="footer">QRManut • Versão 7.6.6.24</div>
 </div>
 <script>
 const API_URL="https://script.google.com/macros/s/AKfycbx4tpC42Q6WdkNhTUTAGoZWvG5M24zwlNscnwbDP5B3Q5pWo8B32-Lf0rQ2Xtua1AFMAQ/exec";
@@ -1030,12 +1030,31 @@ function currentCompetence(){const d=new Date();const year=d.getFullYear();const
 function pairs(items){return items.filter(x=>x[1]!==""&&x[1]!==null&&x[1]!==undefined).map(x=>`<div class="pair"><b>${esc(x[0])}:</b> ${esc(x[1])}</div>`).join("")}
 async function api(params){const r=await fetch(API_URL+"?"+new URLSearchParams({...params}));return r.json()}async function apiPost(params){const body=new URLSearchParams({...params});const r=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"},body:body.toString()});return r.json()}
 function getSavedResponsible(){try{return localStorage.getItem(RESPONSIBLE_KEY)||""}catch(e){return""}}function saveResponsible(n){if(!n)return;try{localStorage.setItem(RESPONSIBLE_KEY,n)}catch(e){}}
-function savePreventiveSession(d){preventiveSession=d;sessionStorage.setItem(PREVENTIVE_SESSION_KEY,JSON.stringify(d))}function readPreventiveSession(){try{const raw=sessionStorage.getItem(PREVENTIVE_SESSION_KEY);preventiveSession=raw?JSON.parse(raw):null}catch(e){preventiveSession=null}}function clearPreventiveSession(){preventiveSession=null;sessionStorage.removeItem(PREVENTIVE_SESSION_KEY)}function saveSystemSession(d){systemSession=d;preventiveSession=d;try{localStorage.setItem(SYSTEM_SESSION_KEY,JSON.stringify(d))}catch(e){}}
-function readSystemSession(){try{const raw=localStorage.getItem(SYSTEM_SESSION_KEY);systemSession=raw?JSON.parse(raw):null}catch(e){systemSession=null}}
-function clearSystemSession(){systemSession=null;preventiveSession=null;try{localStorage.removeItem(SYSTEM_SESSION_KEY)}catch(e){}}
-async function systemSessionIsValid(){if(!systemSession?.systemSessionToken)return false;try{const r=await api({action:"systemsession",systemSession:systemSession.systemSessionToken});if(!r.ok){clearSystemSession();return false}if(r.session){systemSession={...systemSession,...r.session};saveSystemSession(systemSession)}return true}catch(e){clearSystemSession();return false}}
-function menuApi(params){if(!systemSession?.systemSessionToken)return Promise.reject(new Error("Faça login no Menu Principal."));return api({...params,systemSession:systemSession.systemSessionToken})}
+function savePreventiveSession(d){preventiveSession=d;sessionStorage.setItem(PREVENTIVE_SESSION_KEY,JSON.stringify(d))}function readPreventiveSession(){try{const raw=sessionStorage.getItem(PREVENTIVE_SESSION_KEY);preventiveSession=raw?JSON.parse(raw):null}catch(e){preventiveSession=null}}function clearPreventiveSession(){preventiveSession=null;sessionStorage.removeItem(PREVENTIVE_SESSION_KEY)}function saveSystemSession(d){systemSession=d;preventiveSession=d;try{sessionStorage.setItem(SYSTEM_SESSION_KEY,JSON.stringify(d));localStorage.removeItem(SYSTEM_SESSION_KEY)}catch(e){}}
+function readSystemSession(){try{localStorage.removeItem(SYSTEM_SESSION_KEY);const raw=sessionStorage.getItem(SYSTEM_SESSION_KEY);systemSession=raw?JSON.parse(raw):null}catch(e){systemSession=null}}
+function revokeSecureFileUrls76624(){try{secureFileUrlCache76624.forEach(v=>URL.revokeObjectURL(v));secureFileUrlCache76624.clear()}catch(e){}}
+function clearSystemSession(){systemSession=null;preventiveSession=null;revokeSecureFileUrls76624();try{sessionStorage.removeItem(SYSTEM_SESSION_KEY);localStorage.removeItem(SYSTEM_SESSION_KEY)}catch(e){}}
+async function systemSessionIsValid(){if(!systemSession?.systemSessionToken)return false;try{const r=await apiPost({action:"systemsession",systemSessionToken:systemSession.systemSessionToken});if(!r.ok){clearSystemSession();return false}if(r.session){systemSession={...systemSession,...r.session};saveSystemSession(systemSession)}return true}catch(e){clearSystemSession();return false}}
+function menuApi(params){if(!systemSession?.systemSessionToken)return Promise.reject(new Error("Faça login no Menu Principal."));return apiPost({...params,systemSessionToken:systemSession.systemSessionToken})}
 function menuApiPost(params){if(!systemSession?.systemSessionToken)return Promise.reject(new Error("Faça login no Menu Principal."));return apiPost({...params,systemSessionToken:systemSession.systemSessionToken})}
+const secureFileUrlCache76624=new Map();
+async function getSecureFileUrl76624(kind,ref,slot=""){
+  const key=[kind,ref,slot].join("|");
+  if(secureFileUrlCache76624.has(key))return secureFileUrlCache76624.get(key);
+  const r=await menuApiPost({action:"secureFile",secureFileKind:kind,secureFileRef:ref,secureFileSlot:slot});
+  if(!r.ok||!r.file?.base64)throw new Error(r.detail||(qrLanguage==="en-US"?"Unable to open the protected file.":"Não foi possível abrir o arquivo protegido."));
+  const bin=atob(r.file.base64),bytes=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)bytes[i]=bin.charCodeAt(i);
+  const url=URL.createObjectURL(new Blob([bytes],{type:r.file.mime||"application/octet-stream"}));
+  secureFileUrlCache76624.set(key,url);return url;
+}
+async function openSecureFile76624(kind,ref,slot=""){
+  const popup=window.open("about:blank","_blank");
+  try{const url=await getSecureFileUrl76624(kind,ref,slot);if(popup)popup.location.href=url;else window.location.href=url}
+  catch(e){if(popup)popup.close();alert(e.message)}
+}
+async function loadSecureImage76624(img,kind,ref,slot=""){
+  if(!img)return;try{img.src=await getSecureFileUrl76624(kind,ref,slot);img.style.display="block"}catch(e){img.removeAttribute("src");img.style.display="none"}
+}
 function renderSystemAccess(){if(!systemSession){hide("systemAccessInfo");return}show("systemAccessInfo");$("systemAccessText").innerHTML=`Acesso: <b>${esc(systemSession.nome||systemSession.usuario)}</b> • Perfil: <b>${esc(systemSession.perfil)}</b>${systemSession.prestador?` • Prestador: <b>${esc(systemSession.prestador)}</b>`:""}`}
 function hasProfilePermission(key){
   if(!systemSession)return false;
@@ -1330,8 +1349,8 @@ function renderOccurrenceReport(){
         `${item.solucao?`<br><b>${t("Solução","Solution")}:</b><br>${esc(item.solucao)}`:""}`+
       `</div>`+
       `<div class="occ-report-links">`+
-        `${item.fotoAbertura?`<a href="${esc(item.fotoAbertura)}" target="_blank" rel="noopener">📷 ${t("Foto da abertura","Opening photo")}</a>`:""}`+
-        `${item.fotoConclusao?`<a href="${esc(item.fotoConclusao)}" target="_blank" rel="noopener">📷 ${t("Foto da conclusão","Completion photo")}</a>`:""}`+
+        `${item.fotoAbertura?`<button type="button" class="document-open" onclick="openSecureFile76624('occurrencePhoto','${esc(item.ocorrencia)}','opening')">📷 ${t("Foto da abertura","Opening photo")}</button>`:""}`+
+        `${item.fotoConclusao?`<button type="button" class="document-open" onclick="openSecureFile76624('occurrencePhoto','${esc(item.ocorrencia)}','conclusion')">📷 ${t("Foto da conclusão","Completion photo")}</button>`:""}`+
       `</div>`+
       `<a class="open-button" href="?id=${encodeURIComponent(normalizeId(item.id))}">${t("Abrir ficha","Open record")}</a>`+
     `</div>`
@@ -1421,7 +1440,7 @@ async function searchDocuments(){
           `${d.revisao?`<b>${t("Revisão","Revision")}:</b> ${esc(d.revisao)}<br>`:""}`+
           `${d.observacoes?`<b>${t("Observações","Notes")}:</b> ${esc(qrDocumentNotes7613(d.observacoes))}`:""}`+
         `</div>`+
-        `${d.linkPdf?`<a class="document-open" href="${esc(d.linkPdf)}" target="_blank" rel="noopener">👁️ ${t("Abrir PDF","Open PDF")}</a>`:""}`+
+        `${d.linkPdf?`<button type="button" class="document-open" onclick="openSecureFile76624('technicalDocument','${esc(d.idDocumento)}')">👁️ ${t("Abrir PDF","Open PDF")}</button>`:""}`+
       `</div>`
     ).join("");
 
@@ -1513,7 +1532,7 @@ async function clearPendingFilters(){
   await loadPending();
 }
 
-async function loadPreventiveControl(){if(!$("controlCompetence").value)$("controlCompetence").value=currentCompetence();qrRefreshLocalizedDateControls();const provider=["MASTER","GESTOR"].includes(systemSession?.perfil)?$("controlProvider").value:"";const r=await api({action:"preventivecontrol",competencia:$("controlCompetence").value,prestador:provider,systemSession:systemSession.systemSessionToken});if(!r.ok){clearSystemSession();showMenuGate();return}preventiveControlData=r.data;renderPreventiveControl()}
+async function loadPreventiveControl(){if(!$("controlCompetence").value)$("controlCompetence").value=currentCompetence();qrRefreshLocalizedDateControls();const provider=["MASTER","GESTOR"].includes(systemSession?.perfil)?$("controlProvider").value:"";const r=await menuApi({action:"preventivecontrol",competencia:$("controlCompetence").value,prestador:provider});if(!r.ok){clearSystemSession();showMenuGate();return}preventiveControlData=r.data;renderPreventiveControl()}
 function aguardarPinturaTela(){return new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))}
 async function refreshPreventiveControl(){const btn=$("controlRefresh");if(!btn||btn.dataset.loading==="1")return;const inicio=Date.now();btn.dataset.loading="1";btn.disabled=true;btn.textContent="Atualizando...";await aguardarPinturaTela();try{await loadPreventiveControl()}catch(e){$("controlListStatus").textContent="Erro ao atualizar as preventivas."}finally{const decorrido=Date.now()-inicio;if(decorrido<700)await new Promise(resolve=>setTimeout(resolve,700-decorrido));btn.textContent="Atualizar";btn.disabled=false;delete btn.dataset.loading}}
 function qrT7612(pt,en){return qrLanguage==="en-US"?en:pt;}
@@ -1726,7 +1745,7 @@ async function loadAsset(id){
 
   hide("assetProgressNote");
 }
-function renderAssetDocuments(items){if(!items||!items.length){hide("assetDocumentsSection");$("assetDocuments").innerHTML="";$("assetDocumentsStatus").textContent="";return}show("assetDocumentsSection");$("assetDocumentsStatus").textContent=items.length+" documento(s) relacionado(s) a este ativo";$("assetDocuments").innerHTML=items.map(d=>{const icon=String(d.tipoDocumento||"").toLowerCase()==="manual"?"📘":"📄";return `<div class="asset-document-card"><div class="document-title">${icon} ${esc(d.titulo)}</div><div class="document-meta">${d.tipoDocumento?`<b>Tipo:</b> ${esc(d.tipoDocumento)}<br>`:""}${d.disciplina?`<b>Disciplina:</b> ${esc(d.disciplina)}<br>`:""}${d.assunto?`<b>Assunto:</b> ${esc(d.assunto)}<br>`:""}${d.revisao?`<b>Revisão:</b> ${esc(d.revisao)}<br>`:""}${d.observacoes?`<b>Observações:</b> ${esc(d.observacoes)}`:""}</div>${d.linkPdf?`<a class="document-open" href="${esc(d.linkPdf)}" target="_blank" rel="noopener">👁️ Abrir PDF</a>`:""}</div>`}).join("")}
+function renderAssetDocuments(items){if(!items||!items.length){hide("assetDocumentsSection");$("assetDocuments").innerHTML="";$("assetDocumentsStatus").textContent="";return}show("assetDocumentsSection");$("assetDocumentsStatus").textContent=items.length+" documento(s) relacionado(s) a este ativo";$("assetDocuments").innerHTML=items.map(d=>{const icon=String(d.tipoDocumento||"").toLowerCase()==="manual"?"📘":"📄";return `<div class="asset-document-card"><div class="document-title">${icon} ${esc(d.titulo)}</div><div class="document-meta">${d.tipoDocumento?`<b>Tipo:</b> ${esc(d.tipoDocumento)}<br>`:""}${d.disciplina?`<b>Disciplina:</b> ${esc(d.disciplina)}<br>`:""}${d.assunto?`<b>Assunto:</b> ${esc(d.assunto)}<br>`:""}${d.revisao?`<b>Revisão:</b> ${esc(d.revisao)}<br>`:""}${d.observacoes?`<b>Observações:</b> ${esc(d.observacoes)}`:""}</div>${d.linkPdf?`<button type="button" class="document-open" onclick="openSecureFile76624('technicalDocument','${esc(d.idDocumento)}')">👁️ Abrir PDF</button>`:""}</div>`}).join("")}
 function renderAsset(a){
   const t=(pt,en)=>qrLanguage==="en-US"?en:pt;
   const val=v=>{
@@ -1827,10 +1846,10 @@ function renderHistory(items){
 function renderHistoryItem(i){
   const x=history[i];if(!x)return;selectedOccurrence=x;
   const t=(pt,en)=>qrLanguage==="en-US"?en:pt;
-  $("historyDetail").innerHTML=`<div class="history-card"><b>${esc(x.ocorrencia)}</b><div class="muted">${esc(formatDate(x.data))}</div><span class="tag">${esc(qrLanguage==="en-US"?qrTranslateExactText(x.status):x.status)}</span>${x.categoriaOcorrencia?`<span class="tag">${esc(x.categoriaOcorrencia)}</span>`:""}${x.componenteAfetado?`<span class="tag">${esc(x.componenteAfetado)}</span>`:""}<div style="margin-top:8px"><b>${t("Descrição","Description")}:</b><br>${esc(x.descricao)}</div>${x.foto?`<div style="margin-top:8px"><a href="${esc(x.foto)}" target="_blank">📷 ${t("Ver foto","View photo")}</a></div>`:""}${(x.anexos||[]).length?`<div style="margin-top:8px"><b>📎 ${t("Arquivos","Files")}:</b> ${(x.anexos||[]).map(a=>`<a href="${esc(a.linkDrive)}" target="_blank" rel="noopener" style="display:block;margin-top:4px">${esc(a.nomeArquivo)}</a>`).join("")}</div>`:""}${x.solucao?`<div style="margin-top:8px"><b>${t("Solução","Solution")}:</b><br>${esc(x.solucao)}</div>`:""}${systemSession&&hasProfilePermission("OC_CONSULTAR")&&(hasProfilePermission("OC_ALTERAR")||hasProfilePermission("OC_CONCLUIR"))&&(systemSession.perfil!=="PRESTADOR"||systemSession.podeAtenderOC)?`<button class="btn" style="width:100%;margin-top:12px" onclick="openManage(${i})">${t("Gerenciar ocorrência","Manage Work Order")}</button>`:""}</div>`;
+  $("historyDetail").innerHTML=`<div class="history-card"><b>${esc(x.ocorrencia)}</b><div class="muted">${esc(formatDate(x.data))}</div><span class="tag">${esc(qrLanguage==="en-US"?qrTranslateExactText(x.status):x.status)}</span>${x.categoriaOcorrencia?`<span class="tag">${esc(x.categoriaOcorrencia)}</span>`:""}${x.componenteAfetado?`<span class="tag">${esc(x.componenteAfetado)}</span>`:""}<div style="margin-top:8px"><b>${t("Descrição","Description")}:</b><br>${esc(x.descricao)}</div>${x.foto?`<div style="margin-top:8px"><button type="button" class="document-open" onclick="openSecureFile76624('occurrencePhoto','${esc(x.ocorrencia)}','opening')">📷 ${t("Ver foto","View photo")}</button></div>`:""}${(x.anexos||[]).length?`<div style="margin-top:8px"><b>📎 ${t("Arquivos","Files")}:</b> ${(x.anexos||[]).map(a=>`<button type="button" class="auth-link" onclick="openSecureFile76624('occurrenceDocument','${esc(a.idDocumento)}')" style="display:block;margin-top:4px">📎 ${esc(a.nomeArquivo)}</button>`).join("")}</div>`:""}${x.solucao?`<div style="margin-top:8px"><b>${t("Solução","Solution")}:</b><br>${esc(x.solucao)}</div>`:""}${systemSession&&hasProfilePermission("OC_CONSULTAR")&&(hasProfilePermission("OC_ALTERAR")||hasProfilePermission("OC_CONCLUIR"))&&(systemSession.perfil!=="PRESTADOR"||systemSession.podeAtenderOC)?`<button class="btn" style="width:100%;margin-top:12px" onclick="openManage(${i})">${t("Gerenciar ocorrência","Manage Work Order")}</button>`:""}</div>`;
 }
 async function loadPreventiveHistory(){
-  const r=await api({action:"preventivehistory",id:currentAsset.id,systemSession:systemSession.systemSessionToken});
+  const r=await menuApi({action:"preventivehistory",id:currentAsset.id});
   if(!r.ok)return;
 
   const items=r.preventives||[],t=(pt,en)=>qrLanguage==="en-US"?en:pt;
@@ -1842,7 +1861,7 @@ async function loadPreventiveHistory(){
     const docs=(item.documentos||[]);
     const docsHtml=docs.length
       ? `<div style="margin-top:9px"><b>📎 ${t("Documentos da preventiva","Preventive maintenance documents")}:</b>`+
-        docs.map(d=>`<div style="margin-top:4px"><a href="${esc(d.linkDrive)}" target="_blank" rel="noopener">📄 ${esc(qrLanguage==="en-US"?preventiveDocumentTypeLabel7606(d.tipo):d.tipo)}${d.nomeArquivo?` — ${esc(d.nomeArquivo)}`:""}</a>${d.descricao?`<div class="muted">${esc(d.descricao)}</div>`:""}</div>`).join("")+
+        docs.map(d=>`<div style="margin-top:4px"><button type="button" class="auth-link" onclick="openSecureFile76624('preventiveDocument','${esc(d.idDocumento)}')">📄 ${esc(qrLanguage==="en-US"?preventiveDocumentTypeLabel7606(d.tipo):d.tipo)}${d.nomeArquivo?` — ${esc(d.nomeArquivo)}`:""}</button>${d.descricao?`<div class="muted">${esc(d.descricao)}</div>`:""}</div>`).join("")+
         `</div>`
       :"";
 
@@ -1855,8 +1874,8 @@ async function loadPreventiveHistory(){
         <b>${t("Responsável","Responsible")}:</b> ${esc(item.responsavel)}
       </div>
       ${item.observacao?`<div style="margin-top:8px"><b>${t("Observação da preventiva","Preventive maintenance note")}:</b><br>${esc(item.observacao)}</div>`:""}
-      ${item.foto?`<div style="margin-top:8px"><a href="${esc(item.foto)}" target="_blank" rel="noopener">📷 ${t("Ver evidência","View evidence")}</a></div>`:""}
-      ${item.assinatura?`<div style="margin-top:8px"><a href="${esc(item.assinatura)}" target="_blank" rel="noopener">✍️ ${t("Ver assinatura","View signature")}</a></div>`:""}
+      ${item.foto?`<div style="margin-top:8px"><button type="button" class="document-open" onclick="openSecureFile76624('preventivePhoto','${esc(item.registro)}')">📷 ${t("Ver evidência","View evidence")}</button></div>`:""}
+      ${item.assinatura?`<div style="margin-top:8px"><button type="button" class="document-open" onclick="openSecureFile76624('preventiveSignature','${esc(item.registro)}')">✍️ ${t("Ver assinatura","View signature")}</button></div>`:""}
       ${docsHtml}${hasProfilePermission("PREVENTIVA_EXCLUIR")?`<button class="btn btn-danger" style="width:100%;margin-top:10px" onclick="deletePreventiveRecord('${esc(item.registro)}')">🗑️ ${t("Excluir preventiva","Delete preventive maintenance")}</button>`:""}
     </div>`;
   }).join("");
@@ -2055,7 +2074,7 @@ async function uploadPreventiveDocuments7606(registro){
 
 
 function requestPreventive(){requirePreventiveLogin(async()=>{if(!requireUiPermission("PREVENTIVA_REGISTRAR","Seu perfil não possui permissão para registrar preventivas.","Your profile is not allowed to record preventive maintenance."))return;await openPreventive();loadPreventiveHistory()},currentAsset.prestador)}
-async function openPreventive(){preventivePhotoData=null;resetPreventiveDocuments7606();signatureDirty=false;$("preventivePhotoInput").value="";$("preventivePhotoPreview").style.display="none";$("preventiveMessage").className="message";$("preventiveAsset").textContent=currentAsset.id+" – "+currentAsset.nome_do_equipamento;$("preventivePeriodicity").textContent=currentAsset.periodicidade||"Não informada";$("preventiveProvider").textContent=currentAsset.prestador||"Não informado";$("preventiveCompetence").textContent=currentCompetence();$("preventiveResponsible").value=getSavedResponsible();$("preventiveObservation").value="";$("preventiveNeedsAction").checked=false;hide("preventiveActionFields");$("preventiveActionType").value="";$("preventiveActionDescription").value="";$("preventiveActionPriority").value="Média";$("preventiveActionMaterial").value="";$("preventiveActionQuantity").value="";$("preventiveActionOperation").value="";const r=await api({action:"preventiverequirements",id:currentAsset.id,systemSession:systemSession.systemSessionToken});if(!r.ok){alert(r.detail||"Não foi possível carregar as regras.");return}preventiveRequirements=r.data;renderPreventiveRequirements();$("preventiveModal").style.display="flex";if(!$("signatureBox").classList.contains("hidden"))requestAnimationFrame(setupSignatureCanvas)}
+async function openPreventive(){preventivePhotoData=null;resetPreventiveDocuments7606();signatureDirty=false;$("preventivePhotoInput").value="";$("preventivePhotoPreview").style.display="none";$("preventiveMessage").className="message";$("preventiveAsset").textContent=currentAsset.id+" – "+currentAsset.nome_do_equipamento;$("preventivePeriodicity").textContent=currentAsset.periodicidade||"Não informada";$("preventiveProvider").textContent=currentAsset.prestador||"Não informado";$("preventiveCompetence").textContent=currentCompetence();$("preventiveResponsible").value=getSavedResponsible();$("preventiveObservation").value="";$("preventiveNeedsAction").checked=false;hide("preventiveActionFields");$("preventiveActionType").value="";$("preventiveActionDescription").value="";$("preventiveActionPriority").value="Média";$("preventiveActionMaterial").value="";$("preventiveActionQuantity").value="";$("preventiveActionOperation").value="";const r=await menuApi({action:"preventiverequirements",id:currentAsset.id});if(!r.ok){alert(r.detail||"Não foi possível carregar as regras.");return}preventiveRequirements=r.data;renderPreventiveRequirements();$("preventiveModal").style.display="flex";if(!$("signatureBox").classList.contains("hidden"))requestAnimationFrame(setupSignatureCanvas)}
 function renderPreventiveRequirements(){const r=preventiveRequirements;$("preventiveRequirements").innerHTML=`<b>Requisitos deste registro</b><div class="requirement ${r.exigirAssinatura?"required-yes":"required-no"}">${r.exigirAssinatura?"● Assinatura obrigatória":"✓ Assinatura não obrigatória"}</div><div class="requirement ${r.fotoObrigatoria?"required-yes":"required-no"}">${r.fotoObrigatoria?"● Foto obrigatória":"✓ Foto opcional"}</div><div class="requirement ${r.observacaoObrigatoria?"required-yes":"required-no"}">${r.observacaoObrigatoria?"● Observação obrigatória":"✓ Observação opcional"}</div>`;if(r.exigirAssinatura){show("signatureBox");$("signatureRequiredText").textContent=" * obrigatório"}else hide("signatureBox")}
 async function savePreventive(){
   if(preventivePosting)return;
@@ -2282,11 +2301,9 @@ function showExistingOccurrencePhoto(item){
   }
 
   show("existingOccurrencePhotoBox");
-  link.href=url;
-
-  preview.onload=()=>{preview.style.display="block";};
-  preview.onerror=()=>{preview.style.display="none";};
-  preview.src=drivePhotoPreviewUrl(url);
+  link.removeAttribute("href");
+  link.onclick=e=>{e.preventDefault();openSecureFile76624("occurrencePhoto",item.ocorrencia,"opening")};
+  loadSecureImage76624(preview,"occurrencePhoto",item.ocorrencia,"opening");
 }
 function openManage(i){
   selectedOccurrence=history[i];
@@ -2321,16 +2338,14 @@ function openManage(i){
   /* Mantém visível também uma eventual foto de conclusão já existente. */
   if(selectedOccurrence.fotoConclusao){
     const p=$("conclusionPhotoPreview");
-    p.onload=()=>{p.style.display="block";};
-    p.onerror=()=>{p.style.display="none";};
-    p.src=drivePhotoPreviewUrl(selectedOccurrence.fotoConclusao);
+    loadSecureImage76624(p,"occurrencePhoto",selectedOccurrence.ocorrencia,"conclusion");
     if($("conclusionPhotoStatus")){
       $("conclusionPhotoStatus").innerHTML=
-        `📷 ${qrLanguage==="en-US"?"Conclusion photo already on record.":"Foto de conclusão já registrada."} <a href="${esc(selectedOccurrence.fotoConclusao)}" target="_blank" rel="noopener">${qrLanguage==="en-US"?"Open photo":"Abrir foto"}</a>`;
+        `📷 ${qrLanguage==="en-US"?"Conclusion photo already on record.":"Foto de conclusão já registrada."} <button type="button" class="auth-link" onclick="openSecureFile76624('occurrencePhoto','${esc(selectedOccurrence.ocorrencia)}','conclusion')">${qrLanguage==="en-US"?"Open photo":"Abrir foto"}</button>`;
     }
   }
 
-  if($("manageExistingAttachments"))$("manageExistingAttachments").innerHTML=(selectedOccurrence.anexos||[]).length?"<b>Arquivos já anexados:</b>"+(selectedOccurrence.anexos||[]).map(a=>`<a href="${esc(a.linkDrive)}" target="_blank" rel="noopener" style="display:block;margin-top:4px">📎 ${esc(a.nomeArquivo)}</a>`).join(""):"";
+  if($("manageExistingAttachments"))$("manageExistingAttachments").innerHTML=(selectedOccurrence.anexos||[]).length?"<b>Arquivos já anexados:</b>"+(selectedOccurrence.anexos||[]).map(a=>`<button type="button" class="auth-link" onclick="openSecureFile76624('occurrenceDocument','${esc(a.idDocumento)}')" style="display:block;margin-top:4px">📎 ${esc(a.nomeArquivo)}</button>`).join(""):"";
   hasProfilePermission("OC_EXCLUIR")?show("deleteOccurrence"):hide("deleteOccurrence");
   const canAlter=hasProfilePermission("OC_ALTERAR"),canConclude=hasProfilePermission("OC_CONCLUIR");
   ["manageCategory","manageComponent","manageDescription","manageResponsible"].forEach(id=>{if($(id))$(id).disabled=!canAlter;});
@@ -2493,7 +2508,7 @@ async function clearAuditFilters(){$("auditAction").value="";$("auditResult").va
 
 async function loadPublicAppConfig(){try{const r=await api({action:"appconfig"});if(!r.ok||!r.app)return;const a=r.app;document.title=a.nomeSistema||"QRManut";const meta=document.querySelector('meta[name="theme-color"]');if(meta&&a.corPrincipal)meta.setAttribute("content",a.corPrincipal);const t=document.querySelector(".search-title");if(t&&a.nomeSistema)t.textContent=a.nomeSistema;const sub=document.getElementById("qrAppSubtitle");if(sub)sub.textContent=qrLanguage==="en-US"?"Quick Maintenance Management":"Gestão rápida de manutenção"}catch(e){}}
 async function showCompanyTab(){if(!requireUiPermission("CONFIGURACAO_EMPRESA","Seu perfil não possui permissão para acessar a configuração da empresa.","Your profile is not allowed to access company settings."))return;clearTabs();$("tabCompany").classList.add("active");showOnly("companyArea");await loadCompanyConfig()}
-async function loadCompanyConfig(){try{const r=await menuApi({action:"companyconfig"});if(!r.ok)throw new Error(r.detail||"Erro ao carregar configuração.");const c=r.config||{};$("companyId").value=c.idEmpresa||"EMP-0001";$("companyName").value=c.nomeEmpresa||"";$("companyTradeName").value=c.nomeFantasia||"";$("companyCnpj").value=c.cnpj||"";$("companyMaintenanceEmail").value=c.emailManutencao||"";$("companyAdminEmail").value=c.emailAdministrativo||"";$("companyLogo").value=c.logo||"";$("companyPrimaryColor").value=/^#[0-9a-f]{6}$/i.test(c.corPrincipal||"")?c.corPrincipal:"#0b315e";$("companyTimezone").value=c.fusoHorario||"America/New_York";$("companySystemName").value=c.nomeSistema||"QRManut";$("companyActive").checked=!!c.empresaAtiva;$("companyMainUrl").value=c.urlPrincipal||"";$("companyReportsEmail").value=c.emailRelatorios||"";$("companyNotes").value=c.observacoes||"";updateCompanyPreview()}catch(e){$("companyMessage").className="message error";$("companyMessage").textContent=e.message}}
+async function loadCompanyConfig(){try{const r=await menuApi({action:"companyconfig"});if(!r.ok)throw new Error(r.detail||"Erro ao carregar configuração.");const c=r.config||{};$("companyId").value=c.idEmpresa||"EMP-0001";$("companyName").value=c.nomeEmpresa||"";$("companyTradeName").value=c.nomeFantasia||"";$("companyCnpj").value=c.cnpj||"";$("companyMaintenanceEmail").value=c.emailManutencao||"";$("companyAdminEmail").value=c.emailAdministrativo||"";$("companyLogo").value=c.logo||"";$("companyPrimaryColor").value=/^#[0-9a-f]{6}$/i.test(c.corPrincipal||"")?c.corPrincipal:"#0b315e";$("companyTimezone").value=c.fusoHorario||"America/New_York";$("companySystemName").value=c.nomeSistema||"QRManut";$("companyActive").checked=!!c.empresaAtiva;$("companyMainUrl").value=c.urlPrincipal||"";$("companyReportsEmail").value=c.emailRelatorios||"";$("companyOccurrenceEmailTo").value=c.emailOcPrincipal||c.emailManutencao||"";$("companyOccurrenceEmailCc").value=c.emailOcCc||"";$("companyNotes").value=c.observacoes||"";updateCompanyPreview()}catch(e){$("companyMessage").className="message error";$("companyMessage").textContent=e.message}}
 function updateCompanyPreview(){$("companyPreviewName").textContent=($("companySystemName").value||"QRManut")+" • "+($("companyTradeName").value||$("companyName").value||"");const l=$("companyLogo").value.trim();if(l){$("companyLogoPreview").src=l;show("companyLogoPreview")}else hide("companyLogoPreview")}
 async function saveCompanyConfig(){
   const b=$("saveCompanyConfig");
@@ -2519,6 +2534,8 @@ async function saveCompanyConfig(){
       companyActive:$("companyActive").checked?"Sim":"Não",
       companyMainUrl:$("companyMainUrl").value.trim(),
       companyReportsEmail:$("companyReportsEmail").value.trim(),
+      companyOccurrenceEmailTo:$("companyOccurrenceEmailTo").value.trim(),
+      companyOccurrenceEmailCc:$("companyOccurrenceEmailCc").value.trim(),
       companyNotes:$("companyNotes").value.trim()
     });
     if(!r.ok)throw new Error(r.detail||"Erro ao salvar.");
@@ -2582,7 +2599,7 @@ async function loadProfilePermissionsAdmin(){
   try{
     const r=await menuApi({action:"profilepermissionsadmin"});
     if(!r.ok)throw new Error(r.detail||"Erro ao carregar permissões.");
-    if(r.backendVersion!=="7.6.6.23")throw new Error(qrLanguage==="en-US"
+    if(r.backendVersion!=="7.6.6.24")throw new Error(qrLanguage==="en-US"
       ?"The HTML is updated, but Apps Script is still on an older deployment. Update the .gs file and deploy a new version."
       :"O HTML está atualizado, mas o Apps Script ainda está em uma implantação anterior. Atualize o arquivo .gs e faça uma nova versão da implantação.");
     profilePermissionsAdminData=r.data;
@@ -2656,9 +2673,9 @@ async function loadProvidersAdmin(){
   try{
     const r=await menuApi({action:"providersadmin"});
     if(!r.ok)throw new Error(r.detail||t("Erro ao carregar.","Error loading service providers."));
-    if(r.backendVersion!=="7.6.6.23")throw new Error(t(
-      "O HTML 7.6.6.23 está atualizado, mas o Apps Script ainda está em uma versão anterior. Atualize o arquivo .gs e faça uma nova versão da implantação.",
-      "The 7.6.6.23 HTML is updated, but Apps Script is still on an older version. Update the .gs file and deploy a new version."
+    if(r.backendVersion!=="7.6.6.24")throw new Error(t(
+      "O HTML 7.6.6.24 está atualizado, mas o Apps Script ainda está em uma versão anterior. Atualize o arquivo .gs e faça uma nova versão da implantação.",
+      "The 7.6.6.24 HTML is updated, but Apps Script is still on an older version. Update the .gs file and deploy a new version."
     ));
     providersAdminData=r.providers||[];
     $("providersAdminStatus").textContent=`${providersAdminData.length} ${t("prestador(es)","service provider(s)")}`;
@@ -2821,7 +2838,7 @@ async function sendDocumentUpload(){
     const r=await menuApiPost({action:"uploadDocument",documentTitle:$("uploadDocumentTitle").value.trim(),documentType:$("uploadDocumentType").value,documentDiscipline:$("uploadDocumentDiscipline").value,documentFloor:$("uploadDocumentFloor").value,documentEnvironment:$("uploadDocumentEnvironment").value.trim(),documentProvider:$("uploadDocumentProvider").value,documentSubject:$("uploadDocumentSubject").value.trim(),documentRevision:$("uploadDocumentRevision").value.trim(),documentAssetId:$("uploadDocumentAsset").value.trim(),documentNotes:$("uploadDocumentNotes").value.trim(),documentFileName:documentUploadFileData.name,documentMime:documentUploadFileData.mime,documentBase64:documentUploadFileData.base64});
     if(!r.ok)throw new Error(r.detail||"Não foi possível enviar o documento.");
     $("documentUploadMessage").className="message success";$("documentUploadMessage").textContent="✅ Documento enviado com sucesso.";
-    $("documentUploadResult").innerHTML=`<div class="upload-success-card"><b>${esc(r.idDocumento)} — ${esc(r.titulo)}</b>${r.idAtivo?`<div style="margin-top:5px">Vinculado ao ativo: <b>${esc(r.idAtivo)}</b></div>`:""}<a class="open-button" style="margin-top:10px" href="${esc(r.linkPdf)}" target="_blank" rel="noopener">Abrir PDF</a></div>`;
+    $("documentUploadResult").innerHTML=`<div class="upload-success-card"><b>${esc(r.idDocumento)} — ${esc(r.titulo)}</b>${r.idAtivo?`<div style="margin-top:5px">Vinculado ao ativo: <b>${esc(r.idAtivo)}</b></div>`:""}<button type="button" class="open-button" style="margin-top:10px;border:0" onclick="openSecureFile76624('technicalDocument','${esc(r.idDocumento)}')">Abrir PDF</button></div>`;
     documentFiltersLoaded=false;
   }catch(e){$("documentUploadMessage").className="message error";$("documentUploadMessage").textContent=e.message}
   finally{btn.disabled=false;btn.textContent="Enviar documento";delete btn.dataset.loading}
@@ -3099,7 +3116,7 @@ async function loadMaintenancePending(){
               ${x.responsavelAtual?`<b>${qrLanguage==="en-US"?"Responsible":"Responsável"}:</b> ${esc(x.responsavelAtual)}<br>`:""}
               ${x.ocRelacionada?`<b>${qrLanguage==="en-US"?"Related WO":"OC relacionada"}:</b> ${esc(x.ocRelacionada)}<br>`:""}
               ${x.solucao?`<b>${qrLanguage==="en-US"?"Resolution":"Solução"}:</b> ${esc(x.solucao)}<br>`:""}
-              ${x.foto?`<a href="${esc(x.foto)}" target="_blank" rel="noopener">📷 ${qrLanguage==="en-US"?"View evidence":"Ver evidência"}</a>`:""}
+              ${x.foto&&x.idPreventiva?`<button type="button" class="auth-link" onclick="openSecureFile76624('preventivePhoto','${esc(x.idPreventiva)}')">📷 ${qrLanguage==="en-US"?"View evidence":"Ver evidência"}</button>`:""}
             </div>
           </div>
           <span class="audit-result ${pClass}">${esc(x.prioridade)}</span>
@@ -3550,16 +3567,14 @@ async function sendRecovery(){
   try{
     const r=await apiPost({action:"forgotPassword",recoveryIdentifier:id});
     if(!r.ok)throw new Error(r.detail||"Não foi possível processar a solicitação.");
-    const status=String(r.status||"reset_sent");
-    if(status==="not_found"){
-      $("recoveryMessage").className="message error";$("recoveryMessage").textContent=r.message;show("recoveryNotRegisteredBox");
-    }else if(status==="inactive"||status==="no_email"){
-      $("recoveryMessage").className="message error";$("recoveryMessage").textContent=r.message;
-    }else if(status==="invite_pending"){
-      $("recoveryMessage").className="message loading";$("recoveryMessage").textContent=r.message;show("pendingInviteBox");
-    }else{
-      $("recoveryMessage").className="message success";$("recoveryMessage").textContent=r.message;
-    }
+    $("recoveryMessage").className="message success";
+    $("recoveryMessage").textContent=qrLanguage==="en-US"
+      ?"If an eligible account exists for that username or email, access instructions will be sent to the registered address."
+      :(r.message||"Se existir uma conta elegível para esse usuário ou e-mail, as instruções de acesso serão enviadas ao endereço cadastrado.");
+    $("recoveryNotRegisteredBox").querySelector("h3").textContent=qrLanguage==="en-US"?"👤 Need access?":"👤 Precisa de acesso?";
+    $("recoveryNotRegisteredText").textContent=qrLanguage==="en-US"?"If you do not yet have an account, you can request access without revealing whether the identifier above exists.":"Se você ainda não possui cadastro, pode solicitar acesso sem revelar se o identificador informado existe no sistema.";
+    show("recoveryNotRegisteredBox");
+    hide("pendingInviteBox");
   }catch(e){$("recoveryMessage").className="message error";$("recoveryMessage").textContent=e.message}
   finally{$("sendRecovery").disabled=false;$("sendRecovery").textContent=qrLanguage==="en-US"?"Send instructions":"Enviar instruções"}
 }
@@ -3891,6 +3906,9 @@ const QR_ROUTINE_PT_EN={
   "Fuso Horário":"Time Zone",
   "URL Principal":"Main URL",
   "E-mail de Relatórios":"Reports Email",
+  "E-mail principal das OCs *":"Main Work Order Notification Email *",
+  "E-mail CC das OCs":"Work Order Notification CC",
+  "Opcional. Separe vários e-mails por vírgula ou ponto e vírgula.":"Optional. Separate multiple emails with commas or semicolons.",
   "Logo (URL)":"Logo (URL)",
   "Empresa ativa":"Active company",
   "Pré-visualização":"Preview",
@@ -3945,7 +3963,7 @@ const QR_ROUTINE_PT_EN={
   "🔑 Recuperar senha":"🔑 Recover Password",
   "Informe seu usuário ou e-mail. Se o cadastro existir, o QRManut enviará as instruções.":"Enter your username or email. If the account exists, QRManut will send instructions.",
   "Enviar instruções":"Send Instructions",
-  "O QRManut verificará o cadastro antes de enviar as instruções.":"QRManut will verify the account before sending instructions.",
+  "Por segurança, o QRManut não informa se o usuário ou e-mail existe. Se houver uma conta elegível, as instruções serão enviadas ao endereço cadastrado.":"QRManut will verify the account before sending instructions.",
   "👤 Usuário não cadastrado":"👤 User not registered",
   "📧 Solicitar cadastro":"📧 Request access",
   "📥 Solicitação de acesso":"📥 Access Request",
