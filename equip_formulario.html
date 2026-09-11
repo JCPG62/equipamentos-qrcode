@@ -896,7 +896,7 @@ html,body{max-width:100%;overflow-x:hidden}
 </div>
 <label>Adicionar nova foto da ocorrência / correção</label><div class="photo-source-actions"><button type="button" id="manageOccurrenceCameraButton" class="btn btn-blue">📷 Tirar foto</button><button type="button" id="manageOccurrenceAttachButton" class="btn btn-secondary">🖼️ Anexar imagem</button></div><input id="manageOccurrenceCameraInput" class="photo-source-hidden" type="file" accept="image/*" capture="environment"><input id="manageOccurrencePhotoInput" class="photo-source-hidden" type="file" accept="image/*"><div id="manageOccurrencePhotoStatus" class="muted" style="margin-top:5px"></div><img id="manageOccurrencePhotoPreview" class="photo-preview"><div class="upload-file-box" style="margin-top:12px"><div style="font-weight:800">📎 Adicionar arquivo à ocorrência</div><div class="muted" style="margin-top:4px">PDF, Word, Excel ou outro arquivo de evidência, até 8 MB.</div><button id="manageAttachmentButton" type="button" class="btn btn-secondary" style="margin-top:8px">📎 Escolher arquivo</button><input id="manageAttachmentInput" class="photo-source-hidden" type="file"><div id="manageAttachmentName" class="upload-file-name">Nenhum arquivo selecionado.</div><div id="manageExistingAttachments" style="margin-top:8px"></div></div><div id="conclusionPhotoArea" class="hidden"><label>Foto da conclusão</label><div class="photo-source-actions"><button type="button" id="conclusionCameraButton" class="btn btn-blue">📷 Tirar foto</button><button type="button" id="conclusionAttachButton" class="btn btn-secondary">🖼️ Anexar imagem</button></div><input id="conclusionCameraInput" class="photo-source-hidden" type="file" accept="image/*" capture="environment"><input id="conclusionPhotoInput" class="photo-source-hidden" type="file" accept="image/*"><div id="conclusionPhotoStatus" class="muted" style="margin-top:5px"></div><img id="conclusionPhotoPreview" class="photo-preview"></div><div id="manageMessage" class="message"></div><div class="modal-actions" style="justify-content:space-between;flex-wrap:wrap"><button id="deleteOccurrence" class="btn btn-danger hidden" type="button">🗑️ Excluir ocorrência</button><div style="display:flex;gap:8px;flex-wrap:wrap"><button id="cancelManage" class="btn btn-secondary">Cancelar</button><button id="saveManage" class="btn">Salvar alterações</button></div></div></div></div>
 
-<div class="footer">QRManut • Versão 7.6.6.22</div>
+<div class="footer">QRManut • Versão 7.6.6.23</div>
 </div>
 <script>
 const API_URL="https://script.google.com/macros/s/AKfycbx4tpC42Q6WdkNhTUTAGoZWvG5M24zwlNscnwbDP5B3Q5pWo8B32-Lf0rQ2Xtua1AFMAQ/exec";
@@ -2230,8 +2230,10 @@ async function sendReport(){
   try{
     const r=await apiPost({action:"reportOccurrence",id:currentAsset.id,reportadoPor:name,contato:$("reporterContact").value,categoriaOcorrencia:$("category").value,componenteAfetado:$("component").value,descricao:description,fotoBase64:photoData?.base64||"",fotoNome:photoData?.name||"",fotoMime:photoData?.mime||"",attachmentBase64:reportAttachmentData?.base64||"",attachmentNome:reportAttachmentData?.name||"",attachmentMime:reportAttachmentData?.mime||""});
     if(!r.ok)throw new Error(r.detail||reportText76619("Não foi possível registrar a ocorrência.","The work order could not be submitted."));
+    if(r.processamentoMs!=null)console.info("QRManut reportOccurrence:",r.processamentoMs,"ms; notificationsQueued=",!!r.notificacoesEmFila);
     let n="";
     if(r.notificacaoPrestador==="Sim")n=`<br><br>📧 <b>${reportText76619("Prestador notificado:","Service provider notified:")}</b><br>${esc(r.emailPrestador)}`;
+    else if(r.notificacaoPrestador==="Em fila")n=`<br><br>📨 <b>${reportText76619("Notificação em processamento:","Notification is being processed:")}</b><br>${esc(r.emailPrestador)}<br><span class="muted">${reportText76619("O envio do e-mail ocorre em segundo plano para liberar a gravação mais rapidamente.","Email is sent in the background so the work order can be saved faster.")}</span>`;
     else if(r.notificacaoPrestador==="Não - sem e-mail")n=reportText76619("<br><br>⚠️ Prestador configurado para receber a ocorrência, mas sem e-mail cadastrado.","<br><br>⚠️ The service provider is configured to receive work orders, but no email address is registered.");
     else if(r.notificacaoPrestador==="Erro")n=reportText76619("<br><br>⚠️ A ocorrência foi registrada, mas houve erro ao notificar o prestador.","<br><br>⚠️ The work order was saved, but the service provider notification could not be sent.");
     else n=reportText76619("<br><br>ℹ️ Este prestador não está configurado para receber notificações de ocorrência.","<br><br>ℹ️ This service provider is not configured to receive work order notifications.");
@@ -2580,7 +2582,7 @@ async function loadProfilePermissionsAdmin(){
   try{
     const r=await menuApi({action:"profilepermissionsadmin"});
     if(!r.ok)throw new Error(r.detail||"Erro ao carregar permissões.");
-    if(r.backendVersion!=="7.6.6.22")throw new Error(qrLanguage==="en-US"
+    if(r.backendVersion!=="7.6.6.23")throw new Error(qrLanguage==="en-US"
       ?"The HTML is updated, but Apps Script is still on an older deployment. Update the .gs file and deploy a new version."
       :"O HTML está atualizado, mas o Apps Script ainda está em uma implantação anterior. Atualize o arquivo .gs e faça uma nova versão da implantação.");
     profilePermissionsAdminData=r.data;
@@ -2654,9 +2656,9 @@ async function loadProvidersAdmin(){
   try{
     const r=await menuApi({action:"providersadmin"});
     if(!r.ok)throw new Error(r.detail||t("Erro ao carregar.","Error loading service providers."));
-    if(r.backendVersion!=="7.6.6.22")throw new Error(t(
-      "O HTML 7.6.6.22 está atualizado, mas o Apps Script ainda está em uma versão anterior. Atualize o arquivo .gs e faça uma nova versão da implantação.",
-      "The 7.6.6.22 HTML is updated, but Apps Script is still on an older version. Update the .gs file and deploy a new version."
+    if(r.backendVersion!=="7.6.6.23")throw new Error(t(
+      "O HTML 7.6.6.23 está atualizado, mas o Apps Script ainda está em uma versão anterior. Atualize o arquivo .gs e faça uma nova versão da implantação.",
+      "The 7.6.6.23 HTML is updated, but Apps Script is still on an older version. Update the .gs file and deploy a new version."
     ));
     providersAdminData=r.providers||[];
     $("providersAdminStatus").textContent=`${providersAdminData.length} ${t("prestador(es)","service provider(s)")}`;
