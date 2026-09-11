@@ -1,4 +1,4 @@
-<!-- QRManut 7.6.6.24.12: R12 SOL + HOTFIX UX — abrir OC vinculada imediatamente após conversão -->
+<!-- QRManut 7.6.6.24.12: R12 SOL + HOTFIX UX — posicionamento automático na área de Solicitações -->
 <!doctype html>
 <html lang="pt-br">
 <head>
@@ -2843,10 +2843,23 @@ async function refreshSolMenuBadge7662412(){
   }catch(e){el.textContent=base}
 }
 
+function scrollToSolicitationsArea7662412(){
+  const area=$("solicitationsArea");
+  if(!area)return;
+  requestAnimationFrame(()=>{
+    const y=Math.max(0,area.getBoundingClientRect().top+window.scrollY-12);
+    window.scrollTo({top:y,behavior:"smooth"});
+  });
+}
+
 async function showSolicitationsTab7662412(){
   if(!requireUiPermission("SOLICITACOES_TRIAGEM","Seu perfil não possui permissão para acessar Solicitações de Manutenção.","Your profile is not allowed to access Maintenance Requests."))return;
-  clearTabs();$("tabSolicitations").classList.add("active");showOnly("solicitationsArea");
+  clearTabs();
+  $("tabSolicitations").classList.add("active");
+  showOnly("solicitationsArea");
+  scrollToSolicitationsArea7662412();
   await loadSolicitations7662412();
+  scrollToSolicitationsArea7662412();
 }
 
 async function loadSolicitations7662412(){
