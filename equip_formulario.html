@@ -1,4 +1,4 @@
-<!-- QRManut 7.6.6.24 frontend hotfix: CONFIG-UX-R3 + OC-PERFORMANCE-R4 + RECOVERY-R7 -->
+<!-- QRManut 7.6.6.24 frontend hotfix: CONFIG-UX-R3 + OC-PERFORMANCE-R4 + RECOVERY-R8 -->
 <!doctype html>
 <html lang="pt-br">
 <head>
@@ -3665,10 +3665,26 @@ async function sendRecovery(){
     show("recoveryNotRegisteredBox");
     hide("pendingInviteBox");
 
-    // 7.6.6.24 R7 — após uma solicitação aceita, bloqueia novo envio durante
-    // a mesma janela de 5 minutos usada pelo backend.
+    // 7.6.6.24 R8 — após uma solicitação aceita, inicia o cooldown,
+    // fecha a tela de recuperação e retorna automaticamente ao login.
     keepDisabled=true;
     startRecoveryCooldown76624(300);
+
+    // Fecha a recuperação para evitar que o usuário permaneça em uma tela
+    // já concluída e volte a pressionar o mesmo botão.
+    try{
+      if(document.activeElement && typeof document.activeElement.blur==="function"){
+        document.activeElement.blur();
+      }
+    }catch(ignoreBlur){}
+
+    $("forgotPasswordModal").style.display="none";
+    $("systemPassword").value="";
+    $("systemLoginMessage").className="message success";
+    $("systemLoginMessage").textContent=qrLanguage==="en-US"
+      ?"If an eligible account exists, password recovery instructions were sent to the registered email."
+      :"Se existir uma conta elegível, as instruções de recuperação foram enviadas ao e-mail cadastrado.";
+    $("systemLoginModal").style.display="flex";
   }catch(e){
     const msg=String(e&&e.message||e||"");
     $("recoveryMessage").className="message error";
