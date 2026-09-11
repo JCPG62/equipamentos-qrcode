@@ -1,4 +1,4 @@
-<!-- QRManut 7.6.6.24 frontend hotfix: CONFIG-UX-R3 + OC-PERFORMANCE-R4 + RECOVERY-R8 -->
+<!-- QRManut 7.6.6.24.11: Onda 2A + CONFIG-UX-R3 + OC-PERFORMANCE-R4/R5 + MIGRATION-R6 + RECOVERY-R8 + LOGIN-R10 + PRIMARY-COLOR-R11 -->
 <!doctype html>
 <html lang="pt-br">
 <head>
@@ -362,6 +362,70 @@ html,body{max-width:100%;overflow-x:hidden}
   .permissions-actions .btn{width:100%;min-width:0}
 }
 
+
+/* ============================================================
+ * QRManut 7.6.6.24.11 — COR PRINCIPAL R11
+ * A cor institucional passa a tematizar os elementos primários
+ * sem substituir cores semânticas de status.
+ * ============================================================ */
+:root{
+  --qr-primary:#0b315e;
+  --qr-primary-contrast:#ffffff;
+  --qr-primary-soft:#e8eef8;
+}
+.search-title,
+.search-result-id,
+.auth-link{color:var(--qr-primary)!important}
+.badge{background:var(--qr-primary-soft)!important;color:var(--qr-primary)!important}
+.btn-blue,
+.search-box button,
+.open-button,
+.install-app-button,
+.qr-calendar-close,
+.qr-language-switcher button.active{
+  background:var(--qr-primary)!important;
+  color:var(--qr-primary-contrast)!important;
+  border-color:var(--qr-primary)!important;
+}
+.btn-search,
+.back-asset-btn{
+  color:var(--qr-primary)!important;
+  border-color:var(--qr-primary)!important;
+}
+.menu-button.active{
+  background:var(--qr-primary);
+  border-color:var(--qr-primary);
+  color:var(--qr-primary-contrast);
+}
+.permission-check{accent-color:var(--qr-primary)!important}
+.qr-calendar-day.today{outline-color:var(--qr-primary)!important}
+.asset-form-section h3,
+.asset-id-value{color:var(--qr-primary)!important}
+.company-color-preview{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-top:10px;
+  padding:10px 12px;
+  border:1px solid #e5e7eb;
+  border-radius:10px;
+  background:#fff;
+}
+.company-color-preview-swatch{
+  width:46px;
+  height:32px;
+  border-radius:8px;
+  background:var(--qr-primary);
+  border:1px solid rgba(15,23,42,.15);
+  flex:0 0 auto;
+}
+.company-color-preview-label{
+  font-size:.84rem;
+  color:#4b5563;
+  line-height:1.35;
+}
+.company-color-preview-label b{color:var(--qr-primary)}
+
 </style>
 </head>
 <body>
@@ -584,7 +648,7 @@ html,body{max-width:100%;overflow-x:hidden}
     </div>
   </div>
 
-<div id="companyArea" class="hidden"><div class="card"><div class="back-asset-wrap"><button id="companyBackMenu" class="back-asset-btn">← Voltar ao Menu Principal</button></div><h2>⚙️ Configuração da Empresa</h2><div class="muted">Dados institucionais desta implantação dedicada.</div><div class="admin-grid"><label>ID Empresa<input id="companyId"></label><label>Nome da Empresa *<input id="companyName"></label><label>Nome Fantasia<input id="companyTradeName"></label><label>CNPJ<input id="companyCnpj"></label><label class="company-long-field">E-mail de Manutenção<input id="companyMaintenanceEmail" type="email" autocomplete="email"></label><label class="company-long-field">E-mail Administrativo<input id="companyAdminEmail" type="email" autocomplete="email"></label><label>Nome do Sistema *<input id="companySystemName"></label><label>Cor Principal<input id="companyPrimaryColor" type="color" value="#0b315e"></label><label>Fuso Horário<input id="companyTimezone" placeholder="America/New_York"><small class="muted">Ex.: America/New_York (Eastern Time, com ajuste automático de horário de verão)</small></label><label class="company-long-field">URL Principal<input id="companyMainUrl" type="url" inputmode="url"></label><label class="company-long-field">E-mail de Relatórios<input id="companyReportsEmail"></label><label class="company-long-field">E-mail principal das OCs *<input id="companyOccurrenceEmailTo" placeholder="manutencao@empresa.com"></label><label class="company-long-field">E-mail CC das OCs<input id="companyOccurrenceEmailCc" placeholder="gestor@empresa.com; outro@empresa.com"><small class="muted">Opcional. Separe vários e-mails por vírgula ou ponto e vírgula.</small></label><label class="company-long-field">Logo (URL)<input id="companyLogo" type="url" inputmode="url"></label><label class="full">Observações<textarea id="companyNotes" rows="5"></textarea></label></div><label class="switch-row"><input id="companyActive" type="checkbox"> Empresa ativa</label><div class="company-preview"><b>Pré-visualização</b><div id="companyPreviewName" style="margin-top:6px;font-size:1.1rem;font-weight:800"></div><img id="companyLogoPreview" class="company-logo-preview hidden"></div><div id="companyMessage" class="message"></div><div class="occ-report-actions"><button id="saveCompanyConfig" class="btn btn-blue">Salvar configuração</button></div></div></div>
+<div id="companyArea" class="hidden"><div class="card"><div class="back-asset-wrap"><button id="companyBackMenu" class="back-asset-btn">← Voltar ao Menu Principal</button></div><h2>⚙️ Configuração da Empresa</h2><div class="muted">Dados institucionais desta implantação dedicada.</div><div class="admin-grid"><label>ID Empresa<input id="companyId"></label><label>Nome da Empresa *<input id="companyName"></label><label>Nome Fantasia<input id="companyTradeName"></label><label>CNPJ<input id="companyCnpj"></label><label class="company-long-field">E-mail de Manutenção<input id="companyMaintenanceEmail" type="email" autocomplete="email"></label><label class="company-long-field">E-mail Administrativo<input id="companyAdminEmail" type="email" autocomplete="email"></label><label>Nome do Sistema *<input id="companySystemName"></label><label>Cor Principal<input id="companyPrimaryColor" type="color" value="#0b315e"></label><label>Fuso Horário<input id="companyTimezone" placeholder="America/New_York"><small class="muted">Ex.: America/New_York (Eastern Time, com ajuste automático de horário de verão)</small></label><label class="company-long-field">URL Principal<input id="companyMainUrl" type="url" inputmode="url"></label><label class="company-long-field">E-mail de Relatórios<input id="companyReportsEmail"></label><label class="company-long-field">E-mail principal das OCs *<input id="companyOccurrenceEmailTo" placeholder="manutencao@empresa.com"></label><label class="company-long-field">E-mail CC das OCs<input id="companyOccurrenceEmailCc" placeholder="gestor@empresa.com; outro@empresa.com"><small class="muted">Opcional. Separe vários e-mails por vírgula ou ponto e vírgula.</small></label><label class="company-long-field">Logo (URL)<input id="companyLogo" type="url" inputmode="url"></label><label class="full">Observações<textarea id="companyNotes" rows="5"></textarea></label></div><label class="switch-row"><input id="companyActive" type="checkbox"> Empresa ativa</label><div class="company-preview"><b>Pré-visualização</b><div id="companyPreviewName" style="margin-top:6px;font-size:1.1rem;font-weight:800"></div><div id="companyColorPreview" class="company-color-preview"><span class="company-color-preview-swatch" id="companyColorPreviewSwatch"></span><div class="company-color-preview-label"><b id="companyColorPreviewHex">#0b315e</b><br><span>Cor aplicada aos principais botões e destaques do QRManut.</span></div></div><img id="companyLogoPreview" class="company-logo-preview hidden"></div><div id="companyMessage" class="message"></div><div class="occ-report-actions"><button id="saveCompanyConfig" class="btn btn-blue">Salvar configuração</button></div></div></div>
   <div id="providersAdminArea" class="hidden"><div class="card"><div class="back-asset-wrap"><button id="providersBackMenu" class="back-asset-btn">← Voltar ao Menu Principal</button></div><div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap"><div><h2>🏢 Prestadores</h2><div class="muted">Consulte responsáveis e canais de contato dos prestadores. Cadastro e edição obedecem às Permissões de Perfis definidas pelo MASTER.</div></div><button id="newProviderButton" class="btn btn-blue hidden">+ Novo prestador</button></div><div id="providersAdminStatus" class="muted" style="margin-top:12px"></div><div id="providersAdminList"></div></div></div>
   <div id="auditArea" class="hidden">
     <div class="card">
@@ -903,7 +967,7 @@ html,body{max-width:100%;overflow-x:hidden}
 </div>
 <label>Adicionar nova foto da ocorrência / correção</label><div class="photo-source-actions"><button type="button" id="manageOccurrenceCameraButton" class="btn btn-blue">📷 Tirar foto</button><button type="button" id="manageOccurrenceAttachButton" class="btn btn-secondary">🖼️ Anexar imagem</button></div><input id="manageOccurrenceCameraInput" class="photo-source-hidden" type="file" accept="image/*" capture="environment"><input id="manageOccurrencePhotoInput" class="photo-source-hidden" type="file" accept="image/*"><div id="manageOccurrencePhotoStatus" class="muted" style="margin-top:5px"></div><img id="manageOccurrencePhotoPreview" class="photo-preview"><div class="upload-file-box" style="margin-top:12px"><div style="font-weight:800">📎 Adicionar arquivo à ocorrência</div><div class="muted" style="margin-top:4px">PDF, Word, Excel ou outro arquivo de evidência, até 8 MB.</div><button id="manageAttachmentButton" type="button" class="btn btn-secondary" style="margin-top:8px">📎 Escolher arquivo</button><input id="manageAttachmentInput" class="photo-source-hidden" type="file"><div id="manageAttachmentName" class="upload-file-name">Nenhum arquivo selecionado.</div><div id="manageExistingAttachments" style="margin-top:8px"></div></div><div id="conclusionPhotoArea" class="hidden"><label>Foto da conclusão</label><div class="photo-source-actions"><button type="button" id="conclusionCameraButton" class="btn btn-blue">📷 Tirar foto</button><button type="button" id="conclusionAttachButton" class="btn btn-secondary">🖼️ Anexar imagem</button></div><input id="conclusionCameraInput" class="photo-source-hidden" type="file" accept="image/*" capture="environment"><input id="conclusionPhotoInput" class="photo-source-hidden" type="file" accept="image/*"><div id="conclusionPhotoStatus" class="muted" style="margin-top:5px"></div><img id="conclusionPhotoPreview" class="photo-preview"></div><div id="manageMessage" class="message"></div><div class="modal-actions" style="justify-content:space-between;flex-wrap:wrap"><button id="deleteOccurrence" class="btn btn-danger hidden" type="button">🗑️ Excluir ocorrência</button><div style="display:flex;gap:8px;flex-wrap:wrap"><button id="cancelManage" class="btn btn-secondary">Cancelar</button><button id="saveManage" class="btn">Salvar alterações</button></div></div></div></div>
 
-<div class="footer">QRManut • Versão 7.6.6.24</div>
+<div class="footer">QRManut • Versão 7.6.6.24.11</div>
 </div>
 <script>
 const API_URL="https://script.google.com/macros/s/AKfycbx4tpC42Q6WdkNhTUTAGoZWvG5M24zwlNscnwbDP5B3Q5pWo8B32-Lf0rQ2Xtua1AFMAQ/exec";
@@ -2513,10 +2577,59 @@ async function loadAudit(){
 
 async function clearAuditFilters(){$("auditAction").value="";$("auditResult").value="";$("auditUser").value="";$("auditSearch").value="";$("auditStart").value="";$("auditEnd").value="";setDefaultAuditDates();await loadAudit()}
 
-async function loadPublicAppConfig(){try{const r=await api({action:"appconfig"});if(!r.ok||!r.app)return;const a=r.app;document.title=a.nomeSistema||"QRManut";const meta=document.querySelector('meta[name="theme-color"]');if(meta&&a.corPrincipal)meta.setAttribute("content",a.corPrincipal);const t=document.querySelector(".search-title");if(t&&a.nomeSistema)t.textContent=a.nomeSistema;const sub=document.getElementById("qrAppSubtitle");if(sub)sub.textContent=qrLanguage==="en-US"?"Quick Maintenance Management":"Gestão rápida de manutenção"}catch(e){}}
+function qrPrimaryNormalize7662411_(value){
+  const v=String(value||"").trim();
+  return /^#[0-9a-f]{6}$/i.test(v)?v.toLowerCase():"#0b315e";
+}
+function qrPrimaryRgb7662411_(hex){
+  const h=qrPrimaryNormalize7662411_(hex).slice(1);
+  return {r:parseInt(h.slice(0,2),16),g:parseInt(h.slice(2,4),16),b:parseInt(h.slice(4,6),16)};
+}
+function qrPrimarySoft7662411_(hex){
+  const c=qrPrimaryRgb7662411_(hex);
+  const mix=x=>Math.round(x+(255-x)*0.90);
+  return `rgb(${mix(c.r)}, ${mix(c.g)}, ${mix(c.b)})`;
+}
+function qrPrimaryContrast7662411_(hex){
+  const c=qrPrimaryRgb7662411_(hex);
+  const luminance=(0.2126*c.r+0.7152*c.g+0.0722*c.b)/255;
+  return luminance>0.62?"#111827":"#ffffff";
+}
+function applyPrimaryColor7662411_(value){
+  const color=qrPrimaryNormalize7662411_(value);
+  const root=document.documentElement;
+  root.style.setProperty("--qr-primary",color);
+  root.style.setProperty("--qr-primary-contrast",qrPrimaryContrast7662411_(color));
+  root.style.setProperty("--qr-primary-soft",qrPrimarySoft7662411_(color));
+  const meta=document.querySelector('meta[name="theme-color"]');
+  if(meta)meta.setAttribute("content",color);
+  const swatch=$("companyColorPreviewSwatch");
+  if(swatch)swatch.style.background=color;
+  const hex=$("companyColorPreviewHex");
+  if(hex)hex.textContent=color;
+  return color;
+}
+async function loadPublicAppConfig(){
+  try{
+    const r=await api({action:"appconfig"});
+    if(!r.ok||!r.app)return;
+    const a=r.app;
+    document.title=a.nomeSistema||"QRManut";
+    applyPrimaryColor7662411_(a.corPrincipal||"#0b315e");
+    const t=document.querySelector(".search-title");
+    if(t&&a.nomeSistema)t.textContent=a.nomeSistema;
+    const sub=document.getElementById("qrAppSubtitle");
+    if(sub)sub.textContent=qrLanguage==="en-US"?"Quick Maintenance Management":"Gestão rápida de manutenção";
+  }catch(e){}
+}
 async function showCompanyTab(){if(!requireUiPermission("CONFIGURACAO_EMPRESA","Seu perfil não possui permissão para acessar a configuração da empresa.","Your profile is not allowed to access company settings."))return;clearTabs();$("tabCompany").classList.add("active");showOnly("companyArea");await loadCompanyConfig()}
 async function loadCompanyConfig(){try{const r=await menuApi({action:"companyconfig"});if(!r.ok)throw new Error(r.detail||"Erro ao carregar configuração.");const c=r.config||{};$("companyId").value=c.idEmpresa||"EMP-0001";$("companyName").value=c.nomeEmpresa||"";$("companyTradeName").value=c.nomeFantasia||"";$("companyCnpj").value=c.cnpj||"";$("companyMaintenanceEmail").value=c.emailManutencao||"";$("companyAdminEmail").value=c.emailAdministrativo||"";$("companyLogo").value=c.logo||"";$("companyPrimaryColor").value=/^#[0-9a-f]{6}$/i.test(c.corPrincipal||"")?c.corPrincipal:"#0b315e";$("companyTimezone").value=c.fusoHorario||"America/New_York";$("companySystemName").value=c.nomeSistema||"QRManut";$("companyActive").checked=!!c.empresaAtiva;$("companyMainUrl").value=c.urlPrincipal||"";$("companyReportsEmail").value=c.emailRelatorios||"";$("companyOccurrenceEmailTo").value=c.emailOcPrincipal||c.emailManutencao||"";$("companyOccurrenceEmailCc").value=c.emailOcCc||"";$("companyNotes").value=c.observacoes||"";updateCompanyPreview()}catch(e){$("companyMessage").className="message error";$("companyMessage").textContent=e.message}}
-function updateCompanyPreview(){$("companyPreviewName").textContent=($("companySystemName").value||"QRManut")+" • "+($("companyTradeName").value||$("companyName").value||"");const l=$("companyLogo").value.trim();if(l){$("companyLogoPreview").src=l;show("companyLogoPreview")}else hide("companyLogoPreview")}
+function updateCompanyPreview(){
+  $("companyPreviewName").textContent=($("companySystemName").value||"QRManut")+" • "+($("companyTradeName").value||$("companyName").value||"");
+  applyPrimaryColor7662411_($("companyPrimaryColor").value||"#0b315e");
+  const l=$("companyLogo").value.trim();
+  if(l){$("companyLogoPreview").src=l;show("companyLogoPreview")}else hide("companyLogoPreview");
+}
 async function saveCompanyConfig(){
   const b=$("saveCompanyConfig");
   if(!b || b.dataset.loading==="1")return;
@@ -2633,7 +2746,7 @@ async function loadProfilePermissionsAdmin(){
   try{
     const r=await menuApi({action:"profilepermissionsadmin"});
     if(!r.ok)throw new Error(r.detail||"Erro ao carregar permissões.");
-    if(r.backendVersion!=="7.6.6.24")throw new Error(qrLanguage==="en-US"
+    if(r.backendVersion!=="7.6.6.24.11")throw new Error(qrLanguage==="en-US"
       ?"The HTML is updated, but Apps Script is still on an older deployment. Update the .gs file and deploy a new version."
       :"O HTML está atualizado, mas o Apps Script ainda está em uma implantação anterior. Atualize o arquivo .gs e faça uma nova versão da implantação.");
     profilePermissionsAdminData=r.data;
@@ -2707,9 +2820,9 @@ async function loadProvidersAdmin(){
   try{
     const r=await menuApi({action:"providersadmin"});
     if(!r.ok)throw new Error(r.detail||t("Erro ao carregar.","Error loading service providers."));
-    if(r.backendVersion!=="7.6.6.24")throw new Error(t(
-      "O HTML 7.6.6.24 está atualizado, mas o Apps Script ainda está em uma versão anterior. Atualize o arquivo .gs e faça uma nova versão da implantação.",
-      "The 7.6.6.24 HTML is updated, but Apps Script is still on an older version. Update the .gs file and deploy a new version."
+    if(r.backendVersion!=="7.6.6.24.11")throw new Error(t(
+      "O HTML 7.6.6.24.11 está atualizado, mas o Apps Script ainda está em uma versão anterior. Atualize o arquivo .gs e faça uma nova versão da implantação.",
+      "The 7.6.6.24.11 HTML is updated, but Apps Script is still on an older version. Update the .gs file and deploy a new version."
     ));
     providersAdminData=r.providers||[];
     $("providersAdminStatus").textContent=`${providersAdminData.length} ${t("prestador(es)","service provider(s)")}`;
@@ -5040,7 +5153,9 @@ document.getElementById("qrLangEn").addEventListener("click",function(){
   qrTranslateRoutineScreens();
 });
 
-$("openSystemLoginButton").onclick=()=>requireSystemLogin(openMainMenu);$("forgotPasswordButton").onclick=openForgotPassword;$("cancelRecovery").onclick=()=>{$("forgotPasswordModal").style.display="none";$("systemLoginModal").style.display="flex"};$("sendRecovery").onclick=sendRecovery;$("openAccessRequestButton").onclick=openAccessRequestForm76616;$("cancelAccessRequestButton").onclick=()=>{hide("accessRequestForm");show("recoveryNotRegisteredBox")};$("sendAccessRequestButton").onclick=sendAccessRequest76616;$("accessRequestBackToLoginButton").onclick=backToLoginAfterAccessRequest76617;$("resendPendingInviteButton").onclick=resendPendingInvite76616;$("saveNewPassword").onclick=savePasswordFromToken;$("tabUsers").onclick=showUsersTab;$("newUserButton").onclick=openNewUser;$("tabPermissions").onclick=showProfilePermissionsTab;$("permissionsBackMenu").onclick=openDefaultAllowedTab;$("saveProfilePermissions").onclick=saveProfilePermissions76613;$("resetProfilePermissions").onclick=resetProfilePermissions76613;$("tabAudit").onclick=showAuditTab;$("tabProvidersAdmin").onclick=showProvidersAdminTab;$("tabCompany").onclick=showCompanyTab;$("companyBackMenu").onclick=openDefaultAllowedTab;$("providersBackMenu").onclick=openDefaultAllowedTab;$("newProviderButton").onclick=()=>openProviderModal(null);$("cancelProvider").onclick=()=>{$("providerModal").style.display="none"};$("closeProviderConsult").onclick=()=>{$("providerConsultModal").style.display="none"};$("saveProvider").onclick=saveProviderAdmin;$("saveCompanyConfig").onclick=saveCompanyConfig;["companyName","companyTradeName","companySystemName","companyLogo"].forEach(id=>$(id).oninput=updateCompanyPreview);$("auditRefresh").onclick=loadAudit;$("auditClear").onclick=clearAuditFilters;$("auditSearch").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();loadAudit()}};$("cancelUser").onclick=()=>{$("userModal").style.display="none"};$("saveUser").onclick=saveUser;$("userEmail").oninput=updateUserPrimaryAction76617;$("cancelAdminUserPassword").onclick=()=>{$("adminUserPasswordModal").style.display="none"};$("saveAdminUserPassword").onclick=saveAdminUserPassword76617;$("sendSystemLogin").onclick=doSystemLogin;$("systemPassword").onkeydown=e=>{if(e.key==="Enter")doSystemLogin()};$("cancelSystemLogin").onclick=()=>{systemLoginNextAction=null;$("systemLoginModal").style.display="none";if(!systemSession)showMenuGate()};$("systemLogoutButton").onclick=logoutSystemMenu;$("installAppButton").onclick=installQRManut;$("tabSearch").onclick=showSearchTab;$("tabPending").onclick=showPendingTab;$("pendingApplyFilters").onclick=loadPending;$("pendingClearFilters").onclick=clearPendingFilters;$("tabOccurrenceReport").onclick=showOccurrenceReportTab;$("tabPreventive").onclick=showPreventiveTab;$("tabDocuments").onclick=showDocumentsTab;$("tabMaintenancePending").onclick=showMaintenancePendingTab;$("maintenancePendingBackMenu").onclick=openDefaultAllowedTab;$("maintenancePendingRefresh").onclick=loadMaintenancePending;$("maintenancePendingClear").onclick=clearMaintenancePendingFilters;$("maintenancePendingSearch").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();loadMaintenancePending()}};$("maintenancePendingStatusFilter").onchange=loadMaintenancePending;$("maintenancePendingPriorityFilter").onchange=loadMaintenancePending;$("preventiveNeedsAction").onchange=togglePreventiveActionFields;$("tabOccurrenceCatalog").onclick=showOccurrenceCatalogTab;$("occurrenceCatalogBackMenu").onclick=openDefaultAllowedTab;$("saveCatalogCategory").onclick=saveCatalogCategory;$("clearCatalogCategory").onclick=clearCatalogCategoryForm;$("saveCatalogComponent").onclick=saveCatalogComponent;$("clearCatalogComponent").onclick=clearCatalogComponentForm;$("category").onchange=()=>populateOccurrenceComponentSelect();$("manageCategory").onchange=()=>populateManageCatalog($("manageCategory").value,"");$("tabDocumentUpload").onclick=showDocumentUploadTab;$("documentUploadBackMenu").onclick=cancelDocumentUpload;$("uploadDocumentChooseFileButton").onclick=()=>$("uploadDocumentFile").click();$("uploadDocumentFile").onchange=prepareDocumentUploadFile;$("sendDocumentUpload").onclick=sendDocumentUpload;$("clearDocumentUpload").onclick=clearDocumentUploadForm;$("searchButton").onclick=searchAssets;$("searchInput").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();searchAssets()}};$("documentSearchButton").onclick=searchDocuments;$("documentSearchInput").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();searchDocuments()}};$("documentTypeFilter").onchange=searchDocuments;$("documentDisciplineFilter").onchange=searchDocuments;$("documentFloorFilter").onchange=searchDocuments;$("reportButton").onclick=openReport;$("preventiveButton").onclick=requestPreventive;
+$("openSystemLoginButton").onclick=()=>requireSystemLogin(openMainMenu);$("forgotPasswordButton").onclick=openForgotPassword;$("cancelRecovery").onclick=()=>{$("forgotPasswordModal").style.display="none";$("systemLoginModal").style.display="flex"};$("sendRecovery").onclick=sendRecovery;$("openAccessRequestButton").onclick=openAccessRequestForm76616;$("cancelAccessRequestButton").onclick=()=>{hide("accessRequestForm");show("recoveryNotRegisteredBox")};$("sendAccessRequestButton").onclick=sendAccessRequest76616;$("accessRequestBackToLoginButton").onclick=backToLoginAfterAccessRequest76617;$("resendPendingInviteButton").onclick=resendPendingInvite76616;$("saveNewPassword").onclick=savePasswordFromToken;$("tabUsers").onclick=showUsersTab;$("newUserButton").onclick=openNewUser;$("tabPermissions").onclick=showProfilePermissionsTab;$("permissionsBackMenu").onclick=openDefaultAllowedTab;$("saveProfilePermissions").onclick=saveProfilePermissions76613;$("resetProfilePermissions").onclick=resetProfilePermissions76613;$("tabAudit").onclick=showAuditTab;$("tabProvidersAdmin").onclick=showProvidersAdminTab;$("tabCompany").onclick=showCompanyTab;$("companyBackMenu").onclick=openDefaultAllowedTab;$("providersBackMenu").onclick=openDefaultAllowedTab;$("newProviderButton").onclick=()=>openProviderModal(null);$("cancelProvider").onclick=()=>{$("providerModal").style.display="none"};$("closeProviderConsult").onclick=()=>{$("providerConsultModal").style.display="none"};$("saveProvider").onclick=saveProviderAdmin;$("saveCompanyConfig").onclick=saveCompanyConfig;["companyName","companyTradeName","companySystemName","companyLogo"].forEach(id=>$(id).oninput=updateCompanyPreview);
+$("companyPrimaryColor").addEventListener("input",updateCompanyPreview);
+$("companyPrimaryColor").addEventListener("change",updateCompanyPreview);$("auditRefresh").onclick=loadAudit;$("auditClear").onclick=clearAuditFilters;$("auditSearch").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();loadAudit()}};$("cancelUser").onclick=()=>{$("userModal").style.display="none"};$("saveUser").onclick=saveUser;$("userEmail").oninput=updateUserPrimaryAction76617;$("cancelAdminUserPassword").onclick=()=>{$("adminUserPasswordModal").style.display="none"};$("saveAdminUserPassword").onclick=saveAdminUserPassword76617;$("sendSystemLogin").onclick=doSystemLogin;$("systemPassword").onkeydown=e=>{if(e.key==="Enter")doSystemLogin()};$("cancelSystemLogin").onclick=()=>{systemLoginNextAction=null;$("systemLoginModal").style.display="none";if(!systemSession)showMenuGate()};$("systemLogoutButton").onclick=logoutSystemMenu;$("installAppButton").onclick=installQRManut;$("tabSearch").onclick=showSearchTab;$("tabPending").onclick=showPendingTab;$("pendingApplyFilters").onclick=loadPending;$("pendingClearFilters").onclick=clearPendingFilters;$("tabOccurrenceReport").onclick=showOccurrenceReportTab;$("tabPreventive").onclick=showPreventiveTab;$("tabDocuments").onclick=showDocumentsTab;$("tabMaintenancePending").onclick=showMaintenancePendingTab;$("maintenancePendingBackMenu").onclick=openDefaultAllowedTab;$("maintenancePendingRefresh").onclick=loadMaintenancePending;$("maintenancePendingClear").onclick=clearMaintenancePendingFilters;$("maintenancePendingSearch").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();loadMaintenancePending()}};$("maintenancePendingStatusFilter").onchange=loadMaintenancePending;$("maintenancePendingPriorityFilter").onchange=loadMaintenancePending;$("preventiveNeedsAction").onchange=togglePreventiveActionFields;$("tabOccurrenceCatalog").onclick=showOccurrenceCatalogTab;$("occurrenceCatalogBackMenu").onclick=openDefaultAllowedTab;$("saveCatalogCategory").onclick=saveCatalogCategory;$("clearCatalogCategory").onclick=clearCatalogCategoryForm;$("saveCatalogComponent").onclick=saveCatalogComponent;$("clearCatalogComponent").onclick=clearCatalogComponentForm;$("category").onchange=()=>populateOccurrenceComponentSelect();$("manageCategory").onchange=()=>populateManageCatalog($("manageCategory").value,"");$("tabDocumentUpload").onclick=showDocumentUploadTab;$("documentUploadBackMenu").onclick=cancelDocumentUpload;$("uploadDocumentChooseFileButton").onclick=()=>$("uploadDocumentFile").click();$("uploadDocumentFile").onchange=prepareDocumentUploadFile;$("sendDocumentUpload").onclick=sendDocumentUpload;$("clearDocumentUpload").onclick=clearDocumentUploadForm;$("searchButton").onclick=searchAssets;$("searchInput").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();searchAssets()}};$("documentSearchButton").onclick=searchDocuments;$("documentSearchInput").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();searchDocuments()}};$("documentTypeFilter").onchange=searchDocuments;$("documentDisciplineFilter").onchange=searchDocuments;$("documentFloorFilter").onchange=searchDocuments;$("reportButton").onclick=openReport;$("preventiveButton").onclick=requestPreventive;
 $("searchAssetsButton").onclick=function(){if(currentAsset?.id)setOriginAsset(currentAsset.id);requireSystemLogin(()=>{hide("assetScreen");show("searchScreen");openMainMenu();focusBackAssetButton()})};
 $("backAssetButton").onclick=function(){const id=getOriginAsset();if(!id)return;clearOriginAsset();location.href="?id="+encodeURIComponent(id)};
 $("occReportRefresh").onclick=loadOccurrenceReport;$("occReportPdf").onclick=generateOccurrenceReportPdf;["occReportStart","occReportEnd","occReportProvider","occReportCategory","occReportComponent","occReportFloor","occReportLocation"].forEach(id=>$(id).onchange=markOccurrenceReportDirty);$("controlRefresh").onclick=refreshPreventiveControl;$("controlCompetence").onchange=loadPreventiveControl;$("controlProvider").onchange=()=>{if(["MASTER","GESTOR"].includes(systemSession?.perfil))loadPreventiveControl();else renderControlList()};$("controlAll").onclick=()=>setControlMode("all");$("controlPending").onclick=()=>setControlMode("pending");$("controlDone").onclick=()=>setControlMode("done");$("sendMonthlyReport").onclick=sendMonthlyPreventiveReport;
