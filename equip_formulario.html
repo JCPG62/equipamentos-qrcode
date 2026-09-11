@@ -1,4 +1,4 @@
-<!-- QRManut 7.6.6.24 frontend hotfix: CONFIG-UX-R3 + OC-PERFORMANCE-R4 -->
+<!-- QRManut 7.6.6.24 frontend hotfix: CONFIG-UX-R3 + OC-PERFORMANCE-R4 + RECOVERY-R7 -->
 <!doctype html>
 <html lang="pt-br">
 <head>
@@ -3583,6 +3583,10 @@ function openForgotPassword(){
   $("recoveryIdentifier").value=$("systemUsername").value.trim();
   resetRecoveryFlow76616();
   $("forgotPasswordModal").style.display="flex";
+  updateRecoveryCooldownUi76624();
+  if(recoveryCooldownRemaining76624()>0 && !recoveryCooldownTimer76624){
+    recoveryCooldownTimer76624=setInterval(updateRecoveryCooldownUi76624,1000);
+  }
 }
 function openAccessRequestForm76616(){
   const id=$("recoveryIdentifier").value.trim();
@@ -3593,24 +3597,95 @@ function openAccessRequestForm76616(){
   hide("recoveryNotRegisteredBox");show("accessRequestForm");
   setTimeout(()=>$("accessRequestName").focus(),50);
 }
+let recoveryCooldownTimer76624=null;
+const RECOVERY_COOLDOWN_KEY_76624="qr_recovery_cooldown_until_76624";
+
+function recoveryCooldownRemaining76624(){
+  try{
+    const until=Number(sessionStorage.getItem(RECOVERY_COOLDOWN_KEY_76624)||0);
+    return Math.max(0,Math.ceil((until-Date.now())/1000));
+  }catch(e){return 0}
+}
+
+function updateRecoveryCooldownUi76624(){
+  const b=$("sendRecovery");
+  if(!b)return;
+  const left=recoveryCooldownRemaining76624();
+
+  if(left<=0){
+    if(recoveryCooldownTimer76624){
+      clearInterval(recoveryCooldownTimer76624);
+      recoveryCooldownTimer76624=null;
+    }
+    try{sessionStorage.removeItem(RECOVERY_COOLDOWN_KEY_76624)}catch(e){}
+    b.disabled=false;
+    b.textContent=qrLanguage==="en-US"?"Send instructions":"Enviar instruções";
+    return;
+  }
+
+  b.disabled=true;
+  const min=Math.floor(left/60),sec=String(left%60).padStart(2,"0");
+  b.textContent=qrLanguage==="en-US"
+    ?`Wait ${min}:${sec}`
+    :`Aguarde ${min}:${sec}`;
+}
+
+function startRecoveryCooldown76624(seconds){
+  const s=Math.max(1,Number(seconds||300));
+  try{sessionStorage.setItem(RECOVERY_COOLDOWN_KEY_76624,String(Date.now()+s*1000))}catch(e){}
+  updateRecoveryCooldownUi76624();
+  if(recoveryCooldownTimer76624)clearInterval(recoveryCooldownTimer76624);
+  recoveryCooldownTimer76624=setInterval(updateRecoveryCooldownUi76624,1000);
+}
+
 async function sendRecovery(){
   const id=$("recoveryIdentifier").value.trim();
   if(!id){$("recoveryMessage").className="message error";$("recoveryMessage").textContent=qrLanguage==="en-US"?"Enter your username or email.":"Informe seu usuário ou e-mail.";return}
+  if(recoveryCooldownRemaining76624()>0){
+    updateRecoveryCooldownUi76624();
+    return;
+  }
+
   resetRecoveryFlow76616();
-  $("sendRecovery").disabled=true;$("sendRecovery").textContent=qrLanguage==="en-US"?"Checking...":"Verificando...";
+  $("sendRecovery").disabled=true;
+  $("sendRecovery").textContent=qrLanguage==="en-US"?"Checking...":"Verificando...";
+
+  let keepDisabled=false;
   try{
     const r=await apiPost({action:"forgotPassword",recoveryIdentifier:id});
     if(!r.ok)throw new Error(r.detail||"Não foi possível processar a solicitação.");
+
     $("recoveryMessage").className="message success";
     $("recoveryMessage").textContent=qrLanguage==="en-US"
       ?"If an eligible account exists for that username or email, access instructions will be sent to the registered address."
       :(r.message||"Se existir uma conta elegível para esse usuário ou e-mail, as instruções de acesso serão enviadas ao endereço cadastrado.");
+
     $("recoveryNotRegisteredBox").querySelector("h3").textContent=qrLanguage==="en-US"?"👤 Need access?":"👤 Precisa de acesso?";
     $("recoveryNotRegisteredText").textContent=qrLanguage==="en-US"?"If you do not yet have an account, you can request access without revealing whether the identifier above exists.":"Se você ainda não possui cadastro, pode solicitar acesso sem revelar se o identificador informado existe no sistema.";
     show("recoveryNotRegisteredBox");
     hide("pendingInviteBox");
-  }catch(e){$("recoveryMessage").className="message error";$("recoveryMessage").textContent=e.message}
-  finally{$("sendRecovery").disabled=false;$("sendRecovery").textContent=qrLanguage==="en-US"?"Send instructions":"Enviar instruções"}
+
+    // 7.6.6.24 R7 — após uma solicitação aceita, bloqueia novo envio durante
+    // a mesma janela de 5 minutos usada pelo backend.
+    keepDisabled=true;
+    startRecoveryCooldown76624(300);
+  }catch(e){
+    const msg=String(e&&e.message||e||"");
+    $("recoveryMessage").className="message error";
+    $("recoveryMessage").textContent=msg;
+
+    // Se o backend informou limite de frequência, não deixa o botão ativo
+    // oferecendo uma ação que será recusada novamente.
+    if(/aguarde alguns minutos|wait a few minutes|nova solicita[cç][aã]o de recupera[cç][aã]o/i.test(msg)){
+      keepDisabled=true;
+      startRecoveryCooldown76624(300);
+    }
+  }finally{
+    if(!keepDisabled){
+      $("sendRecovery").disabled=false;
+      $("sendRecovery").textContent=qrLanguage==="en-US"?"Send instructions":"Enviar instruções";
+    }
+  }
 }
 async function resendPendingInvite76616(){
   const id=$("recoveryIdentifier").value.trim(),b=$("resendPendingInviteButton");
