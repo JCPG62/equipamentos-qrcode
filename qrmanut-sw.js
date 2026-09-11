@@ -1,80 +1,5672 @@
-const CACHE_NAME="qrmanut-static-7.6.6.24.11";
-const STATIC_ASSETS=[
-  "./equip_formulario.html",
-  "./manifest.webmanifest",
-  "./qrmanut-180.png",
-  "./qrmanut-192.png",
-  "./qrmanut-512.png"
-];
-
-self.addEventListener("install",event=>{
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache=>Promise.allSettled(STATIC_ASSETS.map(asset=>cache.add(asset))))
-      .then(()=>self.skipWaiting())
-  );
-});
-
-self.addEventListener("activate",event=>{
-  event.waitUntil(
-    caches.keys()
-      .then(keys=>Promise.all(
-        keys
-          .filter(key=>key.startsWith("qrmanut-static-")&&key!==CACHE_NAME)
-          .map(key=>caches.delete(key))
-      ))
-      .then(()=>self.clients.claim())
-  );
-});
-
-function cacheIfValid_(cache,key,response){
-  if(!response||!response.ok||response.type==="opaque")return Promise.resolve(response);
-  const copy=response.clone();
-  return cache.put(key,copy)
-    .then(()=>response)
-    .catch(()=>response);
+<!-- QRManut 7.6.6.24.12: Onda 2A + R10 Login + R11 Cor Principal + R12 Solicitações de Manutenção / SOL -->
+<!doctype html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>QRManut</title>
+<meta name="theme-color" content="#0b315e">
+<meta name="application-name" content="QRManut">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="QRManut">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="./qrmanut-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="./qrmanut-512.png">
+<link rel="apple-touch-icon" sizes="180x180" href="./qrmanut-180.png">
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f5f7fa;color:#111827;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}.container{max-width:960px;margin:auto;padding:16px}.card{background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:16px;box-shadow:0 5px 15px rgba(0,0,0,.05)}h1{margin:0 0 5px;font-size:1.35rem}h2{margin-top:0;font-size:1.1rem}h3{font-size:1rem;margin-top:18px}.hidden{display:none!important}.muted{color:#6b7280}.badge{display:inline-block;background:#e8eef8;color:#1f4e78;padding:5px 9px;border-radius:999px;font-size:.8rem;font-weight:700;margin-top:6px}.section{border-top:1px solid #e5e7eb;margin-top:18px;padding-top:14px}.pair{padding:7px 0;border-bottom:1px dashed #eee}.pair:last-child{border-bottom:0}.actions{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:10px;margin-top:20px}.chip,.btn-preventive,.btn-search{display:inline-flex;align-items:center;justify-content:center;text-align:center;min-height:44px;padding:11px 17px;border-radius:999px;font-weight:700;cursor:pointer}.chip{background:#dc2626;color:#fff;border:0}.btn-preventive{background:#047857;color:#fff;border:0}.btn-search{background:#fff;color:#1f4e78;border:1px solid #1f4e78}.status-card{margin-top:16px;border-radius:13px;padding:13px;border:1px solid #e5e7eb}.status-card.ok{background:#ecfdf5}.status-card.critico{background:#fef2f2}.status-card.atendimento{background:#fffbeb}.status-card.aguardando{background:#fff7ed}.status-title{font-weight:800}.status-info{margin-top:5px;font-size:.86rem;color:#6b7280}.search-title{color:#1f4e78;font-size:1.45rem;font-weight:800}
+.system-access-info{margin:12px 0;padding:10px 12px;border:1px solid #c7d2fe;background:#eef2ff;color:#3730a3;border-radius:10px;font-size:.84rem}.system-access-row{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}.menu-locked-card{margin-top:18px;text-align:center;padding:22px}.menu-locked-card .btn{margin-top:12px}.system-login-note{font-size:.84rem;color:#6b7280;line-height:1.45;margin-top:8px}
+.install-app-button{margin-top:12px;border:0;background:#0b315e;color:#fff;border-radius:999px;padding:10px 15px;font-weight:800;cursor:pointer}
+.install-hint{margin-top:10px;padding:10px 12px;border:1px solid #bfdbfe;background:#eff6ff;color:#1e3a8a;border-radius:10px;font-size:.84rem;line-height:1.45}.menu-busca{display:grid;grid-template-columns:repeat(11,1fr);gap:10px;margin:18px 0}.menu-button{border:1px solid #d1d5db;background:#fff;border-radius:12px;padding:13px;font-weight:700;cursor:pointer}.menu-button.active{background:#1f4e78;color:#fff}.menu-button.preventive.active{background:#047857;border-color:#047857}.menu-button.documents.active{background:#7c3aed;border-color:#7c3aed}.menu-button.reports.active{background:#0f766e;border-color:#0f766e}.menu-button.users.active{background:#4338ca;border-color:#4338ca}.user-card{margin-top:10px;border:1px solid #e5e7eb;border-radius:12px;padding:12px;background:#fff}.user-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.auth-link{border:0;background:none;color:#1f4e78;text-decoration:underline;padding:6px 0;cursor:pointer}.password-rules{font-size:.8rem;color:#6b7280;line-height:1.45;margin-top:6px}
+.access-request-box{margin-top:14px;padding:13px;border:1px solid #bfdbfe;background:#eff6ff;border-radius:12px}
+.access-request-box h3{margin:0 0 5px;color:#1e3a8a}
+.access-request-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.access-request-card{margin-top:10px;border:1px solid #e5e7eb;border-left:5px solid #2563eb;border-radius:12px;padding:12px;background:#fff}
+.access-request-card.pending{border-left-color:#d97706}
+.access-request-card.approved{border-left-color:#059669}
+.access-request-card.rejected{border-left-color:#dc2626}
+.access-request-badge{display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:24px;padding:0 7px;margin-left:5px;border-radius:999px;background:#dc2626;color:#fff;font-size:.75rem;font-weight:800}
+.password-wrap{position:relative}.password-wrap input{padding-right:48px}.password-toggle{position:absolute;right:4px;top:50%;transform:translateY(-50%);width:40px;height:40px;border:0;background:transparent;color:#374151;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:8px}.password-toggle:hover{background:#f3f4f6}.password-toggle svg{width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.menu-button.audit.active{background:#374151;border-color:#374151}.menu-button.company.active{background:#7c2d12;border-color:#7c2d12}.menu-button.providers-admin.active{background:#1d4ed8;border-color:#1d4ed8}.admin-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;align-items:end}.admin-grid .full{grid-column:1/-1}
+#companyArea .company-long-field{grid-column:1/-1}
+#companyArea .company-long-field input,#companyArea .company-long-field textarea{min-height:46px}
+@media(max-width:700px){
+  #companyArea .admin-grid{grid-template-columns:1fr}
+  #companyArea .admin-grid .full,#companyArea .company-long-field{grid-column:auto}
+}.provider-admin-card{margin-top:10px;border:1px solid #dbeafe;border-left:5px solid #1d4ed8;border-radius:12px;padding:12px;background:#fff}.company-preview{margin-top:12px;padding:12px;border:1px solid #e5e7eb;border-radius:12px;background:#f9fafb}.company-logo-preview{max-width:180px;max-height:90px;display:block;margin-top:8px}.switch-row{display:flex;align-items:center;gap:8px;margin-top:10px}.switch-row input{width:auto}.audit-filters{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;align-items:end}.audit-filters label{min-width:0}.audit-filters input,.audit-filters select{width:100%;min-width:0;max-width:100%;box-sizing:border-box}.audit-search-field{grid-column:1 / -1}.audit-card{margin-top:10px;border:1px solid #e5e7eb;border-left:5px solid #374151;border-radius:12px;padding:12px;background:#fff}.audit-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.audit-meta{margin-top:7px;line-height:1.55;color:#4b5563;font-size:.86rem}.audit-detail{margin-top:8px;padding:8px;border-radius:8px;background:#f9fafb;font-size:.82rem;white-space:pre-wrap;word-break:break-word}.audit-result{padding:4px 8px;border-radius:999px;font-size:.74rem;font-weight:800}.audit-result.success{background:#dcfce7;color:#166534}.audit-result.fail{background:#fee2e2;color:#991b1b}.audit-result.blocked{background:#ffedd5;color:#9a3412}.search-help{background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:12px;margin-bottom:12px;color:#1e3a8a;line-height:1.5}.search-help strong{display:block;margin-bottom:4px}.search-help ul{margin:6px 0 0 20px;padding:0}.search-box{display:flex;gap:8px}.search-box input{flex:1}.search-box button{border:0;background:#1f4e78;color:#fff;border-radius:9px;padding:0 18px}.back-asset-wrap{margin-bottom:12px;text-align:left}.back-asset-btn{border:1px solid #1f4e78;background:#fff;color:#1f4e78;border-radius:10px;padding:10px 13px;font-weight:700;cursor:pointer}.pending-filters{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;align-items:end}.pending-filter-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.pending-access-note{margin-bottom:10px;padding:9px 11px;border-radius:10px;background:#f9fafb;border:1px solid #e5e7eb;font-size:.84rem;color:#4b5563}.document-filters{display:grid;grid-template-columns:2fr 1fr 1fr 1fr auto;gap:8px;align-items:end}.occ-report-filters{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;align-items:end}.occ-report-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.occ-report-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0}.occ-report-summary-card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:11px;text-align:center}.occ-report-summary-card strong{display:block;font-size:1.25rem}.occ-category-summary{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0 16px}.occ-category-chip{background:#ecfeff;border:1px solid #a5f3fc;color:#155e75;border-radius:999px;padding:6px 10px;font-size:.8rem;font-weight:700}.occ-report-card{margin-top:11px;padding:14px;border:1px solid #e5e7eb;border-left:5px solid #0f766e;border-radius:13px;background:#fff}.occ-report-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.occ-report-meta{margin-top:8px;line-height:1.55;color:#4b5563;font-size:.86rem}.occ-report-links{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}.occ-report-links a{font-weight:700}.occ-pdf-box{margin-top:18px;padding:14px;border:1px solid #99f6e4;background:#f0fdfa;border-radius:12px}.occ-pdf-link{display:inline-flex;margin-top:8px;padding:10px 14px;border-radius:9px;background:#0f766e;color:#fff;text-decoration:none;font-weight:700}.document-card{margin-top:11px;padding:14px;border:1px solid #e5e7eb;border-left:5px solid #7c3aed;border-radius:13px;background:#fff}.document-title{font-weight:800}.document-meta{margin-top:7px;line-height:1.55;color:#4b5563;font-size:.86rem}.document-open{display:inline-flex;align-items:center;justify-content:center;margin-top:10px;padding:10px 14px;border-radius:9px;background:#7c3aed;color:#fff;text-decoration:none;font-weight:700}.document-empty{margin-top:14px;padding:15px;border:1px dashed #d1d5db;border-radius:12px;text-align:center;color:#6b7280}.asset-document-list{display:grid;gap:10px}.asset-document-card{padding:12px;border:1px solid #ddd6fe;border-left:5px solid #7c3aed;border-radius:12px;background:#faf5ff}.asset-document-card .document-open{margin-top:8px}.search-result,.pending-card,.control-item,.history-card,.preventive-card{margin-top:11px;padding:14px;border:1px solid #e5e7eb;border-radius:13px;background:#fff}.search-result-id{font-size:.8rem;font-weight:800;color:#1f4e78}.search-result-name{font-weight:700}.search-result-data{margin-top:8px;line-height:1.55;color:#4b5563;font-size:.86rem}.open-button{display:block;margin-top:10px;padding:10px;border-radius:9px;background:#1f4e78;color:#fff;text-align:center;text-decoration:none;font-weight:700}.pending-summary,.control-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0}.pending-number,.control-summary-card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:11px;text-align:center}.pending-number strong,.control-summary-card strong{display:block;font-size:1.3rem}.preventive-login-info{margin-bottom:13px;padding:10px;background:#ecfdf5;border-radius:10px;color:#065f46;font-size:.85rem}.control-header{display:flex;flex-wrap:wrap;gap:10px;align-items:end}.control-field{flex:1;min-width:180px}.progress-box{margin-top:14px;padding:13px;border:1px solid #e5e7eb;border-radius:12px}.progress-head{display:flex;justify-content:space-between;font-weight:700}.progress-track{height:13px;background:#e5e7eb;border-radius:999px;overflow:hidden;margin-top:8px}.progress-fill{height:100%;width:0;background:#059669}.control-tabs{display:flex;flex-wrap:wrap;gap:8px;margin-top:15px}.control-tab{padding:8px 12px;border:1px solid #d1d5db;border-radius:999px;background:#fff;font-weight:700}.control-tab.active{background:#111827;color:#fff}.control-item.pending{border-left:5px solid #dc2626}.control-item.done{border-left:5px solid #059669}.control-head{display:flex;justify-content:space-between;gap:10px}.control-status{padding:5px 8px;border-radius:999px;font-size:.75rem;font-weight:800}.control-status.pending{background:#fee2e2;color:#991b1b}.control-status.done{background:#dcfce7;color:#166534}.provider-card{margin-top:8px;padding:10px;border:1px solid #e5e7eb;border-radius:10px}.report-action-box{margin-top:20px;padding:15px;border:1px solid #bfdbfe;background:#eff6ff;border-radius:13px;text-align:center}.report-action-box button{margin-top:8px}label{display:grid;gap:5px;margin-top:12px;font-weight:600}input,select,textarea{width:100%;padding:11px;border:1px solid #d1d5db;border-radius:9px;font:inherit}textarea{resize:vertical}button{font:inherit}.btn{border:0;border-radius:9px;padding:11px 15px;background:#111827;color:#fff;cursor:pointer}.btn-green{background:#047857}.btn-blue{background:#1f4e78}.btn-danger{background:#b91c1c}.btn-secondary{background:#e5e7eb;color:#111827}button:disabled{opacity:.55;cursor:not-allowed}.requirements-box{margin-top:13px;padding:11px;border-radius:11px;background:#f9fafb;border:1px solid #e5e7eb}.requirement{margin:5px 0;font-size:.85rem}.required-yes{color:#991b1b;font-weight:700}.required-no{color:#047857}.signature-box{margin-top:14px;padding:12px;border:1px solid #d1d5db;border-radius:12px;background:#f9fafb}.signature-title{font-weight:800}.signature-help{margin-top:3px;font-size:.8rem;color:#6b7280}.signature-canvas-wrap{margin-top:10px;border:2px dashed #9ca3af;background:#fff;border-radius:9px;overflow:hidden}#signatureCanvas{width:100%;height:180px;display:block;touch-action:none}.modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;padding:12px;background:rgba(0,0,0,.45);z-index:999}.modal-box{width:min(700px,96vw);max-height:92vh;overflow:auto;background:#fff;border-radius:15px;padding:17px}.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}.photo-preview{display:none;max-width:100%;max-height:280px;margin-top:10px}.message{display:none;margin-top:12px;padding:10px;border-radius:8px;line-height:1.5}.message.error{display:block;background:#fee2e2;color:#991b1b}.message.loading{display:block;background:#fef3c7;color:#92400e}.message.success{display:block;background:#d1fae5;color:#065f46}.preventive-info{padding:11px;border:1px solid #a7f3d0;border-radius:10px;background:#ecfdf5;line-height:1.6}.tag{display:inline-block;padding:4px 8px;margin:5px 4px 5px 0;background:#eef2ff;border-radius:999px;font-size:.75rem}.preventive-card{background:#f0fdf4}.preventive-id{color:#047857;font-weight:800}.footer{margin-top:20px;text-align:center;color:#9ca3af;font-size:.72rem}iframe{display:none}@media(max-width:700px){.menu-busca{grid-template-columns:1fr}.document-filters,.occ-report-filters,.pending-filters{grid-template-columns:1fr}.pending-summary,.control-summary,.occ-report-summary{grid-template-columns:1fr 1fr}.search-box{display:grid}.search-box button{padding:12px}.actions{flex-direction:column}.chip,.btn-preventive,.btn-search{width:min(100%,380px)}.modal-actions{flex-direction:column-reverse}.modal-actions button{width:100%}}
+.photo-source-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.photo-source-actions .btn{flex:1;min-width:145px}.photo-source-hidden{position:absolute!important;left:-9999px!important;width:1px!important;height:1px!important;opacity:0!important;pointer-events:none!important}.menu-button.upload-doc.active{background:#0369a1;border-color:#0369a1}.document-upload-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;align-items:end}.document-upload-grid .full{grid-column:1/-1}.upload-file-box{margin-top:12px;padding:14px;border:2px dashed #94a3b8;border-radius:12px;background:#f8fafc}.upload-file-name{margin-top:7px;font-size:.86rem;color:#475569}.upload-success-card{margin-top:12px;padding:12px;border:1px solid #86efac;border-radius:12px;background:#f0fdf4}@media(max-width:700px){.document-upload-grid{grid-template-columns:1fr}.document-upload-grid .full{grid-column:auto}}.qr-language-switcher{display:flex;justify-content:flex-end;gap:7px;margin:0 0 10px 0;flex-wrap:wrap}.qr-language-switcher button{border:1px solid #cbd5e1;background:#fff;color:#1f2937;border-radius:999px;padding:7px 11px;font-weight:700;cursor:pointer}.qr-language-switcher button.active{background:#0b315e;color:#fff;border-color:#0b315e}
+.qr-native-date-hidden{
+  position:absolute!important;
+  left:-9999px!important;
+  width:1px!important;
+  height:1px!important;
+  opacity:0!important;
+  pointer-events:none!important;
+}
+.qr-date-display{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  width:100%;
+  min-height:45px;
+  padding:10px 12px;
+  border:1px solid #d1d5db;
+  border-radius:10px;
+  background:#fff;
+  cursor:pointer;
+  text-align:left;
+  font:inherit;
+  color:inherit;
+}
+.qr-date-display:hover{border-color:#94a3b8}
+.qr-date-display .qr-date-value{flex:1}
+.qr-date-display .qr-date-icon{font-size:1.05rem}
+.qr-calendar-backdrop{
+  position:fixed;
+  inset:0;
+  background:rgba(15,23,42,.38);
+  z-index:99998;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:16px;
+}
+.qr-calendar-panel{
+  width:min(390px,100%);
+  background:#fff;
+  border-radius:16px;
+  box-shadow:0 20px 60px rgba(15,23,42,.25);
+  padding:16px;
+  z-index:99999;
+}
+.qr-calendar-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  margin-bottom:12px;
+}
+.qr-calendar-title{
+  font-weight:800;
+  text-align:center;
+  flex:1;
+  text-transform:capitalize;
+}
+.qr-calendar-nav{
+  width:40px;
+  height:40px;
+  border:1px solid #d1d5db;
+  background:#fff;
+  border-radius:9px;
+  cursor:pointer;
+  font-size:1.15rem;
+}
+.qr-calendar-weekdays,
+.qr-calendar-grid{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:4px;
+}
+.qr-calendar-weekdays div{
+  text-align:center;
+  font-size:.77rem;
+  font-weight:800;
+  color:#64748b;
+  padding:5px 0;
+}
+.qr-calendar-day{
+  aspect-ratio:1;
+  border:0;
+  background:transparent;
+  border-radius:9px;
+  cursor:pointer;
+  font:inherit;
+}
+.qr-calendar-day:hover{background:#e2e8f0}
+.qr-calendar-day.other{color:#94a3b8}
+.qr-calendar-day.today{outline:1px solid #0b315e}
+.qr-calendar-day.selected{
+  background:#0b315e;
+  color:#fff;
+  font-weight:800;
+}
+.qr-calendar-actions{
+  display:flex;
+  justify-content:flex-end;
+  gap:8px;
+  margin-top:14px;
+}
+.qr-calendar-actions button{
+  border:0;
+  border-radius:9px;
+  padding:9px 13px;
+  cursor:pointer;
+  font-weight:700;
+}
+.qr-calendar-today{background:#e2e8f0;color:#0f172a}
+.qr-calendar-close{background:#0b315e;color:#fff}
+.qr-month-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+}
+.qr-month-button{
+  border:1px solid #d1d5db;
+  background:#fff;
+  border-radius:10px;
+  padding:11px 6px;
+  cursor:pointer;
+  font:inherit;
+  text-transform:capitalize;
+}
+.qr-month-button:hover{background:#e2e8f0}
+.qr-month-button.selected{
+  background:#0b315e;
+  color:#fff;
+  border-color:#0b315e;
+  font-weight:800;
+}
+@media(max-width:520px){
+  .qr-calendar-panel{padding:13px}
+  .qr-month-grid{grid-template-columns:repeat(2,1fr)}
 }
 
-self.addEventListener("fetch",event=>{
-  if(event.request.method!=="GET")return;
+/* ============================================================
+ * QRManut 7.4.6.1 - Ajuste responsivo do menu principal
+ * ============================================================ */
+html,body{max-width:100%;overflow-x:hidden}
+.main,.container,.app-shell{max-width:100%}
+.system-menu{
+  display:grid!important;
+  grid-template-columns:repeat(11,minmax(0,1fr))!important;
+  gap:8px!important;
+  width:100%!important;
+  max-width:100%!important;
+  overflow:visible!important;
+}
+.menu-button{
+  min-width:0!important;
+  width:100%!important;
+  padding:14px 6px!important;
+  font-size:.88rem!important;
+  line-height:1.15!important;
+  white-space:normal!important;
+  overflow-wrap:anywhere!important;
+  word-break:normal!important;
+}
+#searchArea,.card,.system-access,.main-menu-wrap{
+  max-width:100%!important;
+}
+@media (max-width:1400px){
+  .system-menu{
+    grid-template-columns:repeat(6,minmax(0,1fr))!important;
+  }
+}
+@media (max-width:980px){
+  .system-menu{
+    grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  }
+  .menu-button{
+    font-size:.92rem!important;
+    padding:13px 8px!important;
+  }
+}
+@media (max-width:700px){
+  .system-menu{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+}
+@media (max-width:420px){
+  .system-menu{
+    grid-template-columns:1fr!important;
+  }
+}
 
-  const url=new URL(event.request.url);
 
-  if(event.request.mode==="navigate"||url.pathname.endsWith("/equip_formulario.html")){
-    event.respondWith(
-      fetch(event.request)
-        .then(response=>{
-          if(!response||!response.ok||response.type==="opaque")return response;
-          const copy=response.clone();
-          return caches.open(CACHE_NAME)
-            .then(cache=>cache.put("./equip_formulario.html",copy))
-            .then(()=>response)
-            .catch(()=>response);
-        })
-        .catch(()=>
-          caches.match("./equip_formulario.html")
-            .then(cached=>cached||Response.error())
-        )
-    );
+.asset-progress-note{
+  margin-top:10px;
+  padding:9px 11px;
+  border-radius:10px;
+  background:#f8fafc;
+  border:1px solid #e2e8f0;
+  color:#64748b;
+  font-size:.84rem;
+}
+.asset-progress-note.hidden{display:none!important}
+
+
+/* ============================================================
+ * QRManut 7.5.0.5 - Aviso próprio do sistema
+ * ============================================================ */
+#qrAlertModal{
+  position:fixed;
+  inset:0;
+  z-index:99999;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  background:rgba(15,23,42,.58);
+  backdrop-filter:blur(2px);
+}
+#qrAlertModal.qr-alert-open{display:flex}
+.qr-alert-box{
+  width:min(430px,calc(100vw - 32px));
+  background:#fff;
+  border-radius:18px;
+  box-shadow:0 24px 70px rgba(15,23,42,.28);
+  overflow:hidden;
+  border:1px solid rgba(148,163,184,.35);
+}
+.qr-alert-header{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:18px 20px 12px;
+  font-size:1.18rem;
+  font-weight:800;
+  color:#0b315e;
+}
+.qr-alert-logo{
+  width:32px;
+  height:32px;
+  border-radius:9px;
+  display:grid;
+  place-items:center;
+  background:#eaf2fb;
+  font-size:18px;
+}
+.qr-alert-message{
+  padding:8px 20px 20px;
+  color:#263445;
+  font-size:1rem;
+  line-height:1.5;
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+}
+.qr-alert-actions{
+  display:flex;
+  justify-content:flex-end;
+  padding:0 20px 18px;
+}
+#qrAlertOk{
+  min-width:88px;
+  border:0;
+  border-radius:10px;
+  padding:11px 20px;
+  background:#0b315e;
+  color:#fff;
+  font-weight:700;
+  font-size:1rem;
+  cursor:pointer;
+}
+#qrAlertOk:active{transform:translateY(1px)}
+
+
+/* ============================================================
+ * QRManut 7.6.1.0 - Cadastro completo de ativos
+ * ============================================================ */
+.asset-form-section{margin-top:14px;padding:14px;border:1px solid #e2e8f0;border-radius:13px;background:#fff}
+.asset-form-section h3{margin:0 0 4px;color:#0b315e}
+.asset-form-help{font-size:.8rem;color:#64748b;margin-bottom:8px}
+.asset-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 12px}
+.asset-form-grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.asset-form-grid .full{grid-column:1/-1}
+.asset-id-card{margin:12px 0;background:#f8fafc;border:1px solid #cbd5e1;border-radius:12px;padding:12px}
+.asset-id-value{font-size:1.35rem;font-weight:800;color:#0b315e;word-break:break-all}
+.asset-existing-id{padding:10px 12px;border:1px solid #bfdbfe;background:#eff6ff;border-radius:10px;margin:8px 0 2px}
+.asset-other-input.hidden{display:none!important}
+@media(max-width:720px){.asset-form-grid,.asset-form-grid.three{grid-template-columns:1fr}.asset-form-grid .full{grid-column:auto}}
+
+
+/* ============================================================
+ * QRManut 7.6.6.14 - Correção do acesso MASTER às Permissões de Perfis
+ * ============================================================ */
+.menu-button.permissions.active{background:#6d28d9;border-color:#6d28d9;color:#fff}
+.permissions-note{margin:12px 0;padding:12px 14px;border:1px solid #c4b5fd;background:#f5f3ff;color:#4c1d95;border-radius:12px;line-height:1.5}
+.permissions-table-wrap{width:100%;overflow:auto;border:1px solid #e5e7eb;border-radius:12px;margin-top:14px}
+.permissions-table{width:100%;min-width:780px;border-collapse:collapse;background:#fff}
+.permissions-table th,.permissions-table td{padding:10px 12px;border-bottom:1px solid #e5e7eb;border-right:1px solid #f1f5f9;text-align:center;vertical-align:middle}
+.permissions-table th{position:sticky;top:0;background:#f8fafc;z-index:2;color:#334155;font-size:.84rem}
+.permissions-table th:first-child,.permissions-table td:first-child{text-align:left;position:sticky;left:0;background:#fff;z-index:1;min-width:270px}
+.permissions-table th:first-child{background:#f8fafc;z-index:3}
+.permissions-group td{background:#eef2ff!important;color:#3730a3;font-weight:800;text-align:left!important;position:static!important}
+.permissions-name{font-weight:750;color:#111827}
+.permissions-description{display:block;margin-top:3px;font-size:.76rem;color:#64748b;font-weight:400;line-height:1.35}
+.permission-check{width:22px;height:22px;accent-color:#0b315e;cursor:pointer}
+.permission-check:disabled{cursor:not-allowed;opacity:.7}
+.permission-master-lock{display:inline-flex;align-items:center;gap:5px;color:#166534;font-weight:800;font-size:.8rem}
+.permissions-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+@media(max-width:700px){.permissions-table{min-width:720px}.permissions-actions .btn{flex:1;min-width:180px}}
+
+/* ============================================================
+ * QRManut 7.6.6.16 - Matriz de permissões responsiva no celular
+ * ============================================================ */
+@media(max-width:700px){
+  .permissions-table-wrap{overflow:visible;border:0;background:transparent}
+  .permissions-table{display:block;width:100%;min-width:0;background:transparent;border-collapse:separate}
+  .permissions-table thead{display:none}
+  .permissions-table tbody{display:block;width:100%}
+  .permissions-table tbody tr{display:block;width:100%}
+  .permissions-table tbody tr.permissions-group{margin:18px 0 7px}
+  .permissions-table tbody tr.permissions-group td{display:block!important;width:100%!important;position:static!important;padding:9px 11px!important;border:0!important;border-radius:9px;background:#eef2ff!important;color:#3730a3;text-align:left!important}
+  .permissions-table tbody tr:not(.permissions-group){margin:0 0 12px;border:1px solid #e2e8f0;border-radius:12px;background:#fff;overflow:hidden;box-shadow:0 2px 7px rgba(15,23,42,.04)}
+  .permissions-table tbody tr:not(.permissions-group) td{display:flex;width:100%;min-width:0;position:static!important;align-items:center;justify-content:space-between;gap:12px;padding:10px 12px;border:0;border-bottom:1px solid #f1f5f9;text-align:right;background:#fff}
+  .permissions-table tbody tr:not(.permissions-group) td:last-child{border-bottom:0}
+  .permissions-table tbody tr:not(.permissions-group) td:first-child{display:block;text-align:left;background:#f8fafc;padding:12px;border-bottom:1px solid #e2e8f0}
+  .permissions-table tbody tr:not(.permissions-group) td:not(:first-child)::before{content:attr(data-profile);font-size:.82rem;font-weight:800;color:#334155;text-align:left}
+  .permission-check{width:26px;height:26px;flex:0 0 26px}
+  .permission-master-lock{font-size:.86rem}
+  .permissions-actions{display:grid;grid-template-columns:1fr;gap:8px}
+  .permissions-actions .btn{width:100%;min-width:0}
+}
+
+
+/* ============================================================
+ * QRManut 7.6.6.24.11 — COR PRINCIPAL R11
+ * A cor institucional passa a tematizar os elementos primários
+ * sem substituir cores semânticas de status.
+ * ============================================================ */
+:root{
+  --qr-primary:#0b315e;
+  --qr-primary-contrast:#ffffff;
+  --qr-primary-soft:#e8eef8;
+}
+.search-title,
+.search-result-id,
+.auth-link{color:var(--qr-primary)!important}
+.badge{background:var(--qr-primary-soft)!important;color:var(--qr-primary)!important}
+.btn-blue,
+.search-box button,
+.open-button,
+.install-app-button,
+.qr-calendar-close,
+.qr-language-switcher button.active{
+  background:var(--qr-primary)!important;
+  color:var(--qr-primary-contrast)!important;
+  border-color:var(--qr-primary)!important;
+}
+.btn-search,
+.back-asset-btn{
+  color:var(--qr-primary)!important;
+  border-color:var(--qr-primary)!important;
+}
+.menu-button.active{
+  background:var(--qr-primary);
+  border-color:var(--qr-primary);
+  color:var(--qr-primary-contrast);
+}
+.permission-check{accent-color:var(--qr-primary)!important}
+.qr-calendar-day.today{outline-color:var(--qr-primary)!important}
+.asset-form-section h3,
+.asset-id-value{color:var(--qr-primary)!important}
+.company-color-preview{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-top:10px;
+  padding:10px 12px;
+  border:1px solid #e5e7eb;
+  border-radius:10px;
+  background:#fff;
+}
+.company-color-preview-swatch{
+  width:46px;
+  height:32px;
+  border-radius:8px;
+  background:var(--qr-primary);
+  border:1px solid rgba(15,23,42,.15);
+  flex:0 0 auto;
+}
+.company-color-preview-label{
+  font-size:.84rem;
+  color:#4b5563;
+  line-height:1.35;
+}
+.company-color-preview-label b{color:var(--qr-primary)}
+
+
+/* ============================================================
+ * QRManut 7.6.6.24.12 — SOLICITAÇÕES DE MANUTENÇÃO / SOL
+ * ============================================================ */
+.other-problem-box{margin-top:12px;padding:13px;border:1px dashed #94a3b8;border-radius:12px;background:#f8fafc;text-align:center}
+.other-problem-box .muted{margin-bottom:8px}
+.btn-sol-public{background:#fff7ed;color:#9a3412;border:1px solid #fdba74;border-radius:999px;padding:11px 16px;font-weight:800;cursor:pointer;min-height:44px}
+.menu-button.solicitations.active{background:#9a3412;border-color:#9a3412;color:#fff}
+.sol-filters{display:grid;grid-template-columns:1fr 1fr 2fr auto;gap:9px;align-items:end}
+.sol-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0}
+.sol-summary-card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:11px;text-align:center}
+.sol-summary-card strong{display:block;font-size:1.3rem}
+.sol-card{margin-top:11px;padding:14px;border:1px solid #e5e7eb;border-left:5px solid #ea580c;border-radius:13px;background:#fff}
+.sol-card.new{border-left-color:#dc2626}.sol-card.analysis{border-left-color:#f59e0b}.sol-card.converted{border-left-color:#059669}.sol-card.closed{border-left-color:#94a3b8}
+.sol-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.sol-status{display:inline-block;padding:4px 8px;border-radius:999px;font-size:.75rem;font-weight:800;background:#fff7ed;color:#9a3412}
+.sol-meta{margin-top:8px;line-height:1.55;color:#4b5563;font-size:.86rem}
+.sol-description{margin-top:9px;padding:9px 10px;border-radius:9px;background:#f8fafc;white-space:pre-wrap;word-break:break-word}
+.sol-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:11px}
+.sol-detail-box{padding:11px;border:1px solid #e5e7eb;border-radius:10px;background:#f8fafc;line-height:1.55}
+.sol-asset-search-results{max-height:310px;overflow:auto;margin-top:10px;border:1px solid #e5e7eb;border-radius:12px;padding:7px;background:#fff}
+.sol-asset-option{display:block;width:100%;text-align:left;border:1px solid #e5e7eb;background:#fff;border-radius:10px;padding:10px;margin:6px 0;cursor:pointer;color:#111827}
+.sol-asset-option.selected{border-color:var(--qr-primary);box-shadow:0 0 0 2px var(--qr-primary-soft)}
+.sol-asset-option b{display:block;color:var(--qr-primary)}
+.sol-protocol-success{margin-top:10px;padding:13px;border:1px solid #86efac;background:#f0fdf4;border-radius:12px}
+@media(max-width:760px){.sol-filters{grid-template-columns:1fr}.sol-summary{grid-template-columns:repeat(2,1fr)}}
+
+</style>
+</head>
+<body>
+<div class="qr-language-switcher" aria-label="Language">
+  <button id="qrLangPt" type="button">🇧🇷 Português</button>
+  <button id="qrLangEn" type="button">🇺🇸 English</button>
+</div>
+<div class="container">
+
+<div id="searchScreen" class="hidden">
+  <div class="search-title">QRManut</div>
+  <div id="qrAppSubtitle" class="muted">Gestão rápida de manutenção</div>
+  <button id="installAppButton" type="button" class="install-app-button hidden">📲 Instalar QRManut no celular</button>
+  <div id="iosInstallHint" class="install-hint hidden"><b>Instalar no iPhone:</b> toque em Compartilhar e escolha <b>Adicionar à Tela de Início</b>.</div>
+  <div id="systemAccessInfo" class="system-access-info hidden"><div class="system-access-row"><div id="systemAccessText"></div><button id="systemLogoutButton" class="btn btn-secondary" type="button">Sair do Menu</button></div></div>
+  <div id="menuLockedCard" class="card menu-locked-card hidden"><h2>🔐 Menu Principal protegido</h2><div class="muted">A ficha do equipamento e o registro de ocorrências continuam disponíveis pelo QR Code. Para acessar a Gestão Rápida, identifique-se.</div><button id="openSystemLoginButton" class="btn btn-blue" type="button">Entrar no Menu Principal</button></div>
+  <div id="mainMenuButtons" class="menu-busca">
+    <button id="tabSearch" class="menu-button active">🔎 Buscar ativos</button>
+    <button id="tabPending" class="menu-button">⚠️ OCs pendentes</button>
+    <button id="tabSolicitations" class="menu-button solicitations hidden">📥 Solicitações de Manutenção</button>
+    <button id="tabOccurrenceReport" class="menu-button reports">📊 Relatório de OCs</button>
+    <button id="tabPreventive" class="menu-button preventive">🛠️ Status das Preventivas</button>
+    <button id="tabDocuments" class="menu-button documents">📄 Documentos Técnicos</button>
+    <button id="tabOccurrenceCatalog" class="menu-button hidden">🧩 Categorias e Componentes</button>
+    <button id="tabMaintenancePending" class="menu-button hidden">📌 Pendências / Providências</button>
+<button id="tabAssetManagement" class="menu-button hidden" type="button">🏷️ <span data-i18n="assetManagement">Gestão de Ativos</span></button>
+
+    <button id="tabDocumentUpload" class="menu-button upload-doc hidden">📤 Upload de Documentos</button>
+    <button id="tabUsers" class="menu-button users hidden">👥 Gestão de Usuários</button>
+    <button id="tabPermissions" type="button" class="menu-button permissions hidden">🔐 Permissões de Perfis</button>
+    <button id="tabAudit" class="menu-button audit hidden">🧾 Auditoria</button>
+    <button id="tabProvidersAdmin" class="menu-button providers-admin hidden">🏢 Prestadores</button>
+    <button id="tabCompany" class="menu-button company hidden">⚙️ Empresa</button>
+  </div>
+  <div id="searchArea">
+    <div id="backAssetWrap" class="back-asset-wrap hidden"><button id="backAssetButton" class="back-asset-btn">← Voltar ao equipamento</button></div>
+    <div class="card">
+      <div class="search-box">
+        <input id="searchInput" placeholder="Buscar por ID, nome, categoria, componente, pavimento ou localização">
+        <button id="searchButton">Buscar</button>
+      </div>
+      <div id="searchHint" class="muted" style="margin-top:8px">Digite pelo menos 2 caracteres para iniciar a busca.</div>
+    </div>
+    <div id="searchStatus" class="muted" style="margin-top:12px"></div>
+    <div id="searchResults"></div>
+  </div>
+  <div id="pendingArea" class="hidden">
+    <div class="card">
+      <h2 style="margin-bottom:6px">⚠️ OCs Pendentes</h2>
+      <div id="pendingAccessNote" class="pending-access-note"></div>
+      <div class="pending-filters">
+        <label style="margin-top:0">Prestador<select id="pendingProvider"><option value="">Todos os prestadores</option></select></label>
+        <label style="margin-top:0">Status<select id="pendingStatus"><option value="">Todos os status</option></select></label>
+        <label style="margin-top:0">Categoria<select id="pendingCategory"><option value="">Todas as categorias</option></select></label>
+        <label style="margin-top:0">Pavimento<select id="pendingFloor"><option value="">Todos os pavimentos</option></select></label>
+        <label style="margin-top:0">Localização<select id="pendingLocation"><option value="">Todas as localizações</option></select></label>
+      </div>
+      <div class="pending-filter-actions">
+        <button id="pendingApplyFilters" class="btn btn-blue">Aplicar filtros</button>
+        <button id="pendingClearFilters" class="btn btn-secondary">Limpar filtros</button>
+      </div>
+      <div id="pendingStatusText" class="muted" style="margin-top:12px"></div>
+    </div>
+    <div id="pendingSummary" class="pending-summary"></div>
+    <div id="pendingResults"></div>
+  </div>
+
+  <div id="solicitationsArea" class="hidden">
+    <div class="card">
+      <div class="back-asset-wrap"><button id="solicitationsBackMenu" class="back-asset-btn">← Voltar ao Menu Principal</button></div>
+      <h2>📥 Solicitações de Manutenção</h2>
+      <div class="muted">Caixa de entrada para problemas informados pelo acesso público. A solicitação só vira OC após a triagem.</div>
+      <div class="sol-filters" style="margin-top:12px">
+        <label style="margin-top:0">Situação<select id="solStatusFilter">
+          <option value="OPEN">Em aberto</option>
+          <option value="">Todas</option>
+          <option value="Nova">Nova</option>
+          <option value="Em análise">Em análise</option>
+          <option value="OC criada">OC criada</option>
+          <option value="Encerrada sem OC">Encerrada sem OC</option>
+        </select></label>
+        <label style="margin-top:0">Pavimento<select id="solFloorFilter"><option value="">Todos os pavimentos</option></select></label>
+        <label style="margin-top:0">Busca<input id="solSearch" placeholder="Protocolo, local, solicitante, QR ou OC"></label>
+        <button id="solRefresh" class="btn btn-blue">Atualizar</button>
+      </div>
+      <div id="solStatusText" class="muted" style="margin-top:12px"></div>
+    </div>
+    <div id="solSummary" class="sol-summary"></div>
+    <div id="solResults"></div>
+  </div>
+
+  <div id="occurrenceReportArea" class="hidden">
+    <div class="card">
+      <h2 style="margin-bottom:6px">📊 Relatório de OCs Concluídas</h2>
+      <div class="muted">O período considera a data em que a ocorrência foi concluída.</div>
+      <div class="occ-report-filters">
+        <label>Data inicial<input id="occReportStart" type="date"></label>
+        <label>Data final<input id="occReportEnd" type="date"></label>
+        <label>Prestador<select id="occReportProvider"><option value="">Todos os prestadores</option></select></label>
+        <label>Categoria<select id="occReportCategory"><option value="">Todas as categorias</option></select></label>
+        <label>Componente<select id="occReportComponent"><option value="">Todos os componentes</option></select></label>
+        <label>Pavimento<select id="occReportFloor"><option value="">Todos os pavimentos</option></select></label>
+        <label>Localização<select id="occReportLocation"><option value="">Todas as localizações</option></select></label>
+      </div>
+      <div class="occ-report-actions">
+        <button id="occReportRefresh" class="btn btn-green">Consultar</button>
+        <button id="occReportPdf" class="btn btn-blue" disabled>📄 Gerar PDF</button>
+      </div>
+      <div id="occReportStatus" class="muted" style="margin-top:12px"></div>
+      <div id="occReportSummary" class="occ-report-summary"></div>
+      <div id="occCategorySummary" class="occ-category-summary"></div>
+      <div id="occReportResults"></div>
+      <div id="occPdfBox" class="occ-pdf-box hidden">
+        <strong>PDF do relatório</strong>
+        <div id="occPdfMessage" class="muted" style="margin-top:5px"></div>
+        <div id="occPdfLinkWrap"></div>
+      </div>
+    </div>
+  </div>
+  <div id="documentsArea" class="hidden">
+    <div class="card">
+      <h2 style="margin-bottom:6px">📄 Documentos Técnicos</h2>
+      <div class="document-filters">
+        <label style="margin-top:0">Buscar<input id="documentSearchInput" placeholder="Buscar por título, assunto, tipo, disciplina, pavimento, ambiente, prestador ou ID do ativo"></label>
+        <label style="margin-top:0">Tipo<select id="documentTypeFilter"><option value="">Todos</option></select></label>
+        <label style="margin-top:0">Disciplina<select id="documentDisciplineFilter"><option value="">Todas</option></select></label>
+        <label style="margin-top:0">Pavimento<select id="documentFloorFilter"><option value="">Todos</option></select></label>
+        <button id="documentSearchButton" class="btn btn-blue">Buscar</button>
+      </div>
+      <div id="documentStatus" class="muted" style="margin-top:12px"></div>
+      <div id="documentResults"></div>
+    </div>
+  </div>
+
+
+
+  
+  
+  
+  <div id="maintenancePendingArea" class="hidden">
+    <div class="card">
+      <div class="back-asset-wrap"><button id="maintenancePendingBackMenu" class="back-asset-btn">← Voltar ao Menu Principal</button></div>
+      <h2 id="maintenancePendingTitle">📌 Pendências / Providências</h2>
+      <div id="maintenancePendingHelp" class="muted">Necessidades identificadas durante as preventivas e que exigem alguma providência.</div>
+
+      <div class="filter-grid" style="margin-top:12px">
+        <label>Status<select id="maintenancePendingStatusFilter">
+          <option value="">Todos</option>
+          <option>Pendente</option>
+          <option>Em andamento</option>
+          <option>Resolvida</option>
+        </select></label>
+        <label>Prioridade<select id="maintenancePendingPriorityFilter">
+          <option value="">Todas</option>
+          <option>Crítica</option>
+          <option>Alta</option>
+          <option>Média</option>
+          <option>Baixa</option>
+        </select></label>
+        <label>Busca<input id="maintenancePendingSearch" placeholder="ID, ativo, equipamento, material ou OC"></label>
+      </div>
+
+      <div class="occ-report-actions" style="margin-top:10px">
+        <button id="maintenancePendingRefresh" class="btn btn-blue">Atualizar</button>
+        <button id="maintenancePendingClear" class="btn btn-secondary">Limpar filtros</button>
+      </div>
+
+      <div id="maintenancePendingSummary" class="pending-summary"></div>
+      <div id="maintenancePendingStatusText" class="muted" style="margin-top:10px"></div>
+
+      <div id="maintenancePendingResults"></div>
+      <div id="maintenancePendingMessage" class="message"></div>
+    </div>
+  </div>
+
+<div id="occurrenceCatalogArea" class="hidden">
+    <div class="card">
+      <div class="back-asset-wrap"><button id="occurrenceCatalogBackMenu" class="back-asset-btn">← Voltar ao Menu Principal</button></div>
+      <h2 id="occurrenceCatalogTitle">🧩 Categorias e Componentes</h2>
+      <div id="occurrenceCatalogHelp" class="muted">Cadastre as opções exibidas no formulário de ocorrência. Novos itens entram automaticamente no final da lista. Use ↑ e ↓ para reorganizar.</div>
+
+      <div class="admin-grid" style="margin-top:12px">
+        <div class="full"><h3 id="catalogCategoryHeading">Categorias</h3></div>
+        <input id="catalogCategoryId" type="hidden">
+        <label id="catalogCategoryPtLabel">Nome em português *<input id="catalogCategoryPt"></label>
+        <label id="catalogCategoryEnLabel">Nome em inglês<input id="catalogCategoryEn"></label>
+        <label class="switch-row"><input id="catalogCategoryActive" type="checkbox" checked> <span id="catalogCategoryActiveLabel">Ativa</span></label>
+        <div class="full occ-report-actions">
+          <button id="saveCatalogCategory" class="btn btn-blue">Salvar categoria</button>
+          <button id="clearCatalogCategory" class="btn btn-secondary">Limpar</button>
+        </div>
+      </div>
+
+      <div id="catalogCategoriesStatus" class="muted" style="margin-top:10px"></div>
+      <div id="catalogCategoriesList"></div>
+
+      <div class="section">
+        <h3 id="catalogComponentHeading">Componentes</h3>
+        <div class="admin-grid">
+          <input id="catalogComponentId" type="hidden">
+          <label id="catalogComponentCategoryLabel">Categoria *<select id="catalogComponentCategory"></select></label>
+          <label id="catalogComponentPtLabel">Nome em português *<input id="catalogComponentPt"></label>
+          <label id="catalogComponentEnLabel">Nome em inglês<input id="catalogComponentEn"></label>
+          <label class="switch-row"><input id="catalogComponentActive" type="checkbox" checked> <span id="catalogComponentActiveLabel">Ativo</span></label>
+          <div class="full occ-report-actions">
+            <button id="saveCatalogComponent" class="btn btn-blue">Salvar componente</button>
+            <button id="clearCatalogComponent" class="btn btn-secondary">Limpar</button>
+          </div>
+        </div>
+        <div id="catalogComponentsStatus" class="muted" style="margin-top:10px"></div>
+        <div id="catalogComponentsList"></div>
+      </div>
+      <div id="occurrenceCatalogMessage" class="message"></div>
+    </div>
+  </div>
+
+<div id="documentUploadArea" class="hidden">
+    <div class="card">
+      <div class="back-asset-wrap"><button id="documentUploadBackMenu" class="back-asset-btn">← Voltar ao Menu Principal</button></div>
+      <h2 style="margin-bottom:5px">📤 Upload de Documentos</h2>
+      <div class="muted">Disponibilidade definida em Permissões de Perfis. Somente PDF, até 8 MB.</div>
+      <div class="document-upload-grid">
+        <label>Título *<input id="uploadDocumentTitle"></label>
+        <label>Tipo *<select id="uploadDocumentType"><option value="">Selecione</option></select></label>
+        <label>Disciplina<select id="uploadDocumentDiscipline"><option value="">Selecione</option></select></label>
+        <label>Pavimento<select id="uploadDocumentFloor"><option value="">Selecione</option></select></label>
+        <label>Ambiente<input id="uploadDocumentEnvironment"></label>
+        <label>Prestador<select id="uploadDocumentProvider"><option value="">Sem prestador específico</option></select></label>
+        <label>Assunto<input id="uploadDocumentSubject"></label>
+        <label>Revisão<input id="uploadDocumentRevision"></label>
+        <label class="full">ID do Ativo (opcional)<input id="uploadDocumentAsset" placeholder="Ex.: AC102_SP3P"></label>
+        <label class="full">Observações<textarea id="uploadDocumentNotes" rows="3"></textarea></label>
+      </div>
+      <div class="upload-file-box">
+        <div id="uploadDocumentFileLabel" style="font-weight:700">Arquivo PDF *</div>
+        <button id="uploadDocumentChooseFileButton" type="button" class="btn btn-secondary" style="margin-top:9px">📎 Escolher arquivo PDF</button>
+        <input id="uploadDocumentFile" class="photo-source-hidden" type="file" accept="application/pdf,.pdf">
+        <div id="uploadDocumentFileName" class="upload-file-name">Nenhum arquivo selecionado.</div>
+      </div>
+      <div id="documentUploadMessage" class="message"></div>
+      <div id="documentUploadResult"></div>
+      <div class="occ-report-actions">
+        <button id="sendDocumentUpload" class="btn btn-blue">Enviar documento</button>
+        <button id="clearDocumentUpload" class="btn btn-secondary">Limpar campos</button>
+      </div>
+    </div>
+  </div>
+
+<div id="companyArea" class="hidden"><div class="card"><div class="back-asset-wrap"><button id="companyBackMenu" class="back-asset-btn">← Voltar ao Menu Principal</button></div><h2>⚙️ Configuração da Empresa</h2><div class="muted">Dados institucionais desta implantação dedicada.</div><div class="admin-grid"><label>ID Empresa<input id="companyId"></label><label>Nome da Empresa *<input id="companyName"></label><label>Nome Fantasia<input id="companyTradeName"></label><label>CNPJ<input id="companyCnpj"></label><label class="company-long-field">E-mail de Manutenção<input id="companyMaintenanceEmail" type="email" autocomplete="email"></label><label class="company-long-field">E-mail Administrativo<input id="companyAdminEmail" type="email" autocomplete="email"></label><label>Nome do Sistema *<input id="companySystemName"></label><label>Cor Principal<input id="companyPrimaryColor" type="color" value="#0b315e"></label><label>Fuso Horário<input id="companyTimezone" placeholder="America/New_York"><small class="muted">Ex.: America/New_York (Eastern Time, com ajuste automático de horário de verão)</small></label><label class="company-long-field">URL Principal<input id="companyMainUrl" type="url" inputmode="url"></label><label class="company-long-field">E-mail de Relatórios<input id="companyReportsEmail"></label><label class="company-long-field">E-mail principal das OCs *<input id="companyOccurrenceEmailTo" placeholder="manutencao@empresa.com"></label><label class="company-long-field">E-mail CC das OCs<input id="companyOccurrenceEmailCc" placeholder="gestor@empresa.com; outro@empresa.com"><small class="muted">Opcional. Separe vários e-mails por vírgula ou ponto e vírgula.</small></label><label class="company-long-field">E-mail de Triagem de Solicitações<input id="companySolTriageEmailTo" placeholder="manutencao@empresa.com"><small class="muted">Opcional. Se vazio, o QRManut usa o e-mail principal das OCs/manutenção.</small></label><label class="company-long-field">E-mail CC da Triagem de Solicitações<input id="companySolTriageEmailCc" placeholder="gestor@empresa.com"><small class="muted">Opcional. Separe vários e-mails por vírgula ou ponto e vírgula.</small></label><label class="company-long-field">Logo (URL)<input id="companyLogo" type="url" inputmode="url"></label><label class="full">Observações<textarea id="companyNotes" rows="5"></textarea></label></div><label class="switch-row"><input id="companyActive" type="checkbox"> Empresa ativa</label><div class="company-preview"><b>Pré-visualização</b><div id="companyPreviewName" style="margin-top:6px;font-size:1.1rem;font-weight:800"></div><div id="companyColorPreview" class="company-color-preview"><span class="company-color-preview-swatch" id="companyColorPreviewSwatch"></span><div class="company-color-preview-label"><b id="companyColorPreviewHex">#0b315e</b><br><span>Cor aplicada aos principais botões e destaques do QRManut.</span></div></div><img id="companyLogoPreview" class="company-logo-preview hidden"></div><div id="companyMessage" class="message"></div><div class="occ-report-actions"><button id="saveCompanyConfig" class="btn btn-blue">Salvar configuração</button></div></div></div>
+  <div id="providersAdminArea" class="hidden"><div class="card"><div class="back-asset-wrap"><button id="providersBackMenu" class="back-asset-btn">← Voltar ao Menu Principal</button></div><div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap"><div><h2>🏢 Prestadores</h2><div class="muted">Consulte responsáveis e canais de contato dos prestadores. Cadastro e edição obedecem às Permissões de Perfis definidas pelo MASTER.</div></div><button id="newProviderButton" class="btn btn-blue hidden">+ Novo prestador</button></div><div id="providersAdminStatus" class="muted" style="margin-top:12px"></div><div id="providersAdminList"></div></div></div>
+  <div id="auditArea" class="hidden">
+    <div class="card">
+      <h2 style="margin-bottom:5px">🧾 Auditoria</h2>
+      <div class="muted">Trilha de eventos administrativos e operacionais. Acesso controlado pelas Permissões de Perfis.</div>
+      <div class="audit-filters">
+        <label>Data inicial<input id="auditStart" type="date"></label>
+        <label>Data final<input id="auditEnd" type="date"></label>
+        <label>Ação<select id="auditAction"><option value="">Todas as ações</option></select></label>
+        <label>Resultado<select id="auditResult"><option value="">Todos os resultados</option></select></label>
+        <label>Usuário<select id="auditUser"><option value="">Todos os usuários</option></select></label>
+        <label class="audit-search-field">Busca<input id="auditSearch" placeholder="Ex.: OC-000123, AC102, preventiva"></label>
+      </div>
+      <div class="occ-report-actions">
+        <button id="auditRefresh" class="btn btn-blue">Consultar</button>
+        <button id="auditClear" class="btn btn-secondary">Limpar filtros</button>
+      </div>
+      <div id="auditStatus" class="muted" style="margin-top:12px"></div>
+      <div id="auditResults"></div>
+    </div>
+  </div>
+  <div id="usersArea" class="hidden">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap">
+        <div><h2 style="margin-bottom:4px">👥 Gestão de Usuários</h2><div class="muted">Cada funcionário deve possuir um usuário individual.</div></div>
+        <button id="newUserButton" class="btn btn-blue">+ Novo usuário</button>
+      </div>
+      <div id="usersStatus" class="muted" style="margin-top:12px"></div><div id="usersList"></div>
+      <div id="accessRequestsSection" class="section hidden">
+        <h3 style="margin-bottom:4px">📥 Solicitações de Cadastro <span id="accessRequestsBadge" class="access-request-badge hidden">0</span></h3>
+        <div class="muted">Solicitações enviadas por pessoas que ainda não possuem usuário no QRManut. Aprovar ou recusar é exclusivo do MASTER.</div>
+        <div id="accessRequestsStatus" class="muted" style="margin-top:10px"></div>
+        <div id="accessRequestsList"></div>
+      </div>
+    </div>
+  </div>
+  <div id="permissionsArea" class="hidden">
+    <div class="card">
+      <div class="back-asset-wrap"><button id="permissionsBackMenu" class="back-asset-btn">← Voltar ao Menu Principal</button></div>
+      <h2 id="permissionsTitle">🔐 Permissões de Perfis</h2>
+      <div class="permissions-note" id="permissionsHelp">
+        Defina quais rotinas cada categoria de usuário pode utilizar. O perfil MASTER permanece com acesso total e não pode ser restringido. As regras também são validadas no servidor.
+      </div>
+      <div id="permissionsStatus" class="muted">Carregando permissões...</div>
+      <div id="permissionsMatrix" class="permissions-table-wrap"></div>
+      <div class="permissions-actions">
+        <button id="saveProfilePermissions" class="btn btn-blue" type="button">💾 Salvar permissões</button>
+        <button id="resetProfilePermissions" class="btn btn-secondary" type="button">↩️ Restaurar padrão</button>
+      </div>
+      <div id="permissionsMessage" class="message"></div>
+    </div>
+  </div>
+
+  <div id="preventiveControlArea" class="hidden">
+    <div class="card">
+      <div id="preventiveLoggedInfo" class="preventive-login-info"></div>
+      <div class="control-header">
+        <div class="control-field"><label>Competência<input id="controlCompetence" type="month"></label></div>
+        <div class="control-field"><label>Prestador<select id="controlProvider"><option value="">Todos</option></select></label></div>
+        <button id="controlRefresh" class="btn btn-green">Atualizar</button>
+        <button id="preventiveLogout" class="btn btn-secondary">Voltar</button>
+      </div>
+      <h3 id="controlTitle"></h3>
+      <div id="controlSummary" class="control-summary"></div>
+      <div class="progress-box"><div class="progress-head"><span>Conclusão da competência</span><span id="progressText">0%</span></div><div class="progress-track"><div id="progressFill" class="progress-fill"></div></div></div>
+      <div id="providerSummary"></div>
+      <div class="control-tabs"><button id="controlAll" class="control-tab active">Todos</button><button id="controlPending" class="control-tab">🔴 Pendentes</button><button id="controlDone" class="control-tab">✅ Realizadas</button></div>
+      <div id="controlListStatus" class="muted" style="margin-top:12px"></div>
+      <div id="controlResults"></div>
+      <div class="report-action-box"><strong>📧 Relatório da competência</strong><div class="muted" style="margin-top:5px">Gera um PDF com as preventivas realizadas e pendentes e envia o arquivo por e-mail.</div><button id="sendMonthlyReport" type="button" class="btn btn-blue">📧 Enviar relatório da competência</button><div id="monthlyReportMessage" class="message"></div></div>
+    </div>
+  </div>
+</div>
+
+<div id="assetScreen" class="hidden">
+  <div class="card">
+    <h1 id="titulo">Carregando...</h1><div id="meta" class="muted"></div><div id="tipoBadge" class="badge"></div><div id="assetProgressNote" class="asset-progress-note hidden"></div>
+    <div id="statusCard" class="status-card"><div id="statusTitle" class="status-title"></div><div id="statusInfo" class="status-info"></div></div>
+    <div id="classificationSection" class="section hidden"><h3>Classificação</h3><div id="classification"></div></div>
+    <div id="locationSection" class="section hidden"><h3>Localização</h3><div id="location"></div></div>
+    <div id="technicalSection" class="section hidden"><h3>Características Técnicas</h3><div id="technical"></div></div>
+    <div class="section"><h3>Gestão do Ativo</h3><div id="management"></div></div>
+    <div id="assetDocumentsSection" class="section hidden"><h3>📚 Documentos do Equipamento</h3><div id="assetDocumentsStatus" class="muted"></div><div id="assetDocuments" class="asset-document-list"></div></div>
+    <div class="actions"><button id="reportButton" class="chip">Reportar Serviço / Anomalia / Reparo</button><button id="preventiveButton" class="btn-preventive hidden">🛠️ Registrar Preventiva</button><button id="searchAssetsButton" class="btn-search">☰ Menu Principal</button></div>
+    <div class="other-problem-box"><div class="muted">O problema não é neste equipamento?</div><button id="otherProblemButton" class="btn-sol-public" type="button">📍 Problema em outro equipamento ou ambiente</button></div>
+    <div class="section"><h3>Histórico de Manutenção</h3><div id="historyStatus" class="muted"></div><select id="historySelect" class="hidden"></select><div id="historyDetail"></div></div>
+    <div id="preventiveHistorySection" class="section hidden"><h3>🛠️ Histórico de Preventivas</h3><div id="preventiveHistoryStatus" class="muted">Login necessário para visualizar.</div><div id="preventiveHistory"></div></div>
+  </div>
+</div>
+
+
+
+<div id="qrAlertModal" role="dialog" aria-modal="true" aria-labelledby="qrAlertTitle" aria-describedby="qrAlertMessage">
+  <div class="qr-alert-box">
+    <div class="qr-alert-header">
+      <div class="qr-alert-logo">🔧</div>
+      <div id="qrAlertTitle">QRManut</div>
+    </div>
+    <div id="qrAlertMessage" class="qr-alert-message"></div>
+    <div class="qr-alert-actions">
+      <button id="qrAlertOk" type="button">OK</button>
+    </div>
+  </div>
+</div>
+
+
+<section id="assetManagementPanel" class="hidden" style="margin-top:16px">
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap">
+      <div>
+        <h2 data-i18n="assetManagement">Gestão de Ativos</h2>
+        <div class="muted" data-i18n="assetManagementHelp">Cadastre, edite e inative ativos sem alterar diretamente a planilha.</div>
+      </div>
+      <button id="assetNewButton" class="btn btn-primary" type="button">+ <span data-i18n="newAsset">Novo Ativo</span></button>
+    </div>
+    <div style="margin-top:14px">
+      <input id="assetSearch" type="search" placeholder="Buscar ativo..." style="width:100%">
+    </div>
+    <div id="assetList" style="margin-top:14px"></div>
+  </div>
+</section>
+
+<div id="assetEditModal" class="modal">
+  <div class="modal-box" style="max-width:920px">
+    <h2 id="assetEditTitle">Novo Ativo</h2>
+    <input id="assetRow" type="hidden">
+
+    <div id="assetExistingIdBox" class="asset-existing-id hidden">
+      <div class="muted">ID do ativo</div>
+      <div id="assetExistingId" class="asset-id-value">—</div>
+      <div class="muted" style="margin-top:3px">O ID é preservado durante a edição para manter o histórico, QR Code e documentos vinculados.</div>
+    </div>
+
+    <div id="assetIdBuilderSection" class="asset-form-section">
+      <h3>1. Identificação</h3>
+      <div class="asset-form-help">Monte o código do ativo e informe sua identificação principal.</div>
+      <div class="asset-form-grid three">
+        <label>Família / Prefixo
+          <select id="assetPrefix">
+            <option value="EQ">EQ - Equipamento</option>
+            <option value="AC">AC - Ar-condicionado</option>
+            <option value="CD">CD - Condensador</option>
+            <option value="EX">EX - Exaustor</option>
+            <option value="VT">VT - Ventilador</option>
+            <option value="ATP">ATP - Estrutura predial</option>
+            <option value="BAN">BAN - Banheiro</option>
+            <option value="AMB">AMB - Ambiente</option>
+          </select>
+        </label>
+        <label>Número-base
+          <div style="display:flex;gap:8px">
+            <input id="assetBaseNumber" maxlength="3" inputmode="numeric">
+            <button id="assetSuggestNumber" class="btn btn-secondary" type="button">Sugerir</button>
+          </div>
+        </label>
+        <label>Tipo / Sigla
+          <select id="assetTypeCode"></select>
+        </label>
+        <label>Pavimento / código do ID
+          <select id="assetFloorCode">
+            <option value="1P">1º Piso (1P)</option>
+            <option value="2P">2º Piso (2P)</option>
+            <option value="3P">3º Piso (3P)</option>
+            <option value="EX">Externo (EX)</option>
+            <option value="ET">Externo/Térreo (ET)</option>
+          </select>
+        </label>
+      </div>
+      <div class="asset-id-card">
+        <div class="muted">ID sugerido</div>
+        <div id="assetSuggestedId" class="asset-id-value">—</div>
+      </div>
+    </div>
+
+    <div class="asset-form-section">
+      <h3>2. Classificação e localização</h3>
+      <div class="asset-form-grid">
+        <label>Nome do Equipamento *<input id="assetName"></label>
+        <label>Status<select id="assetStatus"></select></label>
+        <label>Tipo de Ativo<select id="assetAssetType"></select></label>
+        <label>Categoria do Ativo
+          <select id="assetCategory"></select>
+          <input id="assetCategoryOther" class="asset-other-input hidden" placeholder="Informe a nova categoria">
+        </label>
+        <label>Subcategoria<input id="assetSubcategory"></label>
+        <label>Criticidade<select id="assetCriticality"></select></label>
+        <label>Classe de Manutenção
+          <select id="assetMaintenanceClass"></select>
+          <input id="assetMaintenanceClassOther" class="asset-other-input hidden" placeholder="Informe a classe de manutenção">
+        </label>
+        <label>Área<input id="assetArea"></label>
+        <label>Ambiente<input id="assetEnvironment"></label>
+        <label>Componente / Elemento<input id="assetComponentElement"></label>
+        <label>Pavimento
+          <select id="assetFloor"></select>
+          <input id="assetFloorOther" class="asset-other-input hidden" placeholder="Informe o pavimento">
+        </label>
+        <label>Localização
+          <select id="assetLocation"></select>
+          <input id="assetLocationOther" class="asset-other-input hidden" placeholder="Informe a localização">
+        </label>
+        <label class="full">Local Detalhado<input id="assetDetailedLocation" placeholder="Ex.: Casa de máquinas, ao lado do quadro elétrico"></label>
+      </div>
+    </div>
+
+    <div class="asset-form-section">
+      <h3>3. Dados técnicos</h3>
+      <div class="asset-form-grid three">
+        <label>Fabricante<input id="assetManufacturer"></label>
+        <label>Modelo<input id="assetModel"></label>
+        <label>Número de Série<input id="assetSerialNumber"></label>
+        <label>Capacidade<input id="assetCapacity"></label>
+        <label>Amperagem Nominal (FLA)<input id="assetRatedCurrent"></label>
+        <label>Amperagem de Partida (FLR)<input id="assetStartingCurrent"></label>
+        <label>Amperagem Medida<input id="assetMeasuredCurrent"></label>
+        <label>Voltagem<input id="assetVoltage"></label>
+        <label>Peso<input id="assetWeight"></label>
+        <label>Ano de Aquisição<input id="assetAcquisitionYear"></label>
+        <label>Vida Útil Estimada<input id="assetUsefulLife"></label>
+      </div>
+    </div>
+
+    <div class="asset-form-section">
+      <h3>4. Manutenção</h3>
+      <div class="asset-form-grid">
+        <label>Prestador<select id="assetProvider"><option value="">Sem prestador</option></select></label>
+        <label>Periodicidade
+          <select id="assetPeriodicity"></select>
+          <input id="assetPeriodicityOther" class="asset-other-input hidden" placeholder="Informe a periodicidade">
+        </label>
+        <label class="full">Observações<textarea id="assetNotes" rows="4"></textarea></label>
+      </div>
+    </div>
+
+    <div id="assetSaveMessage" class="message"></div>
+    <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:16px">
+      <button id="assetCancel" class="btn btn-secondary" type="button">Cancelar</button>
+      <button id="assetSave" class="btn btn-blue" type="button">Salvar Ativo</button>
+    </div>
+  </div>
+</div>
+
+<div id="systemLoginModal" class="modal"><div class="modal-box"><h2>🔐 Acesso ao QRManut</h2><div class="system-login-note">O acesso ao Menu Principal é individual e controlado por perfil e escopo.</div><label>Usuário ou e-mail<input id="systemUsername" autocomplete="username"></label><label>Senha<div class="password-wrap"><input id="systemPassword" type="password" autocomplete="current-password"><button type="button" class="password-toggle" data-password-target="systemPassword" aria-label="Mostrar senha" title="Mostrar senha"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path><circle cx="12" cy="12" r="2.8"></circle></svg></button></div></label><button id="forgotPasswordButton" class="auth-link" type="button">Esqueci minha senha</button><div id="systemLoginMessage" class="message"></div><div class="modal-actions"><button id="cancelSystemLogin" class="btn btn-secondary">Cancelar</button><button id="sendSystemLogin" class="btn btn-blue">Entrar</button></div></div></div>
+
+<div id="forgotPasswordModal" class="modal"><div class="modal-box"><h2>🔑 Recuperar senha</h2><div class="muted">Informe seu usuário ou e-mail. Por segurança, o QRManut não informa se o usuário ou e-mail existe. Se houver uma conta elegível, as instruções serão enviadas ao endereço cadastrado.</div><label>Usuário ou e-mail<input id="recoveryIdentifier"></label><div id="recoveryMessage" class="message"></div>
+<div id="recoveryNotRegisteredBox" class="access-request-box hidden"><h3>👤 Usuário não cadastrado</h3><div id="recoveryNotRegisteredText" class="muted">Para utilizar o QRManut é necessário solicitar seu cadastro ao administrador.</div><button id="openAccessRequestButton" type="button" class="btn btn-blue" style="margin-top:10px">📧 Solicitar cadastro</button></div>
+<div id="pendingInviteBox" class="access-request-box hidden"><h3>✉️ Convite pendente</h3><div class="muted">Este usuário já foi cadastrado, mas ainda não concluiu a criação da senha.</div><button id="resendPendingInviteButton" type="button" class="btn btn-blue" style="margin-top:10px">✉️ Reenviar convite</button></div>
+<div id="accessRequestForm" class="access-request-box hidden"><h3>📥 Solicitação de acesso</h3><div class="muted">Preencha seus dados. A solicitação será enviada aos administradores MASTER para análise.</div><label>Nome completo *<input id="accessRequestName" autocomplete="name"></label><label>Login desejado *<input id="accessRequestLogin" autocomplete="username"></label><label>E-mail *<input id="accessRequestEmail" type="email" autocomplete="email"></label><label>Telefone<input id="accessRequestPhone" type="tel" autocomplete="tel"></label><div id="accessRequestMessage" class="message"></div><div id="accessRequestActions" class="access-request-actions"><button id="cancelAccessRequestButton" type="button" class="btn btn-secondary">Cancelar solicitação</button><button id="sendAccessRequestButton" type="button" class="btn btn-blue">📧 Enviar solicitação</button></div><button id="accessRequestBackToLoginButton" type="button" class="btn btn-blue hidden" style="width:100%;margin-top:12px">🔐 Voltar ao login</button></div>
+<div id="recoveryModalActions" class="modal-actions"><button id="cancelRecovery" class="btn btn-secondary">Cancelar</button><button id="sendRecovery" class="btn btn-blue">Enviar instruções</button></div></div></div>
+
+<div id="setPasswordModal" class="modal"><div class="modal-box"><h2 id="setPasswordTitle">Criar senha</h2><div id="setPasswordUser" class="preventive-info"></div><label>Nova senha<div class="password-wrap"><input id="newPassword" type="password" autocomplete="new-password"><button type="button" class="password-toggle" data-password-target="newPassword" aria-label="Mostrar senha" title="Mostrar senha"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path><circle cx="12" cy="12" r="2.8"></circle></svg></button></div></label><label>Confirmar senha<div class="password-wrap"><input id="confirmPassword" type="password" autocomplete="new-password"><button type="button" class="password-toggle" data-password-target="confirmPassword" aria-label="Mostrar senha" title="Mostrar senha"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path><circle cx="12" cy="12" r="2.8"></circle></svg></button></div></label><div class="password-rules">Mínimo de 8 caracteres, com letra maiúscula, minúscula, número e caractere especial.</div><div id="setPasswordMessage" class="message"></div><div class="modal-actions"><button id="saveNewPassword" class="btn btn-blue">Salvar senha</button></div></div></div>
+
+
+<div id="providerModal" class="modal"><div class="modal-box"><h2 id="providerModalTitle">🏢 Prestador</h2><input id="providerId" type="hidden"><label>Nome/Razão Social *<input id="providerName"></label><label>Nome Fantasia<input id="providerTradeName"></label><div class="admin-grid"><label>Responsável / Contato principal<input id="providerResponsible"></label><label>Telefone / WhatsApp<input id="providerPhone" type="tel" inputmode="tel" autocomplete="tel"></label><label class="full">E-mail de Contato<input id="providerContactEmail" type="email" autocomplete="email"></label></div><div class="admin-grid"><label class="switch-row"><input id="providerActive" type="checkbox"> Ativo</label><label class="switch-row"><input id="providerRequireSignature" type="checkbox"> Exigir assinatura</label><label class="switch-row"><input id="providerPhotoRequired" type="checkbox"> Foto obrigatória</label><label class="switch-row"><input id="providerObservationRequired" type="checkbox"> Observação obrigatória</label><label class="switch-row"><input id="providerCanPreventive" type="checkbox"> Pode registrar preventiva</label><label class="switch-row"><input id="providerCanOccurrence" type="checkbox"> Pode atender OC</label><label class="switch-row"><input id="providerNotifyOccurrence" type="checkbox"> Notificar OC</label><label class="switch-row"><input id="providerSendReport" type="checkbox"> Enviar relatório</label></div><label>E-mail OC<input id="providerOccurrenceEmail"></label><label>E-mail Relatório<input id="providerReportEmail"></label><label>Observações<textarea id="providerNotes" rows="4"></textarea></label><div id="providerMessage" class="message"></div><div class="modal-actions"><button id="cancelProvider" class="btn btn-secondary">Cancelar</button><button id="saveProvider" class="btn btn-blue">Salvar prestador</button></div></div></div>
+
+<div id="providerConsultModal" class="modal"><div class="modal-box"><h2 id="providerConsultTitle">🏢 Consultar Prestador</h2><div id="providerConsultBody"></div><div class="modal-actions"><button id="closeProviderConsult" class="btn btn-secondary" type="button">Fechar</button></div></div></div>
+
+<div id="userModal" class="modal"><div class="modal-box"><h2 id="userModalTitle">👤 Novo usuário</h2><input id="userEditId" type="hidden"><input id="userRequestId" type="hidden"><label>Nome *<input id="userName"></label><label>Usuário/Login *<input id="userLogin"></label><label><span id="userEmailLabel">E-mail (opcional)</span><input id="userEmail" type="email" autocomplete="email"></label><div id="userEmailHelp" class="password-rules">Se o e-mail não for informado, o MASTER deverá definir a senha do usuário diretamente no QRManut.</div><label>Perfil *<select id="userProfile"><option value="PRESTADOR">PRESTADOR</option><option value="CONSULTA">CONSULTA</option><option value="GESTOR">GESTOR</option><option value="MASTER">MASTER</option></select></label><label>Prestador<select id="userProvider"><option value="">Vínculo interno / sem prestador</option></select></label><div id="userMessage" class="message"></div><div class="modal-actions"><button id="cancelUser" class="btn btn-secondary">Cancelar</button><button id="saveUser" class="btn btn-blue">Criar e enviar convite</button></div></div></div>
+
+<div id="adminUserPasswordModal" class="modal"><div class="modal-box"><h2 id="adminUserPasswordTitle">🔑 Definir senha do usuário</h2><input id="adminUserPasswordId" type="hidden"><div id="adminUserPasswordInfo" class="preventive-info"></div><label>Nova senha<div class="password-wrap"><input id="adminUserPassword" type="password" autocomplete="new-password"><button type="button" class="password-toggle" data-password-target="adminUserPassword" aria-label="Mostrar senha" title="Mostrar senha"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path><circle cx="12" cy="12" r="2.8"></circle></svg></button></div></label><label>Confirmar senha<div class="password-wrap"><input id="adminUserPasswordConfirm" type="password" autocomplete="new-password"><button type="button" class="password-toggle" data-password-target="adminUserPasswordConfirm" aria-label="Mostrar senha" title="Mostrar senha"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path><circle cx="12" cy="12" r="2.8"></circle></svg></button></div></label><div class="password-rules">Mínimo de 8 caracteres, com letra maiúscula, minúscula, número e caractere especial.</div><div id="adminUserPasswordMessage" class="message"></div><div class="modal-actions"><button id="cancelAdminUserPassword" class="btn btn-secondary" type="button">Cancelar</button><button id="saveAdminUserPassword" class="btn btn-blue" type="button">Salvar senha</button></div></div></div>
+
+<div id="preventiveLoginModal" class="modal hidden"><div class="modal-box"><h2>🔐 Acesso às Preventivas</h2><div id="loginProviderInfo" class="preventive-info hidden"></div><label>Usuário<input id="preventiveUsername" autocomplete="username"></label><label>Senha<div class="password-wrap"><input id="preventivePassword" type="password" autocomplete="current-password"><button type="button" class="password-toggle" data-password-target="preventivePassword" aria-label="Mostrar senha" title="Mostrar senha"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path><circle cx="12" cy="12" r="2.8"></circle></svg></button></div></label><div id="loginMessage" class="message"></div><div class="modal-actions"><button id="cancelLogin" class="btn btn-secondary">Cancelar</button><button id="sendLogin" class="btn btn-green">Entrar</button></div></div></div>
+
+<div id="preventiveModal" class="modal"><div class="modal-box"><h2>🛠️ Registrar Manutenção Preventiva</h2><div class="preventive-info"><div><b>Ativo:</b> <span id="preventiveAsset"></span></div><div><b>Periodicidade:</b> <span id="preventivePeriodicity"></span></div><div><b>Prestador:</b> <span id="preventiveProvider"></span></div><div><b>Competência:</b> <span id="preventiveCompetence"></span></div></div><div id="preventiveRequirements" class="requirements-box"></div><label>Responsável pela preventiva *<input id="preventiveResponsible"></label><label>Observação<textarea id="preventiveObservation" rows="5"></textarea></label>
+<label class="switch-row" style="margin-top:12px">
+  <input id="preventiveNeedsAction" type="checkbox">
+  <span id="preventiveNeedsActionLabel">Foi identificada alguma necessidade de providência?</span>
+</label>
+<div id="preventiveActionFields" class="hidden" style="border:1px solid #f59e0b;background:#fffbeb;border-radius:12px;padding:12px;margin-top:8px">
+  <h3 id="preventiveActionHeading" style="margin-top:0">📌 Providência necessária</h3>
+  <label>Tipo de providência *<select id="preventiveActionType">
+    <option value="">Selecione...</option>
+    <option>Compra de material/peça</option>
+    <option>Serviço especializado</option>
+    <option>Intervenção corretiva</option>
+    <option>Inspeção aprofundada</option>
+    <option>Orçamento</option>
+    <option>Substituição de componente</option>
+    <option>Outro</option>
+  </select></label>
+  <label>Descrição da necessidade *<textarea id="preventiveActionDescription" rows="4"></textarea></label>
+  <label>Prioridade *<select id="preventiveActionPriority">
+    <option>Média</option>
+    <option>Baixa</option>
+    <option>Alta</option>
+    <option>Crítica</option>
+  </select></label>
+  <div class="two-col">
+    <label>Material / peça<input id="preventiveActionMaterial"></label>
+    <label>Quantidade<input id="preventiveActionQuantity"></label>
+  </div>
+  <label>Condição de operação<select id="preventiveActionOperation">
+    <option value="">Não informado</option>
+    <option>Pode continuar operando</option>
+    <option>Pode operar com restrição</option>
+    <option>Não deve operar</option>
+  </select></label>
+  <div class="muted" id="preventiveActionNotice">Ao salvar a preventiva, esta necessidade será registrada em Pendências / Providências e comunicada aos responsáveis.</div>
+</div>
+<label>Foto / evidência</label><div class="photo-source-actions"><button type="button" id="preventiveCameraButton" class="btn btn-blue">📷 Tirar foto</button><button type="button" id="preventiveGalleryButton" class="btn btn-secondary">🖼️ Escolher imagem do celular</button></div><input id="preventiveCameraInput" class="photo-source-hidden" type="file" accept="image/*" capture="environment"><input id="preventivePhotoInput" class="photo-source-hidden" type="file" accept="image/*"><img id="preventivePhotoPreview" class="photo-preview">
+<div id="preventiveDocumentsBox" style="margin-top:14px;padding:12px;border:1px solid #dbeafe;background:#f8fbff;border-radius:12px">
+  <div id="preventiveDocumentsTitle" style="font-weight:800">📎 Documentos da preventiva (opcional)</div>
+  <div id="preventiveDocumentsHelp" class="muted" style="margin-top:4px">Anexe relatório do prestador, checklist, laudo ou outra evidência em PDF.</div>
+  <button id="preventiveDocumentAddButton" type="button" class="btn btn-secondary" style="margin-top:9px">📎 Anexar documento PDF</button>
+  <input id="preventiveDocumentInput" type="file" accept="application/pdf,.pdf" multiple class="photo-source-hidden">
+  <div id="preventiveDocumentList" style="margin-top:10px"></div>
+</div>
+<div id="signatureBox" class="signature-box hidden"><div class="signature-title">✍️ Assinatura do responsável <span id="signatureRequiredText" class="required-yes"></span></div><div class="signature-help">Assine no quadro usando o dedo ou mouse.</div><div class="signature-canvas-wrap"><canvas id="signatureCanvas"></canvas></div><button id="clearSignature" type="button" class="btn btn-secondary" style="margin-top:8px">Limpar assinatura</button></div><div id="preventiveMessage" class="message"></div><div class="modal-actions"><button id="cancelPreventive" class="btn btn-secondary">Cancelar</button><button id="savePreventive" class="btn btn-green">Registrar Preventiva</button></div></div></div>
+
+
+<div id="solPublicModal" class="modal"><div class="modal-box">
+  <h2>📍 Solicitação de Manutenção</h2>
+  <div class="muted">Use este formulário quando o problema estiver em outro equipamento ou ambiente. Esta solicitação será analisada pela equipe de manutenção antes de virar uma OC.</div>
+  <div id="solOriginInfo" class="sol-detail-box" style="margin-top:12px"></div>
+  <label>Seu nome *<input id="solReporterName"></label>
+  <label>Contato / telefone / e-mail *<input id="solContact" placeholder="Informe pelo menos um meio de contato"></label>
+  <label>Pavimento *<select id="solFloor"><option value="">Selecione...</option></select></label>
+  <label>Local / Ambiente *<select id="solLocation"><option value="">Selecione o pavimento primeiro</option></select></label>
+  <label id="solOtherLocationWrap" class="hidden">Informe o local *<input id="solOtherLocation"></label>
+  <label>Descreva o problema *<textarea id="solDescription" rows="5" placeholder="Explique de forma simples o que está acontecendo."></textarea></label>
+  <label>Foto / evidência (opcional)</label>
+  <div class="photo-source-actions"><button type="button" id="solCameraButton" class="btn btn-blue">📷 Tirar foto</button><button type="button" id="solGalleryButton" class="btn btn-secondary">🖼️ Escolher imagem</button></div>
+  <input id="solCameraInput" class="photo-source-hidden" type="file" accept="image/*" capture="environment">
+  <input id="solPhotoInput" class="photo-source-hidden" type="file" accept="image/*">
+  <div id="solPhotoStatus" class="muted" style="margin-top:5px"></div>
+  <img id="solPhotoPreview" class="photo-preview">
+  <div id="solPublicMessage" class="message"></div>
+  <div class="modal-actions"><button id="cancelSolPublic" class="btn btn-secondary">Cancelar</button><button id="sendSolPublic" class="btn btn-blue">Enviar solicitação</button></div>
+</div></div>
+
+<div id="solDetailModal" class="modal"><div class="modal-box">
+  <h2>📥 Detalhes da Solicitação</h2>
+  <div id="solDetailContent"></div>
+  <div class="modal-actions"><button id="closeSolDetail" class="btn btn-secondary">Fechar</button></div>
+</div></div>
+
+<div id="solConvertModal" class="modal"><div class="modal-box">
+  <h2>🧰 Criar OC a partir da Solicitação</h2>
+  <div id="solConvertSummary" class="sol-detail-box"></div>
+  <label>Buscar ativo cadastrado *<input id="solAssetSearch" placeholder="ID, equipamento, pavimento, local ou componente"></label>
+  <div id="solAssetSelected" class="message"></div>
+  <div id="solAssetResults" class="sol-asset-search-results"></div>
+  <h3 style="margin-bottom:4px">Classificação inicial da OC</h3>
+  <div class="muted">A classificação pode ser alterada posteriormente na própria OC.</div>
+  <label>Categoria *<select id="solOccurrenceCategory"><option value="">Selecione...</option></select></label>
+  <label>Componente *<select id="solOccurrenceComponent"><option value="">Selecione...</option></select></label>
+  <div id="solConvertMessage" class="message"></div>
+  <div class="modal-actions"><button id="cancelSolConvert" class="btn btn-secondary">Cancelar</button><button id="confirmSolConvert" class="btn btn-green">Criar OC</button></div>
+</div></div>
+
+<div id="solCloseModal" class="modal"><div class="modal-box">
+  <h2>Encerrar solicitação sem OC</h2>
+  <div id="solCloseSummary" class="sol-detail-box"></div>
+  <label>Motivo do encerramento *<textarea id="solCloseReason" rows="4" placeholder="Ex.: solicitação duplicada, problema já resolvido, informação insuficiente..."></textarea></label>
+  <div id="solCloseMessage" class="message"></div>
+  <div class="modal-actions"><button id="cancelSolClose" class="btn btn-secondary">Cancelar</button><button id="confirmSolClose" class="btn">Encerrar sem OC</button></div>
+</div></div>
+
+<div id="reportModal" class="modal"><div class="modal-box"><h2>Reportar Serviço / Anomalia / Reparo</h2><label>Seu nome *<input id="reporterName"></label><label>Contato<input id="reporterContact"></label><label><span id="reportCategoryLabel">Categoria *</span><select id="category"><option value="">Selecione...</option></select></label><label><span id="reportComponentLabel">Componente *</span><select id="component"><option value="">Selecione...</option></select></label><label>Descrição *<textarea id="description" rows="5"></textarea></label><label>Imagem / evidência (opcional)</label><div class="photo-source-actions"><button type="button" id="reportCameraButton" class="btn btn-blue">📷 Tirar foto</button><button type="button" id="reportGalleryButton" class="btn btn-secondary">🖼️ Escolher imagem do celular</button></div><input id="reportCameraInput" class="photo-source-hidden" type="file" accept="image/*" capture="environment"><input id="photoInput" class="photo-source-hidden" type="file" accept="image/*"><div id="reportPhotoStatus" class="muted" style="margin-top:5px"></div><img id="photoPreview" class="photo-preview"><div class="upload-file-box" style="margin-top:12px"><div style="font-weight:800">📎 Arquivo da ocorrência (opcional)</div><div class="muted" style="margin-top:4px">PDF, Word, Excel ou outro arquivo de evidência, até 8 MB.</div><button id="reportAttachmentButton" type="button" class="btn btn-secondary" style="margin-top:8px">📎 Escolher arquivo</button><input id="reportAttachmentInput" class="photo-source-hidden" type="file"><div id="reportAttachmentName" class="upload-file-name">Nenhum arquivo selecionado.</div></div><div id="reportMessage" class="message"></div><div class="modal-actions"><button id="cancelReport" class="btn btn-secondary">Cancelar</button><button id="sendReport" class="btn">Gravar ocorrência</button></div></div></div>
+
+<div id="manageModal" class="modal"><div class="modal-box"><h2>Gerenciar ocorrência</h2><label>Alterado por *<input id="manageChangedBy"></label><label>Categoria<select id="manageCategory"></select></label><label>Componente<select id="manageComponent"></select></label><label>Descrição<textarea id="manageDescription" rows="4"></textarea></label><label>Status<select id="manageStatus"><option>Aberta</option><option>Em atendimento</option><option>Aguardando peça</option><option>Concluída</option><option>Cancelada</option></select></label><label>Responsável<input id="manageResponsible"></label><label>Solução<textarea id="manageSolution" rows="4"></textarea></label><div id="existingOccurrencePhotoBox" class="hidden" style="margin-top:14px;padding:12px;border:1px solid #bfdbfe;background:#eff6ff;border-radius:12px">
+  <div id="existingOccurrencePhotoTitle" style="font-weight:800;color:#1e3a8a">📷 Foto inicial registrada</div>
+  <div id="existingOccurrencePhotoHelp" class="muted" style="margin-top:4px">Esta é a evidência registrada na abertura da ocorrência.</div>
+  <a id="existingOccurrencePhotoLink" class="document-open" href="#" target="_blank" rel="noopener" style="margin-top:8px">Abrir foto inicial</a>
+  <img id="existingOccurrencePhotoPreview" class="photo-preview" alt="Foto inicial da ocorrência" style="margin-top:10px">
+</div>
+<label>Adicionar nova foto da ocorrência / correção</label><div class="photo-source-actions"><button type="button" id="manageOccurrenceCameraButton" class="btn btn-blue">📷 Tirar foto</button><button type="button" id="manageOccurrenceAttachButton" class="btn btn-secondary">🖼️ Anexar imagem</button></div><input id="manageOccurrenceCameraInput" class="photo-source-hidden" type="file" accept="image/*" capture="environment"><input id="manageOccurrencePhotoInput" class="photo-source-hidden" type="file" accept="image/*"><div id="manageOccurrencePhotoStatus" class="muted" style="margin-top:5px"></div><img id="manageOccurrencePhotoPreview" class="photo-preview"><div class="upload-file-box" style="margin-top:12px"><div style="font-weight:800">📎 Adicionar arquivo à ocorrência</div><div class="muted" style="margin-top:4px">PDF, Word, Excel ou outro arquivo de evidência, até 8 MB.</div><button id="manageAttachmentButton" type="button" class="btn btn-secondary" style="margin-top:8px">📎 Escolher arquivo</button><input id="manageAttachmentInput" class="photo-source-hidden" type="file"><div id="manageAttachmentName" class="upload-file-name">Nenhum arquivo selecionado.</div><div id="manageExistingAttachments" style="margin-top:8px"></div></div><div id="conclusionPhotoArea" class="hidden"><label>Foto da conclusão</label><div class="photo-source-actions"><button type="button" id="conclusionCameraButton" class="btn btn-blue">📷 Tirar foto</button><button type="button" id="conclusionAttachButton" class="btn btn-secondary">🖼️ Anexar imagem</button></div><input id="conclusionCameraInput" class="photo-source-hidden" type="file" accept="image/*" capture="environment"><input id="conclusionPhotoInput" class="photo-source-hidden" type="file" accept="image/*"><div id="conclusionPhotoStatus" class="muted" style="margin-top:5px"></div><img id="conclusionPhotoPreview" class="photo-preview"></div><div id="manageMessage" class="message"></div><div class="modal-actions" style="justify-content:space-between;flex-wrap:wrap"><button id="deleteOccurrence" class="btn btn-danger hidden" type="button">🗑️ Excluir ocorrência</button><div style="display:flex;gap:8px;flex-wrap:wrap"><button id="cancelManage" class="btn btn-secondary">Cancelar</button><button id="saveManage" class="btn">Salvar alterações</button></div></div></div></div>
+
+<div class="footer">QRManut • Versão 7.6.6.24.12</div>
+</div>
+<script>
+const API_URL="https://script.google.com/macros/s/AKfycbx4tpC42Q6WdkNhTUTAGoZWvG5M24zwlNscnwbDP5B3Q5pWo8B32-Lf0rQ2Xtua1AFMAQ/exec";
+const TOKEN="";const SYSTEM_SESSION_KEY="qrmanut_system_session";const RESPONSIBLE_KEY="qrmanut_responsavel";const PREVENTIVE_SESSION_KEY="qrmanut_preventive_session";const ORIGIN_ASSET_KEY="qrmanut_origin_asset";const MAX_DIM=1280;const QUALITY=.72;
+let systemSession=null,systemLoginNextAction=null,currentAsset=null,currentAssetStatus=null,history=[],selectedOccurrence=null,preventiveControlData=null,preventiveControlMode="all",preventiveSession=null,preventiveRequirements=null,loginNextAction=null,photoData=null,reportAttachmentData=null,preventivePhotoData=null,preventiveDocumentFiles=[],correctionPhotoData=null,manageAttachmentData=null,conclusionPhotoData=null,reportPosting=false,reportCompleted=false,preventivePosting=false,managePosting=false,signatureDirty=false,signatureDrawing=false,signatureCtx=null,occurrenceReportData=null,occurrenceReportFiltersLoaded=false,pendingFiltersLoaded=false,auditFiltersLoaded=false,companyConfigLoaded=false,providersAdminData=[],usersAdminData=[],profilePermissionsAdminData=null,solPublicMeta=null,solPhotoData=null,solTriageData=null,solTriageMeta=null,solSelected=null,solSelectedAssetId="",solPublicPosting=false,solActionPosting=false;
+const SOL_TARGET_OC_KEY="qrmanut_sol_target_oc";
+const $=id=>document.getElementById(id);
+
+const qrNativeAlert=window.alert.bind(window);
+function qrShowAlert(message,title){
+  const modal=document.getElementById("qrAlertModal");
+  const msg=document.getElementById("qrAlertMessage");
+  const ttl=document.getElementById("qrAlertTitle");
+  const ok=document.getElementById("qrAlertOk");
+
+  if(!modal||!msg||!ttl||!ok){
+    qrNativeAlert(message);
     return;
   }
 
-  if(url.origin===self.location.origin){
-    event.respondWith(
-      caches.match(event.request)
-        .then(cached=>{
-          if(cached)return cached;
-          return fetch(event.request)
-            .then(response=>
-              caches.open(CACHE_NAME)
-                .then(cache=>cacheIfValid_(cache,event.request,response))
-                .catch(()=>response)
-            );
-        })
-        .catch(()=>
-          caches.match(event.request)
-            .then(cached=>cached||Response.error())
-        )
-    );
+  ttl.textContent=title||"QRManut";
+  msg.textContent=String(message??"");
+  modal.classList.add("qr-alert-open");
+
+  const close=()=>{
+    modal.classList.remove("qr-alert-open");
+    ok.removeEventListener("click",close);
+    document.removeEventListener("keydown",onKey);
+  };
+
+  const onKey=e=>{
+    if(e.key==="Enter"||e.key==="Escape"){
+      e.preventDefault();
+      close();
+    }
+  };
+
+  ok.addEventListener("click",close);
+  document.addEventListener("keydown",onKey);
+  setTimeout(()=>ok.focus(),0);
+}
+
+/* Todos os alert() existentes passam a usar a identidade visual do QRManut. */
+window.alert=function(message){
+  qrShowAlert(message,"QRManut");
+};
+
+const show=id=>$(id).classList.remove("hidden");const hide=id=>$(id).classList.add("hidden");
+
+let deferredInstallPrompt=null;
+
+function isStandaloneMode(){
+  return window.matchMedia("(display-mode: standalone)").matches ||
+    window.navigator.standalone === true;
+}
+
+function isIOSDevice(){
+  return /iphone|ipad|ipod/i.test(navigator.userAgent);
+}
+
+function setupInstallExperience(){
+  if(isStandaloneMode()){
+    hide("installAppButton");
+    hide("iosInstallHint");
+    return;
+  }
+
+  if(isIOSDevice()){
+    show("iosInstallHint");
+  }
+}
+
+async function installQRManut(){
+  if(!deferredInstallPrompt)return;
+
+  const btn=$("installAppButton");
+  btn.disabled=true;
+  btn.textContent="Abrindo instalação...";
+
+  try{
+    deferredInstallPrompt.prompt();
+    await deferredInstallPrompt.userChoice;
+  }catch(e){
+    console.warn("Não foi possível abrir a instalação do QRManut.",e);
+  }finally{
+    deferredInstallPrompt=null;
+    btn.disabled=false;
+    btn.textContent="📲 Instalar QRManut no celular";
+    hide("installAppButton");
+  }
+}
+
+window.addEventListener("beforeinstallprompt",event=>{
+  event.preventDefault();
+  deferredInstallPrompt=event;
+
+  if(!isStandaloneMode()){
+    show("installAppButton");
   }
 });
+
+window.addEventListener("appinstalled",()=>{
+  deferredInstallPrompt=null;
+  hide("installAppButton");
+  hide("iosInstallHint");
+});
+
+if("serviceWorker" in navigator){
+  window.addEventListener("load",()=>{
+    navigator.serviceWorker
+      .register("./qrmanut-sw.js")
+      .catch(error=>{
+        console.warn("Service Worker do QRManut não registrado.",error);
+        let warning=document.getElementById("qrServiceWorkerWarning");
+        if(!warning){
+          warning=document.createElement("div");
+          warning.id="qrServiceWorkerWarning";
+          warning.className="install-hint";
+          warning.textContent="⚠️ O modo offline do QRManut não pôde ser ativado. Verifique se o arquivo qrmanut-sw.js foi publicado corretamente.";
+          const host=document.querySelector(".container");
+          if(host)host.prepend(warning);
+        }
+      });
+  });
+}
+
+function esc(v){return String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;").replace(/'/g,"&#039;")}
+function normalizeId(v){return String(v||"").trim().toUpperCase()}function getId(){return normalizeId(new URLSearchParams(location.search).get("id"))}
+function qrDeviceTimeZone(){try{return Intl.DateTimeFormat().resolvedOptions().timeZone||""}catch(e){return""}}
+function formatDate(v){if(!v)return"";const d=new Date(v);const loc=(typeof qrLanguage!=="undefined"&&qrLanguage==="en-US")?"en-US":"pt-BR";return isNaN(d)?v:d.toLocaleString(loc)}
+function currentCompetence(){const d=new Date();const year=d.getFullYear();const month=String(d.getMonth()+1).padStart(2,"0");return year+"-"+month}
+function pairs(items){return items.filter(x=>x[1]!==""&&x[1]!==null&&x[1]!==undefined).map(x=>`<div class="pair"><b>${esc(x[0])}:</b> ${esc(x[1])}</div>`).join("")}
+async function api(params){const r=await fetch(API_URL+"?"+new URLSearchParams({...params}));return r.json()}async function apiPost(params){const body=new URLSearchParams({...params});const r=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"},body:body.toString()});return r.json()}
+function getSavedResponsible(){try{return localStorage.getItem(RESPONSIBLE_KEY)||""}catch(e){return""}}function saveResponsible(n){if(!n)return;try{localStorage.setItem(RESPONSIBLE_KEY,n)}catch(e){}}
+function savePreventiveSession(d){preventiveSession=d;sessionStorage.setItem(PREVENTIVE_SESSION_KEY,JSON.stringify(d))}function readPreventiveSession(){try{const raw=sessionStorage.getItem(PREVENTIVE_SESSION_KEY);preventiveSession=raw?JSON.parse(raw):null}catch(e){preventiveSession=null}}function clearPreventiveSession(){preventiveSession=null;sessionStorage.removeItem(PREVENTIVE_SESSION_KEY)}function saveSystemSession(d){systemSession=d;preventiveSession=d;try{sessionStorage.setItem(SYSTEM_SESSION_KEY,JSON.stringify(d));localStorage.removeItem(SYSTEM_SESSION_KEY)}catch(e){}}
+function readSystemSession(){try{localStorage.removeItem(SYSTEM_SESSION_KEY);const raw=sessionStorage.getItem(SYSTEM_SESSION_KEY);systemSession=raw?JSON.parse(raw):null}catch(e){systemSession=null}}
+function revokeSecureFileUrls76624(){try{secureFileUrlCache76624.forEach(v=>URL.revokeObjectURL(v));secureFileUrlCache76624.clear()}catch(e){}}
+function clearSystemSession(){systemSession=null;preventiveSession=null;revokeSecureFileUrls76624();try{sessionStorage.removeItem(SYSTEM_SESSION_KEY);localStorage.removeItem(SYSTEM_SESSION_KEY)}catch(e){}}
+async function systemSessionIsValid(){if(!systemSession?.systemSessionToken)return false;try{const r=await apiPost({action:"systemsession",systemSessionToken:systemSession.systemSessionToken});if(!r.ok){clearSystemSession();return false}if(r.session){systemSession={...systemSession,...r.session};saveSystemSession(systemSession)}return true}catch(e){clearSystemSession();return false}}
+function menuApi(params){if(!systemSession?.systemSessionToken)return Promise.reject(new Error("Faça login no Menu Principal."));return apiPost({...params,systemSessionToken:systemSession.systemSessionToken})}
+function menuApiPost(params){if(!systemSession?.systemSessionToken)return Promise.reject(new Error("Faça login no Menu Principal."));return apiPost({...params,systemSessionToken:systemSession.systemSessionToken})}
+const secureFileUrlCache76624=new Map();
+async function getSecureFileUrl76624(kind,ref,slot=""){
+  const key=[kind,ref,slot].join("|");
+  if(secureFileUrlCache76624.has(key))return secureFileUrlCache76624.get(key);
+  const r=await menuApiPost({action:"secureFile",secureFileKind:kind,secureFileRef:ref,secureFileSlot:slot});
+  if(!r.ok||!r.file?.base64)throw new Error(r.detail||(qrLanguage==="en-US"?"Unable to open the protected file.":"Não foi possível abrir o arquivo protegido."));
+  const bin=atob(r.file.base64),bytes=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)bytes[i]=bin.charCodeAt(i);
+  const url=URL.createObjectURL(new Blob([bytes],{type:r.file.mime||"application/octet-stream"}));
+  secureFileUrlCache76624.set(key,url);return url;
+}
+async function openSecureFile76624(kind,ref,slot=""){
+  const popup=window.open("about:blank","_blank");
+  try{const url=await getSecureFileUrl76624(kind,ref,slot);if(popup)popup.location.href=url;else window.location.href=url}
+  catch(e){if(popup)popup.close();alert(e.message)}
+}
+async function loadSecureImage76624(img,kind,ref,slot=""){
+  if(!img)return;try{img.src=await getSecureFileUrl76624(kind,ref,slot);img.style.display="block"}catch(e){img.removeAttribute("src");img.style.display="none"}
+}
+function renderSystemAccess(){if(!systemSession){hide("systemAccessInfo");return}show("systemAccessInfo");$("systemAccessText").innerHTML=`Acesso: <b>${esc(systemSession.nome||systemSession.usuario)}</b> • Perfil: <b>${esc(systemSession.perfil)}</b>${systemSession.prestador?` • Prestador: <b>${esc(systemSession.prestador)}</b>`:""}`}
+function hasProfilePermission(key){
+  if(!systemSession)return false;
+  if(String(systemSession.perfil||"").trim().toUpperCase()==="MASTER")return true;
+  return !!(systemSession.permissions&&systemSession.permissions[key]);
+}
+function permissionDeniedMessage(pt,en){alert(qrLanguage==="en-US"?en:pt);return false}
+function requireUiPermission(key,pt,en){return hasProfilePermission(key)||permissionDeniedMessage(pt,en)}
+function updateRoleUi(){
+  if(!systemSession)return;
+  const isMaster=String(systemSession.perfil||"").trim().toUpperCase()==="MASTER";
+  const toggle=(id,key)=>hasProfilePermission(key)?show(id):hide(id);
+  toggle("tabSearch","BUSCAR_ATIVOS");
+  toggle("tabPending","OC_PENDENTES");
+  toggle("tabSolicitations","SOLICITACOES_TRIAGEM");
+  toggle("tabOccurrenceReport","RELATORIO_OC");
+  toggle("tabPreventive","PREVENTIVA_CONSULTAR");
+  toggle("tabDocuments","DOCUMENTOS_CONSULTAR");
+  toggle("tabUsers","GESTAO_USUARIOS");
+  isMaster?show("tabPermissions"):hide("tabPermissions");
+  toggle("tabAudit","AUDITORIA");
+  toggle("tabProvidersAdmin","PRESTADORES_CONSULTAR");
+  toggle("tabCompany","CONFIGURACAO_EMPRESA");
+  toggle("tabDocumentUpload","UPLOAD_DOCUMENTOS");
+  toggle("tabOccurrenceCatalog","CATEGORIAS_COMPONENTES");
+  toggle("tabMaintenancePending","PENDENCIAS");
+  toggle("tabAssetManagement","GESTAO_ATIVOS");
+  hasProfilePermission("PRESTADORES_EDITAR")?show("newProviderButton"):hide("newProviderButton");
+  $("userProfile").innerHTML=isMaster
+    ?'<option value="PRESTADOR">PRESTADOR</option><option value="CONSULTA">CONSULTA</option><option value="GESTOR">GESTOR</option><option value="MASTER">MASTER</option>'
+    :'<option value="PRESTADOR">PRESTADOR</option><option value="CONSULTA">CONSULTA</option><option value="GESTOR">GESTOR</option>';
+}
+function showMenuGate(){show("searchScreen");hide("mainMenuButtons");["searchArea","pendingArea","solicitationsArea","occurrenceReportArea","preventiveControlArea","documentsArea","usersArea","permissionsArea","auditArea","companyArea","providersAdminArea","documentUploadArea","occurrenceCatalogArea","maintenancePendingArea","assetManagementPanel"].forEach(hide);hide("systemAccessInfo");show("menuLockedCard")}
+function openDefaultAllowedTab(){
+  if(hasProfilePermission("BUSCAR_ATIVOS"))return showSearchTab();
+  if(hasProfilePermission("OC_PENDENTES"))return showPendingTab();
+  if(hasProfilePermission("SOLICITACOES_TRIAGEM"))return showSolicitationsTab7662412();
+  if(hasProfilePermission("RELATORIO_OC"))return showOccurrenceReportTab();
+  if(hasProfilePermission("PREVENTIVA_CONSULTAR"))return showPreventiveTab();
+  if(hasProfilePermission("DOCUMENTOS_CONSULTAR"))return showDocumentsTab();
+  if(hasProfilePermission("PENDENCIAS"))return showMaintenancePendingTab();
+  if(hasProfilePermission("PRESTADORES_CONSULTAR"))return showProvidersAdminTab();
+  clearTabs();showOnly("searchArea");$("searchResults").innerHTML='<div class="document-empty">Seu perfil não possui nenhuma rotina de menu habilitada. Contate o administrador MASTER.</div>';
+}
+function openMainMenu(){hide("menuLockedCard");show("mainMenuButtons");renderSystemAccess();updateRoleUi();openDefaultAllowedTab();refreshAccessRequestMenuBadge76616();refreshSolMenuBadge7662412();if(systemSession?.perfil==="PRESTADOR"){$("occReportProvider").disabled=true}else{$("occReportProvider").disabled=false}}
+async function refreshAccessRequestMenuBadge76616(){const el=$("tabUsers");if(!el)return;const base=qrLanguage==="en-US"?"👥 User Management":"👥 Gestão de Usuários";if(systemSession?.perfil!=="MASTER"){el.textContent=base;return}try{const r=await menuApi({action:"accessrequests"});const n=(r.requests||[]).filter(x=>x.status==="Pendente").length;el.textContent=base+(n?` 🔴 ${n}`:"")}catch(e){el.textContent=base}}
+async function requireSystemLogin(nextAction){if(await systemSessionIsValid()){nextAction();return}systemLoginNextAction=nextAction;$("systemUsername").value="";$("systemPassword").value="";$("systemLoginMessage").className="message";$("systemLoginModal").style.display="flex";setTimeout(()=>$("systemUsername").focus(),80)}
+async function doSystemLogin(){const user=$("systemUsername").value.trim(),password=$("systemPassword").value;if(!user||!password){$("systemLoginMessage").className="message error";$("systemLoginMessage").textContent="Informe usuário e senha.";return}$("sendSystemLogin").disabled=true;$("sendSystemLogin").textContent="Entrando...";try{const r=await apiPost({action:"systemLogin",systemUsername:user,systemPassword:password});if(!r.ok)throw new Error(r.detail||"Usuário ou senha inválidos.");saveSystemSession(r);$("systemLoginModal").style.display="none";occurrenceReportFiltersLoaded=false;documentFiltersLoaded=false;pendingFiltersLoaded=false;if(systemLoginNextAction){const fn=systemLoginNextAction;systemLoginNextAction=null;fn()}else openMainMenu()}catch(e){$("systemLoginMessage").className="message error";$("systemLoginMessage").textContent=e.message}finally{$("sendSystemLogin").disabled=false;$("sendSystemLogin").textContent="Entrar"}}
+async function logoutSystemMenu(){try{if(systemSession?.systemSessionToken)await apiPost({action:"systemLogout",systemSessionToken:systemSession.systemSessionToken})}catch(e){}clearSystemSession();clearPreventiveSession();preventiveControlData=null;occurrenceReportData=null;occurrenceReportFiltersLoaded=false;documentFiltersLoaded=false;pendingFiltersLoaded=false;showMenuGate()}
+
+async function sessionIsValid(){return systemSessionIsValid()}
+function getOriginAsset(){try{return sessionStorage.getItem(ORIGIN_ASSET_KEY)||""}catch(e){return""}}function setOriginAsset(id){try{sessionStorage.setItem(ORIGIN_ASSET_KEY,normalizeId(id))}catch(e){}}function clearOriginAsset(){try{sessionStorage.removeItem(ORIGIN_ASSET_KEY)}catch(e){}}
+function updateBackAssetButton(){const id=getOriginAsset();if(id){show("backAssetWrap");$("backAssetButton").textContent=qrLanguage==="en-US"?"← Back to "+id:"← Voltar para "+id}else hide("backAssetWrap")}
+function focusSearchInput(){setTimeout(()=>{try{$("searchInput").focus()}catch(e){}},80)}function focusBackAssetButton(){setTimeout(()=>{try{if(!$("backAssetWrap").classList.contains("hidden"))$("backAssetButton").focus()}catch(e){}},100)}
+async function requirePreventiveLogin(nextAction,provider){await requireSystemLogin(()=>{if(systemSession?.perfil==="PRESTADOR"&&provider&&String(systemSession.prestador||"").trim().toLowerCase()!==String(provider).trim().toLowerCase()){alert("Este equipamento não pertence ao escopo do seu prestador.");return}nextAction()})}
+function processPhoto(file){return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=e=>{const img=new Image();img.onload=()=>{let w=img.width,h=img.height;if(w>MAX_DIM||h>MAX_DIM){if(w>h){h=Math.round(h*MAX_DIM/w);w=MAX_DIM}else{w=Math.round(w*MAX_DIM/h);h=MAX_DIM}}const c=document.createElement("canvas");c.width=w;c.height=h;c.getContext("2d").drawImage(img,0,0,w,h);const url=c.toDataURL("image/jpeg",QUALITY);resolve({base64:url.split(",")[1],dataUrl:url,mime:"image/jpeg",name:"foto_"+Date.now()+".jpg"})};img.src=e.target.result};reader.onerror=reject;reader.readAsDataURL(file)})}
+function processAttachment(file){return new Promise((resolve,reject)=>{if(!file)return resolve(null);if(file.size>8*1024*1024)return reject(new Error("O arquivo ultrapassa o limite de 8 MB."));const reader=new FileReader();reader.onload=()=>{const raw=String(reader.result||"");resolve({base64:raw.includes(",")?raw.split(",")[1]:raw,mime:file.type||"application/octet-stream",name:file.name||("arquivo_"+Date.now())})};reader.onerror=()=>reject(new Error("Não foi possível ler o arquivo."));reader.readAsDataURL(file)})}
+function setupSignatureCanvas(){const c=$("signatureCanvas"),rect=c.getBoundingClientRect(),ratio=window.devicePixelRatio||1;c.width=Math.floor(rect.width*ratio);c.height=Math.floor(180*ratio);signatureCtx=c.getContext("2d");signatureCtx.scale(ratio,ratio);signatureCtx.lineWidth=2;signatureCtx.lineCap="round";signatureCtx.lineJoin="round";clearSignatureCanvas()}function clearSignatureCanvas(){const c=$("signatureCanvas");if(!signatureCtx)return;signatureCtx.save();signatureCtx.setTransform(1,0,0,1,0,0);signatureCtx.fillStyle="#fff";signatureCtx.fillRect(0,0,c.width,c.height);signatureCtx.restore();signatureDirty=false}function signaturePoint(e){const r=$("signatureCanvas").getBoundingClientRect();return{x:e.clientX-r.left,y:e.clientY-r.top}}function signatureStart(e){e.preventDefault();signatureDrawing=true;const p=signaturePoint(e);signatureCtx.beginPath();signatureCtx.moveTo(p.x,p.y);signatureDirty=true}function signatureMove(e){if(!signatureDrawing)return;e.preventDefault();const p=signaturePoint(e);signatureCtx.lineTo(p.x,p.y);signatureCtx.stroke()}function signatureEnd(){signatureDrawing=false}function getSignatureData(){if(!signatureDirty)return null;const u=$("signatureCanvas").toDataURL("image/png");return{base64:u.split(",")[1],mime:"image/png"}}
+function showOnly(a){["searchArea","pendingArea","solicitationsArea","occurrenceReportArea","preventiveControlArea","documentsArea","usersArea","permissionsArea","auditArea","companyArea","providersAdminArea","documentUploadArea","occurrenceCatalogArea","maintenancePendingArea","assetManagementPanel"].forEach(hide);show(a)}
+function clearTabs(){["tabSearch","tabPending","tabSolicitations","tabOccurrenceReport","tabPreventive","tabDocuments","tabUsers","tabPermissions","tabAudit","tabProvidersAdmin","tabCompany","tabDocumentUpload","tabOccurrenceCatalog","tabMaintenancePending","tabAssetManagement"].forEach(id=>$(id).classList.remove("active"))}
+function showSearchTab(){if(!requireUiPermission("BUSCAR_ATIVOS","Seu perfil não possui permissão para buscar ativos.","Your profile is not allowed to search assets."))return;clearTabs();$("tabSearch").classList.add("active");showOnly("searchArea");updateBackAssetButton();focusSearchInput()}
+async function showPendingTab(){if(!requireUiPermission("OC_PENDENTES","Seu perfil não possui permissão para consultar OCs pendentes.","Your profile is not allowed to view pending work orders."))return;clearTabs();$("tabPending").classList.add("active");showOnly("pendingArea");await loadPendingFilters();await loadPending()}
+async function showOccurrenceReportTab(){if(!requireUiPermission("RELATORIO_OC","Seu perfil não possui permissão para acessar o Relatório de OCs.","Your profile is not allowed to access the work order report."))return;clearTabs();$("tabOccurrenceReport").classList.add("active");showOnly("occurrenceReportArea");setDefaultOccurrenceReportDates();await loadOccurrenceReportFilters();if(!occurrenceReportData)await loadOccurrenceReport()}
+function showPreventiveTab(){requireSystemLogin(()=>{if(!requireUiPermission("PREVENTIVA_CONSULTAR","Seu perfil não possui permissão para consultar preventivas.","Your profile is not allowed to view preventive maintenance."))return;clearTabs();$("tabPreventive").classList.add("active");showOnly("preventiveControlArea");loadPreventiveControl()})}
+async function showDocumentsTab(){if(!requireUiPermission("DOCUMENTOS_CONSULTAR","Seu perfil não possui permissão para consultar documentos técnicos.","Your profile is not allowed to view technical documents."))return;clearTabs();$("tabDocuments").classList.add("active");showOnly("documentsArea");await loadDocumentFilters();await searchDocuments()}
+async function showUsersTab(){if(!requireUiPermission("GESTAO_USUARIOS","Seu perfil não possui permissão para acessar a Gestão de Usuários.","Your profile is not allowed to manage users."))return;clearTabs();$("tabUsers").classList.add("active");showOnly("usersArea");await loadUsers()}
+async function showAuditTab(){if(!requireUiPermission("AUDITORIA","Seu perfil não possui permissão para consultar a auditoria.","Your profile is not allowed to view the audit trail."))return;clearTabs();$("tabAudit").classList.add("active");showOnly("auditArea");setDefaultAuditDates();await loadAuditFilters();await loadAudit()}
+
+function isoDateLocal(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function setDefaultOccurrenceReportDates(){if($("occReportStart").value&&$("occReportEnd").value){qrRefreshLocalizedDateControls();return}const hoje=new Date(),inicio=new Date(hoje.getFullYear(),hoje.getMonth(),1);$("occReportStart").value=isoDateLocal(inicio);$("occReportEnd").value=isoDateLocal(hoje);qrRefreshLocalizedDateControls()}
+function fillSelect(id,items,firstLabel){const atual=$(id).value;$(id).innerHTML=`<option value="">${esc(firstLabel)}</option>`+(items||[]).map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join("");if([...$(id).options].some(o=>o.value===atual))$(id).value=atual}
+async function loadOccurrenceReportFilters(){if(occurrenceReportFiltersLoaded)return;try{const r=await menuApi({action:"occurrencereportfilters"});if(!r.ok)throw new Error(r.detail||"Erro ao carregar filtros.");const f=r.filters||{};
+qrFillTranslatedSelect7613("occReportProvider",f.prestadores,qrLanguage==="en-US"?"All service providers":"Todos os prestadores");
+qrFillTranslatedSelect7613("occReportCategory",f.categorias,qrLanguage==="en-US"?"All categories":"Todas as categorias");
+qrFillTranslatedSelect7613("occReportComponent",f.componentes,qrLanguage==="en-US"?"All components":"Todos os componentes");
+qrFillTranslatedSelect7613("occReportFloor",f.pavimentos,qrLanguage==="en-US"?"All floors":"Todos os pavimentos");
+qrFillTranslatedSelect7613("occReportLocation",f.localizacoes,qrLanguage==="en-US"?"All locations":"Todas as localizações");if(systemSession?.perfil==="PRESTADOR"){$("occReportProvider").value=systemSession.prestador;$('occReportProvider').disabled=true}else{$("occReportProvider").disabled=false}occurrenceReportFiltersLoaded=true}catch(e){$("occReportStatus").textContent=e.message}}
+function occurrenceReportParams(){return{dataInicial:$("occReportStart").value,dataFinal:$("occReportEnd").value,prestador:$("occReportProvider").value,categoria:$("occReportCategory").value,componente:$("occReportComponent").value,pavimento:$("occReportFloor").value,localizacao:$("occReportLocation").value}}function markOccurrenceReportDirty(){occurrenceReportData=null;$("occReportPdf").disabled=true;hide("occPdfBox");$("occReportStatus").textContent="Filtros alterados. Clique em Consultar para atualizar o relatório.";$("occReportSummary").innerHTML="";$("occCategorySummary").innerHTML="";$("occReportResults").innerHTML=""}
+
+const QR_STRUCTURED_PT_EN_7613={
+  // Categorias / componentes
+  "Equipamento":"Equipment",
+  "Refrigeração":"Refrigeration",
+  "Climatização":"HVAC",
+  "Elétrica":"Electrical",
+  "Hidráulica":"Plumbing",
+  "Mobiliário":"Furniture",
+  "Civil":"Civil",
+  "Sanitário":"Plumbing Fixtures",
+  "Utilidades":"Utilities",
+  "Segurança":"Safety",
+  "Outros":"Other",
+  "Outro":"Other",
+  "Geral":"General",
+  "Piso":"Floor",
+  "Parede":"Wall",
+  "Teto":"Ceiling",
+  "Porta":"Door",
+  "Janela":"Window",
+  "Vaso Sanitário":"Toilet",
+  "Pia":"Sink",
+  "Torneira":"Faucet",
+  "Descarga":"Flush Valve",
+  "Mictório":"Urinal",
+  "Ralo":"Drain",
+  "Luminária":"Light Fixture",
+  "Tomada":"Outlet",
+  "Interruptor":"Switch",
+  "Tubulação":"Piping",
+  "Registro":"Valve",
+  "Bomba":"Pump",
+  "Motor":"Motor",
+  "Painel":"Panel",
+  "Ar-condicionado":"Air Conditioner",
+
+  // Documentos técnicos
+  "Procedimento":"Procedure",
+  "Diagrama":"Diagram",
+  "Planta / Mapa":"Drawing / Map",
+  "Manual":"Manual",
+  "Relatório":"Report",
+  "Certificado":"Certificate",
+  "Laudo":"Technical Assessment",
+  "Elétrica":"Electrical",
+  "Refrigeração":"Refrigeration",
+  "Climatização":"HVAC",
+  "Hidráulica":"Plumbing",
+  "Segurança":"Safety",
+  "Civil":"Civil",
+  "Extintores e Hidrantes":"Fire Extinguishers and Hydrants",
+  "Condensadoras":"Condensing Units",
+  "Evaporadoras":"Evaporator Units",
+  "Alarmes":"Alarms",
+
+  // Pavimentos / localizações comuns
+  "TÉRREO":"GROUND FLOOR",
+  "TERREO":"GROUND FLOOR",
+  "1º PISO":"1ST FLOOR",
+  "2º PISO":"2ND FLOOR",
+  "3º PISO":"3RD FLOOR",
+  "ÁREA EXTERNA":"EXTERIOR AREA",
+  "AREA EXTERNA":"EXTERIOR AREA",
+  "EXTERNO":"EXTERIOR"
+};
+
+function qrStructuredValue7613(v){
+  const original=String(v??"");
+  if(qrLanguage!=="en-US" || !original)return original;
+
+  const trimmed=original.trim();
+  if(QR_STRUCTURED_PT_EN_7613[trimmed]){
+    return QR_STRUCTURED_PT_EN_7613[trimmed];
+  }
+
+  // Traduções seguras de termos estruturais dentro de valores compostos.
+  let s=trimmed;
+  const replacements=[
+    [/\bTérreo\b/gi,"Ground Floor"],
+    [/\bTerreo\b/gi,"Ground Floor"],
+    [/\b3º\s*Piso\b/gi,"3rd Floor"],
+    [/\b2º\s*Piso\b/gi,"2nd Floor"],
+    [/\b1º\s*Piso\b/gi,"1st Floor"],
+    [/\b3\s*Piso\b/gi,"3rd Floor"],
+    [/\b2\s*Piso\b/gi,"2nd Floor"],
+    [/\b1\s*Piso\b/gi,"1st Floor"],
+    [/\bÁrea Externa\b/gi,"Exterior Area"],
+    [/\bArea Externa\b/gi,"Exterior Area"],
+    [/\bRefrigeração\b/gi,"Refrigeration"],
+    [/\bClimatização\b/gi,"HVAC"],
+    [/\bElétrica\b/gi,"Electrical"],
+    [/\bHidráulica\b/gi,"Plumbing"],
+    [/\bSegurança\b/gi,"Safety"],
+    [/\bMobiliário\b/gi,"Furniture"],
+    [/\bEquipamento\b/gi,"Equipment"],
+    [/\bOutros\b/gi,"Other"],
+    [/\bOutro\b/gi,"Other"]
+  ];
+  replacements.forEach(([rx,en])=>{s=s.replace(rx,en);});
+  return s;
+}
+
+function qrDocumentTitle7613(v){
+  const original=String(v??"");
+  if(qrLanguage!=="en-US" || !original)return original;
+
+  let s=original;
+  const replacements=[
+    [/\bEsquema Elétrico\b/gi,"Electrical Diagram"],
+    [/\bExtintor Hidrante\b/gi,"Fire Extinguisher / Hydrant"],
+    [/\bExtintores e Hidrantes\b/gi,"Fire Extinguishers and Hydrants"],
+    [/\bCondensadoras\b/gi,"Condensing Units"],
+    [/\bEvaporadora\b/gi,"Evaporator Unit"],
+    [/\bEvaporadoras\b/gi,"Evaporator Units"],
+    [/\bAlarmes\b/gi,"Alarms"],
+    [/\b3º?\s*Piso\b/gi,"3rd Floor"],
+    [/\b2º?\s*Piso\b/gi,"2nd Floor"],
+    [/\b1º?\s*Piso\b/gi,"1st Floor"],
+    [/\bPatio\b/gi,"Patio"]
+  ];
+  replacements.forEach(([rx,en])=>{s=s.replace(rx,en);});
+  return s;
+}
+
+function qrDocumentNotes7613(v){
+  const original=String(v??"");
+  if(qrLanguage!=="en-US" || !original)return original;
+
+  const exact={
+    "Classificação inicial gerada automaticamente pelo nome do arquivo. Revisar se necessário.":
+      "Initial classification automatically generated from the file name. Review if necessary."
+  };
+  return exact[original.trim()]||original;
+}
+
+function qrFillTranslatedSelect7613(id,items,firstLabel){
+  const el=$(id);
+  if(!el)return;
+  const atual=el.value;
+  el.innerHTML=`<option value="">${esc(firstLabel)}</option>`+
+    (items||[]).map(v=>`<option value="${esc(v)}">${esc(qrStructuredValue7613(v))}</option>`).join("");
+  if([...el.options].some(o=>o.value===atual))el.value=atual;
+}
+
+function formatDurationHours(v){
+  if(v===null||v===undefined||v==="")return"-";
+  const h=Number(v);
+  if(!Number.isFinite(h))return"-";
+  const locale=qrLanguage==="en-US"?"en-US":"pt-BR";
+  const number=(n)=>new Intl.NumberFormat(locale,{minimumFractionDigits:1,maximumFractionDigits:1}).format(n);
+  if(h<24)return number(h)+" h";
+  return number(h/24)+" "+(qrLanguage==="en-US"?"day(s)":"dia(s)");
+}
+function renderOccurrenceReport(){
+  const d=occurrenceReportData;
+  if(!d)return;
+
+  const t=(pt,en)=>qrLanguage==="en-US"?en:pt;
+  const s=d.summary||{};
+
+  let periodDescription=d.periodo?.descricao||"";
+  if(qrLanguage==="en-US"){
+    periodDescription=periodDescription
+      .replace(/\s+a\s+/gi," to ")
+      .replace(/\s+até\s+/gi," to ");
+  }
+
+  $("occReportStatus").textContent=
+    qrLanguage==="en-US"
+      ?`${s.total||0} work order(s) completed in the period ${periodDescription}`
+      :`${s.total||0} OC(s) concluída(s) no período ${periodDescription}`;
+
+  $("occReportSummary").innerHTML=
+    `<div class="occ-report-summary-card"><strong>${s.total||0}</strong>${t("OCs concluídas","Completed work orders")}</div>`+
+    `<div class="occ-report-summary-card"><strong>${esc(formatDurationHours(s.tempoMedioHoras))}</strong>${t("Tempo médio","Average time")}</div>`+
+    `<div class="occ-report-summary-card"><strong>${s.categorias||0}</strong>${t("Categorias","Categories")}</div>`+
+    `<div class="occ-report-summary-card"><strong>${s.prestadores||0}</strong>${t("Prestadores","Service providers")}</div>`;
+
+  $("occCategorySummary").innerHTML=
+    (d.categorias||[]).map(x=>
+      `<span class="occ-category-chip">${esc(qrStructuredValue7613(x.nome))}: ${x.total}</span>`
+    ).join("");
+
+  const items=d.ocorrencias||[];
+
+  if(!items.length){
+    $("occReportResults").innerHTML=
+      `<div class="document-empty">${t(
+        "Nenhuma OC concluída encontrada para o período e filtros informados.",
+        "No completed work orders were found for the selected period and filters."
+      )}</div>`;
+    $("occReportPdf").disabled=true;
+    return;
+  }
+
+  $("occReportPdf").disabled=false;
+
+  $("occReportResults").innerHTML=items.map(item=>
+    `<div class="occ-report-card">`+
+      `<div class="occ-report-head">`+
+        `<div><b>${esc(item.ocorrencia)}</b><div>${esc(item.id)} – ${esc(item.equipamento)}</div></div>`+
+        `<span class="control-status done">✅ ${t("Concluída","Completed")}</span>`+
+      `</div>`+
+      `<div class="occ-report-meta">`+
+        `<b>${t("Abertura","Opened")}:</b> ${esc(formatDate(item.dataAbertura))}<br>`+
+        `<b>${t("Conclusão","Completed")}:</b> ${esc(formatDate(item.dataConclusao))}<br>`+
+        `<b>${t("Tempo até a conclusão","Time to completion")}:</b> ${esc(formatDurationHours(item.tempoHoras))}<br>`+
+        `${item.prestador?`<b>${t("Prestador","Service Provider")}:</b> ${esc(item.prestador)}<br>`:""}`+
+        `${item.pavimento?`<b>${t("Pavimento","Floor")}:</b> ${esc(qrStructuredValue7613(item.pavimento))}<br>`:""}`+
+        `${item.localizacao?`<b>${t("Localização","Location")}:</b> ${esc(qrStructuredValue7613(item.localizacao))}<br>`:""}`+
+        `${item.categoria?`<b>${t("Categoria","Category")}:</b> ${esc(qrStructuredValue7613(item.categoria))}<br>`:""}`+
+        `${item.componente?`<b>${t("Componente","Component")}:</b> ${esc(qrStructuredValue7613(item.componente))}<br>`:""}`+
+        `${item.responsavel?`<b>${t("Responsável","Responsible")}:</b> ${esc(item.responsavel)}<br>`:""}`+
+        `${item.descricao?`<br><b>${t("Descrição","Description")}:</b><br>${esc(item.descricao)}<br>`:""}`+
+        `${item.solucao?`<br><b>${t("Solução","Solution")}:</b><br>${esc(item.solucao)}`:""}`+
+      `</div>`+
+      `<div class="occ-report-links">`+
+        `${item.fotoAbertura?`<button type="button" class="document-open" onclick="openSecureFile76624('occurrencePhoto','${esc(item.ocorrencia)}','opening')">📷 ${t("Foto da abertura","Opening photo")}</button>`:""}`+
+        `${item.fotoConclusao?`<button type="button" class="document-open" onclick="openSecureFile76624('occurrencePhoto','${esc(item.ocorrencia)}','conclusion')">📷 ${t("Foto da conclusão","Completion photo")}</button>`:""}`+
+      `</div>`+
+      `<a class="open-button" href="?id=${encodeURIComponent(normalizeId(item.id))}">${t("Abrir ficha","Open record")}</a>`+
+    `</div>`
+  ).join("");
+}
+async function loadOccurrenceReport(){setDefaultOccurrenceReportDates();const p=occurrenceReportParams(),btn=$("occReportRefresh");if(!p.dataInicial||!p.dataFinal){$("occReportStatus").textContent="Informe a data inicial e a data final.";return}btn.disabled=true;btn.textContent="Consultando...";$("occReportStatus").textContent="Consultando OCs concluídas...";$("occReportPdf").disabled=true;hide("occPdfBox");try{const r=await menuApi({action:"occurrencereport",...p});if(!r.ok)throw new Error(r.detail||"Não foi possível gerar o relatório.");occurrenceReportData=r.data;renderOccurrenceReport()}catch(e){occurrenceReportData=null;$("occReportStatus").textContent=e.message;$("occReportSummary").innerHTML="";$("occCategorySummary").innerHTML="";$("occReportResults").innerHTML=""}finally{btn.disabled=false;btn.textContent="Consultar"}}
+async function generateOccurrenceReportPdf(){if(!occurrenceReportData)return;const p=occurrenceReportParams(),btn=$("occReportPdf");btn.disabled=true;btn.textContent="Gerando PDF...";show("occPdfBox");$("occPdfMessage").textContent="Gerando o arquivo PDF...";$("occPdfLinkWrap").innerHTML="";try{const r=await menuApiPost({action:"generateOccurrenceReportPdf",dataInicial:p.dataInicial,dataFinal:p.dataFinal,occProvider:p.prestador,occCategory:p.categoria,occComponent:p.componente,occFloor:p.pavimento,occLocation:p.localizacao});if(!r.ok)throw new Error(r.detail||"Não foi possível gerar o PDF.");$("occPdfMessage").textContent=`PDF gerado com ${r.summary.total} OC(s) concluída(s).`;$("occPdfLinkWrap").innerHTML=`<a class="occ-pdf-link" href="${esc(r.url)}" target="_blank" rel="noopener">📄 Abrir PDF</a>`}catch(e){$("occPdfMessage").textContent=e.message}finally{btn.disabled=false;btn.textContent="📄 Gerar PDF"}}
+
+let documentFiltersLoaded=false;
+async function loadDocumentFilters(){
+  if(documentFiltersLoaded)return;
+  try{
+    const r=await menuApi({action:"documentfilters"});
+    if(!r.ok)return;
+
+    const f=r.filters||{};
+
+    qrFillTranslatedSelect7613(
+      "documentTypeFilter",
+      f.tipos||[],
+      qrLanguage==="en-US"?"All":"Todos"
+    );
+    qrFillTranslatedSelect7613(
+      "documentDisciplineFilter",
+      f.disciplinas||[],
+      qrLanguage==="en-US"?"All":"Todas"
+    );
+    qrFillTranslatedSelect7613(
+      "documentFloorFilter",
+      f.pavimentos||[],
+      qrLanguage==="en-US"?"All":"Todos"
+    );
+
+    documentFiltersLoaded=true;
+  }catch(e){}
+}
+async function searchDocuments(){
+  const t=(pt,en)=>qrLanguage==="en-US"?en:pt;
+  const q=$("documentSearchInput").value.trim();
+
+  $("documentStatus").textContent=t("Buscando documentos...","Searching documents...");
+  $("documentResults").innerHTML="";
+
+  try{
+    const r=await menuApi({
+      action:"documents",
+      q:q,
+      tipo:$("documentTypeFilter").value,
+      disciplina:$("documentDisciplineFilter").value,
+      pavimento:$("documentFloorFilter").value
+    });
+
+    if(!r.ok){
+      throw new Error(
+        r.detail||t("Erro ao consultar documentos.","Error searching documents.")
+      );
+    }
+
+    const items=r.documents||[];
+
+    $("documentStatus").textContent=
+      qrLanguage==="en-US"
+        ?`${items.length} document(s) found`
+        :`${items.length} documento(s) encontrado(s)`;
+
+    if(!items.length){
+      $("documentResults").innerHTML=
+        `<div class="document-empty">${t(
+          "Nenhum documento encontrado para os filtros informados.",
+          "No documents were found for the selected filters."
+        )}</div>`;
+      return;
+    }
+
+    $("documentResults").innerHTML=items.map(d=>
+      `<div class="document-card">`+
+        `<div class="document-title">📄 ${esc(qrDocumentTitle7613(d.titulo))}</div>`+
+        `<div class="document-meta">`+
+          `${d.idDocumento?`<b>ID:</b> ${esc(d.idDocumento)}<br>`:""}`+
+          `${d.tipoDocumento?`<b>${t("Tipo","Type")}:</b> ${esc(qrStructuredValue7613(d.tipoDocumento))}<br>`:""}`+
+          `${d.disciplina?`<b>${t("Disciplina","Discipline")}:</b> ${esc(qrStructuredValue7613(d.disciplina))}<br>`:""}`+
+          `${d.assunto?`<b>${t("Assunto","Subject")}:</b> ${esc(qrStructuredValue7613(d.assunto))}<br>`:""}`+
+          `${d.pavimento?`<b>${t("Pavimento","Floor")}:</b> ${esc(qrStructuredValue7613(d.pavimento))}<br>`:""}`+
+          `${d.ambiente?`<b>${t("Ambiente","Environment")}:</b> ${esc(qrStructuredValue7613(d.ambiente))}<br>`:""}`+
+          `${d.prestador?`<b>${t("Prestador","Service Provider")}:</b> ${esc(d.prestador)}<br>`:""}`+
+          `${d.idAtivo?`<b>${t("Ativo","Asset")}:</b> ${esc(d.idAtivo)}<br>`:""}`+
+          `${d.revisao?`<b>${t("Revisão","Revision")}:</b> ${esc(d.revisao)}<br>`:""}`+
+          `${d.observacoes?`<b>${t("Observações","Notes")}:</b> ${esc(qrDocumentNotes7613(d.observacoes))}`:""}`+
+        `</div>`+
+        `${d.linkPdf?`<button type="button" class="document-open" onclick="openSecureFile76624('technicalDocument','${esc(d.idDocumento)}')">👁️ ${t("Abrir PDF","Open PDF")}</button>`:""}`+
+      `</div>`
+    ).join("");
+
+  }catch(e){
+    $("documentStatus").textContent="";
+    $("documentResults").innerHTML=
+      `<div class="message error" style="display:block">${esc(
+        e.message||t("Erro ao buscar documentos.","Error searching documents.")
+      )}</div>`;
+  }
+}
+
+async function searchAssets(){let q=$("searchInput").value.trim();if(!q){$("searchStatus").textContent="Digite o ID, nome do equipamento, ambiente ou localização que deseja localizar.";focusSearchInput();return}if(q.length<2){$("searchStatus").textContent="Digite pelo menos 2 caracteres.";focusSearchInput();return}if(/^[a-z0-9_-]+$/i.test(q))q=normalizeId(q);$("searchStatus").textContent="Buscando...";try{const d=await menuApi({action:"search",q});const items=d.results||[];$("searchStatus").textContent=items.length+" resultado(s)";$("searchResults").innerHTML=items.map(item=>`<div class="search-result"><div class="search-result-id">${esc(item.id)}</div><div class="search-result-name">${esc(item.nome)}</div><div class="search-result-data">${item.pavimento?`<div><b>Pavimento:</b> ${esc(item.pavimento)}</div>`:""}${item.localizacao?`<div><b>Localização:</b> ${esc(item.localizacao)}</div>`:""}${item.prestador?`<div><b>Prestador:</b> ${esc(item.prestador)}</div>`:""}${item.periodicidade?`<div><b>Periodicidade:</b> ${esc(item.periodicidade)}</div>`:""}</div><a class="open-button" href="?id=${encodeURIComponent(normalizeId(item.id))}">Abrir ficha</a></div>`).join("")}catch(e){$("searchStatus").textContent="Erro ao realizar busca."}}
+function pendingParams(){
+  return{
+    prestador:$("pendingProvider").value,
+    status:$("pendingStatus").value,
+    categoria:$("pendingCategory").value,
+    pavimento:$("pendingFloor").value,
+    localizacao:$("pendingLocation").value
+  };
+}
+
+async function loadPendingFilters(){
+  if(pendingFiltersLoaded)return;
+  try{
+    const r=await menuApi({action:"pendingfilters"});
+    if(!r.ok)throw new Error(r.detail||"Erro ao carregar filtros.");
+
+    const f=r.filters||{};
+    fillSelect("pendingProvider",f.prestadores,"Todos os prestadores");
+    fillSelect("pendingStatus",f.status,"Todos os status");
+    fillSelect("pendingCategory",f.categorias,"Todas as categorias");
+    fillSelect("pendingFloor",f.pavimentos,"Todos os pavimentos");
+    fillSelect("pendingLocation",f.localizacoes,"Todas as localizações");
+
+    if(systemSession?.perfil==="PRESTADOR"){
+      $("pendingProvider").innerHTML=`<option value="${esc(systemSession.prestador)}">${esc(systemSession.prestador)}</option>`;
+      $("pendingProvider").value=systemSession.prestador;
+      $("pendingProvider").disabled=true;
+      $("pendingAccessNote").innerHTML=`Você está visualizando somente as OCs dos equipamentos do prestador <b>${esc(systemSession.prestador)}</b>.`;
+    }else{
+      $("pendingProvider").disabled=false;
+      $("pendingAccessNote").textContent=qrLanguage==="en-US"?"MASTER view: use the filters below to view pending work orders.":"Visão MASTER: utilize os filtros abaixo para consultar as OCs pendentes.";
+    }
+
+    pendingFiltersLoaded=true;
+  }catch(e){
+    $("pendingStatusText").textContent=e.message||"Erro ao carregar filtros.";
+  }
+}
+
+async function loadPending(){
+  const btn=$("pendingApplyFilters");
+  if(btn){btn.disabled=true;btn.textContent="Consultando...";}
+  $("pendingStatusText").textContent="Consultando OCs pendentes...";
+
+  try{
+    const d=await menuApi({action:"pending",...pendingParams()});
+    if(!d.ok)throw new Error(d.detail||"Não foi possível consultar as OCs pendentes.");
+
+    const s=d.summary||{};
+    const items=d.occurrences||[];
+
+    $("pendingSummary").innerHTML=`<div class="pending-number"><strong>${s.total||0}</strong>Total</div><div class="pending-number"><strong>🔴 ${s.abertas||0}</strong>Abertas</div><div class="pending-number"><strong>🟡 ${s.emAtendimento||0}</strong>Atendimento</div><div class="pending-number"><strong>🟠 ${s.aguardandoPeca||0}</strong>Aguardando peça</div>`;
+    $("pendingStatusText").textContent=items.length+" OC(s) encontrada(s) com os filtros aplicados.";
+
+    if(!items.length){
+      $("pendingResults").innerHTML='<div class="document-empty">Nenhuma OC pendente encontrada para os filtros informados.</div>';
+      return;
+    }
+
+    $("pendingResults").innerHTML=items.map(item=>`<div class="pending-card"><b>${esc(item.ocorrencia)}</b><div>${esc(item.id)} – ${esc(item.nome)}</div><div class="search-result-data"><b>Status:</b> ${esc(item.status)}${item.prestador?`<br><b>Prestador:</b> ${esc(item.prestador)}`:""}${item.categoriaOcorrencia?`<br><b>Categoria:</b> ${esc(item.categoriaOcorrencia)}`:""}${item.pavimento?`<br><b>Pavimento:</b> ${esc(item.pavimento)}`:""}${item.localizacao?`<br><b>Localização:</b> ${esc(item.localizacao)}`:""}<br><b>Descrição:</b> ${esc(item.descricao)}</div><a class="open-button" href="?id=${encodeURIComponent(normalizeId(item.id))}">Abrir ficha</a></div>`).join("");
+  }catch(e){
+    $("pendingSummary").innerHTML="";
+    $("pendingResults").innerHTML="";
+    $("pendingStatusText").textContent=e.message||"Erro ao consultar OCs pendentes.";
+  }finally{
+    if(btn){btn.disabled=false;btn.textContent="Aplicar filtros";}
+  }
+}
+
+async function clearPendingFilters(){
+  $("pendingStatus").value="";
+  $("pendingCategory").value="";
+  $("pendingFloor").value="";
+  $("pendingLocation").value="";
+  if(systemSession?.perfil==="MASTER")$("pendingProvider").value="";
+  await loadPending();
+}
+
+async function loadPreventiveControl(){if(!$("controlCompetence").value)$("controlCompetence").value=currentCompetence();qrRefreshLocalizedDateControls();const provider=["MASTER","GESTOR"].includes(systemSession?.perfil)?$("controlProvider").value:"";const r=await menuApi({action:"preventivecontrol",competencia:$("controlCompetence").value,prestador:provider});if(!r.ok){clearSystemSession();showMenuGate();return}preventiveControlData=r.data;renderPreventiveControl()}
+function aguardarPinturaTela(){return new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))}
+async function refreshPreventiveControl(){const btn=$("controlRefresh");if(!btn||btn.dataset.loading==="1")return;const inicio=Date.now();btn.dataset.loading="1";btn.disabled=true;btn.textContent="Atualizando...";await aguardarPinturaTela();try{await loadPreventiveControl()}catch(e){$("controlListStatus").textContent="Erro ao atualizar as preventivas."}finally{const decorrido=Date.now()-inicio;if(decorrido<700)await new Promise(resolve=>setTimeout(resolve,700-decorrido));btn.textContent="Atualizar";btn.disabled=false;delete btn.dataset.loading}}
+function qrT7612(pt,en){return qrLanguage==="en-US"?en:pt;}
+function qrYN7612(v){return v?qrT7612("Sim","Yes"):qrT7612("Não","No");}
+function qrReq7612(v){return v?qrT7612("Obrigatória","Required"):qrT7612("Opcional","Optional");}
+function qrStatus7612(v){const s=String(v||"");if(qrLanguage!=="en-US")return s;return {"Ativo":"Active","Inativo":"Inactive","Convite pendente":"Invite pending","Pendente":"Pending","Em andamento":"In Progress","Resolvida":"Resolved"}[s]||s;}
+function qrCompetence7612(v,fallback){const m=String(v||"").match(/^(\d{4})-(\d{2})$/);if(m){const d=new Date(+m[1],+m[2]-1,1,12);return new Intl.DateTimeFormat(qrLanguage==="en-US"?"en-US":"pt-BR",{month:"long",year:"numeric"}).format(d);}if(qrLanguage!=="en-US")return fallback||v||"";let x=String(fallback||"");const M={janeiro:"January",fevereiro:"February",março:"March",abril:"April",maio:"May",junho:"June",julho:"July",agosto:"August",setembro:"September",outubro:"October",novembro:"November",dezembro:"December"};Object.keys(M).forEach(k=>x=x.replace(new RegExp(k,"ig"),M[k]));return x;}
+const QR_AUDIT_EN_7612={PREVENTIVA_REGISTRADA:"Preventive Maintenance Recorded",PREVENTIVA_DUPLICIDADE_BLOQUEADA:"Duplicate Preventive Maintenance Blocked",OC_CRIADA:"Work Order Created",OC_ALTERADA:"Work Order Updated",OC_CONCLUIDA:"Work Order Completed",LOGIN_SUCESSO:"Login Success",LOGIN_FALHOU:"Login Failed",USUARIO_CRIADO:"User Created",USUARIO_ALTERADO:"User Updated",USUARIO_ATIVADO:"User Activated",USUARIO_DESATIVADO:"User Deactivated",USUARIO_STATUS_ALTERADO:"User Status Updated",USUARIO_BLOQUEADO:"User Blocked",SENHA_REDEFINIDA:"Password Reset",SENHA_DEFINIDA_ADMIN:"Password Set by MASTER",CONVITE_REENVIADO:"Invite Resent",PRESTADOR_CRIADO:"Service Provider Created",PRESTADOR_ALTERADO:"Service Provider Updated",CONFIGURACAO_ALTERADA:"Configuration Updated",DOCUMENTO_ENVIADO:"Document Uploaded",DOCUMENTO_PREVENTIVA_ENVIADO:"Preventive Document Uploaded",RELATORIO_ENVIADO:"Report Sent",PENDENCIA_CRIADA:"Pending Action Created",PENDENCIA_ATUALIZADA:"Pending Action Updated",PENDENCIA_RESOLVIDA:"Pending Action Resolved",PENDENCIA_GEROU_OC:"Work Order Created from Pending Action",CATEGORIA_CRIADA:"Category Created",CATEGORIA_ALTERADA:"Category Updated",CATEGORIA_REORDENADA:"Category Reordered",COMPONENTE_CRIADO:"Component Created",COMPONENTE_ALTERADO:"Component Updated",COMPONENTE_REORDENADO:"Component Reordered",ATIVO_CRIADO:"Asset Created",ATIVO_ATUALIZADO:"Asset Updated",ATIVO_ATIVADO:"Asset Activated",ATIVO_INATIVADO:"Asset Deactivated"};
+function qrAuditAction7612(v){const s=String(v||"");return qrLanguage==="en-US"?(QR_AUDIT_EN_7612[s]||s):s;}
+function qrAuditResult7612(v){const s=String(v||"");return qrLanguage==="en-US"?({SUCESSO:"Success",FALHA:"Failed",BLOQUEADO:"Blocked"}[s]||s):s;}
+function qrAuditType7612(v){const s=String(v||"");if(qrLanguage!=="en-US")return s;return {AUTENTICACAO:"Authentication",USUARIO:"User",PRESTADOR:"Service Provider",PREVENTIVA:"Preventive Maintenance",ATIVO:"Asset",DOCUMENTO_TECNICO:"Technical Document",DOCUMENTO_PREVENTIVA:"Preventive Document",CONFIGURACAO_EMPRESA:"Company Configuration",PENDENCIA_MANUTENCAO:"Maintenance Pending Action",CATEGORIA_OCORRENCIA:"Work Order Category",COMPONENTE_OCORRENCIA:"Work Order Component"}[s]||s;}
+
+function renderPreventiveControl(){
+  const d=preventiveControlData,s=d.summary,t=qrT7612;
+  const comp=qrCompetence7612($("controlCompetence").value,d.competenciaDescricao);
+  $("preventiveLoggedInfo").innerHTML=`${t("Acesso","Access")}: <b>${esc(systemSession.usuario)}</b> • ${t("Perfil","Role")}: <b>${esc(systemSession.perfil)}</b> • ${t("Prestador","Service Provider")}: <b>${esc(systemSession.prestador)}</b>`;
+  $("controlTitle").textContent=`${t("Preventivas","Preventive Maintenance")} – ${comp}`;
+  $("controlSummary").innerHTML=`<div class="control-summary-card"><strong>${s.previstas}</strong>${t("Previstas","Planned")}</div><div class="control-summary-card"><strong>✅ ${s.realizadas}</strong>${t("Realizadas","Completed")}</div><div class="control-summary-card"><strong>🔴 ${s.pendentes}</strong>${t("Pendentes","Pending")}</div><div class="control-summary-card"><strong>${s.percentual}%</strong>${t("Conclusão","Completion")}</div>`;
+  $("progressText").textContent=s.percentual+"%";$("progressFill").style.width=s.percentual+"%";
+  if(["MASTER","GESTOR"].includes(systemSession.perfil)){const atual=$("controlProvider").value;if(!atual||$("controlProvider").options.length<=1){$("controlProvider").innerHTML=`<option value="">${t("Todos os prestadores","All service providers")}</option>`+d.prestadores.map(p=>`<option value="${esc(p.prestador)}">${esc(p.prestador)}</option>`).join("")}$("controlProvider").disabled=false}else{$("controlProvider").innerHTML=`<option value="${esc(systemSession.prestador)}">${esc(systemSession.prestador)}</option>`;$("controlProvider").disabled=true}
+  $("providerSummary").innerHTML=d.prestadores.map(p=>`<div class="provider-card"><b>${esc(p.prestador)}</b><br>${t("Previstas","Planned")}: ${p.previstas} • ${t("Realizadas","Completed")}: ${p.realizadas} • ${t("Pendentes","Pending")}: ${p.pendentes} • ${p.percentual}%</div>`).join("");
+  renderControlList();
+}
+
+function setControlMode(m){preventiveControlMode=m;["controlAll","controlPending","controlDone"].forEach(id=>$(id).classList.remove("active"));$(m==="pending"?"controlPending":m==="done"?"controlDone":"controlAll").classList.add("active");renderControlList()}
+function renderControlList(){
+  if(!preventiveControlData)return;const t=qrT7612;
+  let items=preventiveControlMode==="pending"?preventiveControlData.pendentes.map(x=>({...x,state:"pending"})):preventiveControlMode==="done"?preventiveControlData.realizadas.map(x=>({...x,state:"done"})):[...preventiveControlData.pendentes.map(x=>({...x,state:"pending"})),...preventiveControlData.realizadas.map(x=>({...x,state:"done"}))];
+  $("controlListStatus").textContent=`${items.length} ${t("equipamento(s)","equipment item(s)")}`;
+  $("controlResults").innerHTML=items.map(item=>`<div class="control-item ${item.state}"><div class="control-head"><div><b>${esc(item.id)}</b><div>${esc(item.nome)}</div></div><span class="control-status ${item.state}">${item.state==="done"?t("✅ Realizada","✅ Completed"):t("🔴 Pendente","🔴 Pending")}</span></div><div class="search-result-data"><b>${t("Prestador","Service Provider")}:</b> ${esc(item.prestador)}<br><b>${t("Pavimento","Floor")}:</b> ${esc(item.pavimento)}<br><b>${t("Localização","Location")}:</b> ${esc(item.localizacao)}${item.observacaoEquipamento?`<br><br><b>${t("Observação do equipamento","Equipment note")}:</b><br>${esc(item.observacaoEquipamento)}`:""}${item.ultimoRegistro?`<br><br><b>${t("Executada","Completed")}:</b> ${esc(formatDate(item.ultimoRegistro.data))}<br><b>${t("Responsável","Responsible")}:</b> ${esc(item.ultimoRegistro.responsavel)}${item.ultimoRegistro.observacao?`<br><b>${t("Observação da preventiva","Preventive maintenance note")}:</b> ${esc(item.ultimoRegistro.observacao)}`:""}`:""}</div><a class="open-button" href="?id=${encodeURIComponent(normalizeId(item.id))}">${t("Abrir ficha","Open record")}</a></div>`).join("");
+}
+
+async function sendMonthlyPreventiveReport(){if(!preventiveSession)return;const competencia=$("controlCompetence").value,provider=["MASTER","GESTOR"].includes(systemSession.perfil)?$("controlProvider").value:systemSession.prestador,s=preventiveControlData?.summary||{previstas:0,realizadas:0,pendentes:0},txt=$("controlTitle").textContent.replace("Preventivas – ",""),escopo=provider||"Todos os prestadores";if(!confirm(`Enviar relatório de ${txt}?\n\nEscopo: ${escopo}\n\nPrevistas: ${s.previstas}\nRealizadas: ${s.realizadas}\nPendentes: ${s.pendentes}`))return;const btn=$("sendMonthlyReport"),msg=$("monthlyReportMessage");btn.disabled=true;btn.textContent="Enviando relatório...";msg.className="message loading";msg.textContent="Gerando o PDF e enviando o relatório...";try{const r=await apiPost({action:"sendPreventiveReport",systemSessionToken:systemSession.systemSessionToken,competencia,reportProvider:provider||""});if(!r.ok)throw new Error(r.detail||"Não foi possível enviar o relatório.");msg.className="message success";msg.innerHTML=`✅ Relatório de <b>${esc(r.competenciaDescricao)}</b> enviado com sucesso.<br><br><b>Escopo:</b> ${esc(r.escopo)}<br><b>Destino:</b> ${esc(r.email)}<br><br><b>Previstas:</b> ${r.summary.previstas} • <b>Realizadas:</b> ${r.summary.realizadas} • <b>Pendentes:</b> ${r.summary.pendentes} • <b>Conclusão:</b> ${r.summary.percentual}%`}catch(e){msg.className="message error";msg.textContent=e.message}finally{btn.disabled=false;btn.textContent="📧 Enviar relatório da competência"}}
+
+async function loadAssetHistory747(id){
+  try{
+    const r=await menuApi({action:"history",id});
+    if(r&&r.ok)return r.history||r.data||[];
+  }catch(e){}
+  try{
+    const b=await menuApi({action:"assetbundle",id});
+    if(b&&b.ok)return b.history||[];
+  }catch(e){}
+  return [];
+}
+
+async function loadAssetDocuments747(id){
+  try{
+    const r=await menuApi({action:"assetdocuments",id});
+    if(r&&r.ok)return r.documents||r.data||[];
+  }catch(e){}
+  try{
+    const b=await menuApi({action:"assetbundle",id});
+    if(b&&b.ok)return b.documents||[];
+  }catch(e){}
+  return [];
+}
+
+async function loadAsset(id){
+  hide("searchScreen");
+  show("assetScreen");
+
+  currentAsset=null;
+  currentAssetStatus=null;
+  history=[];
+
+  $("titulo").textContent=qrLanguage==="en-US"?"Loading asset...":"Carregando equipamento...";
+  $("meta").textContent="";
+  $("tipoBadge").textContent="";
+  $("statusTitle").textContent="";
+  $("statusInfo").textContent="";
+  hide("statusCard");
+  hide("assetDocumentsSection");
+  $("historyStatus").textContent=qrLanguage==="en-US"?"Loading...":"Carregando...";
+  $("historyDetail").innerHTML="";
+  $("assetDocumentsStatus").textContent="";
+  $("assetDocuments").innerHTML="";
+  $("preventiveHistoryStatus").textContent=qrLanguage==="en-US"?"Sign in to view.":"Login necessário para visualizar.";
+
+  show("assetProgressNote");
+  $("assetProgressNote").textContent=qrLanguage==="en-US"
+    ?"Loading essential asset data..."
+    :"Carregando os dados principais do equipamento...";
+
+  let basicOk=false;
+  let bundleOk=false;
+  let authenticated=false;
+
+  /*
+   * 7.6.6.18:
+   * - assetbasic é o contrato público mínimo do QR;
+   * - assetbundle exige sessão e carrega a ficha completa conforme permissões.
+   */
+  const basicPromise=api({action:"assetbasic",id})
+    .then(basic=>{
+      if(basic?.ok&&basic.data){
+        basicOk=true;
+        if(!currentAsset){
+          currentAsset=basic.data;
+          renderAsset(currentAsset);
+          $("assetProgressNote").textContent=qrLanguage==="en-US"
+            ?"Public asset data loaded."
+            :"Dados públicos do equipamento carregados.";
+        }
+      }
+      return basic;
+    })
+    .catch(()=>null);
+
+  const bundlePromise=(async()=>{
+    const ok=await systemSessionIsValid();
+    if(!ok)return null;
+    authenticated=true;
+    return menuApi({action:"assetbundle",id});
+  })()
+    .then(bundle=>{
+      if(bundle?.ok&&bundle.data){
+        bundleOk=true;
+        currentAsset=bundle.data;
+        renderAsset(currentAsset);
+
+        if(bundle.access?.status&&bundle.status){
+          currentAssetStatus=bundle.status;
+          show("statusCard");
+          renderStatus(bundle.status);
+        }else{
+          hide("statusCard");
+        }
+
+        if(bundle.access?.history){
+          renderHistory(bundle.history||[]);
+        }else{
+          hide("historySelect");
+          $("historyStatus").textContent=qrLanguage==="en-US"
+            ?"Your profile cannot view work order history."
+            :"Seu perfil não possui permissão para consultar o histórico de ocorrências.";
+          $("historyDetail").innerHTML="";
+        }
+
+        if(bundle.access?.documents){
+          renderAssetDocuments(bundle.documents||[]);
+        }else{
+          hide("assetDocumentsSection");
+          $("assetDocuments").innerHTML="";
+          $("assetDocumentsStatus").textContent="";
+        }
+
+        $("assetProgressNote").textContent=qrLanguage==="en-US"
+          ?"Full record loaded."
+          :"Ficha completa carregada.";
+      }
+      return bundle;
+    })
+    .catch(error=>{
+      console.warn("Não foi possível carregar a ficha autenticada.",error);
+      return null;
+    });
+
+  await Promise.race([
+    basicPromise.then(r=>r?.ok&&r.data?true:new Promise(()=>{})),
+    bundlePromise.then(r=>r?.ok&&r.data?true:new Promise(()=>{})),
+    new Promise(resolve=>setTimeout(()=>resolve(false),12000))
+  ]);
+
+  if(!currentAsset){
+    await Promise.allSettled([basicPromise,bundlePromise]);
+
+    if(!basicOk&&!bundleOk){
+      $("titulo").textContent=qrLanguage==="en-US"?"Asset not found":"Ativo não encontrado";
+      $("meta").textContent="";
+      $("tipoBadge").textContent="";
+      $("historyStatus").textContent="";
+      $("assetDocumentsStatus").textContent="";
+      $("preventiveHistoryStatus").textContent="";
+      hide("statusCard");
+      hide("assetProgressNote");
+      return;
+    }
+  }
+
+  await Promise.allSettled([basicPromise,bundlePromise]);
+
+  if(currentAsset&&!bundleOk){
+    hide("statusCard");
+    hide("historySelect");
+    $("historyDetail").innerHTML="";
+    $("historyStatus").textContent=authenticated
+      ?(qrLanguage==="en-US"
+        ?"The complete record could not be loaded with this session."
+        :"Não foi possível carregar a ficha completa com esta sessão.")
+      :(qrLanguage==="en-US"
+        ?"Sign in to view maintenance history."
+        :"Faça login para visualizar o histórico de manutenção.");
+    hide("assetDocumentsSection");
+    $("assetDocuments").innerHTML="";
+    $("assetDocumentsStatus").textContent="";
+  }
+
+  if(bundleOk&&systemSession&&hasProfilePermission("PREVENTIVA_CONSULTAR")&&(
+    ["MASTER","GESTOR"].includes(systemSession.perfil)||
+    !systemSession.prestador||
+    String(systemSession.prestador).toLowerCase()===String(currentAsset.prestador||"").toLowerCase()
+  )){
+    loadPreventiveHistory().catch(()=>{});
+  }else if(currentAsset?.periodicidade){
+    $("preventiveHistoryStatus").textContent=qrLanguage==="en-US"
+      ?"Sign in with permission to view."
+      :"Login com permissão necessário para visualizar.";
+  }
+
+  hide("assetProgressNote");
+}
+function renderAssetDocuments(items){if(!items||!items.length){hide("assetDocumentsSection");$("assetDocuments").innerHTML="";$("assetDocumentsStatus").textContent="";return}show("assetDocumentsSection");$("assetDocumentsStatus").textContent=items.length+" documento(s) relacionado(s) a este ativo";$("assetDocuments").innerHTML=items.map(d=>{const icon=String(d.tipoDocumento||"").toLowerCase()==="manual"?"📘":"📄";return `<div class="asset-document-card"><div class="document-title">${icon} ${esc(d.titulo)}</div><div class="document-meta">${d.tipoDocumento?`<b>Tipo:</b> ${esc(d.tipoDocumento)}<br>`:""}${d.disciplina?`<b>Disciplina:</b> ${esc(d.disciplina)}<br>`:""}${d.assunto?`<b>Assunto:</b> ${esc(d.assunto)}<br>`:""}${d.revisao?`<b>Revisão:</b> ${esc(d.revisao)}<br>`:""}${d.observacoes?`<b>Observações:</b> ${esc(d.observacoes)}`:""}</div>${d.linkPdf?`<button type="button" class="document-open" onclick="openSecureFile76624('technicalDocument','${esc(d.idDocumento)}')">👁️ Abrir PDF</button>`:""}</div>`}).join("")}
+function renderAsset(a){
+  const t=(pt,en)=>qrLanguage==="en-US"?en:pt;
+  const val=v=>{
+    const s=String(v??"");
+    if(qrLanguage!=="en-US")return s;
+    const map={
+      "Setor de Manutenção":"Maintenance Department",
+      "Equipamento de Processo":"Process Equipment",
+      "Alta":"High","Média":"Medium","Media":"Medium","Baixa":"Low",
+      "Mensal":"Monthly","Semanal":"Weekly","Quinzenal":"Biweekly",
+      "Trimestral":"Quarterly","Semestral":"Semiannual","Anual":"Annual",
+      "Equipamento":"Equipment"
+    };
+    return map[s]||s;
+  };
+  $("titulo").textContent=a.id+" – "+a.nome_do_equipamento;
+  $("meta").textContent=a.local_detalhado||a.localizacao||a.pavimento||"";
+  $("tipoBadge").textContent=val(a.tipo_de_ativo||t("Equipamento","Equipment"));
+
+  const cl=pairs([
+    [t("Tipo de Ativo","Asset Type"),val(a.tipo_de_ativo)],
+    [t("Categoria","Category"),val(a.categoria_do_ativo)],
+    [t("Subcategoria","Subcategory"),val(a.subcategoria)],
+    [t("Criticidade","Criticality"),val(a.criticidade)],
+    [t("Classe de Manutenção","Maintenance Class"),val(a.classe_de_manutencao)]
+  ]);
+  if(cl){show("classificationSection");$("classification").innerHTML=cl}
+
+  const loc=pairs([
+    [t("Área","Area"),val(a.area)],
+    [t("Ambiente","Environment"),val(a.ambiente)],
+    [t("Componente / Elemento","Component / Element"),val(a.componente_elemento)],
+    [t("Pavimento","Floor"),val(a.pavimento)],
+    [t("Localização","Location"),val(a.localizacao)],
+    [t("Local Detalhado","Detailed Location"),val(a.local_detalhado)]
+  ]);
+  if(loc){show("locationSection");$("location").innerHTML=loc}
+
+  const tech=pairs([
+    [t("Fabricante","Manufacturer"),val(a.fabricante)],
+    [t("Modelo","Model"),val(a.modelo)],
+    [t("Número de Série","Serial Number"),val(a.numero_de_serie)],
+    [t("Capacidade","Capacity"),val(a.capacidade)],
+    [t("Amperagem Nominal","Rated Current"),val(a.amperagem_nominal_fla)],
+    [t("Amperagem de Partida","Starting Current"),val(a.amperagem_de_partida_flr)],
+    [t("Amperagem Medida","Measured Current"),val(a.amperagem_medida)],
+    [t("Voltagem","Voltage"),val(a.voltagem)],
+    [t("Peso","Weight"),val(a.peso)],
+    [t("Ano de Aquisição","Acquisition Year"),val(a.ano_de_aquisicao)],
+    [t("Vida Útil Estimada","Estimated Useful Life"),val(a.vida_util_estimada)]
+  ]);
+  if(tech){show("technicalSection");$("technical").innerHTML=tech}
+
+  $("management").innerHTML=pairs([
+    [t("Status cadastral","Registration Status"),val(a.status)],
+    [t("Prestador","Service Provider"),val(a.prestador)],
+    [t("Periodicidade","Frequency"),val(a.periodicidade)],
+    [t("Observações","Notes"),val(a.observacoes)]
+  ]);
+
+  const h1=document.querySelector("#classificationSection h3");if(h1)h1.textContent=t("Classificação","Classification");
+  const h2=document.querySelector("#locationSection h3");if(h2)h2.textContent=t("Localização","Location");
+  const h3=document.querySelector("#technicalSection h3");if(h3)h3.textContent=t("Características Técnicas","Technical Specifications");
+
+  if(systemSession&&!hasProfilePermission("OC_REGISTRAR"))hide("reportButton");else show("reportButton");
+  if(a.periodicidade&&systemSession){
+    if(hasProfilePermission("PREVENTIVA_REGISTRAR"))show("preventiveButton");else hide("preventiveButton");
+    if(hasProfilePermission("PREVENTIVA_CONSULTAR"))show("preventiveHistorySection");else hide("preventiveHistorySection");
+  }else{hide("preventiveButton");hide("preventiveHistorySection")}
+}
+function renderStatus(s){
+  const t=(pt,en)=>qrLanguage==="en-US"?en:pt;
+  $("statusCard").className="status-card "+(s.nivel||"");
+  let situacao=s.situacao||"";
+  if(qrLanguage==="en-US"){
+    const map={"Sem ocorrências ativas":"No active issues","Nenhuma ocorrência ativa":"No active issues","Aberta":"Open","Em atendimento":"In progress","Aguardando peça":"Waiting for part","Concluída":"Completed","Cancelada":"Cancelled"};
+    situacao=map[situacao]||situacao;
+  }
+  $("statusTitle").textContent=(s.icone||"")+" "+situacao;
+  $("statusInfo").textContent=s.totalAtivas
+    ? (qrLanguage==="en-US"?`${s.totalAtivas} active issue(s)`:`${s.totalAtivas} ocorrência(s) ativa(s)`)
+    : t("Nenhuma ocorrência ativa.","No active issues.");
+}
+function renderStatusFromCurrent(){if(currentAssetStatus)renderStatus(currentAssetStatus)}
+function renderHistory(items){
+  history=items;
+  if(!items.length){
+    hide("historySelect");
+    $("historyStatus").textContent=qrLanguage==="en-US"?"No maintenance history recorded.":"Nenhum histórico registrado.";
+    $("historyDetail").innerHTML="";
+    return;
+  }
+  show("historySelect");
+  $("historyStatus").textContent=qrLanguage==="en-US"?`${items.length} record(s)`:`${items.length} registro(s)`;
+  $("historySelect").innerHTML=items.map((x,i)=>`<option value="${i}">${esc(x.ocorrencia)} | ${esc(qrLanguage==="en-US"?qrTranslateExactText(x.status):x.status)}</option>`).join("");
+  let targetOc="";try{targetOc=sessionStorage.getItem(SOL_TARGET_OC_KEY)||""}catch(e){}
+  const targetIndex=targetOc?items.findIndex(x=>String(x.ocorrencia||"").toUpperCase()===String(targetOc).toUpperCase()):-1;
+  if(targetIndex>=0){$("historySelect").value=String(targetIndex);renderHistoryItem(targetIndex);try{sessionStorage.removeItem(SOL_TARGET_OC_KEY)}catch(e){}}
+  else renderHistoryItem(0);
+}
+function renderHistoryItem(i){
+  const x=history[i];if(!x)return;selectedOccurrence=x;
+  const t=(pt,en)=>qrLanguage==="en-US"?en:pt;
+  $("historyDetail").innerHTML=`<div class="history-card"><b>${esc(x.ocorrencia)}</b><div class="muted">${esc(formatDate(x.data))}</div><span class="tag">${esc(qrLanguage==="en-US"?qrTranslateExactText(x.status):x.status)}</span>${x.categoriaOcorrencia?`<span class="tag">${esc(x.categoriaOcorrencia)}</span>`:""}${x.componenteAfetado?`<span class="tag">${esc(x.componenteAfetado)}</span>`:""}${x.solOrigem?`<div style="margin-top:7px"><b>${t("Origem","Origin")}:</b> ${esc(x.solOrigem)}</div>`:""}<div style="margin-top:8px"><b>${t("Descrição","Description")}:</b><br>${esc(x.descricao)}</div>${x.foto?`<div style="margin-top:8px"><button type="button" class="document-open" onclick="openSecureFile76624('occurrencePhoto','${esc(x.ocorrencia)}','opening')">📷 ${t("Ver foto","View photo")}</button></div>`:""}${(x.anexos||[]).length?`<div style="margin-top:8px"><b>📎 ${t("Arquivos","Files")}:</b> ${(x.anexos||[]).map(a=>`<button type="button" class="auth-link" onclick="openSecureFile76624('occurrenceDocument','${esc(a.idDocumento)}')" style="display:block;margin-top:4px">📎 ${esc(a.nomeArquivo)}</button>`).join("")}</div>`:""}${x.solucao?`<div style="margin-top:8px"><b>${t("Solução","Solution")}:</b><br>${esc(x.solucao)}</div>`:""}${systemSession&&hasProfilePermission("OC_CONSULTAR")&&(hasProfilePermission("OC_ALTERAR")||hasProfilePermission("OC_CONCLUIR"))&&(systemSession.perfil!=="PRESTADOR"||systemSession.podeAtenderOC)?`<button class="btn" style="width:100%;margin-top:12px" onclick="openManage(${i})">${t("Gerenciar ocorrência","Manage Work Order")}</button>`:""}</div>`;
+}
+async function loadPreventiveHistory(){
+  const r=await menuApi({action:"preventivehistory",id:currentAsset.id});
+  if(!r.ok)return;
+
+  const items=r.preventives||[],t=(pt,en)=>qrLanguage==="en-US"?en:pt;
+  $("preventiveHistoryStatus").textContent=items.length
+    ? (qrLanguage==="en-US"?`${items.length} preventive maintenance record(s)`:`${items.length} preventiva(s) registrada(s)`)
+    : t("Nenhuma preventiva registrada.","No preventive maintenance recorded.");
+
+  $("preventiveHistory").innerHTML=items.map(item=>{
+    const docs=(item.documentos||[]);
+    const docsHtml=docs.length
+      ? `<div style="margin-top:9px"><b>📎 ${t("Documentos da preventiva","Preventive maintenance documents")}:</b>`+
+        docs.map(d=>`<div style="margin-top:4px"><button type="button" class="auth-link" onclick="openSecureFile76624('preventiveDocument','${esc(d.idDocumento)}')">📄 ${esc(qrLanguage==="en-US"?preventiveDocumentTypeLabel7606(d.tipo):d.tipo)}${d.nomeArquivo?` — ${esc(d.nomeArquivo)}`:""}</button>${d.descricao?`<div class="muted">${esc(d.descricao)}</div>`:""}</div>`).join("")+
+        `</div>`
+      :"";
+
+    return `<div class="preventive-card">
+      <div class="preventive-id">${esc(item.registro)}</div>
+      <div class="muted">${esc(formatDate(item.data))}</div>
+      <div style="margin-top:7px">
+        <b>${t("Competência","Period")}:</b> ${esc(item.competencia)}<br>
+        <b>${t("Prestador","Service Provider")}:</b> ${esc(item.prestador)}<br>
+        <b>${t("Responsável","Responsible")}:</b> ${esc(item.responsavel)}
+      </div>
+      ${item.observacao?`<div style="margin-top:8px"><b>${t("Observação da preventiva","Preventive maintenance note")}:</b><br>${esc(item.observacao)}</div>`:""}
+      ${item.foto?`<div style="margin-top:8px"><button type="button" class="document-open" onclick="openSecureFile76624('preventivePhoto','${esc(item.registro)}')">📷 ${t("Ver evidência","View evidence")}</button></div>`:""}
+      ${item.assinatura?`<div style="margin-top:8px"><button type="button" class="document-open" onclick="openSecureFile76624('preventiveSignature','${esc(item.registro)}')">✍️ ${t("Ver assinatura","View signature")}</button></div>`:""}
+      ${docsHtml}${hasProfilePermission("PREVENTIVA_EXCLUIR")?`<button class="btn btn-danger" style="width:100%;margin-top:10px" onclick="deletePreventiveRecord('${esc(item.registro)}')">🗑️ ${t("Excluir preventiva","Delete preventive maintenance")}</button>`:""}
+    </div>`;
+  }).join("");
+}
+
+const PREVENTIVE_DOCUMENT_MAX_BYTES=8*1024*1024;
+const PREVENTIVE_DOCUMENT_TYPES=[
+  "Relatório do prestador",
+  "Checklist de manutenção",
+  "Relatório técnico",
+  "Certificado",
+  "Laudo",
+  "Ordem de serviço externa",
+  "Outro"
+];
+
+function preventiveDocumentTypeLabel7606(v){
+  if(qrLanguage!=="en-US")return v;
+  const map={
+    "Relatório do prestador":"Service provider report",
+    "Checklist de manutenção":"Maintenance checklist",
+    "Relatório técnico":"Technical report",
+    "Certificado":"Certificate",
+    "Laudo":"Technical assessment",
+    "Ordem de serviço externa":"External work order",
+    "Outro":"Other"
+  };
+  return map[v]||v;
+}
+
+function refreshPreventiveDocumentsUi7606(){
+  if(!$("preventiveDocumentsTitle"))return;
+
+  $("preventiveDocumentsTitle").textContent=qrLanguage==="en-US"
+    ?"📎 Preventive maintenance documents (optional)"
+    :"📎 Documentos da preventiva (opcional)";
+
+  $("preventiveDocumentsHelp").textContent=qrLanguage==="en-US"
+    ?"Attach a service provider report, checklist, technical assessment or other PDF evidence."
+    :"Anexe relatório do prestador, checklist, laudo ou outra evidência em PDF.";
+
+  $("preventiveDocumentAddButton").textContent=qrLanguage==="en-US"
+    ?"📎 Attach PDF document"
+    :"📎 Anexar documento PDF";
+}
+
+function resetPreventiveDocuments7606(){
+  preventiveDocumentFiles=[];
+  if($("preventiveDocumentInput"))$("preventiveDocumentInput").value="";
+  renderPreventiveDocuments7606();
+}
+
+function renderPreventiveDocuments7606(){
+  if(!$("preventiveDocumentList"))return;
+
+  refreshPreventiveDocumentsUi7606();
+
+  const t=(pt,en)=>qrLanguage==="en-US"?en:pt;
+  const list=$("preventiveDocumentList");
+
+  if(!preventiveDocumentFiles.length){
+    list.innerHTML=`<div class="muted">${t("Nenhum documento anexado.","No document attached.")}</div>`;
+    return;
+  }
+
+  list.innerHTML=preventiveDocumentFiles.map((d,i)=>`
+    <div style="border:1px solid #e5e7eb;border-radius:10px;padding:10px;margin-top:8px;background:#fff">
+      <div style="display:flex;justify-content:space-between;gap:8px;align-items:flex-start">
+        <div>
+          <b>📄 ${esc(d.file.name)}</b>
+          <div class="muted">${(d.file.size/1024/1024).toFixed(2)} MB</div>
+        </div>
+        <button type="button" class="btn btn-secondary" style="padding:6px 9px" onclick="removePreventiveDocument7606(${i})">✕</button>
+      </div>
+
+      <label style="margin-top:8px">${t("Tipo de documento","Document type")}
+        <select onchange="setPreventiveDocumentType7606(${i},this.value)">
+          ${PREVENTIVE_DOCUMENT_TYPES.map(x=>`<option value="${esc(x)}" ${x===d.type?"selected":""}>${esc(preventiveDocumentTypeLabel7606(x))}</option>`).join("")}
+        </select>
+      </label>
+
+      <label>${t("Descrição (opcional)","Description (optional)")}
+        <input value="${esc(d.description||"")}" oninput="setPreventiveDocumentDescription7606(${i},this.value)">
+      </label>
+    </div>
+  `).join("");
+}
+
+function setPreventiveDocumentType7606(i,v){
+  if(preventiveDocumentFiles[i])preventiveDocumentFiles[i].type=v;
+}
+
+function setPreventiveDocumentDescription7606(i,v){
+  if(preventiveDocumentFiles[i])preventiveDocumentFiles[i].description=v;
+}
+
+function removePreventiveDocument7606(i){
+  preventiveDocumentFiles.splice(i,1);
+  renderPreventiveDocuments7606();
+}
+
+function addPreventiveDocuments7606(files){
+  const t=(pt,en)=>qrLanguage==="en-US"?en:pt;
+  const errors=[];
+
+  Array.from(files||[]).forEach(file=>{
+    const isPdf=file.type==="application/pdf"||/\.pdf$/i.test(file.name||"");
+
+    if(!isPdf){
+      errors.push(`${file.name}: ${t("somente PDF é permitido","PDF files only")}`);
+      return;
+    }
+
+    if(file.size>PREVENTIVE_DOCUMENT_MAX_BYTES){
+      errors.push(`${file.name}: ${t("arquivo acima de 8 MB","file exceeds 8 MB")}`);
+      return;
+    }
+
+    const duplicate=preventiveDocumentFiles.some(d=>
+      d.file.name===file.name &&
+      d.file.size===file.size &&
+      d.file.lastModified===file.lastModified
+    );
+
+    if(!duplicate){
+      preventiveDocumentFiles.push({
+        file,
+        type:"Relatório do prestador",
+        description:""
+      });
+    }
+  });
+
+  if($("preventiveDocumentInput"))$("preventiveDocumentInput").value="";
+  renderPreventiveDocuments7606();
+
+  if(errors.length){
+    showPreventiveError(errors.join("\n"));
+  }
+}
+
+async function uploadPreventiveDocuments7606(registro){
+  if(!preventiveDocumentFiles.length){
+    return {ok:true,total:0,uploaded:0,failed:[]};
+  }
+
+  const t=(pt,en)=>qrLanguage==="en-US"?en:pt;
+  const failed=[];
+  let uploaded=0;
+
+  for(let i=0;i<preventiveDocumentFiles.length;i++){
+    const item=preventiveDocumentFiles[i];
+
+    $("preventiveMessage").className="message loading";
+    $("preventiveMessage").textContent=
+      `${t("Enviando documento","Uploading document")} ${i+1}/${preventiveDocumentFiles.length}: ${item.file.name}`;
+
+    try{
+      const dataUrl=await readUploadPdf(item.file);
+
+      const r=await apiPost({
+        action:"uploadPreventiveDocument",
+        systemSessionToken:systemSession.systemSessionToken,
+        preventiveDocumentRecord:registro,
+        preventiveDocumentType:item.type,
+        preventiveDocumentDescription:item.description||"",
+        preventiveDocumentFileName:item.file.name,
+        preventiveDocumentMime:"application/pdf",
+        preventiveDocumentBase64:dataUrl
+      });
+
+      if(!r.ok){
+        throw new Error(
+          r.detail||
+          t("Falha no envio do documento.","Document upload failed.")
+        );
+      }
+
+      uploaded++;
+
+    }catch(e){
+      failed.push({
+        name:item.file.name,
+        error:e.message
+      });
+    }
+  }
+
+  return {
+    ok:failed.length===0,
+    total:preventiveDocumentFiles.length,
+    uploaded,
+    failed
+  };
+}
+
+
+function requestPreventive(){requirePreventiveLogin(async()=>{if(!requireUiPermission("PREVENTIVA_REGISTRAR","Seu perfil não possui permissão para registrar preventivas.","Your profile is not allowed to record preventive maintenance."))return;await openPreventive();loadPreventiveHistory()},currentAsset.prestador)}
+async function openPreventive(){preventivePhotoData=null;resetPreventiveDocuments7606();signatureDirty=false;$("preventivePhotoInput").value="";$("preventivePhotoPreview").style.display="none";$("preventiveMessage").className="message";$("preventiveAsset").textContent=currentAsset.id+" – "+currentAsset.nome_do_equipamento;$("preventivePeriodicity").textContent=currentAsset.periodicidade||"Não informada";$("preventiveProvider").textContent=currentAsset.prestador||"Não informado";$("preventiveCompetence").textContent=currentCompetence();$("preventiveResponsible").value=getSavedResponsible();$("preventiveObservation").value="";$("preventiveNeedsAction").checked=false;hide("preventiveActionFields");$("preventiveActionType").value="";$("preventiveActionDescription").value="";$("preventiveActionPriority").value="Média";$("preventiveActionMaterial").value="";$("preventiveActionQuantity").value="";$("preventiveActionOperation").value="";const r=await menuApi({action:"preventiverequirements",id:currentAsset.id});if(!r.ok){alert(r.detail||"Não foi possível carregar as regras.");return}preventiveRequirements=r.data;renderPreventiveRequirements();$("preventiveModal").style.display="flex";if(!$("signatureBox").classList.contains("hidden"))requestAnimationFrame(setupSignatureCanvas)}
+function renderPreventiveRequirements(){const r=preventiveRequirements;$("preventiveRequirements").innerHTML=`<b>Requisitos deste registro</b><div class="requirement ${r.exigirAssinatura?"required-yes":"required-no"}">${r.exigirAssinatura?"● Assinatura obrigatória":"✓ Assinatura não obrigatória"}</div><div class="requirement ${r.fotoObrigatoria?"required-yes":"required-no"}">${r.fotoObrigatoria?"● Foto obrigatória":"✓ Foto opcional"}</div><div class="requirement ${r.observacaoObrigatoria?"required-yes":"required-no"}">${r.observacaoObrigatoria?"● Observação obrigatória":"✓ Observação opcional"}</div>`;if(r.exigirAssinatura){show("signatureBox");$("signatureRequiredText").textContent=" * obrigatório"}else hide("signatureBox")}
+async function savePreventive(){
+  if(preventivePosting)return;
+
+  const responsible=$("preventiveResponsible").value.trim();
+  const observation=$("preventiveObservation").value.trim();
+
+  if(!responsible)return showPreventiveError("Informe o responsável pela preventiva.");
+  if(preventiveRequirements.observacaoObrigatoria&&!observation)return showPreventiveError("A observação é obrigatória.");
+  if(preventiveRequirements.fotoObrigatoria&&!preventivePhotoData)return showPreventiveError("A foto é obrigatória.");
+  if(preventiveRequirements.exigirAssinatura&&!signatureDirty)return showPreventiveError("A assinatura é obrigatória.");
+  if($("preventiveNeedsAction").checked){
+    if(!$("preventiveActionType").value)return showPreventiveError(qrLanguage==="en-US"?"Select the required action type.":"Informe o tipo de providência necessária.");
+    if(!$("preventiveActionDescription").value.trim())return showPreventiveError(qrLanguage==="en-US"?"Describe the required action.":"Descreva a providência necessária.");
+  }
+
+  saveResponsible(responsible);
+  const signature=getSignatureData();
+
+  preventivePosting=true;
+  $("savePreventive").disabled=true;
+  $("cancelPreventive").disabled=true;
+  $("savePreventive").textContent=qrLanguage==="en-US"?"Saving...":"Registrando preventiva...";
+  $("preventiveMessage").className="message loading";
+  $("preventiveMessage").textContent=qrLanguage==="en-US"
+    ?"Please wait. The preventive maintenance record is being saved."
+    :"Aguarde. O registro está sendo processado. Não pressione o botão novamente.";
+
+  try{
+    const r=await apiPost({
+      action:"registerPreventive",
+      id:currentAsset.id,
+      systemSessionToken:systemSession.systemSessionToken,
+      preventiveResponsible:responsible,
+      preventiveObservation:observation,
+      preventivePhotoBase64:preventivePhotoData?.base64||"",
+      preventivePhotoName:preventivePhotoData?.name||"",
+      preventivePhotoMime:preventivePhotoData?.mime||"",
+      preventiveSignatureBase64:signature?.base64||"",
+      preventiveSignatureMime:signature?.mime||"",
+      preventiveNeedsAction:$("preventiveNeedsAction").checked?"Sim":"Não",
+      preventiveActionType:$("preventiveActionType").value,
+      preventiveActionDescription:$("preventiveActionDescription").value.trim(),
+      preventiveActionPriority:$("preventiveActionPriority").value,
+      preventiveActionMaterial:$("preventiveActionMaterial").value.trim(),
+      preventiveActionQuantity:$("preventiveActionQuantity").value.trim(),
+      preventiveActionOperation:$("preventiveActionOperation").value,
+      preventiveLanguage:qrLanguage
+    });
+
+    if(!r.ok)throw new Error(r.detail||"Não foi possível registrar a preventiva.");
+
+    const documentResult=await uploadPreventiveDocuments7606(r.registro);
+
+    $("preventiveMessage").className=documentResult.ok?"message success":"message error";
+
+    let baseMessage=r.duplicatePrevented
+      ?(qrLanguage==="en-US"
+        ?`✅ Preventive maintenance <b>${esc(r.registro)}</b> was already recorded.`
+        :`✅ Preventiva <b>${esc(r.registro)}</b> já estava registrada.`)
+      :(qrLanguage==="en-US"
+        ?`✅ Preventive maintenance <b>${esc(r.registro)}</b> saved successfully.`
+        :`✅ Preventiva <b>${esc(r.registro)}</b> registrada com sucesso.`);
+
+    if(documentResult.total){
+      if(documentResult.ok){
+        baseMessage+=qrLanguage==="en-US"
+          ?`<br>📎 ${documentResult.uploaded} document(s) attached successfully.`
+          :`<br>📎 ${documentResult.uploaded} documento(s) anexado(s) com sucesso.`;
+      }else{
+        baseMessage+=qrLanguage==="en-US"
+          ?`<br>⚠️ The preventive maintenance was saved, but ${documentResult.failed.length} document(s) could not be uploaded. You may press Save again to retry the documents.`
+          :`<br>⚠️ A preventiva foi gravada, mas ${documentResult.failed.length} documento(s) não puderam ser enviados. Você pode pressionar Salvar novamente para tentar reenviar os documentos.`;
+        baseMessage+=`<br><small>${documentResult.failed.map(x=>esc(x.name)+": "+esc(x.error)).join("<br>")}</small>`;
+      }
+    }
+
+    $("preventiveMessage").innerHTML=baseMessage;
+
+    if(!documentResult.ok){
+      preventivePosting=false;
+      $("savePreventive").disabled=false;
+      $("cancelPreventive").disabled=false;
+      $("savePreventive").textContent=qrLanguage==="en-US"
+        ?"Retry document upload"
+        :"Tentar enviar documentos novamente";
+      return;
+    }
+
+    // 7.4.6.2:
+    // A gravação já foi confirmada pelo backend. O modal é liberado quase
+    // imediatamente; a atualização do histórico ocorre em segundo plano.
+    setTimeout(()=>{
+      $("preventiveModal").style.display="none";
+      $("savePreventive").disabled=false;
+      $("cancelPreventive").disabled=false;
+      $("savePreventive").textContent=qrLanguage==="en-US"
+        ?"Register Preventive Maintenance"
+        :"Registrar Preventiva";
+      preventivePosting=false;
+      preventivePhotoData=null;
+      preventiveDocumentFiles=[];
+      signatureDirty=false;
+
+      Promise.resolve()
+        .then(()=>loadPreventiveHistory())
+        .catch(()=>{});
+    },350);
+
+  }catch(e){
+    preventivePosting=false;
+    $("savePreventive").disabled=false;
+    $("cancelPreventive").disabled=false;
+    $("savePreventive").textContent=qrLanguage==="en-US"
+      ?"Register Preventive Maintenance"
+      :"Registrar Preventiva";
+    showPreventiveError(e.message);
+  }
+}
+function showPreventiveError(m){$("preventiveMessage").className="message error";$("preventiveMessage").textContent=m}
+function reportText76619(pt,en){return qrLanguage==="en-US"?en:pt;}
+function translateReportError76619(message){
+  const m=String(message||"");
+  if(qrLanguage!=="en-US")return m;
+  const exact={
+    "A foto ultrapassa o limite permitido.":"The photo exceeds the allowed size limit.",
+    "O arquivo anexado ultrapassa o limite permitido.":"The attached file exceeds the allowed size limit.",
+    "ID não informado.":"Asset ID was not provided.",
+    "Ativo não encontrado.":"Asset not found.",
+    "Categoria inválida ou inativa.":"The selected category is invalid or inactive.",
+    "Componente inválido ou inativo.":"The selected component is invalid or inactive.",
+    "Componente inválido para a categoria selecionada.":"The selected component is not valid for this category.",
+    "Muitas solicitações foram enviadas para este equipamento em pouco tempo. Aguarde alguns minutos e tente novamente.":"Too many requests were sent for this asset in a short period. Please wait a few minutes and try again.",
+    "O recebimento de ocorrências está temporariamente indisponível. Tente novamente mais tarde.":"Work order reporting is temporarily unavailable. Please try again later."
+  };
+  return exact[m]||"The work order could not be submitted. Please review the information and try again.";
+}
+async function openReport(){
+  if(systemSession&&!hasProfilePermission("OC_REGISTRAR"))return permissionDeniedMessage("Seu perfil não possui permissão para registrar ocorrências.","Your profile is not allowed to create work orders.");
+  photoData=null;reportAttachmentData=null;reportPosting=false;reportCompleted=false;
+  if($("reportCameraInput"))$("reportCameraInput").value="";
+  if($("photoInput"))$("photoInput").value="";
+  if($("reportAttachmentInput"))$("reportAttachmentInput").value="";
+  if($("reportPhotoStatus"))$("reportPhotoStatus").textContent="";
+  if($("reportAttachmentName"))$("reportAttachmentName").textContent=reportText76619("Nenhum arquivo selecionado.","No file selected.");
+  $("photoPreview").style.display="none";
+  await populateOccurrenceCategorySelect();
+  $("reporterName").value=getSavedResponsible();
+  $("reportMessage").className="message";
+  $("reportMessage").innerHTML="";
+  $("sendReport").disabled=false;
+  $("sendReport").textContent=reportText76619("Gravar ocorrência","Save Work Order");
+  $("cancelReport").textContent=reportText76619("Cancelar","Cancel");
+  qrTranslateElementTree($("reportModal"));
+  qrTranslateAttributes($("reportModal"));
+  $("reportModal").style.display="flex";
+}
+async function sendReport(){
+  if(reportPosting)return;
+  const name=$("reporterName").value.trim(),description=$("description").value.trim();
+  if(!name||!$("category").value||!$("component").value||!description){
+    $("reportMessage").className="message error";
+    $("reportMessage").textContent=reportText76619("Preencha os campos obrigatórios.","Please complete all required fields.");
+    return;
+  }
+  saveResponsible(name);
+  reportPosting=true;reportCompleted=false;
+  $("sendReport").disabled=true;
+  $("sendReport").textContent=reportText76619("Gravando...","Saving...");
+  $("reportMessage").className="message loading";
+  $("reportMessage").textContent=reportText76619("Registrando ocorrência...","Submitting work order...");
+  try{
+    const r=await apiPost({action:"reportOccurrence",systemSessionToken:systemSession?.systemSessionToken||"",id:currentAsset.id,reportadoPor:name,contato:$("reporterContact").value,categoriaOcorrencia:$("category").value,componenteAfetado:$("component").value,descricao:description,fotoBase64:photoData?.base64||"",fotoNome:photoData?.name||"",fotoMime:photoData?.mime||"",attachmentBase64:reportAttachmentData?.base64||"",attachmentNome:reportAttachmentData?.name||"",attachmentMime:reportAttachmentData?.mime||""});
+    if(!r.ok)throw new Error(r.detail||reportText76619("Não foi possível registrar a ocorrência.","The work order could not be submitted."));
+    if(r.processamentoMs!=null)console.info("QRManut reportOccurrence:",r.processamentoMs,"ms; notificationsQueued=",!!r.notificacoesEmFila);
+    let n="";
+    if(r.notificacaoPrestador==="Sim")n=`<br><br>📧 <b>${reportText76619("Prestador notificado:","Service provider notified:")}</b><br>${esc(r.emailPrestador)}`;
+    else if(r.notificacaoPrestador==="Em fila")n=`<br><br>📨 <b>${reportText76619("Notificação em processamento:","Notification is being processed:")}</b><br>${esc(r.emailPrestador)}<br><span class="muted">${reportText76619("O envio do e-mail ocorre em segundo plano para liberar a gravação mais rapidamente.","Email is sent in the background so the work order can be saved faster.")}</span>`;
+    else if(r.notificacaoPrestador==="Não - sem e-mail")n=reportText76619("<br><br>⚠️ Prestador configurado para receber a ocorrência, mas sem e-mail cadastrado.","<br><br>⚠️ The service provider is configured to receive work orders, but no email address is registered.");
+    else if(r.notificacaoPrestador==="Erro")n=reportText76619("<br><br>⚠️ A ocorrência foi registrada, mas houve erro ao notificar o prestador.","<br><br>⚠️ The work order was saved, but the service provider notification could not be sent.");
+    else n=reportText76619("<br><br>ℹ️ Este prestador não está configurado para receber notificações de ocorrência.","<br><br>ℹ️ This service provider is not configured to receive work order notifications.");
+    $("reportMessage").className="message success";
+    $("reportMessage").innerHTML=reportText76619(`✅ Ocorrência <b>${esc(r.ocorrencia)}</b> registrada com sucesso.${n}`,`✅ Work order <b>${esc(r.ocorrencia)}</b> submitted successfully.${n}`);
+    $("sendReport").textContent=reportText76619("Ocorrência gravada","Work Order Saved");
+    $("cancelReport").textContent=reportText76619("Fechar","Close");
+    reportCompleted=true;
+  }catch(e){
+    reportPosting=false;reportCompleted=false;
+    $("sendReport").disabled=false;
+    $("sendReport").textContent=reportText76619("Gravar ocorrência","Save Work Order");
+    $("reportMessage").className="message error";
+    $("reportMessage").textContent=translateReportError76619(e.message);
+  }
+}
+const CATEGORIES=["Civil","Sanitário","Elétrica","Hidráulica","Climatização","Refrigeração","Utilidades","Segurança","Mobiliário","Equipamento","Outros"],COMPONENTS=["Geral","Piso","Parede","Teto","Porta","Janela","Vaso Sanitário","Pia","Torneira","Descarga","Mictório","Ralo","Luminária","Tomada","Interruptor","Tubulação","Registro","Bomba","Motor","Painel","Ar-condicionado","Mobiliário","Outro"];
+function buildManageDropdowns(){/* 7.4.6: opções carregadas da planilha */}
+function drivePhotoPreviewUrl(url){
+  const u=String(url||"").trim();
+  if(!u)return "";
+  let m=u.match(/\/file\/d\/([A-Za-z0-9_-]+)/i);
+  if(!m)m=u.match(/[?&]id=([A-Za-z0-9_-]+)/i);
+  if(m&&m[1])return "https://drive.google.com/thumbnail?id="+encodeURIComponent(m[1])+"&sz=w1000";
+  return u;
+}
+
+function showExistingOccurrencePhoto(item){
+  const box=$("existingOccurrencePhotoBox");
+  const link=$("existingOccurrencePhotoLink");
+  const preview=$("existingOccurrencePhotoPreview");
+  const url=String(item?.foto||"").trim();
+
+  $("existingOccurrencePhotoTitle").textContent=
+    qrLanguage==="en-US"?"📷 Initial photo on record":"📷 Foto inicial registrada";
+  $("existingOccurrencePhotoHelp").textContent=
+    qrLanguage==="en-US"?"This is the evidence recorded when the occurrence was opened.":"Esta é a evidência registrada na abertura da ocorrência.";
+  link.textContent=qrLanguage==="en-US"?"Open initial photo":"Abrir foto inicial";
+
+  if(!url){
+    hide("existingOccurrencePhotoBox");
+    link.removeAttribute("href");
+    preview.removeAttribute("src");
+    preview.style.display="none";
+    return;
+  }
+
+  show("existingOccurrencePhotoBox");
+  link.removeAttribute("href");
+  link.onclick=e=>{e.preventDefault();openSecureFile76624("occurrencePhoto",item.ocorrencia,"opening")};
+  loadSecureImage76624(preview,"occurrencePhoto",item.ocorrencia,"opening");
+}
+function openManage(i){
+  selectedOccurrence=history[i];
+  correctionPhotoData=null;
+  conclusionPhotoData=null;
+  manageAttachmentData=null;
+
+  $("manageOccurrencePhotoInput").value="";
+  $("manageOccurrenceCameraInput").value="";
+  $("conclusionPhotoInput").value="";
+  $("conclusionCameraInput").value=""; if($("manageAttachmentInput"))$("manageAttachmentInput").value=""; if($("manageAttachmentName"))$("manageAttachmentName").textContent="Nenhum arquivo selecionado.";
+
+  if($("manageOccurrencePhotoStatus"))$("manageOccurrencePhotoStatus").textContent="";
+  if($("conclusionPhotoStatus"))$("conclusionPhotoStatus").textContent="";
+
+  $("manageOccurrencePhotoPreview").style.display="none";
+  $("conclusionPhotoPreview").style.display="none";
+
+  /* 7.6.0.5: exibe a foto inicial já gravada no histórico. */
+  showExistingOccurrencePhoto(selectedOccurrence);
+
+  $("manageChangedBy").value=getSavedResponsible();
+  populateManageCatalog(
+    selectedOccurrence.categoriaOcorrencia||"",
+    selectedOccurrence.componenteAfetado||""
+  );
+  $("manageDescription").value=selectedOccurrence.descricao||"";
+  $("manageStatus").value=selectedOccurrence.status||"Aberta";
+  $("manageResponsible").value=selectedOccurrence.responsavel||"";
+  $("manageSolution").value=selectedOccurrence.solucao||"";
+
+  /* Mantém visível também uma eventual foto de conclusão já existente. */
+  if(selectedOccurrence.fotoConclusao){
+    const p=$("conclusionPhotoPreview");
+    loadSecureImage76624(p,"occurrencePhoto",selectedOccurrence.ocorrencia,"conclusion");
+    if($("conclusionPhotoStatus")){
+      $("conclusionPhotoStatus").innerHTML=
+        `📷 ${qrLanguage==="en-US"?"Conclusion photo already on record.":"Foto de conclusão já registrada."} <button type="button" class="auth-link" onclick="openSecureFile76624('occurrencePhoto','${esc(selectedOccurrence.ocorrencia)}','conclusion')">${qrLanguage==="en-US"?"Open photo":"Abrir foto"}</button>`;
+    }
+  }
+
+  if($("manageExistingAttachments"))$("manageExistingAttachments").innerHTML=(selectedOccurrence.anexos||[]).length?"<b>Arquivos já anexados:</b>"+(selectedOccurrence.anexos||[]).map(a=>`<button type="button" class="auth-link" onclick="openSecureFile76624('occurrenceDocument','${esc(a.idDocumento)}')" style="display:block;margin-top:4px">📎 ${esc(a.nomeArquivo)}</button>`).join(""):"";
+  hasProfilePermission("OC_EXCLUIR")?show("deleteOccurrence"):hide("deleteOccurrence");
+  const canAlter=hasProfilePermission("OC_ALTERAR"),canConclude=hasProfilePermission("OC_CONCLUIR");
+  ["manageCategory","manageComponent","manageDescription","manageResponsible"].forEach(id=>{if($(id))$(id).disabled=!canAlter;});
+  if($("manageSolution"))$("manageSolution").disabled=!(canAlter||canConclude);
+  if($("manageOccurrenceCameraButton"))$("manageOccurrenceCameraButton").disabled=!canAlter;
+  if($("manageOccurrenceAttachButton"))$("manageOccurrenceAttachButton").disabled=!canAlter;
+  if($("manageAttachmentButton"))$("manageAttachmentButton").disabled=!canAlter;
+  if($("conclusionCameraButton"))$("conclusionCameraButton").disabled=!canConclude;
+  if($("conclusionAttachButton"))$("conclusionAttachButton").disabled=!canConclude;
+  if($("manageStatus"))Array.from($("manageStatus").options).forEach(opt=>{
+    const isCurrent=String(opt.value)===String(selectedOccurrence?.status||"");
+    opt.disabled=!isCurrent&&(opt.value==="Concluída"?!canConclude:!canAlter);
+  });
+  toggleConclusion();
+  $("manageMessage").className="message";
+  $("manageMessage").textContent="";
+  $("manageModal").style.display="flex";
+}
+function toggleConclusion(){if($("manageStatus").value==="Concluída")show("conclusionPhotoArea");else hide("conclusionPhotoArea")}
+async function saveManage(){
+  if(managePosting)return;
+
+  if(!systemSession?.systemSessionToken){
+    $("manageMessage").className="message error";
+    $("manageMessage").textContent="Faça login no Menu Principal para alterar a ocorrência.";
+    return;
+  }
+
+  const changedBy=$("manageChangedBy").value.trim();
+  const wantsConclude=$("manageStatus").value==="Concluída"&&String(selectedOccurrence?.status||"")!=="Concluída";
+  if(wantsConclude&&!hasProfilePermission("OC_CONCLUIR")){return permissionDeniedMessage("Seu perfil não possui permissão para concluir ocorrências.","Your profile is not allowed to complete work orders.");}
+  if(!wantsConclude&&!hasProfilePermission("OC_ALTERAR")){return permissionDeniedMessage("Seu perfil não possui permissão para alterar ocorrências.","Your profile is not allowed to edit work orders.");}
+
+  if(!changedBy){
+    $("manageMessage").className="message error";
+    $("manageMessage").textContent="Informe quem está realizando a alteração.";
+    return;
+  }
+
+  managePosting=true;
+  saveResponsible(changedBy);
+
+  const btn=$("saveManage");
+  btn.disabled=true;
+  btn.textContent="Salvando...";
+
+  $("manageMessage").className="message loading";
+  $("manageMessage").textContent="Salvando alterações e evidências...";
+
+  try{
+    const payload={
+      action:"updateOccurrence",
+      systemSessionToken:systemSession.systemSessionToken,
+      ocorrencia:selectedOccurrence.ocorrencia,
+      status:$("manageStatus").value,
+      responsavel:$("manageResponsible").value,
+      solucao:$("manageSolution").value,
+      alteradoPor:changedBy,
+      descricaoOcorrencia:$("manageDescription").value,
+      categoriaOcorrenciaEdit:$("manageCategory").value,
+      componenteAfetadoEdit:$("manageComponent").value,
+
+      fotoOcorrenciaBase64:correctionPhotoData?.base64||"",
+      fotoOcorrenciaNome:correctionPhotoData?.name||"",
+      fotoOcorrenciaMime:correctionPhotoData?.mime||"",
+
+      fotoConclusaoBase64:conclusionPhotoData?.base64||"",
+      fotoConclusaoNome:conclusionPhotoData?.name||"",
+      fotoConclusaoMime:conclusionPhotoData?.mime||"",
+      occurrenceAttachmentBase64:manageAttachmentData?.base64||"", occurrenceAttachmentName:manageAttachmentData?.name||"", occurrenceAttachmentMime:manageAttachmentData?.mime||""
+    };
+
+    const r=await apiPost(payload);
+
+    if(!r.ok){
+      throw new Error(r.detail||"Não foi possível salvar a ocorrência.");
+    }
+
+    $("manageMessage").className="message success";
+
+    let evidence="";
+    if(r.fotoCorrecaoSalva)evidence+="<br>📷 Foto da ocorrência salva.";
+    if(r.fotoConclusaoSalva)evidence+="<br>📷 Foto da conclusão salva.";
+
+    $("manageMessage").innerHTML="✅ Alterações salvas com sucesso."+evidence;
+
+    btn.textContent="Alterações salvas";
+
+    setTimeout(()=>{
+      $("manageModal").style.display="none";
+      location.reload();
+    },900);
+
+  }catch(e){
+    managePosting=false;
+    btn.disabled=false;
+    btn.textContent="Salvar alterações";
+    $("manageMessage").className="message error";
+    $("manageMessage").textContent=e.message;
+  }
+}
+async function handleReportImage(file){if(!file){photoData=null;$("photoPreview").style.display="none";return}photoData=await processPhoto(file);$("photoPreview").src=photoData.dataUrl;$("photoPreview").style.display="block";if($("reportPhotoStatus"))$("reportPhotoStatus").textContent=reportText76619("Imagem selecionada: ","Selected image: ")+(file.name||"photo.jpg")}
+$("reportCameraButton").onclick=()=>$("reportCameraInput").click();$("reportGalleryButton").onclick=()=>$("photoInput").click();$("reportCameraInput").onchange=function(){handleReportImage(this.files?.[0])};$("photoInput").onchange=function(){handleReportImage(this.files?.[0])};$("reportAttachmentButton").onclick=()=>$("reportAttachmentInput").click();$("reportAttachmentInput").onchange=async function(){try{reportAttachmentData=await processAttachment(this.files?.[0]);$("reportAttachmentName").textContent=reportAttachmentData?"📎 "+reportAttachmentData.name:reportText76619("Nenhum arquivo selecionado.","No file selected.")}catch(e){reportAttachmentData=null;this.value="";alert(qrLanguage==="en-US"?translateReportError76619(e.message):e.message)}};
+async function handlePreventiveImage(file){if(!file){preventivePhotoData=null;$("preventivePhotoPreview").style.display="none";return}preventivePhotoData=await processPhoto(file);$("preventivePhotoPreview").src=preventivePhotoData.dataUrl;$("preventivePhotoPreview").style.display="block"}$("preventiveCameraButton").onclick=()=>$("preventiveCameraInput").click();$("preventiveGalleryButton").onclick=()=>$("preventivePhotoInput").click();$("preventiveCameraInput").onchange=function(){handlePreventiveImage(this.files?.[0])};$("preventivePhotoInput").onchange=function(){handlePreventiveImage(this.files?.[0])};$("preventiveDocumentAddButton").onclick=()=>$("preventiveDocumentInput").click();$("preventiveDocumentInput").onchange=function(){addPreventiveDocuments7606(this.files)};async function handleManageSelectedImage(file,kind){
+  if(!file)return;
+
+  const isConclusion=kind==="conclusion";
+  const status=$(isConclusion?"conclusionPhotoStatus":"manageOccurrencePhotoStatus");
+  const preview=$(isConclusion?"conclusionPhotoPreview":"manageOccurrencePhotoPreview");
+
+  if(status)status.textContent="Preparando imagem...";
+
+  try{
+    const data=await processPhoto(file);
+
+    if(isConclusion){
+      conclusionPhotoData=data;
+    }else{
+      correctionPhotoData=data;
+    }
+
+    preview.src=data.dataUrl;
+    preview.style.display="block";
+
+    if(status){
+      status.textContent="📷 Imagem selecionada: "+(file.name||"foto.jpg");
+    }
+  }catch(e){
+    if(status)status.textContent="Não foi possível preparar a imagem.";
+  }
+}
+
+$("manageOccurrenceCameraButton").onclick=()=>$("manageOccurrenceCameraInput").click();
+$("manageOccurrenceAttachButton").onclick=()=>$("manageOccurrencePhotoInput").click();
+$("conclusionCameraButton").onclick=()=>$("conclusionCameraInput").click();
+$("conclusionAttachButton").onclick=()=>$("conclusionPhotoInput").click();
+
+$("manageOccurrenceCameraInput").onchange=function(){handleManageSelectedImage(this.files?.[0],"correction")};
+$("manageOccurrencePhotoInput").onchange=function(){handleManageSelectedImage(this.files?.[0],"correction")};
+$("conclusionCameraInput").onchange=function(){handleManageSelectedImage(this.files?.[0],"conclusion")};
+$("conclusionPhotoInput").onchange=function(){handleManageSelectedImage(this.files?.[0],"conclusion")};$("manageAttachmentButton").onclick=()=>$("manageAttachmentInput").click();$("manageAttachmentInput").onchange=async function(){try{manageAttachmentData=await processAttachment(this.files?.[0]);$("manageAttachmentName").textContent=manageAttachmentData?"📎 "+manageAttachmentData.name:"Nenhum arquivo selecionado."}catch(e){manageAttachmentData=null;this.value="";alert(e.message)}};
+
+
+
+async function deleteOccurrenceRecord(){if(!selectedOccurrence||!hasProfilePermission("OC_EXCLUIR"))return;if(!confirm(`Excluir definitivamente a ocorrência ${selectedOccurrence.ocorrencia}?\n\nEsta ação remove o registro do aplicativo e ficará registrada na auditoria.`))return;const btn=$("deleteOccurrence");btn.disabled=true;btn.textContent="Excluindo...";try{const r=await menuApiPost({action:"deleteOccurrence",ocorrencia:selectedOccurrence.ocorrencia});if(!r.ok)throw new Error(r.detail||"Não foi possível excluir a ocorrência.");$("manageModal").style.display="none";location.reload()}catch(e){alert(e.message);btn.disabled=false;btn.textContent="🗑️ Excluir ocorrência"}}
+async function deletePreventiveRecord(registro){if(!hasProfilePermission("PREVENTIVA_EXCLUIR"))return;if(!confirm(`Excluir definitivamente a preventiva ${registro}?\n\nEsta ação ficará registrada na auditoria.`))return;try{const r=await menuApiPost({action:"deletePreventive",registro:registro});if(!r.ok)throw new Error(r.detail||"Não foi possível excluir a preventiva.");await loadPreventiveHistory()}catch(e){alert(e.message)}}
+const PASSWORD_EYE_OPEN=`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path><circle cx="12" cy="12" r="2.8"></circle></svg>`;
+const PASSWORD_EYE_CLOSED=`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3l18 18"></path><path d="M10.6 6.2A10.7 10.7 0 0 1 12 6c7 0 10 6 10 6a17.8 17.8 0 0 1-2.4 3.1"></path><path d="M6.4 6.4C3.5 8.2 2 12 2 12s3.5 6 10 6a10 10 0 0 0 4.1-.9"></path><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"></path></svg>`;
+function setupPasswordToggles(){document.querySelectorAll(".password-toggle").forEach(btn=>{btn.onclick=()=>{const input=document.getElementById(btn.dataset.passwordTarget);if(!input)return;const vis=input.type==="text";input.type=vis?"password":"text";btn.innerHTML=vis?PASSWORD_EYE_OPEN:PASSWORD_EYE_CLOSED;btn.setAttribute("aria-label",vis?"Mostrar senha":"Ocultar senha");btn.title=vis?"Mostrar senha":"Ocultar senha";input.focus()}})}
+function setDefaultAuditDates(){if($("auditStart").value&&$("auditEnd").value){qrRefreshLocalizedDateControls();return}const h=new Date(),i=new Date(h.getFullYear(),h.getMonth(),1);$("auditStart").value=isoDateLocal(i);$("auditEnd").value=isoDateLocal(h);qrRefreshLocalizedDateControls()}
+
+/* ============================================================
+ * SOLICITAÇÕES DE MANUTENÇÃO / SOL — 7.6.6.24.12
+ * ============================================================ */
+
+function solT7662412(pt,en){return qrLanguage==="en-US"?en:pt}
+
+async function loadSolPublicMeta7662412(){
+  if(solPublicMeta)return solPublicMeta;
+  const r=await api({action:"solpublicmeta"});
+  if(!r.ok)throw new Error(r.detail||solT7662412("Não foi possível carregar pavimentos e locais.","Unable to load floors and locations."));
+  solPublicMeta=r.data||{floors:[],locationsByFloor:{}};
+  return solPublicMeta;
+}
+
+function populateSolFloor7662412(){
+  const floors=solPublicMeta?.floors||[];
+  $("solFloor").innerHTML=`<option value="">${solT7662412("Selecione...","Select...")}</option>`+floors.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join("");
+  populateSolLocation7662412();
+}
+
+function populateSolLocation7662412(){
+  const floor=$("solFloor").value;
+  const items=(solPublicMeta?.locationsByFloor||{})[floor]||[];
+  $("solOtherLocation").value="";
+  hide("solOtherLocationWrap");
+  if(!floor){
+    $("solLocation").innerHTML=`<option value="">${solT7662412("Selecione o pavimento primeiro","Select the floor first")}</option>`;
+    return;
+  }
+  $("solLocation").innerHTML=`<option value="">${solT7662412("Selecione...","Select...")}</option>`+
+    items.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join("")+
+    `<option value="__OTHER__">${solT7662412("Outro local","Other location")}</option>`;
+}
+
+function updateSolOtherLocation7662412(){
+  $("solLocation").value==="__OTHER__"?show("solOtherLocationWrap"):hide("solOtherLocationWrap");
+}
+
+async function openPublicSolicitation7662412(){
+  if(!currentAsset?.id)return alert(solT7662412("Não foi possível identificar o QR de origem.","Unable to identify the source QR."));
+  solPhotoData=null;solPublicPosting=false;
+  $("solReporterName").value=getSavedResponsible();
+  $("solContact").value="";
+  $("solDescription").value="";
+  $("solPhotoStatus").textContent="";
+  $("solPhotoPreview").style.display="none";
+  $("solCameraInput").value="";$("solPhotoInput").value="";
+  $("solPublicMessage").className="message";$("solPublicMessage").innerHTML="";
+  $("solOriginInfo").innerHTML=`<b>${solT7662412("QR utilizado como entrada","QR used as entry point")}:</b> ${esc(currentAsset.id)}<br><span class="muted">${solT7662412("O problema não será associado automaticamente a este equipamento.","The issue will not be automatically linked to this asset.")}</span>`;
+  $("sendSolPublic").disabled=true;
+  $("sendSolPublic").textContent=solT7662412("Carregando...","Loading...");
+  $("solPublicModal").style.display="flex";
+  try{
+    await loadSolPublicMeta7662412();
+    populateSolFloor7662412();
+    $("sendSolPublic").disabled=false;
+    $("sendSolPublic").textContent=solT7662412("Enviar solicitação","Submit request");
+    qrTranslateElementTree($("solPublicModal"));qrTranslateAttributes($("solPublicModal"));
+  }catch(e){
+    $("solPublicMessage").className="message error";$("solPublicMessage").textContent=e.message;
+  }
+}
+
+async function handleSolPublicImage7662412(file){
+  if(!file){solPhotoData=null;$("solPhotoPreview").style.display="none";$("solPhotoStatus").textContent="";return}
+  try{
+    solPhotoData=await processPhoto(file);
+    $("solPhotoPreview").src=solPhotoData.dataUrl;$("solPhotoPreview").style.display="block";
+    $("solPhotoStatus").textContent=solT7662412("Imagem selecionada: ","Selected image: ")+(file.name||"foto.jpg");
+  }catch(e){solPhotoData=null;alert(e.message)}
+}
+
+async function sendPublicSolicitation7662412(){
+  if(solPublicPosting)return;
+  const name=$("solReporterName").value.trim();
+  const contact=$("solContact").value.trim();
+  const floor=$("solFloor").value;
+  const location=$("solLocation").value==="__OTHER__"?$("solOtherLocation").value.trim():$("solLocation").value;
+  const description=$("solDescription").value.trim();
+  if(!name||!contact||!floor||!location||!description){
+    $("solPublicMessage").className="message error";
+    $("solPublicMessage").textContent=solT7662412("Preencha os campos obrigatórios.","Please complete all required fields.");
+    return;
+  }
+  saveResponsible(name);
+  solPublicPosting=true;$("sendSolPublic").disabled=true;$("cancelSolPublic").disabled=true;
+  $("sendSolPublic").textContent=solT7662412("Enviando...","Submitting...");
+  $("solPublicMessage").className="message loading";
+  $("solPublicMessage").textContent=solT7662412("Registrando solicitação...","Registering request...");
+  try{
+    const r=await apiPost({
+      action:"createsolicitation",
+      solOriginAssetId:currentAsset.id,
+      solReporterName:name,solContact:contact,solFloor:floor,solLocation:location,solDescription:description,
+      solPhotoBase64:solPhotoData?.base64||"",solPhotoMime:solPhotoData?.mime||"",solPhotoName:solPhotoData?.name||""
+    });
+    if(!r.ok)throw new Error(r.detail||solT7662412("Não foi possível registrar a solicitação.","Unable to register the request."));
+    $("solPublicMessage").className="message success";
+    $("solPublicMessage").innerHTML=`<div class="sol-protocol-success"><b>${solT7662412("Solicitação registrada com sucesso.","Request registered successfully.")}</b><br>${solT7662412("Protocolo","Protocol")}: <b>${esc(r.idSolicitacao)}</b><br><span class="muted">${solT7662412("A equipe de manutenção fará a triagem antes da criação de uma OC.","The maintenance team will review it before a work order is created.")}</span></div>`;
+    $("sendSolPublic").textContent=solT7662412("Solicitação enviada","Request submitted");
+  }catch(e){
+    $("solPublicMessage").className="message error";$("solPublicMessage").textContent=e.message;
+    $("sendSolPublic").disabled=false;$("cancelSolPublic").disabled=false;$("sendSolPublic").textContent=solT7662412("Enviar solicitação","Submit request");
+    solPublicPosting=false;
+  }
+}
+
+function solStatusClass7662412(status){
+  if(status==="Nova")return"new";
+  if(status==="Em análise")return"analysis";
+  if(status==="OC criada")return"converted";
+  return"closed";
+}
+
+function solStatusLabel7662412(status){
+  if(qrLanguage!=="en-US")return status;
+  return {"Nova":"New","Em análise":"Under review","OC criada":"Work order created","Encerrada sem OC":"Closed without work order"}[status]||status;
+}
+
+function solOpenLinkedOccurrence7662412(assetId,oc){
+  try{sessionStorage.setItem(SOL_TARGET_OC_KEY,String(oc||""))}catch(e){}
+  location.href="?id="+encodeURIComponent(assetId);
+}
+
+async function refreshSolMenuBadge7662412(){
+  const el=$("tabSolicitations");
+  if(!el)return;
+  const base=solT7662412("📥 Solicitações de Manutenção","📥 Maintenance Requests");
+  if(!hasProfilePermission("SOLICITACOES_TRIAGEM")){el.textContent=base;return}
+  try{
+    const r=await menuApi({action:"solsummary"});
+    const n=Number(r.summary?.abertas||0);
+    el.textContent=base+(n?` 🔴 ${n}`:"");
+  }catch(e){el.textContent=base}
+}
+
+async function showSolicitationsTab7662412(){
+  if(!requireUiPermission("SOLICITACOES_TRIAGEM","Seu perfil não possui permissão para acessar Solicitações de Manutenção.","Your profile is not allowed to access Maintenance Requests."))return;
+  clearTabs();$("tabSolicitations").classList.add("active");showOnly("solicitationsArea");
+  await loadSolicitations7662412();
+}
+
+async function loadSolicitations7662412(){
+  const b=$("solRefresh");b.disabled=true;b.textContent=solT7662412("Atualizando...","Refreshing...");
+  $("solStatusText").textContent=solT7662412("Carregando solicitações...","Loading requests...");
+  try{
+    const r=await menuApi({action:"solicitations",status:$("solStatusFilter").value,floor:$("solFloorFilter").value,q:$("solSearch").value.trim()});
+    if(!r.ok)throw new Error(r.detail||solT7662412("Não foi possível carregar as solicitações.","Unable to load requests."));
+    solTriageData=r.data||{items:[],summary:{},filters:{floors:[]}};
+    const currentFloor=$("solFloorFilter").value;
+    $("solFloorFilter").innerHTML=`<option value="">${solT7662412("Todos os pavimentos","All floors")}</option>`+
+      (solTriageData.filters?.floors||[]).map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join("");
+    if([...$("solFloorFilter").options].some(o=>o.value===currentFloor))$("solFloorFilter").value=currentFloor;
+    renderSolSummary7662412(solTriageData.summary||{});
+    renderSolicitations7662412(solTriageData.items||[]);
+    $("solStatusText").textContent=solT7662412(`${(solTriageData.items||[]).length} solicitação(ões) exibida(s).`,`${(solTriageData.items||[]).length} request(s) displayed.`);
+    refreshSolMenuBadge7662412();
+  }catch(e){$("solStatusText").textContent=e.message;$("solResults").innerHTML=""}
+  finally{b.disabled=false;b.textContent=solT7662412("Atualizar","Refresh")}
+}
+
+function renderSolSummary7662412(s){
+  $("solSummary").innerHTML=[
+    [solT7662412("Novas","New"),s.nova||0],
+    [solT7662412("Em análise","Under review"),s.emAnalise||0],
+    [solT7662412("OC criada","Work order created"),s.ocCriada||0],
+    [solT7662412("Encerradas sem OC","Closed without WO"),s.encerradaSemOc||0]
+  ].map(x=>`<div class="sol-summary-card"><strong>${esc(x[1])}</strong><span>${esc(x[0])}</span></div>`).join("");
+}
+
+function renderSolicitations7662412(items){
+  if(!items.length){$("solResults").innerHTML=`<div class="document-empty">${solT7662412("Nenhuma solicitação encontrada.","No requests found.")}</div>`;return}
+  $("solResults").innerHTML=items.map(x=>{
+    const open=x.status==="Nova"||x.status==="Em análise";
+    const actions=open
+      ?`<button class="btn btn-secondary" onclick="openSolDetail7662412('${esc(x.idSolicitacao)}')">${solT7662412("Ver detalhes","View details")}</button>
+        <button class="btn btn-green" onclick="openSolConvert7662412('${esc(x.idSolicitacao)}')">${solT7662412("Criar OC","Create work order")}</button>
+        <button class="btn" onclick="openSolClose7662412('${esc(x.idSolicitacao)}')">${solT7662412("Encerrar sem OC","Close without WO")}</button>`
+      :(x.ocVinculada&&x.idAtivoVinculado
+        ?`<button class="btn btn-blue" onclick="solOpenLinkedOccurrence7662412('${esc(x.idAtivoVinculado)}','${esc(x.ocVinculada)}')">${solT7662412("Abrir OC vinculada","Open linked work order")}</button>
+          <button class="btn btn-secondary" onclick="openSolDetail7662412('${esc(x.idSolicitacao)}')">${solT7662412("Ver detalhes","View details")}</button>`
+        :`<button class="btn btn-secondary" onclick="openSolDetail7662412('${esc(x.idSolicitacao)}')">${solT7662412("Ver detalhes","View details")}</button>`);
+    return `<div class="sol-card ${solStatusClass7662412(x.status)}">
+      <div class="sol-head"><div><b>${esc(x.idSolicitacao)}</b><div class="muted">${esc(formatDate(x.data))}</div></div><span class="sol-status">${esc(solStatusLabel7662412(x.status))}</span></div>
+      <div class="sol-meta"><b>${solT7662412("Local","Location")}:</b> ${esc(x.pavimento)} — ${esc(x.local)}<br><b>${solT7662412("Solicitante","Requester")}:</b> ${esc(x.nome)}${x.contato?` • ${esc(x.contato)}`:""}<br><b>${solT7662412("QR de origem","Source QR")}:</b> ${esc(x.qrOrigem||"-")}${x.ocVinculada?`<br><b>OC:</b> ${esc(x.ocVinculada)}${x.idAtivoVinculado?` • ${esc(x.idAtivoVinculado)}`:""}`:""}</div>
+      <div class="sol-description">${esc(x.descricao)}</div>
+      <div class="sol-actions">${actions}</div>
+    </div>`;
+  }).join("");
+}
+
+function getSolFromLoaded7662412(id){
+  return (solTriageData?.items||[]).find(x=>String(x.idSolicitacao).toUpperCase()===String(id).toUpperCase())||null;
+}
+
+async function openSolDetail7662412(id){
+  let x=getSolFromLoaded7662412(id);if(!x)return;
+  if(x.status==="Nova"){
+    try{const r=await menuApiPost({action:"marksolanalysis",solId:id});if(r.ok&&r.solicitation)x=r.solicitation}catch(e){}
+  }
+  solSelected=x;
+  $("solDetailContent").innerHTML=`<div class="sol-detail-box"><b>${esc(x.idSolicitacao)}</b> • ${esc(solStatusLabel7662412(x.status))}<br><b>${solT7662412("Data","Date")}:</b> ${esc(formatDate(x.data))}<br><b>${solT7662412("Solicitante","Requester")}:</b> ${esc(x.nome)}<br><b>${solT7662412("Contato","Contact")}:</b> ${esc(x.contato)}<br><b>${solT7662412("Pavimento","Floor")}:</b> ${esc(x.pavimento)}<br><b>${solT7662412("Local / Ambiente","Location / Environment")}:</b> ${esc(x.local)}<br><b>${solT7662412("QR de origem","Source QR")}:</b> ${esc(x.qrOrigem||"-")}${x.ocVinculada?`<br><b>OC:</b> ${esc(x.ocVinculada)} • ${esc(x.idAtivoVinculado||"")}`:""}${x.motivoEncerramento?`<br><b>${solT7662412("Motivo do encerramento","Closing reason")}:</b> ${esc(x.motivoEncerramento)}`:""}<div class="sol-description"><b>${solT7662412("Descrição","Description")}:</b><br>${esc(x.descricao)}</div>${x.temFoto?`<button type="button" class="document-open" onclick="openSecureFile76624('solicitationPhoto','${esc(x.idSolicitacao)}')">📷 ${solT7662412("Abrir foto","Open photo")}</button>`:""}</div>`;
+  $("solDetailModal").style.display="flex";
+  await loadSolicitations7662412();
+}
+
+async function ensureSolTriageMeta7662412(){
+  if(solTriageMeta)return solTriageMeta;
+  const r=await menuApi({action:"soltriagemmeta"});
+  if(!r.ok)throw new Error(r.detail||solT7662412("Não foi possível carregar os ativos.","Unable to load assets."));
+  solTriageMeta=r.data||{assets:[],catalog:{categorias:[],componentes:[]}};
+  return solTriageMeta;
+}
+
+function renderSolAssetOptions7662412(){
+  const q=normalizarBuscaUi7662412($("solAssetSearch").value);
+  const sol=solSelected||{};
+  const assets=(solTriageMeta?.assets||[]).slice();
+  assets.sort((a,b)=>{
+    const score=x=>(normalizarBuscaUi7662412(x.pavimento)===normalizarBuscaUi7662412(sol.pavimento)?2:0)+(normalizarBuscaUi7662412(x.localizacao||x.ambiente||x.localDetalhado)===normalizarBuscaUi7662412(sol.local)?4:0);
+    return score(b)-score(a)||String(a.id).localeCompare(String(b.id),undefined,{numeric:true});
+  });
+  const filtered=assets.filter(a=>{
+    if(!q)return true;
+    return normalizarBuscaUi7662412([a.id,a.nome,a.categoria,a.componente,a.pavimento,a.localizacao,a.ambiente,a.localDetalhado,a.prestador].join(" ")).includes(q);
+  }).slice(0,80);
+  $("solAssetResults").innerHTML=filtered.length?filtered.map(a=>`<button type="button" class="sol-asset-option ${solSelectedAssetId===a.id?"selected":""}" onclick="selectSolAsset7662412('${esc(a.id)}')"><b>${esc(a.id)} — ${esc(a.nome||"")}</b><span>${esc([a.pavimento,a.localizacao||a.ambiente||a.localDetalhado,a.categoria,a.componente].filter(Boolean).join(" • "))}</span></button>`).join(""):`<div class="document-empty">${solT7662412("Nenhum ativo encontrado.","No asset found.")}</div>`;
+}
+
+function normalizarBuscaUi7662412(v){
+  return String(v||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim();
+}
+
+function selectSolAsset7662412(id){
+  solSelectedAssetId=id;
+  const a=(solTriageMeta?.assets||[]).find(x=>x.id===id);
+  $("solAssetSelected").className="message success";
+  $("solAssetSelected").textContent=a?solT7662412(`Ativo selecionado: ${a.id} — ${a.nome}`,`Selected asset: ${a.id} — ${a.nome}`):"";
+  renderSolAssetOptions7662412();
+}
+
+function populateSolOccurrenceCategories7662412(){
+  const cats=solTriageMeta?.catalog?.categorias||[],comps=solTriageMeta?.catalog?.componentes||[];
+  $("solOccurrenceCategory").innerHTML=`<option value="">${solT7662412("Selecione...","Select...")}</option>`+cats.map(c=>`<option value="${esc(c.nomePt)}">${esc(qrLanguage==="en-US"?(c.nomeEn||c.nomePt):c.nomePt)}</option>`).join("");
+  const other=cats.find(c=>normalizarBuscaUi7662412(c.nomePt)==="outros");
+  if(other)$("solOccurrenceCategory").value=other.nomePt;
+  populateSolOccurrenceComponents7662412();
+  if(other){
+    const general=comps.find(c=>c.idCategoria===other.idCategoria&&normalizarBuscaUi7662412(c.nomePt)==="geral");
+    if(general)$("solOccurrenceComponent").value=general.nomePt;
+  }
+}
+
+function populateSolOccurrenceComponents7662412(){
+  const cats=solTriageMeta?.catalog?.categorias||[],comps=solTriageMeta?.catalog?.componentes||[];
+  const cat=cats.find(c=>c.nomePt===$("solOccurrenceCategory").value);
+  const items=cat?comps.filter(c=>c.idCategoria===cat.idCategoria):[];
+  $("solOccurrenceComponent").innerHTML=`<option value="">${solT7662412("Selecione...","Select...")}</option>`+items.map(c=>`<option value="${esc(c.nomePt)}">${esc(qrLanguage==="en-US"?(c.nomeEn||c.nomePt):c.nomePt)}</option>`).join("");
+}
+
+async function openSolConvert7662412(id){
+  solSelected=getSolFromLoaded7662412(id);if(!solSelected)return;
+  solSelectedAssetId="";$("solAssetSearch").value="";$("solAssetSelected").className="message";$("solAssetSelected").textContent="";$("solConvertMessage").className="message";$("solConvertMessage").textContent="";
+  $("solConvertSummary").innerHTML=`<b>${esc(solSelected.idSolicitacao)}</b><br>${esc(solSelected.pavimento)} — ${esc(solSelected.local)}<div class="sol-description">${esc(solSelected.descricao)}</div>`;
+  $("solConvertModal").style.display="flex";
+  try{
+    await ensureSolTriageMeta7662412();
+    renderSolAssetOptions7662412();populateSolOccurrenceCategories7662412();
+  }catch(e){$("solConvertMessage").className="message error";$("solConvertMessage").textContent=e.message}
+}
+
+async function confirmSolConvert7662412(){
+  if(solActionPosting)return;
+  if(!solSelected||!solSelectedAssetId||!$("solOccurrenceCategory").value||!$("solOccurrenceComponent").value){
+    $("solConvertMessage").className="message error";$("solConvertMessage").textContent=solT7662412("Selecione o ativo, a categoria e o componente.","Select the asset, category and component.");return;
+  }
+  solActionPosting=true;$("confirmSolConvert").disabled=true;$("cancelSolConvert").disabled=true;$("confirmSolConvert").textContent=solT7662412("Criando OC...","Creating work order...");
+  try{
+    const r=await menuApiPost({action:"convertsoltooccurrence",solId:solSelected.idSolicitacao,solAssetId:solSelectedAssetId,solOccurrenceCategory:$("solOccurrenceCategory").value,solOccurrenceComponent:$("solOccurrenceComponent").value});
+    if(!r.ok)throw new Error(r.detail||solT7662412("Não foi possível criar a OC.","Unable to create the work order."));
+    $("solConvertMessage").className="message success";$("solConvertMessage").textContent=solT7662412(`OC ${r.ocorrencia} criada e vinculada à ${solSelected.idSolicitacao}.`,`Work order ${r.ocorrencia} created and linked to ${solSelected.idSolicitacao}.`);
+    setTimeout(async()=>{$("solConvertModal").style.display="none";await loadSolicitations7662412()},900);
+  }catch(e){$("solConvertMessage").className="message error";$("solConvertMessage").textContent=e.message}
+  finally{solActionPosting=false;$("confirmSolConvert").disabled=false;$("cancelSolConvert").disabled=false;$("confirmSolConvert").textContent=solT7662412("Criar OC","Create work order")}
+}
+
+function openSolClose7662412(id){
+  solSelected=getSolFromLoaded7662412(id);if(!solSelected)return;
+  $("solCloseReason").value="";$("solCloseMessage").className="message";$("solCloseMessage").textContent="";
+  $("solCloseSummary").innerHTML=`<b>${esc(solSelected.idSolicitacao)}</b><br>${esc(solSelected.pavimento)} — ${esc(solSelected.local)}<div class="sol-description">${esc(solSelected.descricao)}</div>`;
+  $("solCloseModal").style.display="flex";
+}
+
+async function confirmSolClose7662412(){
+  if(solActionPosting)return;
+  const reason=$("solCloseReason").value.trim();
+  if(!reason){$("solCloseMessage").className="message error";$("solCloseMessage").textContent=solT7662412("Informe o motivo do encerramento.","Enter the closing reason.");return}
+  solActionPosting=true;$("confirmSolClose").disabled=true;$("cancelSolClose").disabled=true;
+  try{
+    const r=await menuApiPost({action:"closesolwithoutoccurrence",solId:solSelected.idSolicitacao,solCloseReason:reason});
+    if(!r.ok)throw new Error(r.detail||solT7662412("Não foi possível encerrar a solicitação.","Unable to close the request."));
+    $("solCloseMessage").className="message success";$("solCloseMessage").textContent=solT7662412("Solicitação encerrada sem OC.","Request closed without a work order.");
+    setTimeout(async()=>{$("solCloseModal").style.display="none";await loadSolicitations7662412()},700);
+  }catch(e){$("solCloseMessage").className="message error";$("solCloseMessage").textContent=e.message}
+  finally{solActionPosting=false;$("confirmSolClose").disabled=false;$("cancelSolClose").disabled=false}
+}
+
+
+async function loadAuditFilters(){if(auditFiltersLoaded)return;try{const r=await menuApi({action:"auditfilters"});if(!r.ok)throw new Error(r.detail||"Erro ao carregar filtros.");const f=r.filters||{};fillSelect("auditAction",f.actions||[],"Todas as ações");fillSelect("auditResult",f.results||[],"Todos os resultados");$("auditUser").innerHTML='<option value="">Todos os usuários</option>'+(f.users||[]).map(u=>`<option value="${esc(u.idUsuario||u.nome||"")}">${esc((u.nome||u.idUsuario||"")+(u.idUsuario&&u.nome?` (${u.idUsuario})`:""))}</option>`).join("");auditFiltersLoaded=true}catch(e){$("auditStatus").textContent=e.message}}
+function auditParams(){return{dataInicial:$("auditStart").value,dataFinal:$("auditEnd").value,acao:$("auditAction").value,resultado:$("auditResult").value,usuario:$("auditUser").value,q:$("auditSearch").value.trim()}}
+function auditResultClass(v){const n=String(v||"").toLowerCase();if(n.includes("sucesso"))return"success";if(n.includes("bloq"))return"blocked";return"fail"}
+async function loadAudit(){
+  const t=qrT7612,b=$("auditRefresh");b.disabled=true;b.textContent=t("Consultando...","Searching...");$("auditStatus").textContent=t("Consultando trilha de auditoria...","Loading audit trail...");
+  try{const r=await menuApi({action:"audit",...auditParams()});if(!r.ok)throw new Error(r.detail||t("Não foi possível consultar a auditoria.","Unable to load the audit trail."));const d=r.data||{},items=d.records||[];$("auditStatus").textContent=qrLanguage==="en-US"?`${items.length} record(s) displayed.`:`${items.length} registro(s) exibido(s).`;if(!items.length){$("auditResults").innerHTML=`<div class="document-empty">${t("Nenhum evento encontrado.","No events found.")}</div>`;return}$("auditResults").innerHTML=items.map(x=>`<div class="audit-card"><div class="audit-head"><div><b>${esc(qrAuditAction7612(x.acao))}</b><div class="muted">${esc(formatDate(x.dataHora))}</div></div><span class="audit-result ${auditResultClass(x.resultado)}">${esc(qrAuditResult7612(x.resultado||"-"))}</span></div><div class="audit-meta">${x.nomeUsuario||x.idUsuario?`<b>${t("Usuário","User")}:</b> ${esc(x.nomeUsuario||"-")}${x.idUsuario?` (${esc(x.idUsuario)})`:""}<br>`:""}${x.perfil?`<b>${t("Perfil","Role")}:</b> ${esc(x.perfil)}<br>`:""}${x.tipoRegistro?`<b>${t("Tipo","Type")}:</b> ${esc(qrAuditType7612(x.tipoRegistro))}<br>`:""}${x.idRegistro?`<b>${t("Registro","Record")}:</b> ${esc(x.idRegistro)}<br>`:""}${x.idAtivo?`<b>${t("Ativo","Asset")}:</b> ${esc(x.idAtivo)}<br>`:""}</div>${x.detalhes?`<div class="audit-detail"><b>${t("Detalhes","Details")}:</b> ${esc(x.detalhes)}</div>`:""}${x.valorAnterior||x.valorNovo?`<div class="audit-detail">${x.valorAnterior?`<b>${t("Anterior","Previous")}:</b> ${esc(x.valorAnterior)}<br>`:""}${x.valorNovo?`<b>${t("Novo","New")}:</b> ${esc(x.valorNovo)}`:""}</div>`:""}</div>`).join("")}catch(e){$("auditStatus").textContent=e.message;$("auditResults").innerHTML=""}finally{b.disabled=false;b.textContent=t("Consultar","Search")}
+}
+
+async function clearAuditFilters(){$("auditAction").value="";$("auditResult").value="";$("auditUser").value="";$("auditSearch").value="";$("auditStart").value="";$("auditEnd").value="";setDefaultAuditDates();await loadAudit()}
+
+function qrPrimaryNormalize7662411_(value){
+  const v=String(value||"").trim();
+  return /^#[0-9a-f]{6}$/i.test(v)?v.toLowerCase():"#0b315e";
+}
+function qrPrimaryRgb7662411_(hex){
+  const h=qrPrimaryNormalize7662411_(hex).slice(1);
+  return {r:parseInt(h.slice(0,2),16),g:parseInt(h.slice(2,4),16),b:parseInt(h.slice(4,6),16)};
+}
+function qrPrimarySoft7662411_(hex){
+  const c=qrPrimaryRgb7662411_(hex);
+  const mix=x=>Math.round(x+(255-x)*0.90);
+  return `rgb(${mix(c.r)}, ${mix(c.g)}, ${mix(c.b)})`;
+}
+function qrPrimaryContrast7662411_(hex){
+  const c=qrPrimaryRgb7662411_(hex);
+  const luminance=(0.2126*c.r+0.7152*c.g+0.0722*c.b)/255;
+  return luminance>0.62?"#111827":"#ffffff";
+}
+function applyPrimaryColor7662411_(value){
+  const color=qrPrimaryNormalize7662411_(value);
+  const root=document.documentElement;
+  root.style.setProperty("--qr-primary",color);
+  root.style.setProperty("--qr-primary-contrast",qrPrimaryContrast7662411_(color));
+  root.style.setProperty("--qr-primary-soft",qrPrimarySoft7662411_(color));
+  const meta=document.querySelector('meta[name="theme-color"]');
+  if(meta)meta.setAttribute("content",color);
+  const swatch=$("companyColorPreviewSwatch");
+  if(swatch)swatch.style.background=color;
+  const hex=$("companyColorPreviewHex");
+  if(hex)hex.textContent=color;
+  return color;
+}
+async function loadPublicAppConfig(){
+  try{
+    const r=await api({action:"appconfig"});
+    if(!r.ok||!r.app)return;
+    const a=r.app;
+    document.title=a.nomeSistema||"QRManut";
+    applyPrimaryColor7662411_(a.corPrincipal||"#0b315e");
+    const t=document.querySelector(".search-title");
+    if(t&&a.nomeSistema)t.textContent=a.nomeSistema;
+    const sub=document.getElementById("qrAppSubtitle");
+    if(sub)sub.textContent=qrLanguage==="en-US"?"Quick Maintenance Management":"Gestão rápida de manutenção";
+  }catch(e){}
+}
+async function showCompanyTab(){if(!requireUiPermission("CONFIGURACAO_EMPRESA","Seu perfil não possui permissão para acessar a configuração da empresa.","Your profile is not allowed to access company settings."))return;clearTabs();$("tabCompany").classList.add("active");showOnly("companyArea");await loadCompanyConfig()}
+async function loadCompanyConfig(){try{const r=await menuApi({action:"companyconfig"});if(!r.ok)throw new Error(r.detail||"Erro ao carregar configuração.");const c=r.config||{};$("companyId").value=c.idEmpresa||"EMP-0001";$("companyName").value=c.nomeEmpresa||"";$("companyTradeName").value=c.nomeFantasia||"";$("companyCnpj").value=c.cnpj||"";$("companyMaintenanceEmail").value=c.emailManutencao||"";$("companyAdminEmail").value=c.emailAdministrativo||"";$("companyLogo").value=c.logo||"";$("companyPrimaryColor").value=/^#[0-9a-f]{6}$/i.test(c.corPrincipal||"")?c.corPrincipal:"#0b315e";$("companyTimezone").value=c.fusoHorario||"America/New_York";$("companySystemName").value=c.nomeSistema||"QRManut";$("companyActive").checked=!!c.empresaAtiva;$("companyMainUrl").value=c.urlPrincipal||"";$("companyReportsEmail").value=c.emailRelatorios||"";$("companyOccurrenceEmailTo").value=c.emailOcPrincipal||c.emailManutencao||"";$("companyOccurrenceEmailCc").value=c.emailOcCc||"";$("companySolTriageEmailTo").value=c.emailSolTriagem||"";$("companySolTriageEmailCc").value=c.emailSolTriagemCc||"";$("companyNotes").value=c.observacoes||"";updateCompanyPreview()}catch(e){$("companyMessage").className="message error";$("companyMessage").textContent=e.message}}
+function updateCompanyPreview(){
+  $("companyPreviewName").textContent=($("companySystemName").value||"QRManut")+" • "+($("companyTradeName").value||$("companyName").value||"");
+  applyPrimaryColor7662411_($("companyPrimaryColor").value||"#0b315e");
+  const l=$("companyLogo").value.trim();
+  if(l){$("companyLogoPreview").src=l;show("companyLogoPreview")}else hide("companyLogoPreview");
+}
+async function saveCompanyConfig(){
+  const b=$("saveCompanyConfig");
+  if(!b || b.dataset.loading==="1")return;
+  b.dataset.loading="1";
+  b.disabled=true;
+  b.textContent="Salvando...";
+  $("companyMessage").className="message loading";
+  $("companyMessage").textContent="Salvando configuração...";
+  try{
+    const r=await menuApiPost({
+      action:"updateCompanyConfig",
+      companyId:$("companyId").value.trim(),
+      companyName:$("companyName").value.trim(),
+      companyTradeName:$("companyTradeName").value.trim(),
+      companyCnpj:$("companyCnpj").value.trim(),
+      companyMaintenanceEmail:$("companyMaintenanceEmail").value.trim(),
+      companyAdminEmail:$("companyAdminEmail").value.trim(),
+      companyLogo:$("companyLogo").value.trim(),
+      companyPrimaryColor:$("companyPrimaryColor").value,
+      companyTimezone:$("companyTimezone").value.trim(),
+      companySystemName:$("companySystemName").value.trim(),
+      companyActive:$("companyActive").checked?"Sim":"Não",
+      companyMainUrl:$("companyMainUrl").value.trim(),
+      companyReportsEmail:$("companyReportsEmail").value.trim(),
+      companyOccurrenceEmailTo:$("companyOccurrenceEmailTo").value.trim(),
+      companyOccurrenceEmailCc:$("companyOccurrenceEmailCc").value.trim(),
+      companySolTriageEmailTo:$("companySolTriageEmailTo").value.trim(),
+      companySolTriageEmailCc:$("companySolTriageEmailCc").value.trim(),
+      companyNotes:$("companyNotes").value.trim()
+    });
+    if(!r.ok)throw new Error(r.detail||"Erro ao salvar.");
+    $("companyMessage").className="message success";
+    $("companyMessage").textContent="✅ Configuração atualizada.";
+    await loadPublicAppConfig();
+
+    // CORREÇÃO 7.6.6.24 R3 — salva e retorna diretamente ao menu.
+    // Remove o foco do campo para fechar o teclado virtual no celular.
+    try{
+      if(document.activeElement && typeof document.activeElement.blur==="function"){
+        document.activeElement.blur();
+      }
+    }catch(ignoreBlur){}
+
+    // Não abre alerta/tela adicional de confirmação.
+    $("companyMessage").className="message";
+    $("companyMessage").textContent="";
+
+    // Fecha a área de edição e volta ao menu principal.
+    clearTabs();
+    show("searchScreen");
+    show("mainMenuButtons");
+    showOnly("searchArea");
+
+    // Posiciona o usuário novamente no botão Empresa sem abrir teclado.
+    setTimeout(()=>{
+      const companyButton=$("tabCompany");
+      if(companyButton && !companyButton.classList.contains("hidden")){
+        try{companyButton.scrollIntoView({behavior:"smooth",block:"center"});}catch(e){}
+        try{companyButton.focus({preventScroll:true});}catch(e){try{companyButton.focus();}catch(ignoreFocus){}}
+      }
+    },80);
+  }catch(e){
+    $("companyMessage").className="message error";
+    $("companyMessage").textContent=e.message;
+  }finally{
+    b.disabled=false;
+    b.textContent="Salvar configuração";
+    delete b.dataset.loading;
+  }
+}
+async function showProfilePermissionsTab(){
+  /* 7.6.6.14: garante sessão atualizada antes de validar o perfil MASTER. */
+  if(!systemSession?.systemSessionToken){
+    return requireSystemLogin(showProfilePermissionsTab);
+  }
+  const valid=await systemSessionIsValid();
+  if(!valid){
+    showMenuGate();
+    return;
+  }
+  const profile=String(systemSession?.perfil||"").trim().toUpperCase();
+  if(profile!=="MASTER")return permissionDeniedMessage("Somente MASTER pode gerenciar as permissões dos perfis.","Only MASTER can manage profile permissions.");
+
+  clearTabs();
+  $("tabPermissions").classList.add("active");
+  showOnly("permissionsArea");
+  $("permissionsStatus").textContent=qrLanguage==="en-US"?"Loading permissions...":"Carregando permissões...";
+  $("permissionsMatrix").innerHTML="";
+  await loadProfilePermissionsAdmin();
+}
+function permissionCheckboxId76613(profile,key){return "perm_"+profile+"_"+key}
+function renderProfilePermissionsAdmin(){
+  const d=profilePermissionsAdminData;if(!d)return;
+  const t=(pt,en)=>qrLanguage==="en-US"?en:pt;
+  const profiles=d.profiles||["MASTER","GESTOR","PRESTADOR","CONSULTA"];
+  let html=`<table class="permissions-table"><thead><tr><th>${t("Rotina / Permissão","Routine / Permission")}</th>${profiles.map(p=>`<th>${esc(p)}</th>`).join("")}</tr></thead><tbody>`;
+  let group="";
+  (d.definitions||[]).forEach(def=>{
+    const g=qrLanguage==="en-US"?(def.groupEn||def.groupPt):(def.groupPt||def.groupEn);
+    if(g!==group){group=g;html+=`<tr class="permissions-group"><td colspan="${profiles.length+1}">${esc(g)}</td></tr>`;}
+    const label=qrLanguage==="en-US"?(def.labelEn||def.labelPt):(def.labelPt||def.labelEn);
+    const desc=qrLanguage==="en-US"?(def.descriptionEn||def.descriptionPt):(def.descriptionPt||def.descriptionEn);
+    html+=`<tr><td><span class="permissions-name">${esc(label)}</span>${desc?`<span class="permissions-description">${esc(desc)}</span>`:""}</td>`;
+    profiles.forEach(profile=>{
+      const checked=profile==="MASTER"?true:!!(d.matrix?.[profile]?.[def.key]);
+      html+=`<td data-profile="${esc(profile)}">${profile==="MASTER"?'<span class="permission-master-lock">🔒 ✓</span>':`<input class="permission-check" type="checkbox" id="${esc(permissionCheckboxId76613(profile,def.key))}" ${checked?"checked":""} aria-label="${esc(profile+" - "+label)}">`}</td>`;
+    });
+    html+='</tr>';
+  });
+  html+='</tbody></table>';
+  $("permissionsMatrix").innerHTML=html;
+}
+async function loadProfilePermissionsAdmin(){
+  $("permissionsStatus").textContent=qrLanguage==="en-US"?"Loading permissions...":"Carregando permissões...";
+  $("permissionsMessage").className="message";
+  try{
+    const r=await menuApi({action:"profilepermissionsadmin"});
+    if(!r.ok)throw new Error(r.detail||"Erro ao carregar permissões.");
+    if(r.backendVersion!=="7.6.6.24.12")throw new Error(qrLanguage==="en-US"
+      ?"The HTML is updated, but Apps Script is still on an older deployment. Update the .gs file and deploy a new version."
+      :"O HTML está atualizado, mas o Apps Script ainda está em uma implantação anterior. Atualize o arquivo .gs e faça uma nova versão da implantação.");
+    profilePermissionsAdminData=r.data;
+    renderProfilePermissionsAdmin();
+    $("permissionsStatus").textContent=qrLanguage==="en-US"?"Permissions loaded. Changes only take effect after you click Save Permissions.":"Permissões carregadas. As alterações só entram em vigor após clicar em Salvar permissões.";
+  }catch(e){$("permissionsStatus").textContent=e.message;$("permissionsMatrix").innerHTML="";}
+}
+function collectProfilePermissions76613(){
+  const d=profilePermissionsAdminData||{},matrix={};
+  (d.profiles||[]).filter(p=>p!=="MASTER").forEach(profile=>{
+    matrix[profile]={};
+    (d.definitions||[]).forEach(def=>{matrix[profile][def.key]=!!$(permissionCheckboxId76613(profile,def.key))?.checked;});
+  });
+  return matrix;
+}
+async function saveProfilePermissions76613(){
+  if(systemSession?.perfil!=="MASTER")return;
+  const btn=$("saveProfilePermissions");btn.disabled=true;btn.textContent=qrLanguage==="en-US"?"Saving...":"Salvando...";
+  $("permissionsMessage").className="message loading";$("permissionsMessage").textContent=qrLanguage==="en-US"?"Saving the permission matrix...":"Salvando a matriz de permissões...";
+  try{
+    const r=await menuApiPost({action:"saveProfilePermissions",permissionsJson:JSON.stringify(collectProfilePermissions76613())});
+    if(!r.ok)throw new Error(r.detail||"Não foi possível salvar as permissões.");
+    profilePermissionsAdminData=r.data||profilePermissionsAdminData;renderProfilePermissionsAdmin();
+    $("permissionsMessage").className="message success";$("permissionsMessage").textContent=qrLanguage==="en-US"?"✅ Permissions saved. Active sessions for changed profiles were invalidated so the new rules are applied on the next sign-in.":"✅ Permissões salvas. As sessões ativas dos perfis alterados foram invalidadas para que as novas regras sejam aplicadas no próximo login.";
+  }catch(e){$("permissionsMessage").className="message error";$("permissionsMessage").textContent=e.message;}
+  finally{btn.disabled=false;btn.textContent=qrLanguage==="en-US"?"💾 Save permissions":"💾 Salvar permissões";}
+}
+async function resetProfilePermissions76613(){
+  if(systemSession?.perfil!=="MASTER")return;
+  if(!confirm(qrLanguage==="en-US"?"Restore the default QRManut permission matrix for MANAGER, SERVICE PROVIDER and VIEWER?":"Restaurar a matriz padrão de permissões do QRManut para GESTOR, PRESTADOR e CONSULTA?"))return;
+  const btn=$("resetProfilePermissions");btn.disabled=true;btn.textContent=qrLanguage==="en-US"?"Restoring...":"Restaurando...";
+  try{
+    const r=await menuApiPost({action:"resetProfilePermissions"});
+    if(!r.ok)throw new Error(r.detail||"Não foi possível restaurar as permissões.");
+    profilePermissionsAdminData=r.data;renderProfilePermissionsAdmin();
+    $("permissionsMessage").className="message success";$("permissionsMessage").textContent=qrLanguage==="en-US"?"✅ Default permissions restored.":"✅ Permissões padrão restauradas.";
+  }catch(e){$("permissionsMessage").className="message error";$("permissionsMessage").textContent=e.message;}
+  finally{btn.disabled=false;btn.textContent=qrLanguage==="en-US"?"↩️ Restore defaults":"↩️ Restaurar padrão";}
+}
+
+async function showProvidersAdminTab(){if(!systemSession){return requireSystemLogin(showProvidersAdminTab)}if(!requireUiPermission("PRESTADORES_CONSULTAR","Seu perfil não possui permissão para consultar prestadores.","Your profile is not allowed to view service providers."))return;clearTabs();$("tabProvidersAdmin").classList.add("active");showOnly("providersAdminArea");hasProfilePermission("PRESTADORES_EDITAR")?show("newProviderButton"):hide("newProviderButton");await loadProvidersAdmin()}
+function providerPhoneDigits7669(value){
+  return String(value||"").replace(/\D/g,"");
+}
+function providerTelHref7669(value){
+  const raw=String(value||"").trim();
+  if(!raw)return "";
+  const plus=raw.startsWith("+")?"+":"";
+  const digits=providerPhoneDigits7669(raw);
+  return digits?"tel:"+plus+digits:"";
+}
+function providerWhatsappHref7669(value){
+  let digits=providerPhoneDigits7669(value);
+  if(!digits)return "";
+  // Se o telefone brasileiro tiver DDD + número, acrescenta o código do país.
+  if((digits.length===10||digits.length===11)&&!digits.startsWith("55"))digits="55"+digits;
+  return "https://wa.me/"+digits;
+}
+function providerContactActions7669(p){
+  if(!p?.telefone)return "";
+  const t=qrT7612;
+  const tel=providerTelHref7669(p.telefone);
+  const wa=providerWhatsappHref7669(p.telefone);
+  return `<div style="display:flex;gap:7px;flex-wrap:wrap;margin:7px 0 3px">`+
+    (tel?`<a class="btn btn-secondary" style="text-decoration:none;padding:8px 11px" href="${esc(tel)}">📞 ${t("Ligar","Call")}</a>`:"")+
+    (wa?`<a class="btn btn-green" style="text-decoration:none;padding:8px 11px" href="${esc(wa)}" target="_blank" rel="noopener">💬 WhatsApp</a>`:"")+
+    `</div>`;
+}
+async function loadProvidersAdmin(){
+  const t=qrT7612;
+  try{
+    const r=await menuApi({action:"providersadmin"});
+    if(!r.ok)throw new Error(r.detail||t("Erro ao carregar.","Error loading service providers."));
+    if(r.backendVersion!=="7.6.6.24.12")throw new Error(t(
+      "O HTML 7.6.6.24.12 está atualizado, mas o Apps Script ainda está em uma versão anterior. Atualize o arquivo .gs e faça uma nova versão da implantação.",
+      "The 7.6.6.24.12 HTML is updated, but Apps Script is still on an older version. Update the .gs file and deploy a new version."
+    ));
+    providersAdminData=r.providers||[];
+    $("providersAdminStatus").textContent=`${providersAdminData.length} ${t("prestador(es)","service provider(s)")}`;
+    const canEdit=hasProfilePermission("PRESTADORES_EDITAR");
+    $("providersAdminList").innerHTML=providersAdminData.map((p,i)=>`
+      <div class="provider-admin-card">
+        <b>${esc(p.nomeFantasia||p.nome)}</b>
+        <div class="search-result-data">
+          <b>ID:</b> ${esc(p.idPrestador)}<br>
+          <b>Status:</b> ${p.ativo?t("Ativo","Active"):t("Inativo","Inactive")}
+        </div>
+        <div class="user-actions">
+          <button class="btn btn-blue" type="button" onclick="openProviderConsult(${i})">👁️ ${t("Consultar","View")}</button>
+          ${canEdit?`<button class="btn btn-secondary" type="button" onclick="openProviderModal(${i})">✏️ ${t("Editar","Edit")}</button>`:""}
+        </div>
+      </div>`).join("");
+  }catch(e){
+    $("providersAdminStatus").textContent=e.message;
+    $("providersAdminList").innerHTML="";
+  }
+}
+
+function openProviderConsult(i){
+  const p=providersAdminData[i];
+  if(!p)return;
+  const t=qrT7612;
+  $("providerConsultTitle").textContent=`🏢 ${p.nomeFantasia||p.nome}`;
+  const hasContact=!!(p.responsavel||p.telefone||p.emailContato);
+  $("providerConsultBody").innerHTML=`
+    <div class="preventive-info">
+      <div><b>${t("Razão Social","Legal Name")}:</b> ${esc(p.nome||"-")}</div>
+      ${p.responsavel?`<div style="margin-top:7px"><b>${t("Responsável / Contato principal","Responsible / Main Contact")}:</b> ${esc(p.responsavel)}</div>`:""}
+      ${p.telefone?`<div style="margin-top:7px"><b>${t("Telefone / WhatsApp","Phone / WhatsApp")}:</b> <a href="${esc(providerTelHref7669(p.telefone))}">${esc(p.telefone)}</a></div>`:""}
+      ${p.emailContato?`<div style="margin-top:7px"><b>${t("E-mail de Contato","Contact Email")}:</b> <a href="mailto:${esc(p.emailContato)}">${esc(p.emailContato)}</a></div>`:""}
+      ${!hasContact?`<div class="muted" style="margin-top:8px">${t("Nenhum dado de contato cadastrado.","No contact information registered.")}</div>`:""}
+    </div>
+    ${p.telefone?providerContactActions7669(p):""}
+    ${p.emailContato?`<div style="margin-top:8px"><a class="btn btn-blue" style="display:inline-flex;text-decoration:none" href="mailto:${esc(p.emailContato)}">✉️ ${t("Enviar e-mail","Send email")}</a></div>`:""}
+  `;
+  $("providerConsultModal").style.display="flex";
+}
+
+function openProviderModal(i){
+  if(!hasProfilePermission("PRESTADORES_EDITAR")){
+    alert(qrLanguage==="en-US"?"Your profile is not allowed to edit service providers.":"Seu perfil não possui permissão para editar prestadores.");
+    return;
+  }
+  const p=(i===null||i===undefined)?null:providersAdminData[i];
+  $("providerModalTitle").textContent=p?(qrLanguage==="en-US"?"🏢 Edit Service Provider":"🏢 Editar Prestador"):(qrLanguage==="en-US"?"🏢 New Service Provider":"🏢 Novo Prestador");
+  $("providerId").value=p?.idPrestador||"";$("providerName").value=p?.nome||"";$("providerTradeName").value=p?.nomeFantasia||"";$("providerResponsible").value=p?.responsavel||"";$("providerPhone").value=p?.telefone||"";$("providerContactEmail").value=p?.emailContato||"";$("providerActive").checked=p?!!p.ativo:true;$("providerRequireSignature").checked=p?!!p.exigirAssinatura:false;$("providerPhotoRequired").checked=p?!!p.fotoObrigatoria:false;$("providerObservationRequired").checked=p?!!p.observacaoObrigatoria:false;$("providerCanPreventive").checked=p?!!p.podeRegistrarPreventiva:true;$("providerCanOccurrence").checked=p?!!p.podeAtenderOC:true;$("providerNotifyOccurrence").checked=p?!!p.notificarOC:false;$("providerOccurrenceEmail").value=p?.emailOC||"";$("providerSendReport").checked=p?!!p.enviarRelatorio:false;$("providerReportEmail").value=p?.emailRelatorio||"";$("providerNotes").value=p?.observacoes||"";$("providerMessage").className="message";$("providerModal").style.display="flex";
+}
+async function saveProviderAdmin(){
+  if(!hasProfilePermission("PRESTADORES_EDITAR"))return alert(qrLanguage==="en-US"?"Your profile is not allowed to save service providers.":"Seu perfil não possui permissão para salvar prestadores.");
+  const b=$("saveProvider");
+  if(!b || b.dataset.loading==="1")return;
+  b.dataset.loading="1";
+  b.disabled=true;
+  b.textContent="Salvando...";
+  $("providerMessage").className="message loading";
+  $("providerMessage").textContent="Salvando prestador...";
+  try{
+    const id=$("providerId").value;
+    const r=await menuApiPost({
+      action:id?"updateProvider":"createProvider",
+      providerId:id,
+      providerName:$("providerName").value.trim(),
+      providerTradeName:$("providerTradeName").value.trim(),
+      providerResponsible:$("providerResponsible").value.trim(),
+      providerPhone:$("providerPhone").value.trim(),
+      providerContactEmail:$("providerContactEmail").value.trim(),
+      providerActive:$("providerActive").checked?"Sim":"Não",
+      providerRequireSignature:$("providerRequireSignature").checked?"Sim":"Não",
+      providerPhotoRequired:$("providerPhotoRequired").checked?"Sim":"Não",
+      providerObservationRequired:$("providerObservationRequired").checked?"Sim":"Não",
+      providerCanPreventive:$("providerCanPreventive").checked?"Sim":"Não",
+      providerCanOccurrence:$("providerCanOccurrence").checked?"Sim":"Não",
+      providerNotifyOccurrence:$("providerNotifyOccurrence").checked?"Sim":"Não",
+      providerOccurrenceEmail:$("providerOccurrenceEmail").value.trim(),
+      providerSendReport:$("providerSendReport").checked?"Sim":"Não",
+      providerReportEmail:$("providerReportEmail").value.trim(),
+      providerNotes:$("providerNotes").value.trim()
+    });
+    if(!r.ok)throw new Error(r.detail||"Erro ao salvar prestador.");
+    $("providerMessage").className="message success";
+    $("providerMessage").textContent="✅ Prestador salvo.";
+    setTimeout(async()=>{
+      $("providerModal").style.display="none";
+      await loadProvidersAdmin();
+    },600);
+  }catch(e){
+    $("providerMessage").className="message error";
+    $("providerMessage").textContent=e.message;
+  }finally{
+    b.disabled=false;
+    b.textContent="Salvar prestador";
+    delete b.dataset.loading;
+  }
+}
+
+let documentUploadMetaLoaded=false;
+let documentUploadFileData=null;
+
+async function showDocumentUploadTab(){
+  if(!requireUiPermission("UPLOAD_DOCUMENTOS","Seu perfil não possui permissão para realizar Upload de Documentos.","Your profile is not allowed to upload technical documents."))return;
+  clearTabs();$("tabDocumentUpload").classList.add("active");showOnly("documentUploadArea");await loadDocumentUploadMeta();
+}
+
+async function loadDocumentUploadMeta(){
+  if(documentUploadMetaLoaded)return;
+  try{
+    const r=await menuApi({action:"documentuploadmeta"});
+    if(!r.ok)throw new Error(r.detail||"Erro ao carregar opções.");
+    const d=r.data||{};
+    fillSelect("uploadDocumentType",d.tipos||[],qrLanguage==="en-US"?"Select":"Selecione");
+    fillSelect("uploadDocumentDiscipline",d.disciplinas||[],qrLanguage==="en-US"?"Select":"Selecione");
+    fillSelect("uploadDocumentFloor",d.pavimentos||[],qrLanguage==="en-US"?"Select":"Selecione");
+    $("uploadDocumentProvider").innerHTML=`<option value="">${qrLanguage==="en-US"?"No specific service provider":"Sem prestador específico"}</option>`+(d.prestadores||[]).map(p=>`<option value="${esc(p.nome)}">${esc(p.nome)}</option>`).join("");
+    $("uploadDocumentFile").dataset.maxBytes=String(d.maxBytes||8388608);
+    documentUploadMetaLoaded=true;
+  }catch(e){$("documentUploadMessage").className="message error";$("documentUploadMessage").textContent=e.message}
+}
+
+function readUploadPdf(file){return new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(r.result||"");r.onerror=()=>reject(new Error("Não foi possível ler o PDF."));r.readAsDataURL(file)})}
+
+async function prepareDocumentUploadFile(){
+  const file=$("uploadDocumentFile").files?.[0];documentUploadFileData=null;
+  if(!file){$("uploadDocumentFileName").textContent="Nenhum arquivo selecionado.";return}
+  const max=Number($("uploadDocumentFile").dataset.maxBytes||8388608);
+  if(file.type!=="application/pdf"&&!/\.pdf$/i.test(file.name||"")){$("uploadDocumentFile").value="";$("documentUploadMessage").className="message error";$("documentUploadMessage").textContent="Selecione um arquivo PDF.";return}
+  if(file.size>max){$("uploadDocumentFile").value="";$("documentUploadMessage").className="message error";$("documentUploadMessage").textContent="O PDF ultrapassa o limite de "+Math.round(max/1024/1024)+" MB.";return}
+  $("uploadDocumentFileName").textContent="Preparando "+file.name+"...";
+  try{
+    const base64=await readUploadPdf(file);
+    documentUploadFileData={name:file.name,mime:"application/pdf",base64,size:file.size};
+    $("uploadDocumentFileName").textContent="📄 "+file.name+" • "+(file.size/1024/1024).toFixed(2).replace(".",",")+" MB";
+    if(!$("uploadDocumentTitle").value.trim())$("uploadDocumentTitle").value=file.name.replace(/\.pdf$/i,"").replace(/[_-]+/g," ");
+    $("documentUploadMessage").className="message";$("documentUploadMessage").textContent="";
+  }catch(e){$("documentUploadMessage").className="message error";$("documentUploadMessage").textContent=e.message}
+}
+
+function clearDocumentUploadForm(){
+  ["uploadDocumentTitle","uploadDocumentEnvironment","uploadDocumentSubject","uploadDocumentRevision","uploadDocumentAsset","uploadDocumentNotes"].forEach(id=>$(id).value="");
+  ["uploadDocumentType","uploadDocumentDiscipline","uploadDocumentFloor","uploadDocumentProvider"].forEach(id=>$(id).value="");
+  $("uploadDocumentFile").value="";$("uploadDocumentFileName").textContent=qrLanguage==="en-US"?"No file selected.":"Nenhum arquivo selecionado.";$("documentUploadMessage").className="message";$("documentUploadMessage").textContent="";$("documentUploadResult").innerHTML="";documentUploadFileData=null;
+}
+
+
+function cancelDocumentUpload(){
+  clearDocumentUploadForm();
+  showSearchTab();
+}
+
+async function sendDocumentUpload(){
+  const btn=$("sendDocumentUpload");if(btn.dataset.loading==="1")return;
+  if(!documentUploadFileData){$("documentUploadMessage").className="message error";$("documentUploadMessage").textContent="Selecione um arquivo PDF.";return}
+  if(!$("uploadDocumentTitle").value.trim()){$("documentUploadMessage").className="message error";$("documentUploadMessage").textContent="Informe o título do documento.";$("uploadDocumentTitle").focus();return}
+  if(!$("uploadDocumentType").value){$("documentUploadMessage").className="message error";$("documentUploadMessage").textContent="Informe o tipo do documento.";return}
+  btn.dataset.loading="1";btn.disabled=true;btn.textContent="Enviando...";$("documentUploadMessage").className="message loading";$("documentUploadMessage").textContent="Enviando PDF e cadastrando o documento. Aguarde...";$("documentUploadResult").innerHTML="";
+  try{
+    const r=await menuApiPost({action:"uploadDocument",documentTitle:$("uploadDocumentTitle").value.trim(),documentType:$("uploadDocumentType").value,documentDiscipline:$("uploadDocumentDiscipline").value,documentFloor:$("uploadDocumentFloor").value,documentEnvironment:$("uploadDocumentEnvironment").value.trim(),documentProvider:$("uploadDocumentProvider").value,documentSubject:$("uploadDocumentSubject").value.trim(),documentRevision:$("uploadDocumentRevision").value.trim(),documentAssetId:$("uploadDocumentAsset").value.trim(),documentNotes:$("uploadDocumentNotes").value.trim(),documentFileName:documentUploadFileData.name,documentMime:documentUploadFileData.mime,documentBase64:documentUploadFileData.base64});
+    if(!r.ok)throw new Error(r.detail||"Não foi possível enviar o documento.");
+    $("documentUploadMessage").className="message success";$("documentUploadMessage").textContent="✅ Documento enviado com sucesso.";
+    $("documentUploadResult").innerHTML=`<div class="upload-success-card"><b>${esc(r.idDocumento)} — ${esc(r.titulo)}</b>${r.idAtivo?`<div style="margin-top:5px">Vinculado ao ativo: <b>${esc(r.idAtivo)}</b></div>`:""}<button type="button" class="open-button" style="margin-top:10px;border:0" onclick="openSecureFile76624('technicalDocument','${esc(r.idDocumento)}')">Abrir PDF</button></div>`;
+    documentFiltersLoaded=false;
+  }catch(e){$("documentUploadMessage").className="message error";$("documentUploadMessage").textContent=e.message}
+  finally{btn.disabled=false;btn.textContent="Enviar documento";delete btn.dataset.loading}
+}
+
+
+let occurrenceCatalogData=null;
+let occurrenceCatalogAdminData=null;
+
+async function loadOccurrenceCatalogPublic(force=false){
+  if(occurrenceCatalogData&&!force)return occurrenceCatalogData;
+  const r=await api({action:"occurrencecatalog"});
+  if(!r.ok)throw new Error(r.detail||"Erro ao carregar categorias e componentes.");
+  occurrenceCatalogData=r.data||{categorias:[],componentes:[]};
+  return occurrenceCatalogData;
+}
+
+function catalogLabel(item){
+  return qrLanguage==="en-US"?(item.nomeEn||item.nomePt):(item.nomePt||item.nomeEn);
+}
+
+async function populateOccurrenceCategorySelect(selectedCategory="",selectedComponent=""){
+  const d=await loadOccurrenceCatalogPublic();
+  const cat=$("category"),comp=$("component");
+  cat.innerHTML=`<option value="">${qrLanguage==="en-US"?"Select...":"Selecione..."}</option>`+
+    (d.categorias||[]).filter(x=>x.ativo!==false).map(x=>`<option value="${esc(x.nomePt)}" data-id="${esc(x.idCategoria)}">${esc(catalogLabel(x))}</option>`).join("");
+  if(selectedCategory)cat.value=selectedCategory;
+  populateOccurrenceComponentSelect(selectedComponent);
+}
+
+function populateOccurrenceComponentSelect(selected=""){
+  const d=occurrenceCatalogData||{categorias:[],componentes:[]};
+  const catName=$("category").value;
+  const cat=(d.categorias||[]).find(x=>x.nomePt===catName);
+  const items=cat?(d.componentes||[]).filter(x=>x.ativo!==false&&x.idCategoria===cat.idCategoria):[];
+  $("component").innerHTML=`<option value="">${qrLanguage==="en-US"?"Select...":"Selecione..."}</option>`+
+    items.map(x=>`<option value="${esc(x.nomePt)}">${esc(catalogLabel(x))}</option>`).join("");
+  if(selected && [...$("component").options].some(o=>o.value===selected))$("component").value=selected;
+}
+
+async function populateManageCatalog(selectedCategory="",selectedComponent=""){
+  const d=await loadOccurrenceCatalogPublic();
+  $("manageCategory").innerHTML=(d.categorias||[]).filter(x=>x.ativo!==false).map(x=>`<option value="${esc(x.nomePt)}">${esc(catalogLabel(x))}</option>`).join("");
+  if(selectedCategory&&[...$("manageCategory").options].some(o=>o.value===selectedCategory))$("manageCategory").value=selectedCategory;
+  const cat=(d.categorias||[]).find(x=>x.nomePt===$("manageCategory").value);
+  const comps=cat?(d.componentes||[]).filter(x=>x.ativo!==false&&x.idCategoria===cat.idCategoria):[];
+  $("manageComponent").innerHTML=comps.map(x=>`<option value="${esc(x.nomePt)}">${esc(catalogLabel(x))}</option>`).join("");
+  if(selectedComponent&&[...$("manageComponent").options].some(o=>o.value===selectedComponent))$("manageComponent").value=selectedComponent;
+}
+
+async function showOccurrenceCatalogTab(){
+  if(!requireUiPermission("CATEGORIAS_COMPONENTES","Seu perfil não possui permissão para administrar Categorias e Componentes.","Your profile is not allowed to manage categories and components."))return;
+  clearTabs();$("tabOccurrenceCatalog").classList.add("active");showOnly("occurrenceCatalogArea");await loadOccurrenceCatalogAdmin();
+}
+
+async function loadOccurrenceCatalogAdmin(){
+  $("catalogCategoriesStatus").textContent=qrLanguage==="en-US"?"Loading...":"Carregando...";
+  try{
+    const r=await menuApi({action:"occurrencecatalogadmin"});
+    if(!r.ok)throw new Error(r.detail||"Erro ao carregar.");
+    occurrenceCatalogAdminData=r.data||{categorias:[],componentes:[]};
+    occurrenceCatalogData={
+      categorias:(occurrenceCatalogAdminData.categorias||[]).filter(x=>x.ativo),
+      componentes:(occurrenceCatalogAdminData.componentes||[]).filter(x=>x.ativo)
+    };
+    renderOccurrenceCatalogAdmin();
+  }catch(e){
+    $("occurrenceCatalogMessage").className="message error";$("occurrenceCatalogMessage").textContent=e.message;
+  }
+}
+
+function renderOccurrenceCatalogAdmin(){
+  const d=occurrenceCatalogAdminData||{categorias:[],componentes:[]};
+
+  $("catalogCategoriesStatus").textContent=qrLanguage==="en-US"
+    ?`${d.categorias.length} categories`
+    :`${d.categorias.length} categoria(s)`;
+
+  $("catalogCategoriesList").innerHTML=d.categorias.map((x,i)=>`
+    <div class="user-card">
+      <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap">
+        <div>
+          <b>${esc(catalogLabel(x))}</b>
+          <div class="search-result-data">
+            ID: ${esc(x.idCategoria)}<br>
+            ${qrLanguage==="en-US"?"Portuguese":"Português"}: ${esc(x.nomePt)}<br>
+            English: ${esc(x.nomeEn||"-")}<br>
+            Status: ${x.ativo?(qrLanguage==="en-US"?"Active":"Ativa"):(qrLanguage==="en-US"?"Inactive":"Inativa")}
+          </div>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <button class="btn btn-secondary" onclick="moveCatalogCategory('${esc(x.idCategoria)}','up')" title="${qrLanguage==="en-US"?"Move up":"Mover para cima"}">↑</button>
+          <button class="btn btn-secondary" onclick="moveCatalogCategory('${esc(x.idCategoria)}','down')" title="${qrLanguage==="en-US"?"Move down":"Mover para baixo"}">↓</button>
+          <button class="btn btn-secondary" onclick="editCatalogCategory(${i})">${qrLanguage==="en-US"?"Edit":"Editar"}</button>
+        </div>
+      </div>
+    </div>`).join("");
+
+  $("catalogComponentCategory").innerHTML=d.categorias.map(x=>
+    `<option value="${esc(x.idCategoria)}">${esc(catalogLabel(x))}</option>`
+  ).join("");
+
+  $("catalogComponentsStatus").textContent=qrLanguage==="en-US"
+    ?`${d.componentes.length} components`
+    :`${d.componentes.length} componente(s)`;
+
+  const groups=d.categorias.map(cat=>({
+    cat,
+    items:d.componentes.filter(x=>x.idCategoria===cat.idCategoria)
+  })).filter(g=>g.items.length);
+
+  $("catalogComponentsList").innerHTML=groups.map(g=>`
+    <div style="margin-top:14px">
+      <h4 style="margin:0 0 8px">${esc(catalogLabel(g.cat))}</h4>
+      ${g.items.map(x=>{
+        const i=d.componentes.findIndex(c=>c.idComponente===x.idComponente);
+        return `<div class="user-card">
+          <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap">
+            <div>
+              <b>${esc(catalogLabel(x))}</b>
+              <div class="search-result-data">
+                ID: ${esc(x.idComponente)}<br>
+                ${qrLanguage==="en-US"?"Portuguese":"Português"}: ${esc(x.nomePt)}<br>
+                English: ${esc(x.nomeEn||"-")}<br>
+                Status: ${x.ativo?(qrLanguage==="en-US"?"Active":"Ativo"):(qrLanguage==="en-US"?"Inactive":"Inativo")}
+              </div>
+            </div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap">
+              <button class="btn btn-secondary" onclick="moveCatalogComponent('${esc(x.idComponente)}','up')" title="${qrLanguage==="en-US"?"Move up":"Mover para cima"}">↑</button>
+              <button class="btn btn-secondary" onclick="moveCatalogComponent('${esc(x.idComponente)}','down')" title="${qrLanguage==="en-US"?"Move down":"Mover para baixo"}">↓</button>
+              <button class="btn btn-secondary" onclick="editCatalogComponent(${i})">${qrLanguage==="en-US"?"Edit":"Editar"}</button>
+            </div>
+          </div>
+        </div>`;
+      }).join("")}
+    </div>`).join("");
+}
+
+function editCatalogCategory(i){
+  const x=occurrenceCatalogAdminData.categorias[i];if(!x)return;
+  $("catalogCategoryId").value=x.idCategoria;$("catalogCategoryPt").value=x.nomePt;$("catalogCategoryEn").value=x.nomeEn||"";$("catalogCategoryActive").checked=!!x.ativo;
+  $("catalogCategoryPt").focus();
+}
+function clearCatalogCategoryForm(){
+  $("catalogCategoryId").value="";$("catalogCategoryPt").value="";$("catalogCategoryEn").value="";$("catalogCategoryActive").checked=true;
+}
+function editCatalogComponent(i){
+  const x=occurrenceCatalogAdminData.componentes[i];if(!x)return;
+  $("catalogComponentId").value=x.idComponente;$("catalogComponentCategory").value=x.idCategoria;$("catalogComponentPt").value=x.nomePt;$("catalogComponentEn").value=x.nomeEn||"";$("catalogComponentActive").checked=!!x.ativo;
+  $("catalogComponentPt").focus();
+}
+function clearCatalogComponentForm(){
+  $("catalogComponentId").value="";$("catalogComponentPt").value="";$("catalogComponentEn").value="";$("catalogComponentActive").checked=true;
+}
+async function saveCatalogCategory(){
+  const b=$("saveCatalogCategory");b.disabled=true;b.textContent=qrLanguage==="en-US"?"Saving...":"Salvando...";
+  try{
+    const r=await menuApiPost({action:"saveOccurrenceCategory",catalogCategoryId:$("catalogCategoryId").value,catalogCategoryPt:$("catalogCategoryPt").value.trim(),catalogCategoryEn:$("catalogCategoryEn").value.trim(),catalogCategoryActive:$("catalogCategoryActive").checked?"Sim":"Não"});
+    if(!r.ok)throw new Error(r.detail||"Erro ao salvar.");
+    clearCatalogCategoryForm();await loadOccurrenceCatalogAdmin();
+  }catch(e){$("occurrenceCatalogMessage").className="message error";$("occurrenceCatalogMessage").textContent=e.message}
+  finally{b.disabled=false;b.textContent=qrLanguage==="en-US"?"Save Category":"Salvar categoria"}
+}
+async function saveCatalogComponent(){
+  const b=$("saveCatalogComponent");b.disabled=true;b.textContent=qrLanguage==="en-US"?"Saving...":"Salvando...";
+  try{
+    const r=await menuApiPost({action:"saveOccurrenceComponent",catalogComponentId:$("catalogComponentId").value,catalogComponentCategoryId:$("catalogComponentCategory").value,catalogComponentPt:$("catalogComponentPt").value.trim(),catalogComponentEn:$("catalogComponentEn").value.trim(),catalogComponentActive:$("catalogComponentActive").checked?"Sim":"Não"});
+    if(!r.ok)throw new Error(r.detail||"Erro ao salvar.");
+    clearCatalogComponentForm();await loadOccurrenceCatalogAdmin();
+  }catch(e){$("occurrenceCatalogMessage").className="message error";$("occurrenceCatalogMessage").textContent=e.message}
+  finally{b.disabled=false;b.textContent=qrLanguage==="en-US"?"Save Component":"Salvar componente"}
+}
+
+
+async function moveCatalogCategory(id,direction){
+  try{
+    const r=await menuApiPost({
+      action:"moveOccurrenceCategory",
+      catalogMoveId:id,
+      catalogMoveDirection:direction
+    });
+    if(!r.ok)throw new Error(r.detail||"Erro ao reorganizar categoria.");
+    await loadOccurrenceCatalogAdmin();
+  }catch(e){
+    $("occurrenceCatalogMessage").className="message error";
+    $("occurrenceCatalogMessage").textContent=e.message;
+  }
+}
+
+async function moveCatalogComponent(id,direction){
+  try{
+    const r=await menuApiPost({
+      action:"moveOccurrenceComponent",
+      catalogMoveId:id,
+      catalogMoveDirection:direction
+    });
+    if(!r.ok)throw new Error(r.detail||"Erro ao reorganizar componente.");
+    await loadOccurrenceCatalogAdmin();
+  }catch(e){
+    $("occurrenceCatalogMessage").className="message error";
+    $("occurrenceCatalogMessage").textContent=e.message;
+  }
+}
+
+
+async function showMaintenancePendingTab(){
+  requireSystemLogin(async ()=>{
+    if(!requireUiPermission("PENDENCIAS","Seu perfil não possui permissão para acessar Pendências / Providências.","Your profile is not allowed to access Pending Actions."))return;
+    clearTabs();
+    $("tabMaintenancePending").classList.add("active");
+    showOnly("maintenancePendingArea");
+    await loadMaintenancePending();
+  });
+}
+
+async function loadMaintenancePending(){
+  const btn=$("maintenancePendingRefresh");
+  btn.disabled=true;
+  btn.textContent=qrLanguage==="en-US"?"Updating...":"Atualizando...";
+
+  $("maintenancePendingStatusText").textContent=qrLanguage==="en-US"?"Loading pending actions...":"Carregando pendências...";
+
+  try{
+    const r=await menuApi({
+      action:"maintenancepending",
+      status:$("maintenancePendingStatusFilter").value,
+      prioridade:$("maintenancePendingPriorityFilter").value,
+      q:$("maintenancePendingSearch").value.trim()
+    });
+
+    if(!r.ok)throw new Error(r.detail||"Erro ao consultar pendências.");
+
+    const items=r.data||[];
+    const counts={pending:0,doing:0,resolved:0,critical:0};
+
+    items.forEach(x=>{
+      if(x.status==="Pendente")counts.pending++;
+      if(x.status==="Em andamento")counts.doing++;
+      if(x.status==="Resolvida")counts.resolved++;
+      if(x.prioridade==="Crítica"&&x.status!=="Resolvida")counts.critical++;
+    });
+
+    $("maintenancePendingSummary").innerHTML=
+      `<div class="pending-summary-card"><strong>${items.length}</strong>${qrLanguage==="en-US"?"Total":"Total"}</div>`+
+      `<div class="pending-summary-card"><strong>🔴 ${counts.pending}</strong>${qrLanguage==="en-US"?"Pending":"Pendentes"}</div>`+
+      `<div class="pending-summary-card"><strong>🟡 ${counts.doing}</strong>${qrLanguage==="en-US"?"In progress":"Em andamento"}</div>`+
+      `<div class="pending-summary-card"><strong>🟢 ${counts.resolved}</strong>${qrLanguage==="en-US"?"Resolved":"Resolvidas"}</div>`+
+      `<div class="pending-summary-card"><strong>🚨 ${counts.critical}</strong>${qrLanguage==="en-US"?"Critical open":"Críticas abertas"}</div>`;
+
+    $("maintenancePendingStatusText").textContent=qrLanguage==="en-US"
+      ?`${items.length} record(s) displayed.`
+      :`${items.length} registro(s) exibido(s).`;
+
+    if(!items.length){
+      $("maintenancePendingResults").innerHTML=`<div class="document-empty">${qrLanguage==="en-US"?"No pending actions found.":"Nenhuma pendência encontrada."}</div>`;
+      return;
+    }
+
+    $("maintenancePendingResults").innerHTML=items.map(x=>{
+      const pClass=x.prioridade==="Crítica"?"error":x.prioridade==="Alta"?"warning":"";
+      const canGenerate=hasProfilePermission("OC_REGISTRAR")&&!x.ocRelacionada&&x.status!=="Resolvida";
+      return `<div class="pending-card">
+        <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap">
+          <div>
+            <b>${esc(x.idPendencia)}</b> • ${esc(x.idAtivo)} – ${esc(x.equipamento)}
+            <div class="search-result-data">
+              <b>${qrLanguage==="en-US"?"Origin":"Origem"}:</b> ${esc(x.idPreventiva||"-")}<br>
+              <b>${qrLanguage==="en-US"?"Priority":"Prioridade"}:</b> ${esc(x.prioridade)}<br>
+              <b>Status:</b> ${esc(x.status)}<br>
+              <b>${qrLanguage==="en-US"?"Action type":"Tipo de providência"}:</b> ${esc(x.tipo)}<br>
+              <b>${qrLanguage==="en-US"?"Description":"Descrição"}:</b> ${esc(x.descricao)}<br>
+              ${x.material?`<b>${qrLanguage==="en-US"?"Material/Part":"Material/Peça"}:</b> ${esc(x.material)}${x.quantidade?` • ${esc(x.quantidade)}`:""}<br>`:""}
+              ${x.condicaoOperacao?`<b>${qrLanguage==="en-US"?"Operating condition":"Condição de operação"}:</b> ${esc(x.condicaoOperacao)}<br>`:""}
+              ${x.prestador?`<b>${qrLanguage==="en-US"?"Service Provider":"Prestador"}:</b> ${esc(x.prestador)}<br>`:""}
+              ${x.responsavelAtual?`<b>${qrLanguage==="en-US"?"Responsible":"Responsável"}:</b> ${esc(x.responsavelAtual)}<br>`:""}
+              ${x.ocRelacionada?`<b>${qrLanguage==="en-US"?"Related WO":"OC relacionada"}:</b> ${esc(x.ocRelacionada)}<br>`:""}
+              ${x.solucao?`<b>${qrLanguage==="en-US"?"Resolution":"Solução"}:</b> ${esc(x.solucao)}<br>`:""}
+              ${x.foto&&x.idPreventiva?`<button type="button" class="auth-link" onclick="openSecureFile76624('preventivePhoto','${esc(x.idPreventiva)}')">📷 ${qrLanguage==="en-US"?"View evidence":"Ver evidência"}</button>`:""}
+            </div>
+          </div>
+          <span class="audit-result ${pClass}">${esc(x.prioridade)}</span>
+        </div>
+
+        <div class="occ-report-actions" style="margin-top:10px">
+          ${x.status==="Pendente"?`<button class="btn btn-secondary" onclick="setMaintenancePendingStatus('${esc(x.idPendencia)}','Em andamento')">${qrLanguage==="en-US"?"Start":"Iniciar"}</button>`:""}
+          ${x.status!=="Resolvida"?`<button class="btn btn-green" onclick="resolveMaintenancePending('${esc(x.idPendencia)}')">${qrLanguage==="en-US"?"Resolve":"Resolver"}</button>`:""}
+          ${canGenerate?`<button class="btn btn-blue" onclick="generateOccurrenceFromMaintenancePending('${esc(x.idPendencia)}')">${qrLanguage==="en-US"?"Generate Work Order":"Gerar OC"}</button>`:""}
+          <a class="open-button" href="?id=${encodeURIComponent(normalizeId(x.idAtivo))}">${qrLanguage==="en-US"?"Open asset":"Abrir ficha"}</a>
+        </div>
+      </div>`;
+    }).join("");
+
+  }catch(e){
+    $("maintenancePendingMessage").className="message error";
+    $("maintenancePendingMessage").textContent=e.message;
+  }finally{
+    btn.disabled=false;
+    btn.textContent=qrLanguage==="en-US"?"Update":"Atualizar";
+  }
+}
+
+async function setMaintenancePendingStatus(id,status,solution=""){
+  try{
+    const r=await menuApiPost({
+      action:"updateMaintenancePending",
+      maintenancePendingId:id,
+      maintenancePendingStatus:status,
+      maintenancePendingResponsible:systemSession?.nome||systemSession?.usuario||"",
+      maintenancePendingSolution:solution
+    });
+    if(!r.ok)throw new Error(r.detail||"Erro ao atualizar.");
+    await loadMaintenancePending();
+  }catch(e){
+    alert(e.message);
+  }
+}
+
+async function resolveMaintenancePending(id){
+  const text=prompt(
+    qrLanguage==="en-US"
+      ?"Briefly describe the action taken/resolution:"
+      :"Descreva brevemente a providência tomada/solução:"
+  );
+  if(text===null)return;
+  if(!String(text).trim()){
+    alert(qrLanguage==="en-US"?"Enter the resolution.":"Informe a solução/providência.");
+    return;
+  }
+  await setMaintenancePendingStatus(id,"Resolvida",String(text).trim());
+}
+
+async function generateOccurrenceFromMaintenancePending(id){
+  if(!confirm(qrLanguage==="en-US"?"Generate a work order from this pending action?":"Gerar uma OC a partir desta pendência?"))return;
+
+  try{
+    const r=await menuApiPost({
+      action:"generateOccurrenceFromPending",
+      maintenancePendingId:id
+    });
+    if(!r.ok)throw new Error(r.detail||"Erro ao gerar OC.");
+    alert((qrLanguage==="en-US"?"Work order generated: ":"OC gerada: ")+(r.ocorrencia||""));
+    await loadMaintenancePending();
+  }catch(e){
+    alert(e.message);
+  }
+}
+
+function clearMaintenancePendingFilters(){
+  $("maintenancePendingStatusFilter").value="";
+  $("maintenancePendingPriorityFilter").value="";
+  $("maintenancePendingSearch").value="";
+  loadMaintenancePending();
+}
+
+function togglePreventiveActionFields(){
+  if($("preventiveNeedsAction").checked)show("preventiveActionFields");
+  else hide("preventiveActionFields");
+}
+
+
+
+let qrAssets760=[],qrAssetTypes760=[],qrAssetOptions7610={};
+
+function assetApi760(action,payload={}){
+  if(!systemSession?.systemSessionToken){
+    return Promise.reject(new Error(
+      qrLanguage==="en-US"
+        ?"Sign in to the Main Menu to manage assets."
+        :"Faça login no Menu Principal para gerenciar ativos."
+    ));
+  }
+
+  return apiPost({
+    action,
+    systemSessionToken:systemSession.systemSessionToken,
+    ...payload
+  });
+}
+
+function assetBuildId760(){
+  const prefix=$("assetPrefix").value||"EQ";
+  const base=String($("assetBaseNumber").value||"").replace(/\D/g,"").padStart(3,"0");
+  const type=$("assetTypeCode").value||"";
+  const floor=$("assetFloorCode").value||"";
+  $("assetSuggestedId").textContent=(base==="000"||!base)?"—":prefix+base+type+floor;
+}
+
+function assetFillTypes760(){
+  const sel=$("assetTypeCode");
+  sel.innerHTML='<option value="">—</option>'+qrAssetTypes760.map(t=>`<option value="${esc(t.codigo)}">${esc(t.codigo)} - ${esc(t.descricao)}</option>`).join("");
+}
+
+function assetFillSelect7610(id,values,placeholder,allowOther=true){
+  const sel=$(id);
+  if(!sel)return;
+  const uniq=[];
+  const seen=new Set();
+  (values||[]).forEach(v=>{
+    const s=String(v||"").trim();
+    const k=s.toLocaleLowerCase();
+    if(!s||seen.has(k))return;
+    seen.add(k);uniq.push(s);
+  });
+  sel.innerHTML=`<option value="">${esc(placeholder||"Selecione...")}</option>`+
+    uniq.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join("")+
+    (allowOther?`<option value="__OTHER__">${qrLanguage==="en-US"?"Other...":"Outro..."}</option>`:"");
+}
+
+function assetSetAssistedValue7610(selectId,otherId,value){
+  const sel=$(selectId),other=$(otherId);
+  if(!sel)return;
+  const val=String(value||"").trim();
+  const exists=[...sel.options].some(o=>o.value===val);
+  if(!val){sel.value="";if(other){other.value="";hide(otherId);}return;}
+  if(exists){sel.value=val;if(other){other.value="";hide(otherId);}return;}
+  const otherOption=[...sel.options].find(o=>o.value==="__OTHER__");
+  if(otherOption){sel.value="__OTHER__";if(other){other.value=val;show(otherId);}}
+  else{
+    const op=document.createElement("option");op.value=val;op.textContent=val;sel.appendChild(op);sel.value=val;
+  }
+}
+
+function assetGetAssistedValue7610(selectId,otherId){
+  const sel=$(selectId);
+  if(!sel)return "";
+  return sel.value==="__OTHER__"?String($(otherId)?.value||"").trim():String(sel.value||"").trim();
+}
+
+function assetToggleOther7610(selectId,otherId){
+  const other=$(otherId);
+  if(!other)return;
+  if($(selectId).value==="__OTHER__")show(otherId);else{hide(otherId);other.value="";}
+}
+
+function assetFillManagementOptions7610(){
+  const o=qrAssetOptions7610||{};
+  assetFillSelect7610("assetAssetType",o.assetTypes||["Equipamento"],qrLanguage==="en-US"?"Select...":"Selecione...",false);
+  assetFillSelect7610("assetCategory",o.categories||[],qrLanguage==="en-US"?"Select...":"Selecione...",true);
+  assetFillSelect7610("assetCriticality",o.criticalities||[],qrLanguage==="en-US"?"Select...":"Selecione...",false);
+  assetFillSelect7610("assetMaintenanceClass",o.maintenanceClasses||[],qrLanguage==="en-US"?"Select...":"Selecione...",true);
+  assetFillSelect7610("assetFloor",o.floors||[],qrLanguage==="en-US"?"Select...":"Selecione...",true);
+  assetFillSelect7610("assetPeriodicity",o.periodicities||[],qrLanguage==="en-US"?"No frequency":"Sem periodicidade",true);
+  assetFillSelect7610("assetStatus",o.statuses||["Ativo","Inativo"],qrLanguage==="en-US"?"Select...":"Selecione...",false);
+
+  const p=$("assetProvider");
+  if(p){
+    p.innerHTML=`<option value="">${qrLanguage==="en-US"?"No service provider":"Sem prestador"}</option>`+
+      (o.providers||[]).map(x=>`<option value="${esc(x.idPrestador)}">${esc(x.display||x.nomeFantasia||x.nome)}</option>`).join("");
+  }
+  assetRefreshLocations7610("");
+}
+
+function assetResolvedFloor7610(){return assetGetAssistedValue7610("assetFloor","assetFloorOther");}
+
+function assetRefreshLocations7610(currentValue){
+  const o=qrAssetOptions7610||{};
+  const floor=assetResolvedFloor7610();
+  const map=o.locationsByFloor||{};
+  let values=floor&&Array.isArray(map[floor])?map[floor]:(o.locationsAll||[]);
+  assetFillSelect7610("assetLocation",values,qrLanguage==="en-US"?"Select...":"Selecione...",true);
+  assetSetAssistedValue7610("assetLocation","assetLocationOther",currentValue||"");
+}
+
+function assetSetProvider7610(a){
+  const sel=$("assetProvider");
+  if(!sel)return;
+  const id=String(a?.idPrestador||"").trim();
+  const name=String(a?.prestador||"").trim();
+  if(id&&[...sel.options].some(o=>o.value===id)){sel.value=id;return;}
+  if(name){
+    const p=(qrAssetOptions7610.providers||[]).find(x=>String(x.display||x.nomeFantasia||x.nome).trim().toLowerCase()===name.toLowerCase());
+    if(p){sel.value=p.idPrestador;return;}
+    const legacy="__LEGACY__"+name;
+    const op=document.createElement("option");op.value=legacy;op.textContent=name+" (cadastro legado)";sel.appendChild(op);sel.value=legacy;return;
+  }
+  sel.value="";
+}
+
+function assetProviderPayload7610(){
+  const val=String($("assetProvider").value||"");
+  if(val.startsWith("__LEGACY__"))return{idPrestador:"",prestador:val.slice(10)};
+  const p=(qrAssetOptions7610.providers||[]).find(x=>x.idPrestador===val);
+  return{idPrestador:val,prestador:p?String(p.display||p.nomeFantasia||p.nome):""};
+}
+
+
+async function loadAssets760(){
+  const r=await assetApi760("listassets760");
+  if(!r.ok)throw new Error(r.detail||r.error||"Erro ao carregar ativos.");
+  qrAssets760=r.items||[];
+  qrAssetTypes760=r.types||[];
+  qrAssetOptions7610=r.options||{};
+  assetFillTypes760();
+  assetFillManagementOptions7610();
+  renderAssets760();
+}
+
+function renderAssets760(){
+  const q=String($("assetSearch").value||"").toLowerCase();
+  const items=qrAssets760.filter(a=>[
+    a.id,a.nome,a.fabricante,a.modelo,a.numeroSerie,a.categoria,a.tipoDeAtivo,
+    a.subcategoria,a.area,a.ambiente,a.componenteElemento,a.pavimento,
+    a.localizacao,a.localDetalhado,a.prestador,a.periodicidade,a.status
+  ].join(" ").toLowerCase().includes(q));
+
+  $("assetList").innerHTML=items.length?items.map(a=>{
+    const inactive=["inativo","desativado"].includes(String(a.status||"").trim().toLowerCase());
+    return `<div class="card" style="margin-bottom:8px">
+      <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap">
+        <div>
+          <div style="font-weight:800">${esc(a.id)}</div>
+          <div>${esc(a.nome||"")}</div>
+          <div class="muted">${esc(a.tipoDeAtivo||"")}${a.categoria?` • ${esc(a.categoria)}`:""}</div>
+          <div class="muted">${esc(a.pavimento||"")} ${a.localizacao?"• "+esc(a.localizacao):""}${a.prestador?` • ${esc(a.prestador)}`:""}</div>
+          <span class="tag">${esc(a.status||"Ativo")}</span>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <button class="btn btn-secondary" onclick="editAsset760(${Number(a.row)})">Editar</button>
+          <button class="btn btn-secondary" onclick="toggleAsset760(${Number(a.row)},${!inactive})">${inactive?"Ativar":"Inativar"}</button>
+        </div>
+      </div>
+    </div>`;
+  }).join(""):'<div class="muted">Nenhum ativo encontrado.</div>';
+
+  qrTranslateElementTree($("assetManagementPanel"));
+  qrTranslateAttributes($("assetManagementPanel"));
+}
+
+function openAssetModal760(a){
+  assetFillTypes760();
+  assetFillManagementOptions7610();
+
+  $("assetRow").value=a?.row||"";
+  $("assetEditTitle").textContent=a?(qrLanguage==="en-US"?"Edit Asset":"Editar Ativo"):(qrLanguage==="en-US"?"New Asset":"Novo Ativo");
+  $("assetSaveMessage").className="message";
+  $("assetSaveMessage").textContent="";
+
+  if(a){
+    hide("assetIdBuilderSection");show("assetExistingIdBox");
+    $("assetExistingId").textContent=a.id||"—";
+    $("assetSuggestedId").textContent=a.id||"—";
+  }else{
+    show("assetIdBuilderSection");hide("assetExistingIdBox");
+    $("assetPrefix").value="EQ";
+    $("assetBaseNumber").value="";
+    $("assetTypeCode").value="";
+    $("assetFloorCode").value="1P";
+    $("assetSuggestedId").textContent="—";
+  }
+
+  $("assetName").value=a?.nome||"";
+  assetSetAssistedValue7610("assetStatus",null,a?.status||"Ativo");
+  assetSetAssistedValue7610("assetAssetType",null,a?.tipoDeAtivo||"Equipamento");
+  assetSetAssistedValue7610("assetCategory","assetCategoryOther",a?.categoria||"");
+  $("assetSubcategory").value=a?.subcategoria||"";
+  assetSetAssistedValue7610("assetCriticality",null,a?.criticidade||"");
+  assetSetAssistedValue7610("assetMaintenanceClass","assetMaintenanceClassOther",a?.classeManutencao||"");
+  $("assetArea").value=a?.area||"";
+  $("assetEnvironment").value=a?.ambiente||"";
+  $("assetComponentElement").value=a?.componenteElemento||"";
+  assetSetAssistedValue7610("assetFloor","assetFloorOther",a?.pavimento||"");
+  assetRefreshLocations7610(a?.localizacao||"");
+  $("assetDetailedLocation").value=a?.localDetalhado||"";
+
+  $("assetManufacturer").value=a?.fabricante||"";
+  $("assetModel").value=a?.modelo||"";
+  $("assetSerialNumber").value=a?.numeroSerie||"";
+  $("assetCapacity").value=a?.capacidade||"";
+  $("assetRatedCurrent").value=a?.amperagemNominal||"";
+  $("assetStartingCurrent").value=a?.amperagemPartida||"";
+  $("assetMeasuredCurrent").value=a?.amperagemMedida||"";
+  $("assetVoltage").value=a?.voltagem||"";
+  $("assetWeight").value=a?.peso||"";
+  $("assetAcquisitionYear").value=a?.anoAquisicao||"";
+  $("assetUsefulLife").value=a?.vidaUtil||"";
+
+  assetSetProvider7610(a);
+  assetSetAssistedValue7610("assetPeriodicity","assetPeriodicityOther",a?.periodicidade||"");
+  $("assetNotes").value=a?.observacoes||"";
+
+  $("assetEditModal").style.display="flex";
+  qrTranslateElementTree($("assetEditModal"));
+  qrTranslateAttributes($("assetEditModal"));
+  setTimeout(()=>$("assetName").focus(),80);
+}
+
+function editAsset760(row){
+  const a=qrAssets760.find(x=>Number(x.row)===Number(row));
+  if(a)openAssetModal760(a);
+}
+
+async function suggestAssetNumber760(){
+  const r=await assetApi760("nextassetbase760",{prefix:$("assetPrefix").value||"EQ"});
+  if(!r.ok)throw new Error(r.detail||r.error||"Erro ao sugerir número.");
+  $("assetBaseNumber").value=r.numeroBase||"";
+  assetBuildId760();
+}
+
+async function saveAsset760(){
+  const row=Number($("assetRow").value||0);
+  const existing=row?qrAssets760.find(x=>Number(x.row)===row):null;
+  const id=existing?.id||$("assetSuggestedId").textContent;
+  const name=String($("assetName").value||"").trim();
+  if(!name)return alert(qrLanguage==="en-US"?"Enter the asset name.":"Informe o nome do equipamento.");
+  if(!existing&&!$("assetTypeCode").value)return alert(qrLanguage==="en-US"?"Select the asset type/code before saving.":"Selecione o tipo/sigla do ativo antes de salvar.");
+  if(!existing&&(!id||id==="—"))return alert(qrLanguage==="en-US"?"Generate the asset ID before saving.":"Gere o ID do ativo antes de salvar.");
+
+  const provider=assetProviderPayload7610();
+  const btn=$("assetSave");
+  btn.disabled=true;
+  btn.textContent=qrLanguage==="en-US"?"Saving...":"Salvando...";
+  $("assetSaveMessage").className="message loading";
+  $("assetSaveMessage").textContent=qrLanguage==="en-US"?"Saving asset data...":"Salvando cadastro do ativo...";
+
+  try{
+    const r=await assetApi760("saveasset760",{
+      row,id,
+      prefix:$("assetPrefix").value,
+      numeroBase:$("assetBaseNumber").value,
+      tipoCodigo:$("assetTypeCode").value,
+      pavimentoCodigo:$("assetFloorCode").value,
+      nome:name,
+      status:$("assetStatus").value,
+      tipoDeAtivo:$("assetAssetType").value,
+      categoria:assetGetAssistedValue7610("assetCategory","assetCategoryOther"),
+      subcategoria:$("assetSubcategory").value,
+      criticidade:$("assetCriticality").value,
+      classeManutencao:assetGetAssistedValue7610("assetMaintenanceClass","assetMaintenanceClassOther"),
+      area:$("assetArea").value,
+      ambiente:$("assetEnvironment").value,
+      componenteElemento:$("assetComponentElement").value,
+      pavimento:assetResolvedFloor7610(),
+      localizacao:assetGetAssistedValue7610("assetLocation","assetLocationOther"),
+      localDetalhado:$("assetDetailedLocation").value,
+      fabricante:$("assetManufacturer").value,
+      modelo:$("assetModel").value,
+      numeroSerie:$("assetSerialNumber").value,
+      capacidade:$("assetCapacity").value,
+      amperagemNominal:$("assetRatedCurrent").value,
+      amperagemPartida:$("assetStartingCurrent").value,
+      amperagemMedida:$("assetMeasuredCurrent").value,
+      voltagem:$("assetVoltage").value,
+      peso:$("assetWeight").value,
+      anoAquisicao:$("assetAcquisitionYear").value,
+      vidaUtil:$("assetUsefulLife").value,
+      idPrestador:provider.idPrestador,
+      prestador:provider.prestador,
+      periodicidade:assetGetAssistedValue7610("assetPeriodicity","assetPeriodicityOther"),
+      observacoes:$("assetNotes").value
+    });
+    if(!r.ok)throw new Error(r.detail||r.error||"Erro ao salvar ativo.");
+
+    $("assetSaveMessage").className="message success";
+    $("assetSaveMessage").textContent=(qrLanguage==="en-US"?"Asset saved: ":"Ativo salvo: ")+r.id;
+    await loadAssets760();
+    setTimeout(()=>{$("assetEditModal").style.display="none";},450);
+  }catch(e){
+    $("assetSaveMessage").className="message error";
+    $("assetSaveMessage").textContent=e.message||"Erro ao salvar ativo.";
+  }finally{
+    btn.disabled=false;
+    btn.textContent=qrLanguage==="en-US"?"Save Asset":"Salvar Ativo";
+  }
+}
+
+async function toggleAsset760(row,isActive){
+  const r=await assetApi760("setassetactive760",{row,active:!isActive});
+  if(!r.ok)return alert(r.detail||r.error||"Erro ao atualizar ativo.");
+  await loadAssets760();
+}
+
+function openAssetManagement760(){
+  if(!hasProfilePermission("GESTAO_ATIVOS")){
+    return alert(qrLanguage?.startsWith("en")?"Your profile is not allowed to manage assets.":"Seu perfil não possui permissão para acessar a Gestão de Ativos.");
+  }
+  clearTabs();
+  $("tabAssetManagement").classList.add("active");
+  showOnly("assetManagementPanel");
+  loadAssets760().catch(e=>alert(e.message));
+}
+
+
+let currentAuthToken="",currentAuthTokenType="";
+function resetRecoveryFlow76616(){
+  ["recoveryNotRegisteredBox","pendingInviteBox","accessRequestForm","accessRequestBackToLoginButton"].forEach(hide);
+  $("recoveryMessage").className="message";$("recoveryMessage").textContent="";
+  $("accessRequestMessage").className="message";$("accessRequestMessage").textContent="";
+  ["accessRequestName","accessRequestLogin","accessRequestEmail","accessRequestPhone","recoveryIdentifier"].forEach(id=>{if($(id))$(id).disabled=false;});
+  $("sendAccessRequestButton").disabled=false;$("cancelAccessRequestButton").disabled=false;
+  show("accessRequestActions");show("recoveryModalActions");
+}
+function finishAccessRequest76617(){
+  ["accessRequestName","accessRequestLogin","accessRequestEmail","accessRequestPhone","recoveryIdentifier"].forEach(id=>{if($(id))$(id).disabled=true;});
+  $("sendAccessRequestButton").disabled=true;$("cancelAccessRequestButton").disabled=true;
+  hide("accessRequestActions");hide("recoveryModalActions");show("accessRequestBackToLoginButton");
+}
+function backToLoginAfterAccessRequest76617(){
+  const login=$("accessRequestLogin").value.trim();
+  $("forgotPasswordModal").style.display="none";
+  resetRecoveryFlow76616();
+  $("systemUsername").value=login;$("systemPassword").value="";
+  $("systemLoginMessage").className="message";$("systemLoginMessage").textContent="";
+  $("systemLoginModal").style.display="flex";
+  setTimeout(()=>$("systemPassword").focus(),60);
+}
+function openForgotPassword(){
+  $("systemLoginModal").style.display="none";
+  $("recoveryIdentifier").value=$("systemUsername").value.trim();
+  resetRecoveryFlow76616();
+  $("forgotPasswordModal").style.display="flex";
+  updateRecoveryCooldownUi76624();
+  if(recoveryCooldownRemaining76624()>0 && !recoveryCooldownTimer76624){
+    recoveryCooldownTimer76624=setInterval(updateRecoveryCooldownUi76624,1000);
+  }
+}
+function openAccessRequestForm76616(){
+  const id=$("recoveryIdentifier").value.trim();
+  $("accessRequestName").value="";
+  $("accessRequestLogin").value=id.includes("@")?"":id;
+  $("accessRequestEmail").value=id.includes("@")?id:"";
+  $("accessRequestPhone").value="";
+  hide("recoveryNotRegisteredBox");show("accessRequestForm");
+  setTimeout(()=>$("accessRequestName").focus(),50);
+}
+let recoveryCooldownTimer76624=null;
+const RECOVERY_COOLDOWN_KEY_76624="qr_recovery_cooldown_until_76624";
+
+function recoveryCooldownRemaining76624(){
+  try{
+    const until=Number(sessionStorage.getItem(RECOVERY_COOLDOWN_KEY_76624)||0);
+    return Math.max(0,Math.ceil((until-Date.now())/1000));
+  }catch(e){return 0}
+}
+
+function updateRecoveryCooldownUi76624(){
+  const b=$("sendRecovery");
+  if(!b)return;
+  const left=recoveryCooldownRemaining76624();
+
+  if(left<=0){
+    if(recoveryCooldownTimer76624){
+      clearInterval(recoveryCooldownTimer76624);
+      recoveryCooldownTimer76624=null;
+    }
+    try{sessionStorage.removeItem(RECOVERY_COOLDOWN_KEY_76624)}catch(e){}
+    b.disabled=false;
+    b.textContent=qrLanguage==="en-US"?"Send instructions":"Enviar instruções";
+    return;
+  }
+
+  b.disabled=true;
+  const min=Math.floor(left/60),sec=String(left%60).padStart(2,"0");
+  b.textContent=qrLanguage==="en-US"
+    ?`Wait ${min}:${sec}`
+    :`Aguarde ${min}:${sec}`;
+}
+
+function startRecoveryCooldown76624(seconds){
+  const s=Math.max(1,Number(seconds||300));
+  try{sessionStorage.setItem(RECOVERY_COOLDOWN_KEY_76624,String(Date.now()+s*1000))}catch(e){}
+  updateRecoveryCooldownUi76624();
+  if(recoveryCooldownTimer76624)clearInterval(recoveryCooldownTimer76624);
+  recoveryCooldownTimer76624=setInterval(updateRecoveryCooldownUi76624,1000);
+}
+
+async function sendRecovery(){
+  const id=$("recoveryIdentifier").value.trim();
+  if(!id){$("recoveryMessage").className="message error";$("recoveryMessage").textContent=qrLanguage==="en-US"?"Enter your username or email.":"Informe seu usuário ou e-mail.";return}
+  if(recoveryCooldownRemaining76624()>0){
+    updateRecoveryCooldownUi76624();
+    return;
+  }
+
+  resetRecoveryFlow76616();
+  $("sendRecovery").disabled=true;
+  $("sendRecovery").textContent=qrLanguage==="en-US"?"Checking...":"Verificando...";
+
+  let keepDisabled=false;
+  try{
+    const r=await apiPost({action:"forgotPassword",recoveryIdentifier:id});
+    if(!r.ok)throw new Error(r.detail||"Não foi possível processar a solicitação.");
+
+    $("recoveryMessage").className="message success";
+    $("recoveryMessage").textContent=qrLanguage==="en-US"
+      ?"If an eligible account exists for that username or email, access instructions will be sent to the registered address."
+      :(r.message||"Se existir uma conta elegível para esse usuário ou e-mail, as instruções de acesso serão enviadas ao endereço cadastrado.");
+
+    $("recoveryNotRegisteredBox").querySelector("h3").textContent=qrLanguage==="en-US"?"👤 Need access?":"👤 Precisa de acesso?";
+    $("recoveryNotRegisteredText").textContent=qrLanguage==="en-US"?"If you do not yet have an account, you can request access without revealing whether the identifier above exists.":"Se você ainda não possui cadastro, pode solicitar acesso sem revelar se o identificador informado existe no sistema.";
+    show("recoveryNotRegisteredBox");
+    hide("pendingInviteBox");
+
+    // 7.6.6.24 R8 — após uma solicitação aceita, inicia o cooldown,
+    // fecha a tela de recuperação e retorna automaticamente ao login.
+    keepDisabled=true;
+    startRecoveryCooldown76624(300);
+
+    // Fecha a recuperação para evitar que o usuário permaneça em uma tela
+    // já concluída e volte a pressionar o mesmo botão.
+    try{
+      if(document.activeElement && typeof document.activeElement.blur==="function"){
+        document.activeElement.blur();
+      }
+    }catch(ignoreBlur){}
+
+    $("forgotPasswordModal").style.display="none";
+    $("systemPassword").value="";
+    $("systemLoginMessage").className="message success";
+    $("systemLoginMessage").textContent=qrLanguage==="en-US"
+      ?"If an eligible account exists, password recovery instructions were sent to the registered email."
+      :"Se existir uma conta elegível, as instruções de recuperação foram enviadas ao e-mail cadastrado.";
+    $("systemLoginModal").style.display="flex";
+  }catch(e){
+    const msg=String(e&&e.message||e||"");
+    $("recoveryMessage").className="message error";
+    $("recoveryMessage").textContent=msg;
+
+    // Se o backend informou limite de frequência, não deixa o botão ativo
+    // oferecendo uma ação que será recusada novamente.
+    if(/aguarde alguns minutos|wait a few minutes|nova solicita[cç][aã]o de recupera[cç][aã]o/i.test(msg)){
+      keepDisabled=true;
+      startRecoveryCooldown76624(300);
+    }
+  }finally{
+    if(!keepDisabled){
+      $("sendRecovery").disabled=false;
+      $("sendRecovery").textContent=qrLanguage==="en-US"?"Send instructions":"Enviar instruções";
+    }
+  }
+}
+async function resendPendingInvite76616(){
+  const id=$("recoveryIdentifier").value.trim(),b=$("resendPendingInviteButton");
+  b.disabled=true;b.textContent=qrLanguage==="en-US"?"Sending...":"Enviando...";
+  try{const r=await apiPost({action:"resendPendingInvitePublic",recoveryIdentifier:id});if(!r.ok)throw new Error(r.detail||"Não foi possível reenviar o convite.");$("recoveryMessage").className="message success";$("recoveryMessage").textContent=r.message;hide("pendingInviteBox")}catch(e){$("recoveryMessage").className="message error";$("recoveryMessage").textContent=e.message}finally{b.disabled=false;b.textContent=qrLanguage==="en-US"?"✉️ Resend invite":"✉️ Reenviar convite"}
+}
+async function sendAccessRequest76616(){
+  const name=$("accessRequestName").value.trim(),login=$("accessRequestLogin").value.trim(),email=$("accessRequestEmail").value.trim(),phone=$("accessRequestPhone").value.trim(),b=$("sendAccessRequestButton");
+  if(!name||!login||!email){$("accessRequestMessage").className="message error";$("accessRequestMessage").textContent=qrLanguage==="en-US"?"Enter name, requested login and email.":"Informe nome, login desejado e e-mail.";return}
+  b.disabled=true;$("cancelAccessRequestButton").disabled=true;b.textContent=qrLanguage==="en-US"?"Sending...":"Enviando...";$("accessRequestMessage").className="message loading";$("accessRequestMessage").textContent=qrLanguage==="en-US"?"Sending request to the administrators...":"Enviando solicitação aos administradores...";
+  try{
+    const r=await apiPost({action:"requestAccess",accessRequestName:name,accessRequestLogin:login,accessRequestEmail:email,accessRequestPhone:phone});
+    if(!r.ok)throw new Error(r.detail||"Não foi possível enviar a solicitação.");
+    $("accessRequestMessage").className="message success";
+    $("accessRequestMessage").textContent=(r.message||"")+(qrLanguage==="en-US"?" You can now return to the login screen.":" Você já pode voltar para a tela de login.");
+    finishAccessRequest76617();
+  }catch(e){
+    $("accessRequestMessage").className="message error";$("accessRequestMessage").textContent=e.message;
+    b.disabled=false;$("cancelAccessRequestButton").disabled=false;
+  }finally{if(!b.disabled)b.textContent=qrLanguage==="en-US"?"📧 Send request":"📧 Enviar solicitação"}
+}
+async function openSetPasswordFromUrl(){const p=new URLSearchParams(location.search),a=p.get("activate"),r=p.get("reset");if(!a&&!r)return false;currentAuthToken=a||r;currentAuthTokenType=a?"ATIVACAO":"RESET";try{const x=await api({action:"validatetoken",authToken:currentAuthToken,authTokenType:currentAuthTokenType});if(!x.ok)throw new Error(x.detail||"Link inválido ou expirado.");$("setPasswordTitle").textContent=a?"Ativar acesso":"Redefinir senha";$("setPasswordUser").innerHTML=`<b>${esc(x.usuario.nome||x.usuario.usuario)}</b><br>${esc(x.usuario.email||"")}`;$("newPassword").value="";$("confirmPassword").value="";$("setPasswordMessage").className="message";$("setPasswordModal").style.display="flex"}catch(e){alert(e.message)}return true}
+async function savePasswordFromToken(){const p=$("newPassword").value,c=$("confirmPassword").value;$("saveNewPassword").disabled=true;$("saveNewPassword").textContent="Salvando...";try{const r=await apiPost({action:"setPassword",authToken:currentAuthToken,authTokenType:currentAuthTokenType,newPassword:p,confirmPassword:c});if(!r.ok)throw new Error(r.detail||"Não foi possível salvar a senha.");$("setPasswordMessage").className="message success";$("setPasswordMessage").textContent=r.message;setTimeout(()=>{location.href=location.pathname+"?id=EQBUSCA"},1200)}catch(e){$("setPasswordMessage").className="message error";$("setPasswordMessage").textContent=e.message}finally{$("saveNewPassword").disabled=false;$("saveNewPassword").textContent="Salvar senha"}}
+async function loadUsers(){
+  const t=qrT7612;$("usersStatus").textContent=t("Carregando usuários...","Loading users...");
+  try{
+    const requestsPromise=systemSession?.perfil==="MASTER"?menuApi({action:"accessrequests"}):Promise.resolve({ok:true,requests:[]});
+    const [u,p,req]=await Promise.all([menuApi({action:"users"}),menuApi({action:"providers"}),requestsPromise]);
+    if(!u.ok)throw new Error(u.detail||t("Erro ao carregar usuários.","Error loading users."));
+    const prov=p.providers||[];
+    $("userProvider").innerHTML=`<option value="">${t("Vínculo interno / sem prestador","Internal account / no provider")}</option>`+prov.map(x=>`<option value="${esc(x.idPrestador)}">${esc(x.nomeFantasia||x.nome)}</option>`).join("");
+    usersAdminData=u.users||[];
+    $("usersStatus").textContent=`${usersAdminData.length} ${t("usuário(s)","user(s)")}`;
+    const isMaster=systemSession?.perfil==="MASTER";
+    const canManageUsers=hasProfilePermission("GESTAO_USUARIOS");
+    $("newUserButton").classList.toggle("hidden",!isMaster);
+    $("usersList").innerHTML=usersAdminData.map(x=>{
+      const canManageThis=isMaster&&canManageUsers;
+      const editButtons=canManageThis
+        ?`<button class="btn btn-secondary" type="button" onclick="openEditUser('${esc(x.idUsuario)}')">✏️ ${t("Editar","Edit")}</button>${x.status!=="Inativo"&&x.email?`<button class="btn btn-secondary" type="button" onclick="resendInviteUser('${esc(x.idUsuario)}')">✉️ ${t("Reenviar convite","Resend invite")}</button>`:""}${x.status!=="Inativo"?`<button class="btn btn-blue" type="button" onclick="openAdminUserPassword76617('${esc(x.idUsuario)}')">🔑 ${x.senhaDefinida?t("Redefinir senha","Reset password"):t("Definir senha","Set password")}</button>`:""}`
+        :"";
+      const statusButton=canManageThis?(x.status!=="Inativo"
+        ?`<button class="btn" type="button" onclick="setUserStatus('${esc(x.idUsuario)}','Inativo')">${t("Inativar","Deactivate")}</button>`
+        :`<button class="btn btn-green" type="button" onclick="setUserStatus('${esc(x.idUsuario)}','Ativo')">${t("Reativar","Reactivate")}</button>`):"";
+      const statusLabel=!x.email&&!x.senhaDefinida&&x.status==="Convite pendente"?t("Senha pendente","Password pending"):qrStatus7612(x.status);
+      return `<div class="user-card"><b>${esc(x.nome)}</b><div class="search-result-data"><b>ID:</b> ${esc(x.idUsuario)}<br><b>Login:</b> ${esc(x.usuario)}<br><b>${t("E-mail","Email")}:</b> ${esc(x.email||t("Não cadastrado","Not registered"))}<br><b>${t("Perfil","Role")}:</b> ${esc(x.perfil)}${x.prestador?`<br><b>${t("Prestador","Service Provider")}:</b> ${esc(x.prestador)}`:""}<br><b>Status:</b> ${esc(statusLabel)}${x.ultimoLogin?`<br><b>${t("Último login","Last login")}:</b> ${esc(formatDate(x.ultimoLogin))}`:""}</div><div class="user-actions">${editButtons}${statusButton}</div></div>`;
+    }).join("");
+    renderAccessRequests76616(req.requests||[]);
+  }catch(e){$("usersStatus").textContent=e.message}
+}
+
+function renderAccessRequests76616(items){
+  window.accessRequestsCache76616=items||[];
+  if(systemSession?.perfil!=="MASTER"){hide("accessRequestsSection");return}
+  show("accessRequestsSection");
+  const pending=items.filter(x=>x.status==="Pendente");
+  $("accessRequestsBadge").textContent=String(pending.length);
+  pending.length?show("accessRequestsBadge"):hide("accessRequestsBadge");
+  $("accessRequestsStatus").textContent=qrLanguage==="en-US"?`${pending.length} pending request(s).`:`${pending.length} solicitação(ões) pendente(s).`;$("tabUsers").textContent=(qrLanguage==="en-US"?"👥 User Management":"👥 Gestão de Usuários")+(pending.length?` 🔴 ${pending.length}`:"");
+  if(!items.length){$("accessRequestsList").innerHTML=`<div class="document-empty">${qrLanguage==="en-US"?"No access requests.":"Nenhuma solicitação de cadastro."}</div>`;return}
+  $("accessRequestsList").innerHTML=items.map(x=>{
+    const cls=x.status==="Aprovada"?"approved":x.status==="Recusada"?"rejected":"pending";
+    const actions=x.status==="Pendente"?`<div class="user-actions"><button class="btn btn-green" type="button" onclick="approveAccessRequest76616('${esc(x.idSolicitacao)}')">✅ ${qrLanguage==="en-US"?"Approve registration":"Aprovar cadastro"}</button><button class="btn" type="button" onclick="rejectAccessRequest76616('${esc(x.idSolicitacao)}')">❌ ${qrLanguage==="en-US"?"Reject":"Recusar"}</button></div>`:"";
+    return `<div class="access-request-card ${cls}"><b>${esc(x.nome)}</b> <span class="tag">${esc(x.status)}</span><div class="search-result-data"><b>ID:</b> ${esc(x.idSolicitacao)}<br><b>${qrLanguage==="en-US"?"Requested login":"Login solicitado"}:</b> ${esc(x.login)}<br><b>${qrLanguage==="en-US"?"Email":"E-mail"}:</b> ${esc(x.email)}${x.telefone?`<br><b>${qrLanguage==="en-US"?"Phone":"Telefone"}:</b> ${esc(x.telefone)}`:""}<br><b>${qrLanguage==="en-US"?"Requested at":"Solicitado em"}:</b> ${esc(formatDate(x.dataSolicitacao))}${x.analisadoPor?`<br><b>${qrLanguage==="en-US"?"Reviewed by":"Analisado por"}:</b> ${esc(x.analisadoPor)}`:""}${x.observacao?`<br><b>${qrLanguage==="en-US"?"Note":"Observação"}:</b> ${esc(x.observacao)}`:""}${x.idUsuarioCriado?`<br><b>${qrLanguage==="en-US"?"Created user":"Usuário criado"}:</b> ${esc(x.idUsuarioCriado)}`:""}</div>${actions}</div>`;
+  }).join("");
+}
+function approveAccessRequest76616(id){
+  if(systemSession?.perfil!=="MASTER")return alert("Somente MASTER pode aprovar solicitações.");
+  const x=(window.accessRequestsCache76616||[]).find(r=>String(r.idSolicitacao)===String(id));
+  if(!x)return alert("Solicitação não encontrada. Atualize a Gestão de Usuários.");
+  $("userEditId").value="";$("userRequestId").value=x.idSolicitacao;
+  $("userModalTitle").textContent=qrLanguage==="en-US"?"✅ Approve access request":"✅ Aprovar solicitação de acesso";
+  $("userName").value=x.nome||"";$("userLogin").value=x.login||"";$("userEmail").value=x.email||"";$("userProvider").value="";$("userProfile").value="CONSULTA";$("userMessage").className="message";
+  updateUserPrimaryAction76617();$("userModal").style.display="flex";
+}
+async function rejectAccessRequest76616(id){
+  if(systemSession?.perfil!=="MASTER")return alert("Somente MASTER pode recusar solicitações.");
+  const reason=prompt(qrLanguage==="en-US"?"Reason for rejection (optional):":"Motivo da recusa (opcional):");if(reason===null)return;
+  try{const r=await menuApiPost({action:"rejectAccessRequest",accessRequestId:id,accessRequestReason:reason});if(!r.ok)throw new Error(r.detail||"Erro ao recusar solicitação.");await loadUsers()}catch(e){alert(e.message)}
+}
+
+function updateUserPrimaryAction76617(){
+  const editId=$("userEditId").value.trim(),requestId=$("userRequestId").value.trim(),hasEmail=!!$("userEmail").value.trim();
+  if(editId){$("saveUser").textContent=qrLanguage==="en-US"?"Save changes":"Salvar alterações";return}
+  if(requestId){$("saveUser").textContent=hasEmail?(qrLanguage==="en-US"?"Approve and send invite":"Aprovar e enviar convite"):(qrLanguage==="en-US"?"Approve and set password":"Aprovar e definir senha");return}
+  $("saveUser").textContent=hasEmail?(qrLanguage==="en-US"?"Create and send invite":"Criar e enviar convite"):(qrLanguage==="en-US"?"Create user and set password":"Criar usuário e definir senha");
+}
+
+function openNewUser(){
+  if(!hasProfilePermission("GESTAO_USUARIOS"))return permissionDeniedMessage("Seu perfil não possui permissão para criar usuários.","Your profile is not allowed to create users.");
+  $("userEditId").value="";$("userRequestId").value="";
+  $("userModalTitle").textContent=qrLanguage==="en-US"?"👤 New User":"👤 Novo usuário";
+  $("userName").value="";$("userLogin").value="";$("userEmail").value="";$("userProvider").value="";$("userProfile").value="PRESTADOR";$("userMessage").className="message";
+  updateUserPrimaryAction76617();
+  $("userModal").style.display="flex";
+}
+
+function openEditUser(id){
+  if(!hasProfilePermission("GESTAO_USUARIOS")){
+    alert(qrLanguage==="en-US"?"Your profile is not allowed to edit users.":"Seu perfil não possui permissão para editar usuários.");
+    return;
+  }
+  const x=usersAdminData.find(u=>String(u.idUsuario)===String(id));
+  if(x&&x.perfil==="MASTER"&&systemSession?.perfil!=="MASTER")return alert(qrLanguage==="en-US"?"Only MASTER can edit another MASTER account.":"Somente MASTER pode editar outro usuário MASTER.");
+  if(!x)return alert(qrLanguage==="en-US"?"User not found.":"Usuário não encontrado.");
+  $("userEditId").value=x.idUsuario;$("userRequestId").value="";
+  $("userModalTitle").textContent=qrLanguage==="en-US"?"✏️ Edit User":"✏️ Editar usuário";
+  $("userName").value=x.nome||"";$("userLogin").value=x.usuario||"";$("userEmail").value=x.email||"";$("userProfile").value=x.perfil||"CONSULTA";$("userProvider").value=x.idPrestador||"";$("userMessage").className="message";
+  updateUserPrimaryAction76617();
+  $("userModal").style.display="flex";
+}
+
+async function saveUser(){
+  const b=$("saveUser"),editId=$("userEditId").value.trim(),requestId=$("userRequestId").value.trim(),isEdit=!!editId;
+  if(!hasProfilePermission("GESTAO_USUARIOS"))return alert(qrLanguage==="en-US"?"Your profile is not allowed to manage users.":"Seu perfil não possui permissão para gerenciar usuários.");
+  b.disabled=true;b.textContent=qrLanguage==="en-US"?(isEdit?"Saving...":"Creating..."):(isEdit?"Salvando...":"Criando...");
+  try{
+    const r=await menuApiPost({action:isEdit?"updateUser":"createUser",userId:editId,accessRequestId:requestId,userName:$("userName").value.trim(),userLogin:$("userLogin").value.trim(),userEmail:$("userEmail").value.trim(),userProviderId:$("userProvider").value,userProfile:$("userProfile").value});
+    if(!r.ok)throw new Error(r.detail||(isEdit?"Não foi possível atualizar o usuário.":"Não foi possível criar o usuário."));
+    $("userMessage").className="message success";$("userMessage").textContent=r.message||(isEdit?"Usuário atualizado.":"Usuário criado com sucesso.");
+    if(r.requiresPasswordDefinition&&r.idUsuario){
+      setTimeout(async()=>{$("userModal").style.display="none";await loadUsers();openAdminUserPassword76617(r.idUsuario);},550);
+      return;
+    }
+    if(r.sessionInvalidated){
+      setTimeout(()=>{alert(qrLanguage==="en-US"?"Your account was updated. Sign in again to refresh your permissions.":"Seu próprio usuário foi atualizado. Entre novamente para atualizar suas permissões.");logoutSystemMenu();},700);
+      return;
+    }
+    setTimeout(async()=>{$("userModal").style.display="none";await loadUsers()},700);
+  }catch(e){$("userMessage").className="message error";$("userMessage").textContent=e.message}
+  finally{b.disabled=false;updateUserPrimaryAction76617()}
+}
+function openAdminUserPassword76617(id){
+  if(systemSession?.perfil!=="MASTER"||!hasProfilePermission("GESTAO_USUARIOS"))return alert(qrLanguage==="en-US"?"Only MASTER can define user passwords.":"Somente MASTER pode definir ou redefinir senhas de usuários.");
+  const x=usersAdminData.find(u=>String(u.idUsuario)===String(id));if(!x)return alert(qrLanguage==="en-US"?"User not found.":"Usuário não encontrado.");
+  if(x.status==="Inativo")return alert(qrLanguage==="en-US"?"Reactivate the user before setting a password.":"Reative o usuário antes de definir uma senha.");
+  $("adminUserPasswordId").value=x.idUsuario;
+  $("adminUserPasswordTitle").textContent=x.senhaDefinida?(qrLanguage==="en-US"?"🔑 Reset user password":"🔑 Redefinir senha do usuário"):(qrLanguage==="en-US"?"🔑 Set user password":"🔑 Definir senha do usuário");
+  $("adminUserPasswordInfo").innerHTML=`<b>${esc(x.nome)}</b><br>Login: ${esc(x.usuario)}${x.email?`<br>${qrLanguage==="en-US"?"Email":"E-mail"}: ${esc(x.email)}`:`<br>${qrLanguage==="en-US"?"No email registered":"Sem e-mail cadastrado"}`}`;
+  $("adminUserPassword").value="";$("adminUserPasswordConfirm").value="";$("adminUserPasswordMessage").className="message";$("adminUserPasswordMessage").textContent="";
+  $("adminUserPasswordModal").style.display="flex";setTimeout(()=>$("adminUserPassword").focus(),60);
+}
+async function saveAdminUserPassword76617(){
+  const id=$("adminUserPasswordId").value.trim(),p=$("adminUserPassword").value,c=$("adminUserPasswordConfirm").value,b=$("saveAdminUserPassword");
+  if(!id)return;
+  b.disabled=true;b.textContent=qrLanguage==="en-US"?"Saving...":"Salvando...";$("adminUserPasswordMessage").className="message loading";$("adminUserPasswordMessage").textContent=qrLanguage==="en-US"?"Saving the new password...":"Gravando a nova senha...";
+  try{
+    const r=await menuApiPost({action:"adminSetUserPassword",userId:id,newPassword:p,confirmPassword:c});
+    if(!r.ok)throw new Error(r.detail||"Não foi possível definir a senha.");
+    $("adminUserPasswordMessage").className="message success";$("adminUserPasswordMessage").textContent=r.message;
+    if(r.sessionInvalidated){setTimeout(()=>{$("adminUserPasswordModal").style.display="none";logoutSystemMenu();},700);return}
+    setTimeout(async()=>{$("adminUserPasswordModal").style.display="none";await loadUsers();},650);
+  }catch(e){$("adminUserPasswordMessage").className="message error";$("adminUserPasswordMessage").textContent=e.message}
+  finally{b.disabled=false;b.textContent=qrLanguage==="en-US"?"Save password":"Salvar senha"}
+}
+
+async function setUserStatus(id,status){const lbl=qrStatus7612(status);if(!confirm(qrLanguage==="en-US"?`Change the user status to ${lbl}?`:`Alterar o status do usuário para ${lbl}?`))return;try{const r=await menuApiPost({action:"updateUserStatus",userId:id,userStatus:status});if(!r.ok)throw new Error(r.detail||(qrLanguage==="en-US"?"Error updating user.":"Erro ao alterar usuário."));await loadUsers()}catch(e){alert(e.message)}}
+async function resendInviteUser(id){if(!hasProfilePermission("GESTAO_USUARIOS"))return alert(qrLanguage==="en-US"?"Your profile is not allowed to resend invitations.":"Seu perfil não possui permissão para reenviar convites.");const target=usersAdminData.find(u=>String(u.idUsuario)===String(id));if(target?.perfil==="MASTER"&&systemSession?.perfil!=="MASTER")return alert(qrLanguage==="en-US"?"Only MASTER can resend an invitation to another MASTER account.":"Somente MASTER pode reenviar convite para outro usuário MASTER.");try{const r=await menuApiPost({action:"resendInvite",userId:id});if(!r.ok)throw new Error(r.detail||(qrLanguage==="en-US"?"Error sending invite.":"Erro ao enviar convite."));alert(qrLanguage==="en-US"?"Invite sent.":"Convite enviado.")}catch(e){alert(e.message)}}
+
+const QR_LANG_KEY="qrmanut_language";
+let qrLanguage="pt-BR";
+
+const QR_TEXT={
+  "pt-BR":{
+    tabSearch:"🔎 Buscar ativos",
+    tabPending:"⚠️ OCs Pendentes",
+    tabSolicitations:"📥 Solicitações de Manutenção",
+    tabOccurrenceReport:"📊 Relatório de OCs",
+    tabPreventive:"🛠️ Status das Preventivas",
+    tabDocuments:"📄 Documentos Técnicos",
+    tabOccurrenceCatalog:"🧩 Categorias e Componentes",
+    tabMaintenancePending:"📌 Pendências / Providências",
+    tabAssetManagement:"🏷️ Gestão de Ativos",
+    tabDocumentUpload:"📤 Upload de Documentos",
+    tabUsers:"👥 Gestão de Usuários",
+    tabPermissions:"🔐 Permissões de Perfis",
+    tabAudit:"🧾 Auditoria",
+    tabProvidersAdmin:"🏢 Prestadores",
+    tabCompany:"⚙️ Empresa",
+    searchAssetsButton:"☰ Menu Principal",
+    openSystemLoginButton:"🔐 Entrar no Menu Principal",
+    pendingApplyFilters:"Aplicar filtros",
+    pendingClearFilters:"Limpar filtros",
+    occReportRefresh:"Consultar",
+    auditRefresh:"Consultar",
+    auditClear:"Limpar filtros",
+    documentSearchButton:"Buscar documentos",
+    sendDocumentUpload:"Enviar documento",
+    clearDocumentUpload:"Limpar campos",
+    uploadDocumentChooseFileButton:"📎 Escolher arquivo PDF",
+    documentUploadBackMenu:"← Voltar ao Menu Principal",
+    companyBackMenu:"← Voltar ao Menu Principal",
+    providersBackMenu:"← Voltar ao Menu Principal",
+    saveCompanyConfig:"Salvar configuração",
+    saveProvider:"Salvar prestador",
+    cancelProvider:"Cancelar",
+    cancelSystemLogin:"Cancelar",
+    sendSystemLogin:"Entrar",
+    forgotPasswordButton:"Esqueci minha senha",
+    saveNewPassword:"Salvar senha",
+    cancelManage:"Cancelar",
+    saveManage:"Salvar alterações",
+    cancelReport:"Cancelar",
+    sendReport:"Gravar ocorrência",
+    cancelPreventive:"Cancelar",
+    savePreventive:"Registrar Preventiva"
+  },
+  "en-US":{
+    tabSearch:"🔎 Search Assets",
+    tabPending:"⚠️ Pending Work Orders",
+    tabSolicitations:"📥 Maintenance Requests",
+    tabOccurrenceReport:"📊 Work Order Report",
+    tabPreventive:"🛠️ Preventive Maintenance Status",
+    tabDocuments:"📄 Technical Documents",
+    tabOccurrenceCatalog:"🧩 Categories & Components",
+    tabMaintenancePending:"📌 Pending Actions",
+    tabAssetManagement:"🏷️ Asset Management",
+    tabDocumentUpload:"📤 Upload Documents",
+    tabUsers:"👥 User Management",
+    tabPermissions:"🔐 Profile Permissions",
+    tabAudit:"🧾 Audit",
+    tabProvidersAdmin:"🏢 Service Providers",
+    tabCompany:"⚙️ Company",
+    searchAssetsButton:"☰ Main Menu",
+    openSystemLoginButton:"🔐 Sign In to Main Menu",
+    pendingApplyFilters:"Apply Filters",
+    pendingClearFilters:"Clear Filters",
+    occReportRefresh:"Search",
+    auditRefresh:"Search",
+    auditClear:"Clear Filters",
+    documentSearchButton:"Search Documents",
+    sendDocumentUpload:"Upload Document",
+    clearDocumentUpload:"Clear Fields",
+    uploadDocumentChooseFileButton:"📎 Choose PDF File",
+    documentUploadBackMenu:"← Back to Main Menu",
+    companyBackMenu:"← Back to Main Menu",
+    providersBackMenu:"← Back to Main Menu",
+    saveCompanyConfig:"Save Configuration",
+    saveProvider:"Save Provider",
+    cancelProvider:"Cancel",
+    cancelSystemLogin:"Cancel",
+    sendSystemLogin:"Sign In",
+    forgotPasswordButton:"Forgot my password",
+    saveNewPassword:"Save Password",
+    cancelManage:"Cancel",
+    saveManage:"Save Changes",
+    cancelReport:"Cancel",
+    sendReport:"Save Work Order",
+    cancelPreventive:"Cancel",
+    savePreventive:"Register Preventive Maintenance"
+  }
+};
+
+const QR_PLACEHOLDERS={
+  "pt-BR":{
+    searchInput:"Buscar por ID, nome, categoria, componente, pavimento ou localização",
+    documentSearchInput:"Buscar por título, assunto, tipo, disciplina, pavimento, ambiente, prestador ou ID do ativo",
+    auditSearch:"Ex.: OC-000123, AC102, preventiva"
+  },
+  "en-US":{
+    searchInput:"Search by ID, name, category, component, floor or location",
+    documentSearchInput:"Search by title, subject, type, discipline, floor, environment, provider or asset ID",
+    auditSearch:"E.g.: OC-000123, AC102, preventive"
+  }
+};
+
+
+const QR_ROUTINE_PT_EN={
+  "Buscar":"Search",
+  "Digite pelo menos 2 caracteres para iniciar a busca.":"Type at least 2 characters to start searching.",
+  "← Voltar ao equipamento":"← Back to Asset",
+
+  "⚠️ OCs Pendentes":"⚠️ Pending Work Orders",
+  "Prestador":"Service Provider",
+  "Status":"Status",
+  "Categoria":"Category",
+  "Pavimento":"Floor",
+  "Localização":"Location",
+  "Todos os prestadores":"All service providers",
+  "Todos os status":"All statuses",
+  "Todas as categorias":"All categories",
+  "Todos os pavimentos":"All floors",
+  "Todas as localizações":"All locations",
+  "Aplicar filtros":"Apply Filters",
+  "Limpar filtros":"Clear Filters",
+
+  "📊 Relatório de OCs Concluídas":"📊 Completed Work Order Report",
+  "O período considera a data em que a ocorrência foi concluída.":"The period is based on the date the work order was completed.",
+  "Data inicial":"Start date",
+  "Data final":"End date",
+  "Componente":"Component",
+  "Todos os componentes":"All components",
+  "Consultar":"Search",
+  "📄 Gerar PDF":"📄 Generate PDF",
+  "PDF do relatório":"Report PDF",
+
+  "📄 Documentos Técnicos":"📄 Technical Documents",
+  "Tipo":"Type",
+  "Disciplina":"Discipline",
+  "Todos":"All",
+  "Todas":"All",
+
+  "📤 Upload de Documentos":"📤 Upload Documents",
+  "Disponibilidade definida em Permissões de Perfis. Somente PDF, até 8 MB.":"Availability is defined in Profile Permissions. PDF only, up to 8 MB.",
+  "Título *":"Title *",
+  "Tipo *":"Type *",
+  "Ambiente":"Environment",
+  "Assunto":"Subject",
+  "Revisão":"Revision",
+  "ID do Ativo (opcional)":"Asset ID (optional)",
+  "Observações":"Notes",
+  "Arquivo PDF *":"PDF File *",
+  "Nenhum arquivo selecionado.":"No file selected.",
+  "Sem prestador específico":"No specific service provider",
+  "Selecione":"Select",
+  "Enviar documento":"Upload Document",
+  "Limpar campos":"Clear Fields",
+  "← Voltar ao Menu Principal":"← Back to Main Menu",
+
+  "⚙️ Configuração da Empresa":"⚙️ Company Configuration",
+  "Dados institucionais desta implantação dedicada.":"Institutional data for this dedicated deployment.",
+  "ID Empresa":"Company ID",
+  "Nome da Empresa *":"Company Name *",
+  "Nome Fantasia":"Trade Name",
+  "E-mail de Manutenção":"Maintenance Email",
+  "E-mail Administrativo":"Administrative Email",
+  "Nome do Sistema *":"System Name *",
+  "Cor Principal":"Primary Color",
+  "Fuso Horário":"Time Zone",
+  "URL Principal":"Main URL",
+  "E-mail de Relatórios":"Reports Email",
+  "E-mail principal das OCs *":"Main Work Order Notification Email *",
+  "E-mail CC das OCs":"Work Order Notification CC",
+  "E-mail de Triagem de Solicitações":"Maintenance Request Triage Email",
+  "E-mail CC da Triagem de Solicitações":"Maintenance Request Triage CC",
+  "Opcional. Se vazio, o QRManut usa o e-mail principal das OCs/manutenção.":"Optional. If blank, QRManut uses the main work order/maintenance email.",
+  "Opcional. Separe vários e-mails por vírgula ou ponto e vírgula.":"Optional. Separate multiple emails with commas or semicolons.",
+  "Logo (URL)":"Logo (URL)",
+  "Empresa ativa":"Active company",
+  "Pré-visualização":"Preview",
+  "Salvar configuração":"Save Configuration",
+
+  "🏢 Prestadores":"🏢 Service Providers",
+  "Consulte responsáveis e canais de contato dos prestadores. Cadastro e edição obedecem às Permissões de Perfis definidas pelo MASTER.":"View service provider contacts. Registration and editing follow Profile Permissions defined by MASTER.",
+  "Regras operacionais herdadas pelos usuários.":"Operational rules inherited by linked users.",
+  "+ Novo prestador":"+ New provider",
+
+  "🧾 Auditoria":"🧾 Audit",
+  "Trilha de eventos administrativos e operacionais. Acesso controlado pelas Permissões de Perfis.":"Administrative and operational event trail. Access is controlled by Profile Permissions.",
+  "Ação":"Action",
+  "Resultado":"Result",
+  "Usuário":"User",
+  "Busca":"Search",
+  "Todas as ações":"All actions",
+  "Todos os resultados":"All results",
+  "Todos os usuários":"All users",
+
+  "👥 Gestão de Usuários":"👥 User Management",
+  "Cada funcionário deve possuir um usuário individual.":"Each employee must have an individual user account.",
+  "+ Novo usuário":"+ New user",
+
+  "Competência":"Period",
+  "Atualizar":"Refresh",
+  "Voltar":"Back",
+  "Conclusão da competência":"Period completion",
+  "🔴 Pendentes":"🔴 Pending",
+  "✅ Realizadas":"✅ Completed",
+  "📧 Relatório da competência":"📧 Period Report",
+  "Gera um PDF com as preventivas realizadas e pendentes e envia o arquivo por e-mail.":"Generates a PDF with completed and pending preventive maintenance and sends it by email.",
+  "📧 Enviar relatório da competência":"📧 Send Period Report",
+
+  "Carregando...":"Loading...",
+  "Classificação":"Classification",
+  "Características Técnicas":"Technical Specifications",
+  "Gestão do Ativo":"Asset Management",
+  "📚 Documentos do Equipamento":"📚 Equipment Documents",
+  "Reportar Serviço / Anomalia / Reparo":"Report Service / Issue / Repair",
+  "O problema não é neste equipamento?":"Is the issue on another asset?",
+  "📍 Problema em outro equipamento ou ambiente":"📍 Issue on another asset or environment",
+  "📍 Solicitação de Manutenção":"📍 Maintenance Request",
+  "Seu nome *":"Your name *",
+  "Contato / telefone / e-mail *":"Contact / phone / email *",
+  "Local / Ambiente *":"Location / Environment *",
+  "Informe o local *":"Enter the location *",
+  "Descreva o problema *":"Describe the issue *",
+  "Foto / evidência (opcional)":"Photo / evidence (optional)",
+  "Enviar solicitação":"Submit request",
+  "📥 Solicitações de Manutenção":"📥 Maintenance Requests",
+  "Situação":"Status",
+  "Em aberto":"Open",
+  "Nova":"New",
+  "Em análise":"Under review",
+  "OC criada":"Work order created",
+  "Encerrada sem OC":"Closed without work order",
+  "🛠️ Registrar Preventiva":"🛠️ Register Preventive Maintenance",
+  "Histórico de Manutenção":"Maintenance History",
+
+  "🔐 Acesso ao QRManut":"🔐 QRManut Access",
+  "O acesso ao Menu Principal é individual e controlado por perfil e escopo.":"Main Menu access is individual and controlled by role and scope.",
+  "Usuário ou e-mail":"Username or email",
+  "Senha":"Password",
+  "Esqueci minha senha":"Forgot my password",
+  "Cancelar":"Cancel",
+  "Entrar":"Sign In",
+
+  "🔑 Recuperar senha":"🔑 Recover Password",
+  "Informe seu usuário ou e-mail. Se o cadastro existir, o QRManut enviará as instruções.":"Enter your username or email. If the account exists, QRManut will send instructions.",
+  "Enviar instruções":"Send Instructions",
+  "Por segurança, o QRManut não informa se o usuário ou e-mail existe. Se houver uma conta elegível, as instruções serão enviadas ao endereço cadastrado.":"QRManut will verify the account before sending instructions.",
+  "👤 Usuário não cadastrado":"👤 User not registered",
+  "📧 Solicitar cadastro":"📧 Request access",
+  "📥 Solicitação de acesso":"📥 Access Request",
+
+  "Nova senha":"New Password",
+  "Confirmar senha":"Confirm Password",
+  "Mínimo de 8 caracteres, com letra maiúscula, minúscula, número e caractere especial.":"Minimum 8 characters, including uppercase, lowercase, number and special character.",
+  "Salvar senha":"Save Password",
+
+  "👤 Novo usuário":"👤 New User",
+  "Nome *":"Name *",
+  "Usuário/Login *":"Username/Login *",
+  "E-mail *":"Email *",
+  "Perfil *":"Role *",
+  "Vínculo interno / sem prestador":"Internal account / no provider",
+  "Criar e enviar convite":"Create and Send Invite",
+
+  "🏢 Prestador":"🏢 Service Provider",
+  "Nome/Razão Social *":"Name/Legal Name *",
+  "Responsável / Contato principal":"Responsible / Main Contact",
+  "Telefone / WhatsApp":"Phone / WhatsApp",
+  "E-mail de Contato":"Contact Email",
+  "Ativo":"Active",
+  "Exigir assinatura":"Require signature",
+  "Foto obrigatória":"Photo required",
+  "Observação obrigatória":"Notes required",
+  "Pode registrar preventiva":"Can register preventive maintenance",
+  "Pode atender OC":"Can handle work orders",
+  "Notificar OC":"Notify work order",
+  "Enviar relatório":"Send report",
+  "E-mail OC":"Work Order Email",
+  "E-mail Relatório":"Report Email",
+  "Salvar prestador":"Save Provider",
+
+  "🛠️ Registrar Manutenção Preventiva":"🛠️ Register Preventive Maintenance",
+  "Periodicidade:":"Frequency:",
+  "Prestador:":"Service Provider:",
+  "Competência:":"Period:",
+  "Responsável pela preventiva *":"Preventive maintenance technician *",
+  "Observação":"Notes",
+  "Foto / evidência":"Photo / evidence",
+  "✍️ Assinatura do responsável":"✍️ Technician Signature",
+  "Assine no quadro usando o dedo ou mouse.":"Sign in the box using your finger or mouse.",
+  "Limpar assinatura":"Clear Signature",
+  "Registrar Preventiva":"Register Preventive Maintenance",
+
+  "Seu nome *":"Your name *",
+  "Contato":"Contact",
+  "Descrição *":"Description *",
+  "Foto":"Photo",
+  "Gravar ocorrência":"Save Work Order",
+  "Imagem / evidência (opcional)":"Image / evidence (optional)",
+  "🖼️ Escolher imagem do celular":"🖼️ Choose image from device",
+  "📎 Arquivo da ocorrência (opcional)":"📎 Work order attachment (optional)",
+  "PDF, Word, Excel ou outro arquivo de evidência, até 8 MB.":"PDF, Word, Excel or another evidence file, up to 8 MB.",
+  "📎 Escolher arquivo":"📎 Choose file",
+
+  "Gerenciar ocorrência":"Manage Work Order",
+  "Alterado por *":"Changed by *",
+  "Descrição":"Description",
+  "Responsável":"Responsible",
+  "Solução":"Solution",
+  "Foto da ocorrência / correção":"Work Order / Correction Photo",
+  "📷 Tirar foto":"📷 Take Photo",
+  "🖼️ Anexar imagem":"🖼️ Attach Image",
+  "Foto da conclusão":"Completion Photo",
+  "Salvar alterações":"Save Changes",
+
+  "Aberta":"Open",
+  "Em atendimento":"In progress",
+  "Aguardando peça":"Waiting for part",
+  "Concluída":"Completed",
+  "Cancelada":"Cancelled",
+  "Instalar QRManut no celular":"Install QRManut on this device",
+  "Menu Principal protegido":"Protected Main Menu",
+  "A ficha do equipamento e o registro de ocorrências continuam disponíveis pelo QR Code. Para acessar a Gestão Rápida, identifique-se.":"The equipment record and work order reporting remain available through the QR Code. Sign in to access the Main Menu.",
+  "Entrar no Menu Principal":"Sign In to Main Menu",
+  "Sair do Menu":"Sign Out",
+  "Acesso":"Access",
+  "Perfil":"Role",
+  "Previstas":"Planned",
+  "Realizadas":"Completed",
+  "Pendentes":"Pending",
+  "Conclusão":"Completion",
+  "Período":"Period",
+  "Atualizando...":"Refreshing...",
+  "Consultando...":"Searching...",
+  "Consultando OCs concluídas...":"Loading completed work orders...",
+  "OCs concluídas":"Completed work orders",
+  "Tempo médio":"Average time",
+  "Categorias":"Categories",
+  "Prestadores":"Service providers",
+  "Abertas":"Open",
+  "Atendimento":"In progress",
+  "Aguardando peça":"Waiting for part",
+  "Total":"Total",
+  "Abrir ficha":"Open record",
+  "Observação do equipamento:":"Equipment note:",
+  "Equipamento sem Contrato":"Equipment without contract",
+  "Todas as categorias":"All categories",
+  "Todos os componentes":"All components",
+  "Todos os pavimentos":"All floors",
+  "Todas as localizações":"All locations",
+  "Todos os prestadores":"All service providers",
+  "Todos os status":"All statuses",
+  "Sem prestador específico":"No specific service provider",
+  "Selecione":"Select",
+  "Previsão":"Planned",
+  "Realizada":"Completed",
+  "Pendente":"Pending",
+  "Todas":"All",
+  "Todos":"All",
+  "Equipamentos":"Equipment",
+  "equipamento(s)":"equipment",
+  "OC(s) encontrada(s) com os filtros aplicados.":"work order(s) found with the applied filters.",
+  "OC(s) concluída(s) no período":"work order(s) completed in the period",
+  "dia(s)":"day(s)",
+  "Categoria:":"Category:",
+  "Pavimento:":"Floor:",
+  "Localização:":"Location:",
+  "Descrição:":"Description:",
+  "Prestador:":"Service Provider:",
+  "Status:":"Status:",
+  "Previstas:":"Planned:",
+  "Realizadas:":"Completed:",
+  "Pendentes:":"Pending:",
+  "Acesso:":"Access:",
+  "Perfil:":"Role:",
+  "Abertura:":"Opened:",
+  "Conclusão:":"Completed:",
+  "Tempo até a conclusão:":"Time to completion:",
+  "Responsável:":"Responsible:",
+  "Solução:":"Solution:",
+  "Foto da conclusão":"Completion photo",
+  "Usuário(s)":"user(s)",
+  "usuário(s)":"user(s)",
+  "Último login:":"Last login:",
+  "Reenviar convite":"Resend invite",
+  "Inativar":"Deactivate",
+  "Ativar":"Activate",
+  "Ativo":"Active",
+  "Inativo":"Inactive",
+  "agosto":"August",
+  "janeiro":"January",
+  "fevereiro":"February",
+  "março":"March",
+  "abril":"April",
+  "maio":"May",
+  "junho":"June",
+  "julho":"July",
+  "setembro":"September",
+  "outubro":"October",
+  "novembro":"November",
+  "dezembro":"December",
+  "Visão MASTER: utilize os filtros abaixo para consultar as OCs pendentes.":"MASTER view: use the filters below to view pending work orders.",
+  "Gestão de Ativos":"Asset Management",
+  "Cadastre, edite e inative ativos sem alterar diretamente a planilha.":"Create, edit and deactivate assets without changing the spreadsheet directly.",
+  "Novo Ativo":"New Asset",
+  "Editar Ativo":"Edit Asset",
+  "Buscar ativo...":"Search asset...",
+  "Nenhum ativo encontrado.":"No assets found.",
+  "Editar":"Edit",
+  "ID do ativo":"Asset ID",
+  "O ID é preservado durante a edição para manter o histórico, QR Code e documentos vinculados.":"The asset ID is preserved during editing to keep history, QR Code and linked documents intact.",
+  "1. Identificação":"1. Identification",
+  "Monte o código do ativo e informe sua identificação principal.":"Build the asset code and enter its main identification information.",
+  "Família / Prefixo":"Family / Prefix",
+  "Número-base":"Base Number",
+  "Sugerir":"Suggest",
+  "Tipo / Sigla":"Type / Code",
+  "Pavimento / código do ID":"Floor / ID Code",
+  "ID sugerido":"Suggested ID",
+  "2. Classificação e localização":"2. Classification and Location",
+  "Nome do Equipamento *":"Equipment Name *",
+  "Categoria do Ativo":"Asset Category",
+  "Classe de Manutenção":"Maintenance Class",
+  "Pavimento":"Floor",
+  "Localização":"Location",
+  "Local Detalhado":"Detailed Location",
+  "3. Dados técnicos":"3. Technical Data",
+  "Dados técnicos":"Technical Data",
+  "Fabricante":"Manufacturer",
+  "Modelo":"Model",
+  "Número de Série":"Serial Number",
+  "Capacidade":"Capacity",
+  "Amperagem Nominal (FLA)":"Rated Current (FLA)",
+  "Amperagem de Partida (FLR)":"Starting Current (FLR)",
+  "Amperagem Medida":"Measured Current",
+  "Voltagem":"Voltage",
+  "Peso":"Weight",
+  "Ano de Aquisição":"Acquisition Year",
+  "Vida Útil Estimada":"Estimated Useful Life",
+  "4. Manutenção":"4. Maintenance",
+  "Prestador":"Service Provider",
+  "Periodicidade":"Frequency",
+  "Sem prestador":"No service provider",
+  "Sem periodicidade":"No frequency",
+  "Salvar Ativo":"Save Asset",
+  "Informe a nova categoria":"Enter the new category",
+  "Informe a classe de manutenção":"Enter the maintenance class",
+  "Informe o pavimento":"Enter the floor",
+  "Informe a localização":"Enter the location",
+  "Informe a periodicidade":"Enter the frequency",
+  "Ex.: Casa de máquinas, ao lado do quadro elétrico":"E.g.: Mechanical room, next to the electrical panel",
+  "Equipamento":"Equipment",
+  "Infraestrutura":"Infrastructure",
+  "Sistema":"System",
+  "Ambiente":"Environment",
+  "TÉRREO":"GROUND FLOOR",
+  "1º PISO":"1ST FLOOR",
+  "2º PISO":"2ND FLOOR",
+  "3º PISO":"3RD FLOOR",
+  "EXTERNO":"EXTERIOR",
+  "1º Piso (1P)":"1st Floor (1P)",
+  "2º Piso (2P)":"2nd Floor (2P)",
+  "3º Piso (3P)":"3rd Floor (3P)",
+  "Externo (EX)":"Exterior (EX)",
+  "Externo/Térreo (ET)":"Exterior/Ground Floor (ET)",
+  "Desativado":"Deactivated",
+  "Estq Manut":"Maintenance Stock",
+  "Crítica":"Critical",
+  "Preventiva":"Preventive",
+  "Corretiva":"Corrective",
+  "Preditiva":"Predictive",
+  "Inspeção":"Inspection",
+  "Equipamento com manutenção terceirizada":"Equipment with outsourced maintenance",
+  "Bimestral":"Every two months",
+  "Bomba Hidráulica":"Hydraulic Pump",
+  "Ventilador":"Fan",
+  "Condensador":"Condenser",
+  "Evaporadora":"Evaporator",
+  "Compressor":"Compressor",
+  "Ar-condicionado":"Air Conditioner",
+  "Exaustor":"Exhaust Fan",
+  "Piso Teto":"Floor-Ceiling Unit",
+  "Cassete":"Cassette Unit",
+  "Chiller":"Chiller",
+  "Gerador":"Generator",
+  "Vaso de Pressão":"Pressure Vessel",
+  "Vaso/Reservatório":"Vessel/Reservoir",
+  "Manômetro":"Pressure Gauge",
+  "Válvula de Segurança":"Safety Valve",
+  "Climatizador":"Air Cooler",
+  "Câmara":"Chamber",
+  "Seladora":"Sealer",
+  "Split":"Split Unit",
+  "Transformador":"Transformer",
+  "Cabine Blindada":"Metal-Enclosed Switchgear",
+  "Bebedouro":"Drinking Fountain",
+  "Liofilizador":"Freeze Dryer",
+  "Monta Carga":"Dumbwaiter",
+  "Tipo de Ativo":"Asset Type",
+  "Subcategoria":"Subcategory",
+  "Criticidade":"Criticality",
+  "Classe de Manutenção":"Maintenance Class",
+  "Área":"Area",
+  "Componente / Elemento":"Component / Element",
+  "Local Detalhado":"Detailed Location",
+  "Fabricante":"Manufacturer",
+  "Número de Série":"Serial Number",
+  "Capacidade":"Capacity",
+  "Amperagem Nominal":"Rated Current",
+  "Amperagem de Partida":"Starting Current",
+  "Amperagem Medida":"Measured Current",
+  "Voltagem":"Voltage",
+  "Peso":"Weight",
+  "Ano de Aquisição":"Acquisition Year",
+  "Vida Útil Estimada":"Estimated Useful Life",
+  "Status cadastral":"Registration Status",
+  "Periodicidade":"Frequency",
+  "Nenhuma ocorrência ativa.":"No active issues.",
+  "Nenhum histórico registrado.":"No maintenance history recorded.",
+  "Nenhuma preventiva registrada.":"No preventive maintenance recorded.",
+  "Ver foto":"View photo",
+  "Ver evidência":"View evidence",
+  "Ver assinatura":"View signature",
+  "Setor de Manutenção":"Maintenance Department",
+  "Equipamento de Processo":"Process Equipment",
+  "Alta":"High",
+  "Média":"Medium",
+  "Baixa":"Low",
+  "Mensal":"Monthly",
+  "Semanal":"Weekly",
+  "Quinzenal":"Biweekly",
+  "Trimestral":"Quarterly",
+  "Semestral":"Semiannual",
+  "Anual":"Annual",
+  "Nome em português *":"Name in Portuguese *",
+  "Nome em inglês":"Name in English",
+  "Ativa":"Active",
+  "Salvar categoria":"Save Category",
+  "Componentes":"Components",
+  "Categoria *":"Category *",
+  "Salvar componente":"Save Component",
+  "Limpar":"Clear",
+  "Em andamento":"In Progress",
+  "Resolvida":"Resolved",
+  "Prioridade":"Priority",
+  "Sim":"Yes",
+  "Não":"No",
+  "Obrigatória":"Required",
+  "Opcional":"Optional",
+  "Reativar":"Reactivate",
+  "Convite pendente":"Invite pending",
+  "Executada:":"Completed:",
+  "Observação da preventiva:":"Preventive maintenance note:",
+  "Consultando trilha de auditoria...":"Loading audit trail...",
+  "Nenhum evento encontrado.":"No events found."
+
+
+};
+
+const QR_ROUTINE_EN_PT=Object.fromEntries(
+  Object.entries(QR_ROUTINE_PT_EN).map(([pt,en])=>[en,pt])
+);
+
+const qrOriginalOptionValues=new WeakMap();
+
+
+function qrTranslateExactText(text){
+  const trimmed=String(text||"").trim();
+  if(!trimmed)return trimmed;
+
+  if(qrLanguage==="en-US"){
+    return QR_ROUTINE_PT_EN[trimmed]||trimmed;
+  }
+
+  return QR_ROUTINE_EN_PT[trimmed]||trimmed;
+}
+
+function qrTranslateCompositeText(text){
+  let t=String(text||"").trim();
+  if(!t)return t;
+
+  // Exact match first
+  const exact=qrTranslateExactText(t);
+  if(exact!==t)return exact;
+
+  // Asset type/code options, e.g. "BH - Bomba Hidráulica".
+  // Only visible text changes; the internal option value is preserved.
+  let assetCodeMatch=t.match(/^([A-Z0-9_]+)\s+-\s+(.+)$/i);
+  if(assetCodeMatch){
+    const translatedDescription=qrTranslateExactText(assetCodeMatch[2]);
+    if(translatedDescription!==assetCodeMatch[2]){
+      return assetCodeMatch[1]+" - "+translatedDescription;
+    }
+  }
+
+  if(qrLanguage==="en-US"){
+    const prefixes=[
+      ["Status:","Status:"],
+      ["Prestador:","Service Provider:"],
+      ["Categoria:","Category:"],
+      ["Pavimento:","Floor:"],
+      ["Localização:","Location:"],
+      ["Descrição:","Description:"],
+      ["Observação do equipamento:","Equipment note:"],
+      ["Previstas:","Planned:"],
+      ["Realizadas:","Completed:"],
+      ["Pendentes:","Pending:"],
+      ["Acesso:","Access:"],
+      ["Perfil:","Role:"]
+    ];
+
+    for(const [pt,en] of prefixes){
+      if(t.startsWith(pt)){
+        return en+t.slice(pt.length);
+      }
+    }
+
+    // Dynamic result sentences
+    let m=t.match(/^(\d+)\s+OC\(s\)\s+encontrada\(s\)\s+com\s+os\s+filtros\s+aplicados\.$/i);
+    if(m)return `${m[1]} work order(s) found with the applied filters.`;
+
+    m=t.match(/^(\d+)\s+OC\(s\)\s+concluída\(s\)\s+no\s+período\s+(.+)$/i);
+    if(m)return `${m[1]} work order(s) completed in the period ${m[2]}`;
+
+    m=t.match(/^(\d+(?:[.,]\d+)?)\s+dia\(s\)$/i);
+    if(m)return `${m[1]} day(s)`;
+
+    m=t.match(/^(\d+)\s+equipamento\(s\)$/i);
+    if(m)return `${m[1]} equipment`;
+
+    // Preventive title month text
+    m=t.match(/^Preventivas\s+[–-]\s+(.+)$/i);
+    if(m)return `Preventive Maintenance – ${m[1]}`;
+
+    // Provider summary line
+    m=t.match(/^Previstas:\s*(\d+)\s*•\s*Realizadas:\s*(\d+)\s*•\s*Pendentes:\s*(\d+)\s*•\s*(.+)$/i);
+    if(m)return `Planned: ${m[1]} • Completed: ${m[2]} • Pending: ${m[3]} • ${m[4]}`;
+  }
+
+  return t;
+}
+
+function qrTranslateOptionElement(opt){
+  if(!opt || opt.tagName!=="OPTION")return;
+
+  if(!qrOriginalOptionValues.has(opt)){
+    const original=opt.hasAttribute("value")
+      ? opt.getAttribute("value")
+      : opt.textContent.trim();
+
+    qrOriginalOptionValues.set(opt,original);
+
+    if(!opt.hasAttribute("value")){
+      opt.setAttribute("value",original);
+    }
+  }
+
+  const current=opt.textContent.trim();
+  const translated=qrTranslateCompositeText(current);
+
+  if(translated!==current){
+    opt.textContent=translated;
+  }
+}
+
+function qrTranslateTextNode(node){
+  if(!node || node.nodeType!==Node.TEXT_NODE)return;
+
+  const raw=node.nodeValue;
+  const trimmed=raw.trim();
+  if(!trimmed)return;
+
+  const translated=qrTranslateCompositeText(trimmed);
+
+  if(translated!==trimmed){
+    const left=raw.match(/^\s*/)?.[0]||"";
+    const right=raw.match(/\s*$/)?.[0]||"";
+    node.nodeValue=left+translated+right;
+  }
+}
+
+function qrTranslateElementTree(root){
+  if(!root)return;
+
+  // Preserve option internal values before changing visible text.
+  if(root.tagName==="OPTION"){
+    qrTranslateOptionElement(root);
+  }
+
+  root.querySelectorAll?.("option").forEach(opt=>{
+    qrTranslateOptionElement(opt);
+  });
+
+  const walker=document.createTreeWalker(
+    root,
+    NodeFilter.SHOW_TEXT,
+    {
+      acceptNode(node){
+        const parent=node.parentElement;
+        if(!parent)return NodeFilter.FILTER_REJECT;
+        if(["SCRIPT","STYLE","TEXTAREA","INPUT"].includes(parent.tagName))return NodeFilter.FILTER_REJECT;
+        if(parent.tagName==="OPTION")return NodeFilter.FILTER_REJECT;
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    }
+  );
+
+  let node;
+  while((node=walker.nextNode())){
+    qrTranslateTextNode(node);
+  }
+}
+
+
+function qrTranslateAttributes(root){
+  if(!root)return;
+
+  root.querySelectorAll?.("input[placeholder],textarea[placeholder]").forEach(el=>{
+    const p=el.getAttribute("placeholder")||"";
+    if(!el.dataset.qrOriginalPlaceholder){
+      el.dataset.qrOriginalPlaceholder=p;
+    }
+
+    if(qrLanguage==="en-US"){
+      const translated=qrTranslateCompositeText(el.dataset.qrOriginalPlaceholder);
+      if(translated!==el.dataset.qrOriginalPlaceholder){
+        el.setAttribute("placeholder",translated);
+      }else if(el.dataset.qrOriginalPlaceholder==="Ex.: AC102_SP3P"){
+        el.setAttribute("placeholder","E.g.: AC102_SP3P");
+      }
+    }else{
+      el.setAttribute("placeholder",el.dataset.qrOriginalPlaceholder);
+    }
+  });
+
+  root.querySelectorAll?.("[title]").forEach(el=>{
+    const title=el.getAttribute("title")||"";
+    if(!el.dataset.qrOriginalTitle){
+      el.dataset.qrOriginalTitle=title;
+    }
+    if(qrLanguage==="en-US"){
+      const translated=qrTranslateCompositeText(el.dataset.qrOriginalTitle);
+      el.setAttribute("title",translated);
+    }else{
+      el.setAttribute("title",el.dataset.qrOriginalTitle);
+    }
+  });
+}
+
+function qrTranslateRoutineScreens(){
+  [
+    "searchArea","pendingArea","occurrenceReportArea","documentsArea",
+    "documentUploadArea","companyArea","providersAdminArea","auditArea",
+    "usersArea","preventiveControlArea","assetScreen","systemLoginModal",
+    "forgotPasswordModal","setPasswordModal","userModal","providerModal","providerConsultModal",
+    "preventiveModal","reportModal","manageModal",
+    "assetManagementPanel","assetEditModal",
+    "occurrenceCatalogArea","maintenancePendingArea"
+  ].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el){qrTranslateElementTree(el);qrTranslateAttributes(el);}
+  });
+}
+
+function qrInstallRoutineObserver(){
+  if(window.__qrRoutineObserver)return;
+
+  window.__qrRoutineObserver=new MutationObserver(mutations=>{
+    for(const m of mutations){
+      m.addedNodes.forEach(node=>{
+        if(node.nodeType===Node.ELEMENT_NODE){
+          qrTranslateElementTree(node);
+          qrTranslateAttributes(node);
+        }else if(node.nodeType===Node.TEXT_NODE){
+          qrTranslateTextNode(node);
+        }
+      });
+    }
+  });
+
+  window.__qrRoutineObserver.observe(document.body,{
+    childList:true,
+    subtree:true
+  });
+}
+
+
+const QR_DATE_CONTROL_IDS=[
+  {id:"occReportStart",mode:"date"},
+  {id:"occReportEnd",mode:"date"},
+  {id:"auditStart",mode:"date"},
+  {id:"auditEnd",mode:"date"},
+  {id:"controlCompetence",mode:"month"}
+];
+
+let qrCalendarState={
+  input:null,
+  mode:"date",
+  viewYear:null,
+  viewMonth:null
+};
+
+function qrLocale(){
+  return qrLanguage==="en-US"?"en-US":"pt-BR";
+}
+
+function qrParseIsoDate(value){
+  const m=String(value||"").match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if(!m)return null;
+  return new Date(Number(m[1]),Number(m[2])-1,Number(m[3]),12,0,0,0);
+}
+
+function qrParseIsoMonth(value){
+  const m=String(value||"").match(/^(\d{4})-(\d{2})$/);
+  if(!m)return null;
+  return new Date(Number(m[1]),Number(m[2])-1,1,12,0,0,0);
+}
+
+function qrIsoDate(d){
+  const y=d.getFullYear();
+  const m=String(d.getMonth()+1).padStart(2,"0");
+  const day=String(d.getDate()).padStart(2,"0");
+  return `${y}-${m}-${day}`;
+}
+
+function qrIsoMonth(d){
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`;
+}
+
+function qrFormatDateValue(value,mode){
+  if(!value)return qrLanguage==="en-US"?"Select date":"Selecionar data";
+
+  const d=mode==="month"?qrParseIsoMonth(value):qrParseIsoDate(value);
+  if(!d)return value;
+
+  if(mode==="month"){
+    return new Intl.DateTimeFormat(qrLocale(),{
+      month:"long",
+      year:"numeric"
+    }).format(d);
+  }
+
+  return new Intl.DateTimeFormat(qrLocale(),{
+    year:"numeric",
+    month:"2-digit",
+    day:"2-digit"
+  }).format(d);
+}
+
+function qrRefreshLocalizedDateControls(){
+  QR_DATE_CONTROL_IDS.forEach(cfg=>{
+    const input=document.getElementById(cfg.id);
+    if(!input)return;
+    const btn=document.querySelector(`[data-qr-date-for="${cfg.id}"]`);
+    if(!btn)return;
+    const value=btn.querySelector(".qr-date-value");
+    if(value)value.textContent=qrFormatDateValue(input.value,cfg.mode);
+    btn.title=qrLanguage==="en-US"?"Open calendar":"Abrir calendário";
+    btn.setAttribute("aria-label",btn.title);
+  });
+
+  const backdrop=document.getElementById("qrCalendarBackdrop");
+  if(backdrop && !backdrop.classList.contains("hidden")){
+    qrRenderCalendar();
+  }
+}
+
+function qrInstallLocalizedDateControls(){
+  QR_DATE_CONTROL_IDS.forEach(cfg=>{
+    const input=document.getElementById(cfg.id);
+    if(!input || input.dataset.qrLocalized==="1")return;
+
+    input.dataset.qrLocalized="1";
+    input.classList.add("qr-native-date-hidden");
+
+    const btn=document.createElement("button");
+    btn.type="button";
+    btn.className="qr-date-display";
+    btn.dataset.qrDateFor=cfg.id;
+    btn.innerHTML='<span class="qr-date-value"></span><span class="qr-date-icon">📅</span>';
+
+    input.insertAdjacentElement("afterend",btn);
+
+    btn.addEventListener("click",()=>{
+      qrOpenCalendar(input,cfg.mode);
+    });
+
+    input.addEventListener("change",()=>{
+      const value=btn.querySelector(".qr-date-value");
+      if(value)value.textContent=qrFormatDateValue(input.value,cfg.mode);
+    });
+  });
+
+  qrEnsureCalendarDom();
+  qrRefreshLocalizedDateControls();
+}
+
+function qrEnsureCalendarDom(){
+  if(document.getElementById("qrCalendarBackdrop"))return;
+
+  const back=document.createElement("div");
+  back.id="qrCalendarBackdrop";
+  back.className="qr-calendar-backdrop hidden";
+  back.innerHTML=`
+    <div class="qr-calendar-panel" role="dialog" aria-modal="true">
+      <div class="qr-calendar-header">
+        <button type="button" id="qrCalendarPrev" class="qr-calendar-nav">‹</button>
+        <div id="qrCalendarTitle" class="qr-calendar-title"></div>
+        <button type="button" id="qrCalendarNext" class="qr-calendar-nav">›</button>
+      </div>
+      <div id="qrCalendarBody"></div>
+      <div class="qr-calendar-actions">
+        <button type="button" id="qrCalendarToday" class="qr-calendar-today"></button>
+        <button type="button" id="qrCalendarClose" class="qr-calendar-close"></button>
+      </div>
+    </div>`;
+
+  document.body.appendChild(back);
+
+  back.addEventListener("click",e=>{
+    if(e.target===back)qrCloseCalendar();
+  });
+
+  document.getElementById("qrCalendarClose").onclick=qrCloseCalendar;
+  document.getElementById("qrCalendarPrev").onclick=()=>qrShiftCalendar(-1);
+  document.getElementById("qrCalendarNext").onclick=()=>qrShiftCalendar(1);
+  document.getElementById("qrCalendarToday").onclick=qrSelectToday;
+}
+
+function qrOpenCalendar(input,mode){
+  qrEnsureCalendarDom();
+
+  qrCalendarState.input=input;
+  qrCalendarState.mode=mode;
+
+  let d=mode==="month"?qrParseIsoMonth(input.value):qrParseIsoDate(input.value);
+  if(!d)d=new Date();
+
+  qrCalendarState.viewYear=d.getFullYear();
+  qrCalendarState.viewMonth=d.getMonth();
+
+  document.getElementById("qrCalendarBackdrop").classList.remove("hidden");
+  qrRenderCalendar();
+}
+
+function qrCloseCalendar(){
+  const back=document.getElementById("qrCalendarBackdrop");
+  if(back)back.classList.add("hidden");
+}
+
+function qrShiftCalendar(delta){
+  if(qrCalendarState.mode==="month"){
+    qrCalendarState.viewYear+=delta;
+  }else{
+    const d=new Date(qrCalendarState.viewYear,qrCalendarState.viewMonth+delta,1);
+    qrCalendarState.viewYear=d.getFullYear();
+    qrCalendarState.viewMonth=d.getMonth();
+  }
+  qrRenderCalendar();
+}
+
+function qrSelectToday(){
+  const input=qrCalendarState.input;
+  if(!input)return;
+
+  const now=new Date();
+  input.value=qrCalendarState.mode==="month"?qrIsoMonth(now):qrIsoDate(now);
+  input.dispatchEvent(new Event("change",{bubbles:true}));
+  qrCloseCalendar();
+}
+
+function qrSelectDate(d){
+  const input=qrCalendarState.input;
+  if(!input)return;
+
+  input.value=qrIsoDate(d);
+  input.dispatchEvent(new Event("change",{bubbles:true}));
+  qrCloseCalendar();
+}
+
+function qrSelectMonth(monthIndex){
+  const input=qrCalendarState.input;
+  if(!input)return;
+
+  const d=new Date(qrCalendarState.viewYear,monthIndex,1);
+  input.value=qrIsoMonth(d);
+  input.dispatchEvent(new Event("change",{bubbles:true}));
+  qrCloseCalendar();
+}
+
+function qrRenderCalendar(){
+  const title=document.getElementById("qrCalendarTitle");
+  const body=document.getElementById("qrCalendarBody");
+  const todayBtn=document.getElementById("qrCalendarToday");
+  const closeBtn=document.getElementById("qrCalendarClose");
+  if(!title||!body)return;
+
+  todayBtn.textContent=qrLanguage==="en-US"?"Today":"Hoje";
+  closeBtn.textContent=qrLanguage==="en-US"?"Cancel":"Cancelar";
+
+  if(qrCalendarState.mode==="month"){
+    title.textContent=String(qrCalendarState.viewYear);
+    document.getElementById("qrCalendarPrev").title=qrLanguage==="en-US"?"Previous year":"Ano anterior";
+    document.getElementById("qrCalendarNext").title=qrLanguage==="en-US"?"Next year":"Próximo ano";
+
+    const selected=qrParseIsoMonth(qrCalendarState.input?.value);
+    const months=Array.from({length:12},(_,i)=>
+      new Intl.DateTimeFormat(qrLocale(),{month:"long"}).format(new Date(2026,i,1))
+    );
+
+    body.innerHTML='<div class="qr-month-grid">'+months.map((name,i)=>{
+      const isSelected=selected &&
+        selected.getFullYear()===qrCalendarState.viewYear &&
+        selected.getMonth()===i;
+      return `<button type="button" class="qr-month-button${isSelected?" selected":""}" data-month="${i}">${name}</button>`;
+    }).join("")+'</div>';
+
+    body.querySelectorAll("[data-month]").forEach(btn=>{
+      btn.onclick=()=>qrSelectMonth(Number(btn.dataset.month));
+    });
+    return;
+  }
+
+  const monthDate=new Date(qrCalendarState.viewYear,qrCalendarState.viewMonth,1);
+  title.textContent=new Intl.DateTimeFormat(qrLocale(),{
+    month:"long",
+    year:"numeric"
+  }).format(monthDate);
+
+  document.getElementById("qrCalendarPrev").title=qrLanguage==="en-US"?"Previous month":"Mês anterior";
+  document.getElementById("qrCalendarNext").title=qrLanguage==="en-US"?"Next month":"Próximo mês";
+
+  const weekdays=qrLanguage==="en-US"
+    ? ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"]
+    : ["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"];
+
+  const first=new Date(qrCalendarState.viewYear,qrCalendarState.viewMonth,1);
+  const start=new Date(qrCalendarState.viewYear,qrCalendarState.viewMonth,1-first.getDay());
+  const selected=qrParseIsoDate(qrCalendarState.input?.value);
+  const today=new Date();
+
+  let days="";
+  for(let i=0;i<42;i++){
+    const d=new Date(start);
+    d.setDate(start.getDate()+i);
+
+    const other=d.getMonth()!==qrCalendarState.viewMonth;
+    const isToday=
+      d.getFullYear()===today.getFullYear() &&
+      d.getMonth()===today.getMonth() &&
+      d.getDate()===today.getDate();
+    const isSelected=selected &&
+      d.getFullYear()===selected.getFullYear() &&
+      d.getMonth()===selected.getMonth() &&
+      d.getDate()===selected.getDate();
+
+    days+=`<button type="button"
+      class="qr-calendar-day${other?" other":""}${isToday?" today":""}${isSelected?" selected":""}"
+      data-date="${qrIsoDate(d)}">${d.getDate()}</button>`;
+  }
+
+  body.innerHTML=
+    '<div class="qr-calendar-weekdays">'+weekdays.map(w=>`<div>${w}</div>`).join("")+'</div>'+
+    '<div class="qr-calendar-grid">'+days+'</div>';
+
+  body.querySelectorAll("[data-date]").forEach(btn=>{
+    btn.onclick=()=>{
+      const d=qrParseIsoDate(btn.dataset.date);
+      if(d)qrSelectDate(d);
+    };
+  });
+}
+
+function qrApplyLanguage(lang){
+  qrLanguage=lang==="en-US"?"en-US":"pt-BR";
+  try{localStorage.setItem(QR_LANG_KEY,qrLanguage)}catch(e){}
+
+  const texts=QR_TEXT[qrLanguage]||QR_TEXT["pt-BR"];
+  Object.keys(texts).forEach(id=>{
+    const el=document.getElementById(id);
+    if(el)el.textContent=texts[id];
+  });
+
+  const placeholders=QR_PLACEHOLDERS[qrLanguage]||QR_PLACEHOLDERS["pt-BR"];
+  Object.keys(placeholders).forEach(id=>{
+    const el=document.getElementById(id);
+    if(el)el.placeholder=placeholders[id];
+  });
+
+  const pt=document.getElementById("qrLangPt");
+  const en=document.getElementById("qrLangEn");
+  if(pt)pt.classList.toggle("active",qrLanguage==="pt-BR");
+  if(en)en.classList.toggle("active",qrLanguage==="en-US");
+
+  document.documentElement.lang=qrLanguage==="en-US"?"en":"pt-BR";
+
+  qrTranslateRoutineScreens();
+  qrRefreshLocalizedDateControls();
+  if(systemSession?.perfil==="MASTER")refreshAccessRequestMenuBadge76616();
+
+  // Headings/labels that have no functional event attached.
+  const safeText=[
+    ["#systemLoginModal h2","🔐 Acesso ao QRManut","🔐 QRManut Access"],
+    ["#pendingArea h2","⚠️ OCs Pendentes","⚠️ Pending Work Orders"],
+    ["#occurrenceReportArea h2","📊 Relatório de OCs","📊 Work Order Report"],
+    ["#documentsArea h2","📄 Documentos Técnicos","📄 Technical Documents"],
+    ["#documentUploadArea h2","📤 Upload de Documentos","📤 Upload Documents"],
+    ["#usersArea h2","👥 Gestão de Usuários","👥 User Management"],
+    ["#auditArea h2","🧾 Auditoria","🧾 Audit"],
+    ["#providersAdminArea h2","🏢 Prestadores","🏢 Service Providers"],
+    ["#companyArea h2","⚙️ Configuração da Empresa","⚙️ Company Configuration"],
+    ["#manageModal h2","Gerenciar ocorrência","Manage Work Order"]
+  ];
+  safeText.forEach(([selector,ptText,enText])=>{
+    const el=document.querySelector(selector);
+    if(el)el.textContent=qrLanguage==="en-US"?enText:ptText;
+  });
+
+  if($("searchInput"))$("searchInput").placeholder=(QR_PLACEHOLDERS[qrLanguage]||QR_PLACEHOLDERS["pt-BR"]).searchInput;
+  if($("documentSearchInput"))$("documentSearchInput").placeholder=(QR_PLACEHOLDERS[qrLanguage]||QR_PLACEHOLDERS["pt-BR"]).documentSearchInput;
+  if($("auditSearch"))$("auditSearch").placeholder=(QR_PLACEHOLDERS[qrLanguage]||QR_PLACEHOLDERS["pt-BR"]).auditSearch;
+  if($("reportCategoryLabel"))$("reportCategoryLabel").textContent=qrLanguage==="en-US"?"Category *":"Categoria *";
+  if($("reportComponentLabel"))$("reportComponentLabel").textContent=qrLanguage==="en-US"?"Component *":"Componente *";
+  if(currentAsset){
+    renderAsset(currentAsset);
+    renderStatusFromCurrent();
+    if(systemSession&&Array.isArray(history))renderHistory(history);
+    updateBackAssetButton();
+  }
+  if($("pendingAccessNote")&&!$("pendingArea").classList.contains("hidden")){
+    if(systemSession?.perfil==="PRESTADOR"){
+      $("pendingAccessNote").innerHTML=qrLanguage==="en-US"
+        ? `You are viewing only work orders for equipment assigned to service provider <b>${esc(systemSession.prestador)}</b>.`
+        : `Você está visualizando somente as OCs dos equipamentos do prestador <b>${esc(systemSession.prestador)}</b>.`;
+    }else{
+      $("pendingAccessNote").textContent=qrLanguage==="en-US"
+        ? "MASTER view: use the filters below to view pending work orders."
+        : "Visão MASTER: utilize os filtros abaixo para consultar as OCs pendentes.";
+    }
+  }
+
+
+  if($("occurrenceCatalogTitle"))$("occurrenceCatalogTitle").textContent=qrLanguage==="en-US"?"🧩 Categories & Components":"🧩 Categorias e Componentes";
+  if($("occurrenceCatalogHelp"))$("occurrenceCatalogHelp").textContent=qrLanguage==="en-US"?"Manage the options shown in the work order form. New items are added automatically at the end. Use ↑ and ↓ to reorder.":"Cadastre as opções exibidas no formulário de ocorrência. Novos itens entram automaticamente no final da lista. Use ↑ e ↓ para reorganizar.";
+  if($("catalogCategoryHeading"))$("catalogCategoryHeading").textContent=qrLanguage==="en-US"?"Categories":"Categorias";
+  if($("catalogComponentHeading"))$("catalogComponentHeading").textContent=qrLanguage==="en-US"?"Components":"Componentes";
+  if($("catalogCategoryPtLabel"))$("catalogCategoryPtLabel").firstChild.nodeValue=qrLanguage==="en-US"?"Name in Portuguese *":"Nome em português *";
+  if($("catalogCategoryEnLabel"))$("catalogCategoryEnLabel").firstChild.nodeValue=qrLanguage==="en-US"?"Name in English":"Nome em inglês";
+  if($("catalogCategoryActiveLabel"))$("catalogCategoryActiveLabel").textContent=qrLanguage==="en-US"?"Active":"Ativa";
+  if($("saveCatalogCategory"))$("saveCatalogCategory").textContent=qrLanguage==="en-US"?"Save Category":"Salvar categoria";
+  if($("clearCatalogCategory"))$("clearCatalogCategory").textContent=qrLanguage==="en-US"?"Clear":"Limpar";
+  if($("catalogComponentCategoryLabel"))$("catalogComponentCategoryLabel").firstChild.nodeValue=qrLanguage==="en-US"?"Category *":"Categoria *";
+  if($("catalogComponentPtLabel"))$("catalogComponentPtLabel").firstChild.nodeValue=qrLanguage==="en-US"?"Name in Portuguese *":"Nome em português *";
+  if($("catalogComponentEnLabel"))$("catalogComponentEnLabel").firstChild.nodeValue=qrLanguage==="en-US"?"Name in English":"Nome em inglês";
+  if($("catalogComponentActiveLabel"))$("catalogComponentActiveLabel").textContent=qrLanguage==="en-US"?"Active":"Ativo";
+  if($("saveCatalogComponent"))$("saveCatalogComponent").textContent=qrLanguage==="en-US"?"Save Component":"Salvar componente";
+  if($("clearCatalogComponent"))$("clearCatalogComponent").textContent=qrLanguage==="en-US"?"Clear":"Limpar";
+  if(occurrenceCatalogAdminData)renderOccurrenceCatalogAdmin();
+  if(occurrenceCatalogData&&$("category"))populateOccurrenceCategorySelect($("category").value,$("component").value);
+  if(preventiveControlData)renderPreventiveControl();
+  if(occurrenceReportData)renderOccurrenceReport();
+  if($("documentsArea")&&!$("documentsArea").classList.contains("hidden")){
+    documentFiltersLoaded=false;
+    loadDocumentFilters().then(()=>searchDocuments()).catch(()=>{});
+  }
+  if($("uploadDocumentFileLabel"))$("uploadDocumentFileLabel").textContent=qrLanguage==="en-US"?"PDF File *":"Arquivo PDF *";
+  if($("uploadDocumentChooseFileButton"))$("uploadDocumentChooseFileButton").textContent=qrLanguage==="en-US"?"📎 Choose PDF File":"📎 Escolher arquivo PDF";
+  if($("uploadDocumentFileName")&&!documentUploadFileData)$("uploadDocumentFileName").textContent=qrLanguage==="en-US"?"No file selected.":"Nenhum arquivo selecionado.";
+
+
+  if($("maintenancePendingTitle"))$("maintenancePendingTitle").textContent=qrLanguage==="en-US"?"📌 Pending Actions":"📌 Pendências / Providências";
+  if($("maintenancePendingHelp"))$("maintenancePendingHelp").textContent=qrLanguage==="en-US"?"Needs identified during preventive maintenance that require follow-up.":"Necessidades identificadas durante as preventivas e que exigem alguma providência.";
+  if($("preventiveNeedsActionLabel"))$("preventiveNeedsActionLabel").textContent=qrLanguage==="en-US"?"Was any follow-up action identified?":"Foi identificada alguma necessidade de providência?";
+  if($("preventiveActionHeading"))$("preventiveActionHeading").textContent=qrLanguage==="en-US"?"📌 Required action":"📌 Providência necessária";
+  if($("preventiveActionNotice"))$("preventiveActionNotice").textContent=qrLanguage==="en-US"?"When the preventive maintenance is saved, this need will be registered under Pending Actions and communicated to the responsible users.":"Ao salvar a preventiva, esta necessidade será registrada em Pendências / Providências e comunicada aos responsáveis.";
+
+}
+
+function qrLoadLanguage(){
+  let lang="pt-BR";
+  try{
+    const saved=localStorage.getItem(QR_LANG_KEY);
+    if(saved==="en-US"||saved==="pt-BR")lang=saved;
+  }catch(e){}
+  qrApplyLanguage(lang);
+}
+
+document.getElementById("qrLangPt").addEventListener("click",function(){
+  qrApplyLanguage("pt-BR");
+  qrTranslateRoutineScreens();
+  qrTranslateElementTree(document.body);
+  qrTranslateAttributes(document.body);
+});
+document.getElementById("qrLangEn").addEventListener("click",function(){
+  qrApplyLanguage("en-US");
+  qrTranslateRoutineScreens();
+});
+
+$("otherProblemButton").onclick=openPublicSolicitation7662412;
+$("cancelSolPublic").onclick=()=>{if(!solPublicPosting)$("solPublicModal").style.display="none"};
+$("sendSolPublic").onclick=sendPublicSolicitation7662412;
+$("solFloor").onchange=populateSolLocation7662412;
+$("solLocation").onchange=updateSolOtherLocation7662412;
+$("solCameraButton").onclick=()=>$("solCameraInput").click();
+$("solGalleryButton").onclick=()=>$("solPhotoInput").click();
+$("solCameraInput").onchange=function(){handleSolPublicImage7662412(this.files?.[0])};
+$("solPhotoInput").onchange=function(){handleSolPublicImage7662412(this.files?.[0])};
+$("tabSolicitations").onclick=showSolicitationsTab7662412;
+$("solicitationsBackMenu").onclick=openDefaultAllowedTab;
+$("solRefresh").onclick=loadSolicitations7662412;
+$("solStatusFilter").onchange=loadSolicitations7662412;
+$("solFloorFilter").onchange=loadSolicitations7662412;
+$("solSearch").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();loadSolicitations7662412()}};
+$("closeSolDetail").onclick=()=>{$("solDetailModal").style.display="none"};
+$("solAssetSearch").oninput=renderSolAssetOptions7662412;
+$("solOccurrenceCategory").onchange=populateSolOccurrenceComponents7662412;
+$("cancelSolConvert").onclick=()=>{if(!solActionPosting)$("solConvertModal").style.display="none"};
+$("confirmSolConvert").onclick=confirmSolConvert7662412;
+$("cancelSolClose").onclick=()=>{if(!solActionPosting)$("solCloseModal").style.display="none"};
+$("confirmSolClose").onclick=confirmSolClose7662412;
+$("openSystemLoginButton").onclick=()=>requireSystemLogin(openMainMenu);$("forgotPasswordButton").onclick=openForgotPassword;$("cancelRecovery").onclick=()=>{$("forgotPasswordModal").style.display="none";$("systemLoginModal").style.display="flex"};$("sendRecovery").onclick=sendRecovery;$("openAccessRequestButton").onclick=openAccessRequestForm76616;$("cancelAccessRequestButton").onclick=()=>{hide("accessRequestForm");show("recoveryNotRegisteredBox")};$("sendAccessRequestButton").onclick=sendAccessRequest76616;$("accessRequestBackToLoginButton").onclick=backToLoginAfterAccessRequest76617;$("resendPendingInviteButton").onclick=resendPendingInvite76616;$("saveNewPassword").onclick=savePasswordFromToken;$("tabUsers").onclick=showUsersTab;$("newUserButton").onclick=openNewUser;$("tabPermissions").onclick=showProfilePermissionsTab;$("permissionsBackMenu").onclick=openDefaultAllowedTab;$("saveProfilePermissions").onclick=saveProfilePermissions76613;$("resetProfilePermissions").onclick=resetProfilePermissions76613;$("tabAudit").onclick=showAuditTab;$("tabProvidersAdmin").onclick=showProvidersAdminTab;$("tabCompany").onclick=showCompanyTab;$("companyBackMenu").onclick=openDefaultAllowedTab;$("providersBackMenu").onclick=openDefaultAllowedTab;$("newProviderButton").onclick=()=>openProviderModal(null);$("cancelProvider").onclick=()=>{$("providerModal").style.display="none"};$("closeProviderConsult").onclick=()=>{$("providerConsultModal").style.display="none"};$("saveProvider").onclick=saveProviderAdmin;$("saveCompanyConfig").onclick=saveCompanyConfig;["companyName","companyTradeName","companySystemName","companyLogo"].forEach(id=>$(id).oninput=updateCompanyPreview);
+$("companyPrimaryColor").addEventListener("input",updateCompanyPreview);
+$("companyPrimaryColor").addEventListener("change",updateCompanyPreview);$("auditRefresh").onclick=loadAudit;$("auditClear").onclick=clearAuditFilters;$("auditSearch").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();loadAudit()}};$("cancelUser").onclick=()=>{$("userModal").style.display="none"};$("saveUser").onclick=saveUser;$("userEmail").oninput=updateUserPrimaryAction76617;$("cancelAdminUserPassword").onclick=()=>{$("adminUserPasswordModal").style.display="none"};$("saveAdminUserPassword").onclick=saveAdminUserPassword76617;$("sendSystemLogin").onclick=doSystemLogin;$("systemPassword").onkeydown=e=>{if(e.key==="Enter")doSystemLogin()};$("cancelSystemLogin").onclick=()=>{systemLoginNextAction=null;$("systemLoginModal").style.display="none";if(!systemSession)showMenuGate()};$("systemLogoutButton").onclick=logoutSystemMenu;$("installAppButton").onclick=installQRManut;$("tabSearch").onclick=showSearchTab;$("tabPending").onclick=showPendingTab;$("pendingApplyFilters").onclick=loadPending;$("pendingClearFilters").onclick=clearPendingFilters;$("tabOccurrenceReport").onclick=showOccurrenceReportTab;$("tabPreventive").onclick=showPreventiveTab;$("tabDocuments").onclick=showDocumentsTab;$("tabMaintenancePending").onclick=showMaintenancePendingTab;$("maintenancePendingBackMenu").onclick=openDefaultAllowedTab;$("maintenancePendingRefresh").onclick=loadMaintenancePending;$("maintenancePendingClear").onclick=clearMaintenancePendingFilters;$("maintenancePendingSearch").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();loadMaintenancePending()}};$("maintenancePendingStatusFilter").onchange=loadMaintenancePending;$("maintenancePendingPriorityFilter").onchange=loadMaintenancePending;$("preventiveNeedsAction").onchange=togglePreventiveActionFields;$("tabOccurrenceCatalog").onclick=showOccurrenceCatalogTab;$("occurrenceCatalogBackMenu").onclick=openDefaultAllowedTab;$("saveCatalogCategory").onclick=saveCatalogCategory;$("clearCatalogCategory").onclick=clearCatalogCategoryForm;$("saveCatalogComponent").onclick=saveCatalogComponent;$("clearCatalogComponent").onclick=clearCatalogComponentForm;$("category").onchange=()=>populateOccurrenceComponentSelect();$("manageCategory").onchange=()=>populateManageCatalog($("manageCategory").value,"");$("tabDocumentUpload").onclick=showDocumentUploadTab;$("documentUploadBackMenu").onclick=cancelDocumentUpload;$("uploadDocumentChooseFileButton").onclick=()=>$("uploadDocumentFile").click();$("uploadDocumentFile").onchange=prepareDocumentUploadFile;$("sendDocumentUpload").onclick=sendDocumentUpload;$("clearDocumentUpload").onclick=clearDocumentUploadForm;$("searchButton").onclick=searchAssets;$("searchInput").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();searchAssets()}};$("documentSearchButton").onclick=searchDocuments;$("documentSearchInput").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();searchDocuments()}};$("documentTypeFilter").onchange=searchDocuments;$("documentDisciplineFilter").onchange=searchDocuments;$("documentFloorFilter").onchange=searchDocuments;$("reportButton").onclick=openReport;$("preventiveButton").onclick=requestPreventive;
+$("searchAssetsButton").onclick=function(){if(currentAsset?.id)setOriginAsset(currentAsset.id);requireSystemLogin(()=>{hide("assetScreen");show("searchScreen");openMainMenu();focusBackAssetButton()})};
+$("backAssetButton").onclick=function(){const id=getOriginAsset();if(!id)return;clearOriginAsset();location.href="?id="+encodeURIComponent(id)};
+$("occReportRefresh").onclick=loadOccurrenceReport;$("occReportPdf").onclick=generateOccurrenceReportPdf;["occReportStart","occReportEnd","occReportProvider","occReportCategory","occReportComponent","occReportFloor","occReportLocation"].forEach(id=>$(id).onchange=markOccurrenceReportDirty);$("controlRefresh").onclick=refreshPreventiveControl;$("controlCompetence").onchange=loadPreventiveControl;$("controlProvider").onchange=()=>{if(["MASTER","GESTOR"].includes(systemSession?.perfil))loadPreventiveControl();else renderControlList()};$("controlAll").onclick=()=>setControlMode("all");$("controlPending").onclick=()=>setControlMode("pending");$("controlDone").onclick=()=>setControlMode("done");$("sendMonthlyReport").onclick=sendMonthlyPreventiveReport;
+$("preventiveLogout").onclick=()=>openDefaultAllowedTab();$("cancelPreventive").onclick=()=>{if(!preventivePosting)$("preventiveModal").style.display="none"};$("savePreventive").onclick=savePreventive;$("cancelReport").onclick=function(){if(reportPosting){if(reportCompleted){reportPosting=false;reportCompleted=false;$("reportModal").style.display="none";location.reload()}return}$("reportModal").style.display="none"};$("sendReport").onclick=sendReport;$("historySelect").onchange=function(){renderHistoryItem(Number(this.value))};$("manageStatus").onchange=toggleConclusion;$("cancelManage").onclick=()=>{if(!managePosting)$("manageModal").style.display="none"};$("saveManage").onclick=saveManage;$("deleteOccurrence").onclick=deleteOccurrenceRecord;$("signatureCanvas").addEventListener("pointerdown",signatureStart);$("signatureCanvas").addEventListener("pointermove",signatureMove);window.addEventListener("pointerup",signatureEnd);$("clearSignature").onclick=clearSignatureCanvas;
+qrLoadLanguage();
+qrInstallRoutineObserver();
+qrTranslateRoutineScreens();
+qrTranslateElementTree(document.body);
+qrTranslateAttributes(document.body);
+
+[
+  "tabSearch","tabPending","tabSolicitations","tabOccurrenceReport","tabPreventive",
+  "tabDocuments","tabDocumentUpload","tabUsers","tabPermissions","tabAudit",
+  "tabProvidersAdmin","tabCompany","reportButton","otherProblemButton","preventiveButton"
+].forEach(id=>{
+  const el=document.getElementById(id);
+  if(el)el.addEventListener("click",()=>{
+    setTimeout(qrTranslateRoutineScreens,0);
+    setTimeout(qrTranslateRoutineScreens,250);
+  });
+});
+
+
+qrInstallLocalizedDateControls();
+async function main(){buildManageDropdowns();setupPasswordToggles();readPreventiveSession();readSystemSession();setupInstallExperience();await loadPublicAppConfig();qrApplyLanguage(qrLanguage);if(await openSetPasswordFromUrl())return;$("controlCompetence").value=currentCompetence();setDefaultOccurrenceReportDates();const id=getId();if(!id||id==="EQBUSCA"){clearOriginAsset();show("searchScreen");if(await systemSessionIsValid())openMainMenu();else showMenuGate();return}await loadAsset(id)}main();
+
+$("tabAssetManagement").onclick=openAssetManagement760;
+$("assetNewButton").onclick=()=>openAssetModal760(null);
+$("assetCancel").onclick=()=>$("assetEditModal").style.display="none";
+$("assetSave").onclick=()=>saveAsset760().catch(e=>alert(e.message));
+$("assetSuggestNumber").onclick=()=>suggestAssetNumber760().catch(e=>alert(e.message));
+$("assetSearch").oninput=renderAssets760;
+["assetPrefix","assetBaseNumber","assetTypeCode","assetFloorCode"].forEach(id=>{
+  $(id).addEventListener("input",assetBuildId760);
+  $(id).addEventListener("change",assetBuildId760);
+});
+$("assetCategory").addEventListener("change",()=>assetToggleOther7610("assetCategory","assetCategoryOther"));
+$("assetMaintenanceClass").addEventListener("change",()=>assetToggleOther7610("assetMaintenanceClass","assetMaintenanceClassOther"));
+$("assetPeriodicity").addEventListener("change",()=>assetToggleOther7610("assetPeriodicity","assetPeriodicityOther"));
+$("assetFloor").addEventListener("change",()=>{
+  assetToggleOther7610("assetFloor","assetFloorOther");
+  assetRefreshLocations7610("");
+});
+$("assetFloorOther").addEventListener("input",()=>assetRefreshLocations7610(""));
+$("assetLocation").addEventListener("change",()=>assetToggleOther7610("assetLocation","assetLocationOther"));
+
+</script>
+
+</body>
+</html>
