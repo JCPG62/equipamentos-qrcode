@@ -1,4 +1,4 @@
-<!-- QRManut 7.6.6.24 frontend hotfix: CONFIG-UX-R3 -->
+<!-- QRManut 7.6.6.24 frontend hotfix: CONFIG-UX-R3 + OC-PERFORMANCE-R4 -->
 <!doctype html>
 <html lang="pt-br">
 <head>
@@ -2254,7 +2254,7 @@ async function sendReport(){
   $("reportMessage").className="message loading";
   $("reportMessage").textContent=reportText76619("Registrando ocorrência...","Submitting work order...");
   try{
-    const r=await apiPost({action:"reportOccurrence",id:currentAsset.id,reportadoPor:name,contato:$("reporterContact").value,categoriaOcorrencia:$("category").value,componenteAfetado:$("component").value,descricao:description,fotoBase64:photoData?.base64||"",fotoNome:photoData?.name||"",fotoMime:photoData?.mime||"",attachmentBase64:reportAttachmentData?.base64||"",attachmentNome:reportAttachmentData?.name||"",attachmentMime:reportAttachmentData?.mime||""});
+    const r=await apiPost({action:"reportOccurrence",systemSessionToken:systemSession?.systemSessionToken||"",id:currentAsset.id,reportadoPor:name,contato:$("reporterContact").value,categoriaOcorrencia:$("category").value,componenteAfetado:$("component").value,descricao:description,fotoBase64:photoData?.base64||"",fotoNome:photoData?.name||"",fotoMime:photoData?.mime||"",attachmentBase64:reportAttachmentData?.base64||"",attachmentNome:reportAttachmentData?.name||"",attachmentMime:reportAttachmentData?.mime||""});
     if(!r.ok)throw new Error(r.detail||reportText76619("Não foi possível registrar a ocorrência.","The work order could not be submitted."));
     if(r.processamentoMs!=null)console.info("QRManut reportOccurrence:",r.processamentoMs,"ms; notificationsQueued=",!!r.notificacoesEmFila);
     let n="";
