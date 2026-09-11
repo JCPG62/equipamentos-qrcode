@@ -1,4 +1,4 @@
-<!-- QRManut 7.6.6.24.12: R12 SOL + HOTFIX UX — fechamento automático da janela após envio -->
+<!-- QRManut 7.6.6.24.12: R12 SOL + HOTFIX UX — abrir OC vinculada imediatamente após conversão -->
 <!doctype html>
 <html lang="pt-br">
 <head>
@@ -1049,7 +1049,7 @@ html,body{max-width:100%;overflow-x:hidden}
   <label>Categoria *<select id="solOccurrenceCategory"><option value="">Selecione...</option></select></label>
   <label>Componente *<select id="solOccurrenceComponent"><option value="">Selecione...</option></select></label>
   <div id="solConvertMessage" class="message"></div>
-  <div class="modal-actions"><button id="cancelSolConvert" class="btn btn-secondary">Cancelar</button><button id="confirmSolConvert" class="btn btn-green">Criar OC</button></div>
+  <div class="modal-actions"><button id="cancelSolConvert" class="btn btn-secondary">Cancelar</button><button id="openCreatedSolOccurrence" class="btn btn-blue hidden">Abrir OC vinculada</button><button id="confirmSolConvert" class="btn btn-green">Criar OC</button></div>
 </div></div>
 
 <div id="solCloseModal" class="modal"><div class="modal-box">
@@ -1075,7 +1075,7 @@ html,body{max-width:100%;overflow-x:hidden}
 <script>
 const API_URL="https://script.google.com/macros/s/AKfycbx4tpC42Q6WdkNhTUTAGoZWvG5M24zwlNscnwbDP5B3Q5pWo8B32-Lf0rQ2Xtua1AFMAQ/exec";
 const TOKEN="";const SYSTEM_SESSION_KEY="qrmanut_system_session";const RESPONSIBLE_KEY="qrmanut_responsavel";const PREVENTIVE_SESSION_KEY="qrmanut_preventive_session";const ORIGIN_ASSET_KEY="qrmanut_origin_asset";const MAX_DIM=1280;const QUALITY=.72;
-let systemSession=null,systemLoginNextAction=null,currentAsset=null,currentAssetStatus=null,history=[],selectedOccurrence=null,preventiveControlData=null,preventiveControlMode="all",preventiveSession=null,preventiveRequirements=null,loginNextAction=null,photoData=null,reportAttachmentData=null,preventivePhotoData=null,preventiveDocumentFiles=[],correctionPhotoData=null,manageAttachmentData=null,conclusionPhotoData=null,reportPosting=false,reportCompleted=false,preventivePosting=false,managePosting=false,signatureDirty=false,signatureDrawing=false,signatureCtx=null,occurrenceReportData=null,occurrenceReportFiltersLoaded=false,pendingFiltersLoaded=false,auditFiltersLoaded=false,companyConfigLoaded=false,providersAdminData=[],usersAdminData=[],profilePermissionsAdminData=null,solPublicMeta=null,solPhotoData=null,solTriageData=null,solTriageMeta=null,solSelected=null,solSelectedAssetId="",solPublicPosting=false,solActionPosting=false;
+let systemSession=null,systemLoginNextAction=null,currentAsset=null,currentAssetStatus=null,history=[],selectedOccurrence=null,preventiveControlData=null,preventiveControlMode="all",preventiveSession=null,preventiveRequirements=null,loginNextAction=null,photoData=null,reportAttachmentData=null,preventivePhotoData=null,preventiveDocumentFiles=[],correctionPhotoData=null,manageAttachmentData=null,conclusionPhotoData=null,reportPosting=false,reportCompleted=false,preventivePosting=false,managePosting=false,signatureDirty=false,signatureDrawing=false,signatureCtx=null,occurrenceReportData=null,occurrenceReportFiltersLoaded=false,pendingFiltersLoaded=false,auditFiltersLoaded=false,companyConfigLoaded=false,providersAdminData=[],usersAdminData=[],profilePermissionsAdminData=null,solPublicMeta=null,solPhotoData=null,solTriageData=null,solTriageMeta=null,solSelected=null,solSelectedAssetId="",solPublicPosting=false,solActionPosting=false,solLastCreatedOccurrence7662412=null;
 const SOL_TARGET_OC_KEY="qrmanut_sol_target_oc";
 const $=id=>document.getElementById(id);
 
@@ -2969,7 +2969,11 @@ function populateSolOccurrenceComponents7662412(){
 
 async function openSolConvert7662412(id){
   solSelected=getSolFromLoaded7662412(id);if(!solSelected)return;
-  solSelectedAssetId="";$("solAssetSearch").value="";$("solAssetSelected").className="message";$("solAssetSelected").textContent="";$("solConvertMessage").className="message";$("solConvertMessage").textContent="";
+  solSelectedAssetId="";solLastCreatedOccurrence7662412=null;
+  $("solAssetSearch").value="";$("solAssetSelected").className="message";$("solAssetSelected").textContent="";$("solConvertMessage").className="message";$("solConvertMessage").textContent="";
+  hide("openCreatedSolOccurrence");
+  $("confirmSolConvert").classList.remove("hidden");
+  $("cancelSolConvert").textContent=solT7662412("Cancelar","Cancel");
   $("solConvertSummary").innerHTML=`<b>${esc(solSelected.idSolicitacao)}</b><br>${esc(solSelected.pavimento)} — ${esc(solSelected.local)}<div class="sol-description">${esc(solSelected.descricao)}</div>`;
   $("solConvertModal").style.display="flex";
   try{
@@ -2987,10 +2991,31 @@ async function confirmSolConvert7662412(){
   try{
     const r=await menuApiPost({action:"convertsoltooccurrence",solId:solSelected.idSolicitacao,solAssetId:solSelectedAssetId,solOccurrenceCategory:$("solOccurrenceCategory").value,solOccurrenceComponent:$("solOccurrenceComponent").value});
     if(!r.ok)throw new Error(r.detail||solT7662412("Não foi possível criar a OC.","Unable to create the work order."));
-    $("solConvertMessage").className="message success";$("solConvertMessage").textContent=solT7662412(`OC ${r.ocorrencia} criada e vinculada à ${solSelected.idSolicitacao}.`,`Work order ${r.ocorrencia} created and linked to ${solSelected.idSolicitacao}.`);
-    setTimeout(async()=>{$("solConvertModal").style.display="none";await loadSolicitations7662412()},900);
+    solLastCreatedOccurrence7662412={idAtivo:r.idAtivo,ocorrencia:r.ocorrencia};
+    $("solConvertMessage").className="message success";
+    $("solConvertMessage").textContent=solT7662412(
+      `OC ${r.ocorrencia} criada e vinculada à ${solSelected.idSolicitacao}.`,
+      `Work order ${r.ocorrencia} created and linked to ${solSelected.idSolicitacao}.`
+    );
+    $("confirmSolConvert").classList.add("hidden");
+    $("openCreatedSolOccurrence").classList.remove("hidden");
+    $("cancelSolConvert").textContent=solT7662412("Voltar à lista","Back to list");
+    await refreshSolMenuBadge7662412();
   }catch(e){$("solConvertMessage").className="message error";$("solConvertMessage").textContent=e.message}
   finally{solActionPosting=false;$("confirmSolConvert").disabled=false;$("cancelSolConvert").disabled=false;$("confirmSolConvert").textContent=solT7662412("Criar OC","Create work order")}
+}
+
+function openCreatedSolOccurrence7662412(){
+  const x=solLastCreatedOccurrence7662412;
+  if(!x?.idAtivo||!x?.ocorrencia)return;
+  $("solConvertModal").style.display="none";
+  solOpenLinkedOccurrence7662412(x.idAtivo,x.ocorrencia);
+}
+
+async function closeSolConvertAndRefresh7662412(){
+  if(solActionPosting)return;
+  $("solConvertModal").style.display="none";
+  await loadSolicitations7662412();
 }
 
 function openSolClose7662412(id){
@@ -5643,7 +5668,8 @@ $("solSearch").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();loadSolicita
 $("closeSolDetail").onclick=()=>{$("solDetailModal").style.display="none"};
 $("solAssetSearch").oninput=renderSolAssetOptions7662412;
 $("solOccurrenceCategory").onchange=populateSolOccurrenceComponents7662412;
-$("cancelSolConvert").onclick=()=>{if(!solActionPosting)$("solConvertModal").style.display="none"};
+$("cancelSolConvert").onclick=closeSolConvertAndRefresh7662412;
+$("openCreatedSolOccurrence").onclick=openCreatedSolOccurrence7662412;
 $("confirmSolConvert").onclick=confirmSolConvert7662412;
 $("cancelSolClose").onclick=()=>{if(!solActionPosting)$("solCloseModal").style.display="none"};
 $("confirmSolClose").onclick=confirmSolClose7662412;
