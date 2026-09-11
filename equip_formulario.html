@@ -1,3 +1,4 @@
+<!-- QRManut 7.6.6.24 frontend hotfix: CONFIG-CLOSE-R2 -->
 <!doctype html>
 <html lang="pt-br">
 <head>
@@ -2543,11 +2544,22 @@ async function saveCompanyConfig(){
     $("companyMessage").textContent="✅ Configuração atualizada.";
     await loadPublicAppConfig();
 
-    // CORREÇÃO 7.6.6.24 — após salvar com sucesso, fecha a tela de
-    // Configuração da Empresa e retorna ao primeiro menu permitido ao usuário.
-    setTimeout(()=>{
+    // CORREÇÃO 7.6.6.24 R2 — fechamento garantido da tela após salvar.
+    // Primeiro oculta explicitamente a Configuração da Empresa; depois tenta
+    // voltar à primeira rotina permitida. Se houver qualquer falha de navegação,
+    // permanece fora da tela de edição e retorna à Busca de Ativos.
+    hide("companyArea");
+    try{
       openDefaultAllowedTab();
-    },500);
+    }catch(navError){
+      console.warn("Configuração salva; falha apenas ao navegar após o salvamento.",navError);
+      clearTabs();
+      showOnly("searchArea");
+    }
+    qrShowAlert(
+      qrLanguage==="en-US" ? "Company configuration updated successfully." : "Configuração da empresa atualizada com sucesso.",
+      "QRManut"
+    );
   }catch(e){
     $("companyMessage").className="message error";
     $("companyMessage").textContent=e.message;
