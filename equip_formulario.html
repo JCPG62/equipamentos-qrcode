@@ -1,4 +1,4 @@
-<!-- QRManut 7.6.6.24.12: R12 SOL + HOTFIX UX — posicionamento automático na área de Solicitações -->
+<!-- QRManut 7.6.6.25: Onda 2B / B1 Integridade + fluxo SOL validado -->
 <!doctype html>
 <html lang="pt-br">
 <head>
@@ -1070,7 +1070,7 @@ html,body{max-width:100%;overflow-x:hidden}
 </div>
 <label>Adicionar nova foto da ocorrência / correção</label><div class="photo-source-actions"><button type="button" id="manageOccurrenceCameraButton" class="btn btn-blue">📷 Tirar foto</button><button type="button" id="manageOccurrenceAttachButton" class="btn btn-secondary">🖼️ Anexar imagem</button></div><input id="manageOccurrenceCameraInput" class="photo-source-hidden" type="file" accept="image/*" capture="environment"><input id="manageOccurrencePhotoInput" class="photo-source-hidden" type="file" accept="image/*"><div id="manageOccurrencePhotoStatus" class="muted" style="margin-top:5px"></div><img id="manageOccurrencePhotoPreview" class="photo-preview"><div class="upload-file-box" style="margin-top:12px"><div style="font-weight:800">📎 Adicionar arquivo à ocorrência</div><div class="muted" style="margin-top:4px">PDF, Word, Excel ou outro arquivo de evidência, até 8 MB.</div><button id="manageAttachmentButton" type="button" class="btn btn-secondary" style="margin-top:8px">📎 Escolher arquivo</button><input id="manageAttachmentInput" class="photo-source-hidden" type="file"><div id="manageAttachmentName" class="upload-file-name">Nenhum arquivo selecionado.</div><div id="manageExistingAttachments" style="margin-top:8px"></div></div><div id="conclusionPhotoArea" class="hidden"><label>Foto da conclusão</label><div class="photo-source-actions"><button type="button" id="conclusionCameraButton" class="btn btn-blue">📷 Tirar foto</button><button type="button" id="conclusionAttachButton" class="btn btn-secondary">🖼️ Anexar imagem</button></div><input id="conclusionCameraInput" class="photo-source-hidden" type="file" accept="image/*" capture="environment"><input id="conclusionPhotoInput" class="photo-source-hidden" type="file" accept="image/*"><div id="conclusionPhotoStatus" class="muted" style="margin-top:5px"></div><img id="conclusionPhotoPreview" class="photo-preview"></div><div id="manageMessage" class="message"></div><div class="modal-actions" style="justify-content:space-between;flex-wrap:wrap"><button id="deleteOccurrence" class="btn btn-danger hidden" type="button">🗑️ Excluir ocorrência</button><div style="display:flex;gap:8px;flex-wrap:wrap"><button id="cancelManage" class="btn btn-secondary">Cancelar</button><button id="saveManage" class="btn">Salvar alterações</button></div></div></div></div>
 
-<div class="footer">QRManut • Versão 7.6.6.24.12</div>
+<div class="footer">QRManut • Versão 7.6.6.25</div>
 </div>
 <script>
 const API_URL="https://script.google.com/macros/s/AKfycbx4tpC42Q6WdkNhTUTAGoZWvG5M24zwlNscnwbDP5B3Q5pWo8B32-Lf0rQ2Xtua1AFMAQ/exec";
@@ -3234,7 +3234,7 @@ async function loadProfilePermissionsAdmin(){
   try{
     const r=await menuApi({action:"profilepermissionsadmin"});
     if(!r.ok)throw new Error(r.detail||"Erro ao carregar permissões.");
-    if(r.backendVersion!=="7.6.6.24.12")throw new Error(qrLanguage==="en-US"
+    if(r.backendVersion!=="7.6.6.25")throw new Error(qrLanguage==="en-US"
       ?"The HTML is updated, but Apps Script is still on an older deployment. Update the .gs file and deploy a new version."
       :"O HTML está atualizado, mas o Apps Script ainda está em uma implantação anterior. Atualize o arquivo .gs e faça uma nova versão da implantação.");
     profilePermissionsAdminData=r.data;
@@ -3308,9 +3308,9 @@ async function loadProvidersAdmin(){
   try{
     const r=await menuApi({action:"providersadmin"});
     if(!r.ok)throw new Error(r.detail||t("Erro ao carregar.","Error loading service providers."));
-    if(r.backendVersion!=="7.6.6.24.12")throw new Error(t(
-      "O HTML 7.6.6.24.12 está atualizado, mas o Apps Script ainda está em uma versão anterior. Atualize o arquivo .gs e faça uma nova versão da implantação.",
-      "The 7.6.6.24.12 HTML is updated, but Apps Script is still on an older version. Update the .gs file and deploy a new version."
+    if(r.backendVersion!=="7.6.6.25")throw new Error(t(
+      "O HTML 7.6.6.25 está atualizado, mas o Apps Script ainda está em uma versão anterior. Atualize o arquivo .gs e faça uma nova versão da implantação.",
+      "The 7.6.6.25 HTML is updated, but Apps Script is still on an older version. Update the .gs file and deploy a new version."
     ));
     providersAdminData=r.providers||[];
     $("providersAdminStatus").textContent=`${providersAdminData.length} ${t("prestador(es)","service provider(s)")}`;
