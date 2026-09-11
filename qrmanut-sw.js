@@ -1,4 +1,4 @@
-const CACHE_NAME="qrmanut-static-7.6.6.24.12-r12-solscroll";
+const CACHE_NAME="qrmanut-static-7.6.6.25-b1";
 const STATIC_ASSETS=[
   "./equip_formulario.html",
   "./manifest.webmanifest",
