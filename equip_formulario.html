@@ -1,11 +1,11 @@
-<!-- QRManut 7.6.6.25: Onda 2B / B4.5 UX Menu — feedback visual imediato -->
+<!-- QRManut 7.6.6.25: B5.1 Documentos Técnicos — abertura protegida de PDFs grandes -->
 <!doctype html>
 <html lang="pt-br">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>QRManut</title>
-<meta name="qrmanut-build" content="2026-09-12-b4.5">
+<meta name="qrmanut-build" content="2026-09-12-b5.1">
 <meta name="theme-color" content="#0b315e">
 <meta name="application-name" content="QRManut">
 <meta name="mobile-web-app-capable" content="yes">
@@ -1208,7 +1208,7 @@ window.addEventListener("appinstalled",()=>{
 /* ============================================================
  * QRManut 7.6.6.25 — B4.2 ATUALIZAÇÃO AUTOMÁTICA DO PWA
  * ============================================================ */
-const QR_BUILD_7662542="2026-09-12-b4.5";
+const QR_BUILD_7662542="2026-09-12-b5.1";
 let qrBuildCheckRunning7662542=false;
 let qrLastBuildCheck7662542=0;
 
@@ -1444,19 +1444,160 @@ async function systemSessionIsValid(){
 function menuApi(params){if(!systemSession?.systemSessionToken)return Promise.reject(new Error("Faça login no Menu Principal."));return apiPost({...params,systemSessionToken:systemSession.systemSessionToken})}
 function menuApiPost(params){if(!systemSession?.systemSessionToken)return Promise.reject(new Error("Faça login no Menu Principal."));return apiPost({...params,systemSessionToken:systemSession.systemSessionToken})}
 const secureFileUrlCache76624=new Map();
-async function getSecureFileUrl76624(kind,ref,slot=""){
+const SECURE_FILE_CHUNK_BYTES_766251=4*1024*1024;
+const SECURE_FILE_PARALLEL_766251=3;
+
+function secureFileBase64ToBytes766251_(base64){
+  const bin=atob(base64||"");
+  const bytes=new Uint8Array(bin.length);
+  for(let i=0;i<bin.length;i++)bytes[i]=bin.charCodeAt(i);
+  return bytes;
+}
+
+function secureFileProgress766251_(popup,percent,name){
+  if(!popup||popup.closed)return;
+  try{
+    const p=Math.max(0,Math.min(100,Math.round(Number(percent)||0)));
+    popup.document.open();
+    popup.document.write(
+      "<!doctype html><html lang='pt-br'><meta charset='utf-8'>"+
+      "<meta name='viewport' content='width=device-width,initial-scale=1'>"+
+      "<title>QRManut — Documento</title>"+
+      "<body style='font-family:system-ui;padding:26px;background:#f5f7fa;color:#111827'>"+
+      "<div style='max-width:520px;margin:auto;background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:20px'>"+
+      "<h2 style='margin-top:0'>QRManut</h2>"+
+      "<p style='word-break:break-word'><b>"+esc(name||"Documento")+"</b></p>"+
+      "<p>Carregando documento protegido... <b>"+p+"%</b></p>"+
+      "<div style='height:12px;background:#e5e7eb;border-radius:999px;overflow:hidden'>"+
+      "<div style='height:100%;width:"+p+"%;background:#0b315e'></div></div>"+
+      "<p style='font-size:.84rem;color:#6b7280'>Arquivos grandes são carregados em blocos seguros.</p>"+
+      "</div></body></html>"
+    );
+    popup.document.close();
+  }catch(_e){}
+}
+
+async function getSecureLargeFileUrl766251_(kind,ref,slot,meta,popup){
+  const total=Number(meta?.size||0);
+  if(!total)throw new Error(qrLanguage==="en-US"?"Invalid file size.":"Tamanho de arquivo inválido.");
+
+  const totalChunks=Math.ceil(total/SECURE_FILE_CHUNK_BYTES_766251);
+  const chunks=new Array(totalChunks);
+  let completed=0;
+
+  secureFileProgress766251_(popup,0,meta?.name||ref);
+
+  for(let batchStart=0;batchStart<totalChunks;batchStart+=SECURE_FILE_PARALLEL_766251){
+    const jobs=[];
+
+    for(let j=0;j<SECURE_FILE_PARALLEL_766251;j++){
+      const index=batchStart+j;
+      if(index>=totalChunks)break;
+
+      const start=index*SECURE_FILE_CHUNK_BYTES_766251;
+
+      jobs.push(
+        menuApiPost({
+          action:"secureFileChunk",
+          secureFileKind:kind,
+          secureFileRef:ref,
+          secureFileSlot:slot,
+          secureFileStart:String(start),
+          secureFileChunkSize:String(SECURE_FILE_CHUNK_BYTES_766251)
+        }).then(r=>{
+          if(!r.ok||!r.chunk?.base64){
+            throw new Error(
+              r.detail||
+              (qrLanguage==="en-US"
+                ?"Unable to read a protected file block."
+                :"Não foi possível ler um bloco do arquivo protegido.")
+            );
+          }
+
+          chunks[index]=secureFileBase64ToBytes766251_(r.chunk.base64);
+          completed++;
+          secureFileProgress766251_(
+            popup,
+            completed/totalChunks*100,
+            meta?.name||ref
+          );
+        })
+      );
+    }
+
+    await Promise.all(jobs);
+  }
+
+  return URL.createObjectURL(
+    new Blob(chunks,{type:meta?.mime||"application/octet-stream"})
+  );
+}
+
+async function getSecureFileUrl76624(kind,ref,slot="",popup=null){
   const key=[kind,ref,slot].join("|");
   if(secureFileUrlCache76624.has(key))return secureFileUrlCache76624.get(key);
-  const r=await menuApiPost({action:"secureFile",secureFileKind:kind,secureFileRef:ref,secureFileSlot:slot});
-  if(!r.ok||!r.file?.base64)throw new Error(r.detail||(qrLanguage==="en-US"?"Unable to open the protected file.":"Não foi possível abrir o arquivo protegido."));
-  const bin=atob(r.file.base64),bytes=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)bytes[i]=bin.charCodeAt(i);
-  const url=URL.createObjectURL(new Blob([bytes],{type:r.file.mime||"application/octet-stream"}));
-  secureFileUrlCache76624.set(key,url);return url;
+
+  const metaResponse=await menuApiPost({
+    action:"secureFileMeta",
+    secureFileKind:kind,
+    secureFileRef:ref,
+    secureFileSlot:slot
+  });
+
+  if(!metaResponse.ok||!metaResponse.file){
+    throw new Error(
+      metaResponse.detail||
+      (qrLanguage==="en-US"
+        ?"Unable to open the protected file."
+        :"Não foi possível abrir o arquivo protegido.")
+    );
+  }
+
+  let url;
+
+  if(metaResponse.file.large){
+    url=await getSecureLargeFileUrl766251_(
+      kind,ref,slot,metaResponse.file,popup
+    );
+  }else{
+    const r=await menuApiPost({
+      action:"secureFile",
+      secureFileKind:kind,
+      secureFileRef:ref,
+      secureFileSlot:slot
+    });
+
+    if(!r.ok||!r.file?.base64){
+      throw new Error(
+        r.detail||
+        (qrLanguage==="en-US"
+          ?"Unable to open the protected file."
+          :"Não foi possível abrir o arquivo protegido.")
+      );
+    }
+
+    const bytes=secureFileBase64ToBytes766251_(r.file.base64);
+    url=URL.createObjectURL(
+      new Blob([bytes],{type:r.file.mime||"application/octet-stream"})
+    );
+  }
+
+  secureFileUrlCache76624.set(key,url);
+  return url;
 }
+
 async function openSecureFile76624(kind,ref,slot=""){
   const popup=window.open("about:blank","_blank");
-  try{const url=await getSecureFileUrl76624(kind,ref,slot);if(popup)popup.location.href=url;else window.location.href=url}
-  catch(e){if(popup)popup.close();alert(e.message)}
+
+  try{
+    if(popup)secureFileProgress766251_(popup,0,ref);
+    const url=await getSecureFileUrl76624(kind,ref,slot,popup);
+    if(popup)popup.location.replace(url);
+    else window.location.href=url;
+  }catch(e){
+    if(popup)popup.close();
+    alert(e.message);
+  }
 }
 async function loadSecureImage76624(img,kind,ref,slot=""){
   if(!img)return;try{img.src=await getSecureFileUrl76624(kind,ref,slot);img.style.display="block"}catch(e){img.removeAttribute("src");img.style.display="none"}
