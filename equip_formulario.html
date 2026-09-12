@@ -1,4 +1,4 @@
-<!-- QRManut 7.6.6.25: Onda 2B / B4 PWA — HTML network-first e Service Worker estável -->
+<!-- QRManut 7.6.6.25: Onda 2B / B4.1 UX Offline — mensagens amigáveis e sessão preservada -->
 <!doctype html>
 <html lang="pt-br">
 <head>
@@ -453,6 +453,30 @@ html,body{max-width:100%;overflow-x:hidden}
 .sol-protocol-success{margin-top:10px;padding:13px;border:1px solid #86efac;background:#f0fdf4;border-radius:12px}
 @media(max-width:760px){.sol-filters{grid-template-columns:1fr}.sol-summary{grid-template-columns:repeat(2,1fr)}}
 
+
+/* ============================================================
+ * QRManut 7.6.6.25 — B4.1 UX OFFLINE
+ * ============================================================ */
+.qr-network-status{
+  position:sticky;
+  top:8px;
+  z-index:1200;
+  margin:0 0 12px;
+  padding:11px 13px;
+  border-radius:12px;
+  border:1px solid #fdba74;
+  background:#fff7ed;
+  color:#9a3412;
+  box-shadow:0 5px 15px rgba(0,0,0,.06);
+  line-height:1.4;
+  font-size:.9rem;
+}
+.qr-network-status.online{
+  border-color:#86efac;
+  background:#f0fdf4;
+  color:#166534;
+}
+
 </style>
 </head>
 <body>
@@ -461,6 +485,7 @@ html,body{max-width:100%;overflow-x:hidden}
   <button id="qrLangEn" type="button">🇺🇸 English</button>
 </div>
 <div class="container">
+<div id="qrNetworkStatus" class="qr-network-status hidden" role="status" aria-live="polite"></div>
 
 <div id="searchScreen" class="hidden">
   <div class="search-title">QRManut</div>
@@ -1203,13 +1228,143 @@ function qrDeviceTimeZone(){try{return Intl.DateTimeFormat().resolvedOptions().t
 function formatDate(v){if(!v)return"";const d=new Date(v);const loc=(typeof qrLanguage!=="undefined"&&qrLanguage==="en-US")?"en-US":"pt-BR";return isNaN(d)?v:d.toLocaleString(loc)}
 function currentCompetence(){const d=new Date();const year=d.getFullYear();const month=String(d.getMonth()+1).padStart(2,"0");return year+"-"+month}
 function pairs(items){return items.filter(x=>x[1]!==""&&x[1]!==null&&x[1]!==undefined).map(x=>`<div class="pair"><b>${esc(x[0])}:</b> ${esc(x[1])}</div>`).join("")}
-async function api(params){const r=await fetch(API_URL+"?"+new URLSearchParams({...params}));return r.json()}async function apiPost(params){const body=new URLSearchParams({...params});const r=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"},body:body.toString()});return r.json()}
+function qrOfflineMessage766254_(){
+  return qrLanguage==="en-US"
+    ?"No internet connection. QRManut can open in offline mode, but sign-in, data queries and records require an internet connection."
+    :"Sem conexão com a internet. O QRManut pode abrir em modo offline, mas o login, as consultas e os registros precisam de conexão.";
+}
+
+function qrServiceUnavailableMessage766254_(){
+  return qrLanguage==="en-US"
+    ?"Unable to communicate with the QRManut server. Check your internet connection and try again."
+    :"Não foi possível comunicar com o servidor do QRManut. Verifique sua conexão com a internet e tente novamente.";
+}
+
+function qrIsNetworkFailure766254_(error){
+  if(error?.qrNetwork===true)return true;
+  if(navigator.onLine===false)return true;
+  const msg=String(error?.message||error||"").toLowerCase();
+  return /failed to fetch|networkerror|network error|network request failed|load failed|fetch failed|internet connection/.test(msg);
+}
+
+function qrNetworkError766254_(message){
+  const e=new Error(message||qrOfflineMessage766254_());
+  e.qrNetwork=true;
+  return e;
+}
+
+async function qrFetchJson766254_(url,options){
+  if(navigator.onLine===false){
+    throw qrNetworkError766254_(qrOfflineMessage766254_());
+  }
+
+  let response;
+  try{
+    response=await fetch(url,options);
+  }catch(error){
+    if(qrIsNetworkFailure766254_(error)){
+      throw qrNetworkError766254_(qrServiceUnavailableMessage766254_());
+    }
+    throw error;
+  }
+
+  if(!response.ok){
+    throw new Error(
+      (qrLanguage==="en-US"
+        ?"QRManut server returned an error"
+        :"O servidor do QRManut retornou um erro")+
+      " ("+response.status+")."
+    );
+  }
+
+  try{
+    return await response.json();
+  }catch(error){
+    throw new Error(
+      qrLanguage==="en-US"
+        ?"The QRManut server returned an invalid response. Try again."
+        :"O servidor do QRManut retornou uma resposta inválida. Tente novamente."
+    );
+  }
+}
+
+async function api(params){
+  return qrFetchJson766254_(
+    API_URL+"?"+new URLSearchParams({...params})
+  );
+}
+
+async function apiPost(params){
+  const body=new URLSearchParams({...params});
+  return qrFetchJson766254_(
+    API_URL,
+    {
+      method:"POST",
+      headers:{"Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"},
+      body:body.toString()
+    }
+  );
+}
+
+let qrNetworkRestoredTimer766254_=null;
+
+function updateNetworkStatus766254_(restored){
+  const el=$("qrNetworkStatus");
+  if(!el)return;
+
+  if(navigator.onLine===false){
+    if(qrNetworkRestoredTimer766254_){
+      clearTimeout(qrNetworkRestoredTimer766254_);
+      qrNetworkRestoredTimer766254_=null;
+    }
+    el.classList.remove("online");
+    el.innerHTML=qrLanguage==="en-US"
+      ?"<b>📴 Offline mode</b><br>The interface is available, but sign-in, queries and records require internet."
+      :"<b>📴 Modo offline</b><br>A interface está disponível, mas login, consultas e registros precisam de internet.";
+    show("qrNetworkStatus");
+    return;
+  }
+
+  if(restored){
+    el.classList.add("online");
+    el.innerHTML=qrLanguage==="en-US"
+      ?"<b>✅ Connection restored</b>"
+      :"<b>✅ Conexão restabelecida</b>";
+    show("qrNetworkStatus");
+    if(qrNetworkRestoredTimer766254_)clearTimeout(qrNetworkRestoredTimer766254_);
+    qrNetworkRestoredTimer766254_=setTimeout(()=>{
+      hide("qrNetworkStatus");
+      el.classList.remove("online");
+    },2500);
+    return;
+  }
+
+  hide("qrNetworkStatus");
+  el.classList.remove("online");
+}
+
+window.addEventListener("offline",()=>updateNetworkStatus766254_(false));
+window.addEventListener("online",()=>updateNetworkStatus766254_(true));
 function getSavedResponsible(){try{return localStorage.getItem(RESPONSIBLE_KEY)||""}catch(e){return""}}function saveResponsible(n){if(!n)return;try{localStorage.setItem(RESPONSIBLE_KEY,n)}catch(e){}}
 function savePreventiveSession(d){preventiveSession=d;sessionStorage.setItem(PREVENTIVE_SESSION_KEY,JSON.stringify(d))}function readPreventiveSession(){try{const raw=sessionStorage.getItem(PREVENTIVE_SESSION_KEY);preventiveSession=raw?JSON.parse(raw):null}catch(e){preventiveSession=null}}function clearPreventiveSession(){preventiveSession=null;sessionStorage.removeItem(PREVENTIVE_SESSION_KEY)}function saveSystemSession(d){systemSession=d;preventiveSession=d;try{sessionStorage.setItem(SYSTEM_SESSION_KEY,JSON.stringify(d));localStorage.removeItem(SYSTEM_SESSION_KEY)}catch(e){}}
 function readSystemSession(){try{localStorage.removeItem(SYSTEM_SESSION_KEY);const raw=sessionStorage.getItem(SYSTEM_SESSION_KEY);systemSession=raw?JSON.parse(raw):null}catch(e){systemSession=null}}
 function revokeSecureFileUrls76624(){try{secureFileUrlCache76624.forEach(v=>URL.revokeObjectURL(v));secureFileUrlCache76624.clear()}catch(e){}}
 function clearSystemSession(){systemSession=null;preventiveSession=null;revokeSecureFileUrls76624();try{sessionStorage.removeItem(SYSTEM_SESSION_KEY);localStorage.removeItem(SYSTEM_SESSION_KEY)}catch(e){}}
-async function systemSessionIsValid(){if(!systemSession?.systemSessionToken)return false;try{const r=await apiPost({action:"systemsession",systemSessionToken:systemSession.systemSessionToken});if(!r.ok){clearSystemSession();return false}if(r.session){systemSession={...systemSession,...r.session};saveSystemSession(systemSession)}return true}catch(e){clearSystemSession();return false}}
+async function systemSessionIsValid(){
+  if(!systemSession?.systemSessionToken)return false;
+  try{
+    const r=await apiPost({action:"systemsession",systemSessionToken:systemSession.systemSessionToken});
+    if(!r.ok){clearSystemSession();return false}
+    if(r.session){systemSession={...systemSession,...r.session};saveSystemSession(systemSession)}
+    return true;
+  }catch(e){
+    // Falta de internet não invalida uma sessão que pode voltar a ser válida
+    // assim que a conexão for restabelecida.
+    if(qrIsNetworkFailure766254_(e))return false;
+    clearSystemSession();
+    return false;
+  }
+}
 function menuApi(params){if(!systemSession?.systemSessionToken)return Promise.reject(new Error("Faça login no Menu Principal."));return apiPost({...params,systemSessionToken:systemSession.systemSessionToken})}
 function menuApiPost(params){if(!systemSession?.systemSessionToken)return Promise.reject(new Error("Faça login no Menu Principal."));return apiPost({...params,systemSessionToken:systemSession.systemSessionToken})}
 const secureFileUrlCache76624=new Map();
@@ -5576,6 +5731,7 @@ function qrApplyLanguage(lang){
   if(en)en.classList.toggle("active",qrLanguage==="en-US");
 
   document.documentElement.lang=qrLanguage==="en-US"?"en":"pt-BR";
+  updateNetworkStatus766254_(false);
 
   qrTranslateRoutineScreens();
   qrRefreshLocalizedDateControls();
@@ -5710,6 +5866,7 @@ $("backAssetButton").onclick=function(){const id=getOriginAsset();if(!id)return;
 $("occReportRefresh").onclick=loadOccurrenceReport;$("occReportPdf").onclick=generateOccurrenceReportPdf;["occReportStart","occReportEnd","occReportProvider","occReportCategory","occReportComponent","occReportFloor","occReportLocation"].forEach(id=>$(id).onchange=markOccurrenceReportDirty);$("controlRefresh").onclick=refreshPreventiveControl;$("controlCompetence").onchange=loadPreventiveControl;$("controlProvider").onchange=()=>{if(["MASTER","GESTOR"].includes(systemSession?.perfil))loadPreventiveControl();else renderControlList()};$("controlAll").onclick=()=>setControlMode("all");$("controlPending").onclick=()=>setControlMode("pending");$("controlDone").onclick=()=>setControlMode("done");$("sendMonthlyReport").onclick=sendMonthlyPreventiveReport;
 $("preventiveLogout").onclick=()=>openDefaultAllowedTab();$("cancelPreventive").onclick=()=>{if(!preventivePosting)$("preventiveModal").style.display="none"};$("savePreventive").onclick=savePreventive;$("cancelReport").onclick=function(){if(reportPosting){if(reportCompleted){reportPosting=false;reportCompleted=false;$("reportModal").style.display="none";location.reload()}return}$("reportModal").style.display="none"};$("sendReport").onclick=sendReport;$("historySelect").onchange=function(){renderHistoryItem(Number(this.value))};$("manageStatus").onchange=toggleConclusion;$("cancelManage").onclick=()=>{if(!managePosting)$("manageModal").style.display="none"};$("saveManage").onclick=saveManage;$("deleteOccurrence").onclick=deleteOccurrenceRecord;$("signatureCanvas").addEventListener("pointerdown",signatureStart);$("signatureCanvas").addEventListener("pointermove",signatureMove);window.addEventListener("pointerup",signatureEnd);$("clearSignature").onclick=clearSignatureCanvas;
 qrLoadLanguage();
+updateNetworkStatus766254_(false);
 qrInstallRoutineObserver();
 qrTranslateRoutineScreens();
 qrTranslateElementTree(document.body);
