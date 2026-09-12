@@ -1,11 +1,11 @@
-<!-- QRManut 7.6.6.25: B5.2.5 Gestão de Ativos — correção do status na edição -->
+<!-- QRManut 7.6.6.25: B5.2.6 Gestão de Ativos — baixa/descarte por ação dedicada -->
 <!doctype html>
 <html lang="pt-br">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>QRManut</title>
-<meta name="qrmanut-build" content="2026-09-12-b5.2.5">
+<meta name="qrmanut-build" content="2026-09-12-b5.2.6">
 <meta name="theme-color" content="#0b315e">
 <meta name="application-name" content="QRManut">
 <meta name="mobile-web-app-capable" content="yes">
@@ -1265,7 +1265,7 @@ window.addEventListener("appinstalled",()=>{
 /* ============================================================
  * QRManut 7.6.6.25 — B4.2 ATUALIZAÇÃO AUTOMÁTICA DO PWA
  * ============================================================ */
-const QR_BUILD_7662542="2026-09-12-b5.2.5";
+const QR_BUILD_7662542="2026-09-12-b5.2.6";
 let qrBuildCheckRunning7662542=false;
 let qrLastBuildCheck7662542=0;
 
@@ -4859,15 +4859,28 @@ async function saveAsset760(){
     if(!confirm("Você está corrigindo a baixa/descarte deste ativo. O ativo voltará ao status selecionado e a correção ficará registrada na Auditoria. Continuar?"))return;
   }
 
+  if(willBeDisposed&&!wasDisposed){
+    const confirmMessage=qrLanguage==="en-US"
+      ?"Confirm the definitive retirement/disposal of this asset? It will no longer accept new work orders, preventive maintenance records or requests."
+      :"Confirma a baixa/descarte definitivo deste ativo? Após a baixa ele não aceitará novas OCs, preventivas ou solicitações.";
+    if(!confirm(confirmMessage))return;
+  }
+
   const provider=assetProviderPayload7610();
   const btn=$("assetSave");
   btn.disabled=true;
   btn.textContent=qrLanguage==="en-US"?"Saving...":"Salvando...";
   $("assetSaveMessage").className="message loading";
-  $("assetSaveMessage").textContent=qrLanguage==="en-US"?"Saving asset data...":"Salvando cadastro do ativo...";
+  $("assetSaveMessage").textContent=willBeDisposed&&!wasDisposed
+    ?(qrLanguage==="en-US"?"Retiring/disposing asset...":"Registrando baixa/descarte do ativo...")
+    :(qrLanguage==="en-US"?"Saving asset data...":"Salvando cadastro do ativo...");
 
   try{
-    const r=await assetApi760("saveasset760",{
+    // B5.2.6: a baixa definitiva usa uma ação própria e não depende
+    // do salvamento genérico da ficha do ativo.
+    const action=(willBeDisposed&&!wasDisposed)?"disposeasset760":"saveasset760";
+
+    const r=await assetApi760(action,{
       row,id,
       prefix:$("assetPrefix").value,
       numeroBase:$("assetBaseNumber").value,
@@ -4910,9 +4923,20 @@ async function saveAsset760(){
     if(!r.ok)throw new Error(r.detail||r.error||"Erro ao salvar ativo.");
 
     $("assetSaveMessage").className="message success";
-    $("assetSaveMessage").textContent=(qrLanguage==="en-US"?"Asset saved: ":"Ativo salvo: ")+r.id;
-    await loadAssets760();
-    setTimeout(()=>{$("assetEditModal").style.display="none";},450);
+
+    if(willBeDisposed&&!wasDisposed){
+      const successMessage=qrLanguage==="en-US"
+        ?"Asset retired/disposed successfully."
+        :"Ativo descartado com sucesso.";
+      $("assetSaveMessage").textContent=successMessage;
+      await loadAssets760();
+      alert(successMessage);
+      $("assetEditModal").style.display="none";
+    }else{
+      $("assetSaveMessage").textContent=(qrLanguage==="en-US"?"Asset saved: ":"Ativo salvo: ")+r.id;
+      await loadAssets760();
+      setTimeout(()=>{$("assetEditModal").style.display="none";},450);
+    }
   }catch(e){
     $("assetSaveMessage").className="message error";
     $("assetSaveMessage").textContent=e.message||"Erro ao salvar ativo.";
