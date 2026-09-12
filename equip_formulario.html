@@ -1,11 +1,11 @@
-<!-- QRManut 7.6.6.25: Onda 2B / B4.3 UX Pendências — foco automático no formulário -->
+<!-- QRManut 7.6.6.25: Onda 2B / B4.4 UX Menu — rolagem automática centralizada em todas as rotinas -->
 <!doctype html>
 <html lang="pt-br">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>QRManut</title>
-<meta name="qrmanut-build" content="2026-09-11-b4.3">
+<meta name="qrmanut-build" content="2026-09-11-b4.4">
 <meta name="theme-color" content="#0b315e">
 <meta name="application-name" content="QRManut">
 <meta name="mobile-web-app-capable" content="yes">
@@ -1208,7 +1208,7 @@ window.addEventListener("appinstalled",()=>{
 /* ============================================================
  * QRManut 7.6.6.25 — B4.2 ATUALIZAÇÃO AUTOMÁTICA DO PWA
  * ============================================================ */
-const QR_BUILD_7662542="2026-09-11-b4.3";
+const QR_BUILD_7662542="2026-09-11-b4.4";
 let qrBuildCheckRunning7662542=false;
 let qrLastBuildCheck7662542=0;
 
@@ -1519,7 +1519,41 @@ async function requirePreventiveLogin(nextAction,provider){await requireSystemLo
 function processPhoto(file){return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=e=>{const img=new Image();img.onload=()=>{let w=img.width,h=img.height;if(w>MAX_DIM||h>MAX_DIM){if(w>h){h=Math.round(h*MAX_DIM/w);w=MAX_DIM}else{w=Math.round(w*MAX_DIM/h);h=MAX_DIM}}const c=document.createElement("canvas");c.width=w;c.height=h;c.getContext("2d").drawImage(img,0,0,w,h);const url=c.toDataURL("image/jpeg",QUALITY);resolve({base64:url.split(",")[1],dataUrl:url,mime:"image/jpeg",name:"foto_"+Date.now()+".jpg"})};img.src=e.target.result};reader.onerror=reject;reader.readAsDataURL(file)})}
 function processAttachment(file){return new Promise((resolve,reject)=>{if(!file)return resolve(null);if(file.size>8*1024*1024)return reject(new Error("O arquivo ultrapassa o limite de 8 MB."));const reader=new FileReader();reader.onload=()=>{const raw=String(reader.result||"");resolve({base64:raw.includes(",")?raw.split(",")[1]:raw,mime:file.type||"application/octet-stream",name:file.name||("arquivo_"+Date.now())})};reader.onerror=()=>reject(new Error("Não foi possível ler o arquivo."));reader.readAsDataURL(file)})}
 function setupSignatureCanvas(){const c=$("signatureCanvas"),rect=c.getBoundingClientRect(),ratio=window.devicePixelRatio||1;c.width=Math.floor(rect.width*ratio);c.height=Math.floor(180*ratio);signatureCtx=c.getContext("2d");signatureCtx.scale(ratio,ratio);signatureCtx.lineWidth=2;signatureCtx.lineCap="round";signatureCtx.lineJoin="round";clearSignatureCanvas()}function clearSignatureCanvas(){const c=$("signatureCanvas");if(!signatureCtx)return;signatureCtx.save();signatureCtx.setTransform(1,0,0,1,0,0);signatureCtx.fillStyle="#fff";signatureCtx.fillRect(0,0,c.width,c.height);signatureCtx.restore();signatureDirty=false}function signaturePoint(e){const r=$("signatureCanvas").getBoundingClientRect();return{x:e.clientX-r.left,y:e.clientY-r.top}}function signatureStart(e){e.preventDefault();signatureDrawing=true;const p=signaturePoint(e);signatureCtx.beginPath();signatureCtx.moveTo(p.x,p.y);signatureDirty=true}function signatureMove(e){if(!signatureDrawing)return;e.preventDefault();const p=signaturePoint(e);signatureCtx.lineTo(p.x,p.y);signatureCtx.stroke()}function signatureEnd(){signatureDrawing=false}function getSignatureData(){if(!signatureDirty)return null;const u=$("signatureCanvas").toDataURL("image/png");return{base64:u.split(",")[1],mime:"image/png"}}
-function showOnly(a){["searchArea","pendingArea","solicitationsArea","occurrenceReportArea","preventiveControlArea","documentsArea","usersArea","permissionsArea","auditArea","companyArea","providersAdminArea","documentUploadArea","occurrenceCatalogArea","maintenancePendingArea","assetManagementPanel"].forEach(hide);show(a)}
+function qrScrollToRoutineArea766256_(areaId){
+  const area=$(areaId);
+  if(!area)return;
+
+  const doScroll=()=>{
+    if(area.classList.contains("hidden"))return;
+    try{
+      const y=Math.max(0,area.getBoundingClientRect().top+window.scrollY-12);
+      window.scrollTo({top:y,behavior:"smooth"});
+    }catch(e){
+      try{area.scrollIntoView({behavior:"smooth",block:"start"});}catch(_e){}
+    }
+  };
+
+  // Primeiro posicionamento logo após a rotina ser exibida.
+  requestAnimationFrame(doScroll);
+
+  // Segundo posicionamento para telas que carregam filtros/cards de forma assíncrona.
+  setTimeout(doScroll,450);
+}
+
+function showOnly(a){
+  [
+    "searchArea","pendingArea","solicitationsArea","occurrenceReportArea",
+    "preventiveControlArea","documentsArea","usersArea","permissionsArea",
+    "auditArea","companyArea","providersAdminArea","documentUploadArea",
+    "occurrenceCatalogArea","maintenancePendingArea","assetManagementPanel"
+  ].forEach(hide);
+
+  show(a);
+
+  // 7.6.6.25 / B4.4 — regra única para TODOS os botões do menu:
+  // sempre que uma rotina é aberta, a tela acompanha a área exibida.
+  qrScrollToRoutineArea766256_(a);
+}
 function clearTabs(){["tabSearch","tabPending","tabSolicitations","tabOccurrenceReport","tabPreventive","tabDocuments","tabUsers","tabPermissions","tabAudit","tabProvidersAdmin","tabCompany","tabDocumentUpload","tabOccurrenceCatalog","tabMaintenancePending","tabAssetManagement"].forEach(id=>$(id).classList.remove("active"))}
 function showSearchTab(){if(!requireUiPermission("BUSCAR_ATIVOS","Seu perfil não possui permissão para buscar ativos.","Your profile is not allowed to search assets."))return;clearTabs();$("tabSearch").classList.add("active");showOnly("searchArea");updateBackAssetButton();focusSearchInput()}
 async function showPendingTab(){if(!requireUiPermission("OC_PENDENTES","Seu perfil não possui permissão para consultar OCs pendentes.","Your profile is not allowed to view pending work orders."))return;clearTabs();$("tabPending").classList.add("active");showOnly("pendingArea");await loadPendingFilters();await loadPending()}
@@ -3926,22 +3960,14 @@ async function moveCatalogComponent(id,direction){
 }
 
 
-function scrollToMaintenancePendingArea766255_(){
-  const area=$("maintenancePendingArea");
-  if(!area)return;
-
-  requestAnimationFrame(()=>{
-    const y=Math.max(0,area.getBoundingClientRect().top+window.scrollY-12);
-    window.scrollTo({top:y,behavior:"smooth"});
-
-    setTimeout(()=>{
-      try{
-        $("maintenancePendingStatusFilter").focus({preventScroll:true});
-      }catch(e){
-        try{$("maintenancePendingStatusFilter").focus()}catch(_e){}
-      }
-    },320);
-  });
+function focusMaintenancePendingFilter766255_(){
+  setTimeout(()=>{
+    try{
+      $("maintenancePendingStatusFilter").focus({preventScroll:true});
+    }catch(e){
+      try{$("maintenancePendingStatusFilter").focus()}catch(_e){}
+    }
+  },320);
 }
 
 async function showMaintenancePendingTab(){
@@ -3950,15 +3976,8 @@ async function showMaintenancePendingTab(){
     clearTabs();
     $("tabMaintenancePending").classList.add("active");
     showOnly("maintenancePendingArea");
-
-    // 7.6.6.25 / B4.3 — ao abrir pelo menu, leva o usuário diretamente
-    // ao formulário/filtros de Pendências, em vez de permanecer no botão.
-    scrollToMaintenancePendingArea766255_();
-
+    focusMaintenancePendingFilter766255_();
     await loadMaintenancePending();
-
-    // Reforça o posicionamento após a atualização da lista.
-    scrollToMaintenancePendingArea766255_();
   });
 }
 
