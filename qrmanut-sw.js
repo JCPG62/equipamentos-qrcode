@@ -1,5 +1,5 @@
 /*
- * QRManut 7.6.6.25 — Onda 2B / B4
+ * QRManut 7.6.6.25 — Onda 2B / B4.2
  * Service Worker estável.
  *
  * REGRA DE MANUTENÇÃO:
@@ -8,7 +8,7 @@
  *   nomes de arquivos estáticos ou política offline realmente mudar.
  */
 
-const CACHE_VERSION="7.6.6.25-b4";
+const CACHE_VERSION="7.6.6.25-b4.2";
 const STATIC_CACHE=`qrmanut-static-${CACHE_VERSION}`;
 const NAV_CACHE=`qrmanut-navigation-${CACHE_VERSION}`;
 
@@ -44,8 +44,9 @@ self.addEventListener("install",event=>{
 
 self.addEventListener("activate",event=>{
   event.waitUntil(
-    caches.keys()
-      .then(keys=>Promise.all(
+    (async()=>{
+      const keys=await caches.keys();
+      await Promise.all(
         keys
           .filter(key=>
             (key.startsWith("qrmanut-static-")||key.startsWith("qrmanut-navigation-")) &&
@@ -53,8 +54,33 @@ self.addEventListener("activate",event=>{
             key!==NAV_CACHE
           )
           .map(key=>caches.delete(key))
-      ))
-      .then(()=>self.clients.claim())
+      );
+
+      await self.clients.claim();
+
+      /*
+       * B4.2: corrige PWAs que o sistema operacional restaurou com um HTML
+       * antigo já carregado na memória. A ativação desta versão navega
+       * novamente os clientes QRManut para que recebam o HTML publicado.
+       * Isso ocorre apenas quando este novo Service Worker é ativado.
+       */
+      const clients=await self.clients.matchAll({
+        type:"window",
+        includeUncontrolled:true
+      });
+
+      await Promise.all(
+        clients.map(async client=>{
+          try{
+            const url=new URL(client.url);
+            if(url.origin!==self.location.origin)return;
+            if(!url.pathname.endsWith("/equip_formulario.html"))return;
+            url.searchParams.set("__qr_sw_refresh","7.6.6.25-b4.2");
+            await client.navigate(url.toString());
+          }catch(_e){}
+        })
+      );
+    })()
   );
 });
 
