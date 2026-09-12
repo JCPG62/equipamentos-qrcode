@@ -1,11 +1,11 @@
-<!-- QRManut 7.6.6.25: Onda 2B / B4.2 Atualização PWA — recuperação automática de HTML antigo -->
+<!-- QRManut 7.6.6.25: Onda 2B / B4.3 UX Pendências — foco automático no formulário -->
 <!doctype html>
 <html lang="pt-br">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>QRManut</title>
-<meta name="qrmanut-build" content="2026-09-11-b4.2">
+<meta name="qrmanut-build" content="2026-09-11-b4.3">
 <meta name="theme-color" content="#0b315e">
 <meta name="application-name" content="QRManut">
 <meta name="mobile-web-app-capable" content="yes">
@@ -1208,7 +1208,7 @@ window.addEventListener("appinstalled",()=>{
 /* ============================================================
  * QRManut 7.6.6.25 — B4.2 ATUALIZAÇÃO AUTOMÁTICA DO PWA
  * ============================================================ */
-const QR_BUILD_7662542="2026-09-11-b4.2";
+const QR_BUILD_7662542="2026-09-11-b4.3";
 let qrBuildCheckRunning7662542=false;
 let qrLastBuildCheck7662542=0;
 
@@ -3926,13 +3926,39 @@ async function moveCatalogComponent(id,direction){
 }
 
 
+function scrollToMaintenancePendingArea766255_(){
+  const area=$("maintenancePendingArea");
+  if(!area)return;
+
+  requestAnimationFrame(()=>{
+    const y=Math.max(0,area.getBoundingClientRect().top+window.scrollY-12);
+    window.scrollTo({top:y,behavior:"smooth"});
+
+    setTimeout(()=>{
+      try{
+        $("maintenancePendingStatusFilter").focus({preventScroll:true});
+      }catch(e){
+        try{$("maintenancePendingStatusFilter").focus()}catch(_e){}
+      }
+    },320);
+  });
+}
+
 async function showMaintenancePendingTab(){
   requireSystemLogin(async ()=>{
     if(!requireUiPermission("PENDENCIAS","Seu perfil não possui permissão para acessar Pendências / Providências.","Your profile is not allowed to access Pending Actions."))return;
     clearTabs();
     $("tabMaintenancePending").classList.add("active");
     showOnly("maintenancePendingArea");
+
+    // 7.6.6.25 / B4.3 — ao abrir pelo menu, leva o usuário diretamente
+    // ao formulário/filtros de Pendências, em vez de permanecer no botão.
+    scrollToMaintenancePendingArea766255_();
+
     await loadMaintenancePending();
+
+    // Reforça o posicionamento após a atualização da lista.
+    scrollToMaintenancePendingArea766255_();
   });
 }
 
