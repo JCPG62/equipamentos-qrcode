@@ -1,11 +1,11 @@
-<!-- QRManut 7.6.6.25: B5.2.2 Ciclo de Vida — preserva todas as situações dos ativos -->
+<!-- QRManut 7.6.6.25: B5.2.3 Status das Preventivas — prestadores carregados antecipadamente -->
 <!doctype html>
 <html lang="pt-br">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>QRManut</title>
-<meta name="qrmanut-build" content="2026-09-12-b5.2.2">
+<meta name="qrmanut-build" content="2026-09-12-b5.2.3">
 <meta name="theme-color" content="#0b315e">
 <meta name="application-name" content="QRManut">
 <meta name="mobile-web-app-capable" content="yes">
@@ -1265,7 +1265,7 @@ window.addEventListener("appinstalled",()=>{
 /* ============================================================
  * QRManut 7.6.6.25 — B4.2 ATUALIZAÇÃO AUTOMÁTICA DO PWA
  * ============================================================ */
-const QR_BUILD_7662542="2026-09-12-b5.2.2";
+const QR_BUILD_7662542="2026-09-12-b5.2.3";
 let qrBuildCheckRunning7662542=false;
 let qrLastBuildCheck7662542=0;
 
@@ -1777,6 +1777,10 @@ function showPreventiveTab(){
       return;
     }
     showOnly("preventiveControlArea");
+
+    // B5.2.3: o dropdown de prestadores é carregado por uma rota leve,
+    // sem esperar o cálculo completo do Status das Preventivas.
+    loadPreventiveProvidersFast766253_();
     loadPreventiveControl();
   });
 }
@@ -2195,6 +2199,93 @@ async function clearPendingFilters(){
   await loadPending();
 }
 
+const QR_PREVENTIVE_PROVIDER_CACHE_KEY_766253="QRMANUT_PREVENTIVE_PROVIDERS_766253";
+let qrPreventiveProviderPromise766253=null;
+
+function fillPreventiveProviderDropdown766253_(items){
+  if(!["MASTER","GESTOR"].includes(systemSession?.perfil))return;
+
+  const sel=$("controlProvider");
+  if(!sel)return;
+
+  const current=sel.value;
+  const unique=[];
+  const seen=new Set();
+
+  (items||[]).forEach(v=>{
+    const name=String(v||"").trim();
+    if(!name)return;
+    const key=name.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
+    if(seen.has(key))return;
+    seen.add(key);
+    unique.push(name);
+  });
+
+  unique.sort((a,b)=>a.localeCompare(b,"pt-BR"));
+
+  sel.innerHTML=
+    `<option value="">${qrLanguage==="en-US"?"All service providers":"Todos os prestadores"}</option>`+
+    unique.map(name=>`<option value="${esc(name)}">${esc(name)}</option>`).join("");
+
+  if([...sel.options].some(o=>o.value===current))sel.value=current;
+  sel.disabled=false;
+}
+
+function readPreventiveProviderCache766253_(){
+  try{
+    const raw=sessionStorage.getItem(QR_PREVENTIVE_PROVIDER_CACHE_KEY_766253);
+    if(!raw)return null;
+    const data=JSON.parse(raw);
+    if(!Array.isArray(data.items))return null;
+    if(Date.now()-Number(data.ts||0)>10*60*1000)return null;
+    return data.items;
+  }catch(_e){
+    return null;
+  }
+}
+
+function writePreventiveProviderCache766253_(items){
+  try{
+    sessionStorage.setItem(
+      QR_PREVENTIVE_PROVIDER_CACHE_KEY_766253,
+      JSON.stringify({ts:Date.now(),items:items||[]})
+    );
+  }catch(_e){}
+}
+
+async function loadPreventiveProvidersFast766253_(){
+  if(!["MASTER","GESTOR"].includes(systemSession?.perfil)){
+    const own=String(systemSession?.prestador||"").trim();
+    if(own){
+      $("controlProvider").innerHTML=`<option value="${esc(own)}">${esc(own)}</option>`;
+      $("controlProvider").disabled=true;
+    }
+    return;
+  }
+
+  const cached=readPreventiveProviderCache766253_();
+  if(cached)fillPreventiveProviderDropdown766253_(cached);
+
+  if(qrPreventiveProviderPromise766253)return qrPreventiveProviderPromise766253;
+
+  qrPreventiveProviderPromise766253=(async()=>{
+    try{
+      const r=await menuApi({action:"preventiveproviders"});
+      if(r?.ok&&Array.isArray(r.providers)){
+        fillPreventiveProviderDropdown766253_(r.providers);
+        writePreventiveProviderCache766253_(r.providers);
+      }
+    }catch(_e){
+      // O cálculo completo das preventivas continua funcionando mesmo
+      // se este pré-carregamento opcional falhar.
+    }finally{
+      qrPreventiveProviderPromise766253=null;
+    }
+  })();
+
+  return qrPreventiveProviderPromise766253;
+}
+
 async function loadPreventiveControl(){if(!$("controlCompetence").value)$("controlCompetence").value=currentCompetence();qrRefreshLocalizedDateControls();const provider=["MASTER","GESTOR"].includes(systemSession?.perfil)?$("controlProvider").value:"";const r=await menuApi({action:"preventivecontrol",competencia:$("controlCompetence").value,prestador:provider});if(!r.ok){clearSystemSession();showMenuGate();return}preventiveControlData=r.data;renderPreventiveControl()}
 function aguardarPinturaTela(){return new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))}
 async function refreshPreventiveControl(){const btn=$("controlRefresh");if(!btn||btn.dataset.loading==="1")return;const inicio=Date.now();btn.dataset.loading="1";btn.disabled=true;btn.textContent="Atualizando...";await aguardarPinturaTela();try{await loadPreventiveControl()}catch(e){$("controlListStatus").textContent="Erro ao atualizar as preventivas."}finally{const decorrido=Date.now()-inicio;if(decorrido<700)await new Promise(resolve=>setTimeout(resolve,700-decorrido));btn.textContent="Atualizar";btn.disabled=false;delete btn.dataset.loading}}
@@ -2215,7 +2306,21 @@ function renderPreventiveControl(){
   $("controlTitle").textContent=`${t("Preventivas","Preventive Maintenance")} – ${comp}`;
   $("controlSummary").innerHTML=`<div class="control-summary-card"><strong>${s.previstas}</strong>${t("Previstas","Planned")}</div><div class="control-summary-card"><strong>✅ ${s.realizadas}</strong>${t("Realizadas","Completed")}</div><div class="control-summary-card"><strong>🔴 ${s.pendentes}</strong>${t("Pendentes","Pending")}</div><div class="control-summary-card"><strong>${s.percentual}%</strong>${t("Conclusão","Completion")}</div>`;
   $("progressText").textContent=s.percentual+"%";$("progressFill").style.width=s.percentual+"%";
-  if(["MASTER","GESTOR"].includes(systemSession.perfil)){const atual=$("controlProvider").value;if(!atual||$("controlProvider").options.length<=1){$("controlProvider").innerHTML=`<option value="">${t("Todos os prestadores","All service providers")}</option>`+d.prestadores.map(p=>`<option value="${esc(p.prestador)}">${esc(p.prestador)}</option>`).join("")}$("controlProvider").disabled=false}else{$("controlProvider").innerHTML=`<option value="${esc(systemSession.prestador)}">${esc(systemSession.prestador)}</option>`;$("controlProvider").disabled=true}
+  if(["MASTER","GESTOR"].includes(systemSession.perfil)){
+    const atual=$("controlProvider").value;
+    const nomesPreventiva=(d.prestadores||[]).map(p=>p.prestador).filter(Boolean);
+
+    if(!atual||$("controlProvider").options.length<=1){
+      fillPreventiveProviderDropdown766253_(nomesPreventiva);
+    }
+
+    // Guarda a lista calculada pelo próprio controle para a próxima abertura.
+    if(nomesPreventiva.length)writePreventiveProviderCache766253_(nomesPreventiva);
+    $("controlProvider").disabled=false;
+  }else{
+    $("controlProvider").innerHTML=`<option value="${esc(systemSession.prestador)}">${esc(systemSession.prestador)}</option>`;
+    $("controlProvider").disabled=true;
+  }
   $("providerSummary").innerHTML=d.prestadores.map(p=>`<div class="provider-card"><b>${esc(p.prestador)}</b><br>${t("Previstas","Planned")}: ${p.previstas} • ${t("Realizadas","Completed")}: ${p.realizadas} • ${t("Pendentes","Pending")}: ${p.pendentes} • ${p.percentual}%</div>`).join("");
   renderControlList();
 }
