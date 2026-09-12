@@ -1,11 +1,11 @@
-<!-- QRManut 7.6.6.25: B5.2 Ciclo de Vida dos Ativos — Ativo, Inativo e Baixado/Descartado -->
+<!-- QRManut 7.6.6.25: B5.2.2 Ciclo de Vida — preserva todas as situações dos ativos -->
 <!doctype html>
 <html lang="pt-br">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>QRManut</title>
-<meta name="qrmanut-build" content="2026-09-12-b5.2">
+<meta name="qrmanut-build" content="2026-09-12-b5.2.2">
 <meta name="theme-color" content="#0b315e">
 <meta name="application-name" content="QRManut">
 <meta name="mobile-web-app-capable" content="yes">
@@ -1265,7 +1265,7 @@ window.addEventListener("appinstalled",()=>{
 /* ============================================================
  * QRManut 7.6.6.25 — B4.2 ATUALIZAÇÃO AUTOMÁTICA DO PWA
  * ============================================================ */
-const QR_BUILD_7662542="2026-09-12-b5.2";
+const QR_BUILD_7662542="2026-09-12-b5.2.2";
 let qrBuildCheckRunning7662542=false;
 let qrLastBuildCheck7662542=0;
 
@@ -2743,7 +2743,7 @@ function requestPreventive(){
   if(!assetIsOperationalFront766252_(currentAsset)){
     return alert(assetIsDisposedFront766252_(currentAsset?.status)
       ?"Ativo baixado/descartado. Não é possível registrar nova preventiva."
-      :"Ativo inativo. Reative o ativo antes de registrar nova preventiva.");
+      :`Ativo não operacional (${String(currentAsset?.status||"Inativo")}). Altere a situação para Ativo antes de registrar nova preventiva.`);
   }
   requirePreventiveLogin(async()=>{if(!requireUiPermission("PREVENTIVA_REGISTRAR","Seu perfil não possui permissão para registrar preventivas.","Your profile is not allowed to record preventive maintenance."))return;await openPreventive();loadPreventiveHistory()},currentAsset.prestador)
 }
@@ -2889,7 +2889,7 @@ async function openReport(){
   if(!assetIsOperationalFront766252_(currentAsset)){
     return alert(assetIsDisposedFront766252_(currentAsset?.status)
       ?"Ativo baixado/descartado. Não é possível registrar nova ocorrência."
-      :"Ativo inativo. Reative o ativo antes de registrar nova ocorrência.");
+      :`Ativo não operacional (${String(currentAsset?.status||"Inativo")}). Altere a situação para Ativo antes de registrar nova ocorrência.`);
   }
   if(systemSession&&!hasProfilePermission("OC_REGISTRAR"))return permissionDeniedMessage("Seu perfil não possui permissão para registrar ocorrências.","Your profile is not allowed to create work orders.");
   photoData=null;reportAttachmentData=null;reportPosting=false;reportCompleted=false;
@@ -3217,7 +3217,7 @@ async function openPublicSolicitation7662412(){
   if(!assetIsOperationalFront766252_(currentAsset)){
     return alert(assetIsDisposedFront766252_(currentAsset?.status)
       ?"Ativo baixado/descartado. Este QR não está disponível para novas solicitações."
-      :"Ativo inativo. Este QR não está disponível para novas solicitações.");
+      :`Ativo não operacional (${String(currentAsset?.status||"Inativo")}). Este QR não está disponível para novas solicitações.`);
   }
   if(!currentAsset?.id)return alert(solT7662412("Não foi possível identificar o QR de origem.","Unable to identify the source QR."));
   solPhotoData=null;solPublicPosting=false;
@@ -4477,9 +4477,12 @@ function renderAssetLifecycle766252_(a){
   hide("otherProblemButton");
 
   notice.className="asset-lifecycle-notice"+(disposed?" disposed":"");
+
+  const st=String(a?.status||"Inativo").trim()||"Inativo";
+
   notice.innerHTML=disposed
     ?`<b>⛔ Ativo baixado/descartado</b><br>Este ativo foi retirado definitivamente de operação e não aceita novas OCs, preventivas ou solicitações. O histórico permanece disponível para consulta.`
-    :`<b>⚠️ Ativo inativo</b><br>Este ativo está fora de operação e não aceita novas OCs, preventivas ou solicitações. Reative-o na Gestão de Ativos para voltar às rotinas operacionais.`;
+    :`<b>⚠️ Ativo não operacional — ${esc(st)}</b><br>Enquanto permanecer nesta situação, o ativo não aceita novas OCs, preventivas ou solicitações. A situação pode ser alterada na Gestão de Ativos.`;
   show("assetLifecycleNotice");
 }
 
@@ -4556,7 +4559,7 @@ function assetFillManagementOptions7610(){
   assetFillSelect7610("assetMaintenanceClass",o.maintenanceClasses||[],qrLanguage==="en-US"?"Select...":"Selecione...",true);
   assetFillSelect7610("assetFloor",o.floors||[],qrLanguage==="en-US"?"Select...":"Selecione...",true);
   assetFillSelect7610("assetPeriodicity",o.periodicities||[],qrLanguage==="en-US"?"No frequency":"Sem periodicidade",true);
-  assetFillSelect7610("assetStatus",o.statuses||["Ativo","Inativo","Baixado/Descartado"],qrLanguage==="en-US"?"Select...":"Selecione...",false);
+  assetFillSelect7610("assetStatus",o.statuses||["Ativo","Manutenção","Estoque","Estq Manut","Inativo","Desativado","Baixado/Descartado"],qrLanguage==="en-US"?"Select...":"Selecione...",false);
 
   const p=$("assetProvider");
   if(p){
