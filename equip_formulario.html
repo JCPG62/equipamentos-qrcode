@@ -1,4 +1,4 @@
-<!-- QRManut 7.6.6.25: Onda 2B / B1 Integridade + UX seleção de ativo → Classificação inicial da OC -->
+<!-- QRManut 7.6.6.25: Onda 2B / B4 PWA — HTML network-first e Service Worker estável -->
 <!doctype html>
 <html lang="pt-br">
 <head>
@@ -1181,7 +1181,7 @@ window.addEventListener("appinstalled",()=>{
 if("serviceWorker" in navigator){
   window.addEventListener("load",()=>{
     navigator.serviceWorker
-      .register("./qrmanut-sw.js")
+      .register("./qrmanut-sw.js",{updateViaCache:"none"})
       .catch(error=>{
         console.warn("Service Worker do QRManut não registrado.",error);
         let warning=document.getElementById("qrServiceWorkerWarning");
