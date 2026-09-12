@@ -1,11 +1,11 @@
-<!-- QRManut 7.6.6.25: B5.1 Documentos Técnicos — abertura protegida de PDFs grandes -->
+<!-- QRManut 7.6.6.25: B5.2 Ciclo de Vida dos Ativos — Ativo, Inativo e Baixado/Descartado -->
 <!doctype html>
 <html lang="pt-br">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>QRManut</title>
-<meta name="qrmanut-build" content="2026-09-12-b5.1">
+<meta name="qrmanut-build" content="2026-09-12-b5.2">
 <meta name="theme-color" content="#0b315e">
 <meta name="application-name" content="QRManut">
 <meta name="mobile-web-app-capable" content="yes">
@@ -456,6 +456,42 @@ html,body{max-width:100%;overflow-x:hidden}
 
 
 /* ============================================================
+ * QRManut 7.6.6.25 — B5.2 CICLO DE VIDA DOS ATIVOS
+ * ============================================================ */
+.asset-lifecycle-notice{
+  margin:12px 0 0;
+  padding:12px 14px;
+  border-radius:12px;
+  border:1px solid #f59e0b;
+  background:#fffbeb;
+  color:#92400e;
+  line-height:1.45;
+}
+.asset-lifecycle-notice.disposed{
+  border-color:#fca5a5;
+  background:#fef2f2;
+  color:#991b1b;
+}
+.asset-disposal-box{
+  margin-top:14px;
+  padding:14px;
+  border:1px solid #fecaca;
+  border-left:5px solid #b91c1c;
+  border-radius:12px;
+  background:#fff7f7;
+}
+.asset-disposal-box h3{margin:0 0 6px;color:#991b1b}
+.asset-disposal-meta{
+  margin-top:8px;
+  padding:9px 11px;
+  border-radius:9px;
+  background:#fff;
+  border:1px solid #e5e7eb;
+  color:#4b5563;
+  font-size:.86rem;
+}
+
+/* ============================================================
  * QRManut 7.6.6.25 — B4.1 UX OFFLINE
  * ============================================================ */
 .qr-network-status{
@@ -812,6 +848,7 @@ html,body{max-width:100%;overflow-x:hidden}
     <div class="section"><h3>Gestão do Ativo</h3><div id="management"></div></div>
     <div id="assetDocumentsSection" class="section hidden"><h3>📚 Documentos do Equipamento</h3><div id="assetDocumentsStatus" class="muted"></div><div id="assetDocuments" class="asset-document-list"></div></div>
     <div class="actions"><button id="reportButton" class="chip">Reportar Serviço / Anomalia / Reparo</button><button id="preventiveButton" class="btn-preventive hidden">🛠️ Registrar Preventiva</button><button id="searchAssetsButton" class="btn-search">☰ Menu Principal</button></div>
+    <div id="assetLifecycleNotice" class="asset-lifecycle-notice hidden"></div>
     <div class="other-problem-box"><div class="muted">O problema não é neste equipamento?</div><button id="otherProblemButton" class="btn-sol-public" type="button">📍 Problema em outro equipamento ou ambiente</button></div>
     <div class="section"><h3>Histórico de Manutenção</h3><div id="historyStatus" class="muted"></div><select id="historySelect" class="hidden"></select><div id="historyDetail"></div></div>
     <div id="preventiveHistorySection" class="section hidden"><h3>🛠️ Histórico de Preventivas</h3><div id="preventiveHistoryStatus" class="muted">Login necessário para visualizar.</div><div id="preventiveHistory"></div></div>
@@ -930,6 +967,26 @@ html,body{max-width:100%;overflow-x:hidden}
           <input id="assetLocationOther" class="asset-other-input hidden" placeholder="Informe a localização">
         </label>
         <label class="full">Local Detalhado<input id="assetDetailedLocation" placeholder="Ex.: Casa de máquinas, ao lado do quadro elétrico"></label>
+      </div>
+
+      <div id="assetDisposalFields" class="asset-disposal-box hidden">
+        <h3>🗑️ Baixa / Descarte do Ativo</h3>
+        <div class="asset-form-help">Use este status somente quando o ativo tiver sido retirado definitivamente de operação.</div>
+        <div class="asset-form-grid">
+          <label>Data da baixa/descarte *<input id="assetDisposalDate" type="date"></label>
+          <label>Destino do ativo *<input id="assetDisposalDestination" list="assetDisposalDestinationList" placeholder="Ex.: Sucata, descarte, venda..."></label>
+          <datalist id="assetDisposalDestinationList">
+            <option value="Descarte">
+            <option value="Sucata">
+            <option value="Substituição">
+            <option value="Venda">
+            <option value="Doação">
+            <option value="Devolução ao fornecedor">
+            <option value="Outro">
+          </datalist>
+          <label class="full">Motivo da baixa/descarte *<textarea id="assetDisposalReason" rows="3" placeholder="Informe o motivo da retirada definitiva do ativo"></textarea></label>
+        </div>
+        <div class="asset-disposal-meta"><b>Responsável:</b> <span id="assetDisposalResponsible">—</span></div>
       </div>
     </div>
 
@@ -1208,7 +1265,7 @@ window.addEventListener("appinstalled",()=>{
 /* ============================================================
  * QRManut 7.6.6.25 — B4.2 ATUALIZAÇÃO AUTOMÁTICA DO PWA
  * ============================================================ */
-const QR_BUILD_7662542="2026-09-12-b5.1";
+const QR_BUILD_7662542="2026-09-12-b5.2";
 let qrBuildCheckRunning7662542=false;
 let qrLastBuildCheck7662542=0;
 
@@ -2409,6 +2466,10 @@ function renderAsset(a){
     [t("Status cadastral","Registration Status"),val(a.status)],
     [t("Prestador","Service Provider"),val(a.prestador)],
     [t("Periodicidade","Frequency"),val(a.periodicidade)],
+    [t("Data da Baixa","Retirement Date"),val(a.data_da_baixa)],
+    [t("Destino do Ativo","Asset Destination"),val(a.destino_do_ativo)],
+    [t("Motivo da Baixa","Retirement Reason"),val(a.motivo_da_baixa)],
+    [t("Responsável pela Baixa","Retired By"),val(a.responsavel_pela_baixa)],
     [t("Observações","Notes"),val(a.observacoes)]
   ]);
 
@@ -2416,11 +2477,7 @@ function renderAsset(a){
   const h2=document.querySelector("#locationSection h3");if(h2)h2.textContent=t("Localização","Location");
   const h3=document.querySelector("#technicalSection h3");if(h3)h3.textContent=t("Características Técnicas","Technical Specifications");
 
-  if(systemSession&&!hasProfilePermission("OC_REGISTRAR"))hide("reportButton");else show("reportButton");
-  if(a.periodicidade&&systemSession){
-    if(hasProfilePermission("PREVENTIVA_REGISTRAR"))show("preventiveButton");else hide("preventiveButton");
-    if(hasProfilePermission("PREVENTIVA_CONSULTAR"))show("preventiveHistorySection");else hide("preventiveHistorySection");
-  }else{hide("preventiveButton");hide("preventiveHistorySection")}
+  renderAssetLifecycle766252_(a);
 }
 function renderStatus(s){
   const t=(pt,en)=>qrLanguage==="en-US"?en:pt;
@@ -2682,7 +2739,14 @@ async function uploadPreventiveDocuments7606(registro){
 }
 
 
-function requestPreventive(){requirePreventiveLogin(async()=>{if(!requireUiPermission("PREVENTIVA_REGISTRAR","Seu perfil não possui permissão para registrar preventivas.","Your profile is not allowed to record preventive maintenance."))return;await openPreventive();loadPreventiveHistory()},currentAsset.prestador)}
+function requestPreventive(){
+  if(!assetIsOperationalFront766252_(currentAsset)){
+    return alert(assetIsDisposedFront766252_(currentAsset?.status)
+      ?"Ativo baixado/descartado. Não é possível registrar nova preventiva."
+      :"Ativo inativo. Reative o ativo antes de registrar nova preventiva.");
+  }
+  requirePreventiveLogin(async()=>{if(!requireUiPermission("PREVENTIVA_REGISTRAR","Seu perfil não possui permissão para registrar preventivas.","Your profile is not allowed to record preventive maintenance."))return;await openPreventive();loadPreventiveHistory()},currentAsset.prestador)
+}
 async function openPreventive(){preventivePhotoData=null;resetPreventiveDocuments7606();signatureDirty=false;$("preventivePhotoInput").value="";$("preventivePhotoPreview").style.display="none";$("preventiveMessage").className="message";$("preventiveAsset").textContent=currentAsset.id+" – "+currentAsset.nome_do_equipamento;$("preventivePeriodicity").textContent=currentAsset.periodicidade||"Não informada";$("preventiveProvider").textContent=currentAsset.prestador||"Não informado";$("preventiveCompetence").textContent=currentCompetence();$("preventiveResponsible").value=getSavedResponsible();$("preventiveObservation").value="";$("preventiveNeedsAction").checked=false;hide("preventiveActionFields");$("preventiveActionType").value="";$("preventiveActionDescription").value="";$("preventiveActionPriority").value="Média";$("preventiveActionMaterial").value="";$("preventiveActionQuantity").value="";$("preventiveActionOperation").value="";const r=await menuApi({action:"preventiverequirements",id:currentAsset.id});if(!r.ok){alert(r.detail||"Não foi possível carregar as regras.");return}preventiveRequirements=r.data;renderPreventiveRequirements();$("preventiveModal").style.display="flex";if(!$("signatureBox").classList.contains("hidden"))requestAnimationFrame(setupSignatureCanvas)}
 function renderPreventiveRequirements(){const r=preventiveRequirements;$("preventiveRequirements").innerHTML=`<b>Requisitos deste registro</b><div class="requirement ${r.exigirAssinatura?"required-yes":"required-no"}">${r.exigirAssinatura?"● Assinatura obrigatória":"✓ Assinatura não obrigatória"}</div><div class="requirement ${r.fotoObrigatoria?"required-yes":"required-no"}">${r.fotoObrigatoria?"● Foto obrigatória":"✓ Foto opcional"}</div><div class="requirement ${r.observacaoObrigatoria?"required-yes":"required-no"}">${r.observacaoObrigatoria?"● Observação obrigatória":"✓ Observação opcional"}</div>`;if(r.exigirAssinatura){show("signatureBox");$("signatureRequiredText").textContent=" * obrigatório"}else hide("signatureBox")}
 async function savePreventive(){
@@ -2822,6 +2886,11 @@ function translateReportError76619(message){
   return exact[m]||"The work order could not be submitted. Please review the information and try again.";
 }
 async function openReport(){
+  if(!assetIsOperationalFront766252_(currentAsset)){
+    return alert(assetIsDisposedFront766252_(currentAsset?.status)
+      ?"Ativo baixado/descartado. Não é possível registrar nova ocorrência."
+      :"Ativo inativo. Reative o ativo antes de registrar nova ocorrência.");
+  }
   if(systemSession&&!hasProfilePermission("OC_REGISTRAR"))return permissionDeniedMessage("Seu perfil não possui permissão para registrar ocorrências.","Your profile is not allowed to create work orders.");
   photoData=null;reportAttachmentData=null;reportPosting=false;reportCompleted=false;
   if($("reportCameraInput"))$("reportCameraInput").value="";
@@ -3145,6 +3214,11 @@ function updateSolOtherLocation7662412(){
 }
 
 async function openPublicSolicitation7662412(){
+  if(!assetIsOperationalFront766252_(currentAsset)){
+    return alert(assetIsDisposedFront766252_(currentAsset?.status)
+      ?"Ativo baixado/descartado. Este QR não está disponível para novas solicitações."
+      :"Ativo inativo. Este QR não está disponível para novas solicitações.");
+  }
   if(!currentAsset?.id)return alert(solT7662412("Não foi possível identificar o QR de origem.","Unable to identify the source QR."));
   solPhotoData=null;solPublicPosting=false;
   $("solReporterName").value=getSavedResponsible();
@@ -4321,6 +4395,104 @@ function assetApi760(action,payload={}){
   });
 }
 
+function assetStatusNorm766252_(value){
+  return String(value||"")
+    .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+    .trim().toLowerCase();
+}
+
+function assetIsDisposedFront766252_(value){
+  return ["baixado","descartado","baixado/descartado","baixado - descartado","sucata"]
+    .includes(assetStatusNorm766252_(value));
+}
+
+function assetIsOperationalFront766252_(assetOrStatus){
+  const value=assetOrStatus&&typeof assetOrStatus==="object"
+    ?assetOrStatus.status
+    :assetOrStatus;
+  const s=assetStatusNorm766252_(value||"Ativo");
+  return !s||s==="ativo";
+}
+
+function assetToday766252_(){
+  const d=new Date(),pad=n=>String(n).padStart(2,"0");
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+}
+
+function qrNormalizeDateInput(value){
+  const s=String(value||"").trim();
+  let m=s.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if(m)return `${m[1]}-${m[2]}-${m[3]}`;
+  m=s.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+  if(m)return `${m[3]}-${m[2]}-${m[1]}`;
+  const d=new Date(s);
+  if(!isNaN(d.getTime())){
+    const pad=n=>String(n).padStart(2,"0");
+    return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+  }
+  return "";
+}
+
+function assetToggleDisposalFields766252_(){
+  const disposed=assetIsDisposedFront766252_($("assetStatus")?.value);
+  if(disposed){
+    show("assetDisposalFields");
+    if(!$("assetDisposalDate").value)$("assetDisposalDate").value=assetToday766252_();
+    if(!$("assetDisposalResponsible").textContent.trim()||$("assetDisposalResponsible").textContent.trim()==="—"){
+      $("assetDisposalResponsible").textContent=systemSession?.nome||systemSession?.usuario||"—";
+    }
+  }else{
+    hide("assetDisposalFields");
+  }
+}
+
+function renderAssetLifecycle766252_(a){
+  const operational=a?.operacional!==undefined
+    ?!!a.operacional
+    :assetIsOperationalFront766252_(a);
+
+  const disposed=a?.baixado_descartado!==undefined
+    ?!!a.baixado_descartado
+    :assetIsDisposedFront766252_(a?.status);
+
+  const notice=$("assetLifecycleNotice");
+
+  if(operational){
+    hide("assetLifecycleNotice");
+    if(systemSession&&!hasProfilePermission("OC_REGISTRAR"))hide("reportButton");else show("reportButton");
+    show("otherProblemButton");
+
+    if(a?.periodicidade&&systemSession){
+      if(hasProfilePermission("PREVENTIVA_REGISTRAR"))show("preventiveButton");else hide("preventiveButton");
+      if(hasProfilePermission("PREVENTIVA_CONSULTAR"))show("preventiveHistorySection");else hide("preventiveHistorySection");
+    }else{
+      hide("preventiveButton");
+      if(!a?.periodicidade)hide("preventiveHistorySection");
+    }
+    return;
+  }
+
+  hide("reportButton");
+  hide("preventiveButton");
+  hide("otherProblemButton");
+
+  notice.className="asset-lifecycle-notice"+(disposed?" disposed":"");
+  notice.innerHTML=disposed
+    ?`<b>⛔ Ativo baixado/descartado</b><br>Este ativo foi retirado definitivamente de operação e não aceita novas OCs, preventivas ou solicitações. O histórico permanece disponível para consulta.`
+    :`<b>⚠️ Ativo inativo</b><br>Este ativo está fora de operação e não aceita novas OCs, preventivas ou solicitações. Reative-o na Gestão de Ativos para voltar às rotinas operacionais.`;
+  show("assetLifecycleNotice");
+}
+
+function disposeAsset760(row){
+  const a=qrAssets760.find(x=>Number(x.row)===Number(row));
+  if(!a)return;
+  openAssetModal760(a);
+  $("assetStatus").value="Baixado/Descartado";
+  assetToggleDisposalFields766252_();
+  if(!$("assetDisposalDate").value)$("assetDisposalDate").value=assetToday766252_();
+  setTimeout(()=>$("assetDisposalReason").focus(),120);
+}
+
 function assetBuildId760(){
   const prefix=$("assetPrefix").value||"EQ";
   const base=String($("assetBaseNumber").value||"").replace(/\D/g,"").padStart(3,"0");
@@ -4384,7 +4556,7 @@ function assetFillManagementOptions7610(){
   assetFillSelect7610("assetMaintenanceClass",o.maintenanceClasses||[],qrLanguage==="en-US"?"Select...":"Selecione...",true);
   assetFillSelect7610("assetFloor",o.floors||[],qrLanguage==="en-US"?"Select...":"Selecione...",true);
   assetFillSelect7610("assetPeriodicity",o.periodicities||[],qrLanguage==="en-US"?"No frequency":"Sem periodicidade",true);
-  assetFillSelect7610("assetStatus",o.statuses||["Ativo","Inativo"],qrLanguage==="en-US"?"Select...":"Selecione...",false);
+  assetFillSelect7610("assetStatus",o.statuses||["Ativo","Inativo","Baixado/Descartado"],qrLanguage==="en-US"?"Select...":"Selecione...",false);
 
   const p=$("assetProvider");
   if(p){
@@ -4448,7 +4620,9 @@ function renderAssets760(){
   ].join(" ").toLowerCase().includes(q));
 
   $("assetList").innerHTML=items.length?items.map(a=>{
-    const inactive=["inativo","desativado"].includes(String(a.status||"").trim().toLowerCase());
+    const disposed=assetIsDisposedFront766252_(a.status);
+    const operational=assetIsOperationalFront766252_(a);
+    const inactive=!operational&&!disposed;
     return `<div class="card" style="margin-bottom:8px">
       <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap">
         <div>
@@ -4459,8 +4633,9 @@ function renderAssets760(){
           <span class="tag">${esc(a.status||"Ativo")}</span>
         </div>
         <div style="display:flex;gap:6px;flex-wrap:wrap">
-          <button class="btn btn-secondary" onclick="editAsset760(${Number(a.row)})">Editar</button>
-          <button class="btn btn-secondary" onclick="toggleAsset760(${Number(a.row)},${!inactive})">${inactive?"Ativar":"Inativar"}</button>
+          <button class="btn btn-secondary" onclick="editAsset760(${Number(a.row)})">${disposed?"Editar / corrigir baixa":"Editar"}</button>
+          ${disposed?"":`<button class="btn btn-secondary" onclick="toggleAsset760(${Number(a.row)},${operational})">${operational?"Inativar":"Ativar"}</button>`}
+          ${disposed?"":`<button class="btn btn-danger" onclick="disposeAsset760(${Number(a.row)})">Baixar/Descartar</button>`}
         </div>
       </div>
     </div>`;
@@ -4494,6 +4669,11 @@ function openAssetModal760(a){
 
   $("assetName").value=a?.nome||"";
   assetSetAssistedValue7610("assetStatus",null,a?.status||"Ativo");
+  $("assetDisposalDate").value=a?.dataBaixa?qrNormalizeDateInput(a.dataBaixa):"";
+  $("assetDisposalReason").value=a?.motivoBaixa||"";
+  $("assetDisposalDestination").value=a?.destinoAtivo||"";
+  $("assetDisposalResponsible").textContent=a?.responsavelBaixa||systemSession?.nome||systemSession?.usuario||"—";
+  assetToggleDisposalFields766252_();
   assetSetAssistedValue7610("assetAssetType",null,a?.tipoDeAtivo||"Equipamento");
   assetSetAssistedValue7610("assetCategory","assetCategoryOther",a?.categoria||"");
   $("assetSubcategory").value=a?.subcategoria||"";
@@ -4549,6 +4729,28 @@ async function saveAsset760(){
   if(!existing&&!$("assetTypeCode").value)return alert(qrLanguage==="en-US"?"Select the asset type/code before saving.":"Selecione o tipo/sigla do ativo antes de salvar.");
   if(!existing&&(!id||id==="—"))return alert(qrLanguage==="en-US"?"Generate the asset ID before saving.":"Gere o ID do ativo antes de salvar.");
 
+  const newStatus=String($("assetStatus").value||"Ativo");
+  const wasDisposed=!!existing&&assetIsDisposedFront766252_(existing.status);
+  const willBeDisposed=assetIsDisposedFront766252_(newStatus);
+
+  if(!existing&&willBeDisposed){
+    return alert("Um novo ativo não pode ser cadastrado diretamente como Baixado/Descartado.");
+  }
+
+  if(willBeDisposed){
+    if(!$("assetDisposalDate").value)return alert("Informe a data da baixa/descarte.");
+    if(!String($("assetDisposalReason").value||"").trim())return alert("Informe o motivo da baixa/descarte.");
+    if(!String($("assetDisposalDestination").value||"").trim())return alert("Informe o destino do ativo.");
+  }
+
+  if(wasDisposed&&!willBeDisposed){
+    const profile=String(systemSession?.perfil||"").toUpperCase();
+    if(!["MASTER","GESTOR"].includes(profile)){
+      return alert("Somente MASTER ou GESTOR pode corrigir a baixa de um ativo.");
+    }
+    if(!confirm("Você está corrigindo a baixa/descarte deste ativo. O ativo voltará ao status selecionado e a correção ficará registrada na Auditoria. Continuar?"))return;
+  }
+
   const provider=assetProviderPayload7610();
   const btn=$("assetSave");
   btn.disabled=true;
@@ -4564,7 +4766,11 @@ async function saveAsset760(){
       tipoCodigo:$("assetTypeCode").value,
       pavimentoCodigo:$("assetFloorCode").value,
       nome:name,
-      status:$("assetStatus").value,
+      status:newStatus,
+      dataBaixa:$("assetDisposalDate").value,
+      motivoBaixa:$("assetDisposalReason").value,
+      responsavelBaixa:$("assetDisposalResponsible").textContent,
+      destinoAtivo:$("assetDisposalDestination").value,
       tipoDeAtivo:$("assetAssetType").value,
       categoria:assetGetAssistedValue7610("assetCategory","assetCategoryOther"),
       subcategoria:$("assetSubcategory").value,
@@ -6189,6 +6395,7 @@ $("tabAssetManagement").onclick=openAssetManagement760;
 $("assetNewButton").onclick=()=>openAssetModal760(null);
 $("assetCancel").onclick=()=>$("assetEditModal").style.display="none";
 $("assetSave").onclick=()=>saveAsset760().catch(e=>alert(e.message));
+$("assetStatus").onchange=assetToggleDisposalFields766252_;
 $("assetSuggestNumber").onclick=()=>suggestAssetNumber760().catch(e=>alert(e.message));
 $("assetSearch").oninput=renderAssets760;
 ["assetPrefix","assetBaseNumber","assetTypeCode","assetFloorCode"].forEach(id=>{
