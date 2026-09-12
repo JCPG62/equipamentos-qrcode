@@ -1,4 +1,4 @@
-<!-- QRManut 7.6.6.25: Onda 2B / B1 Integridade + fluxo SOL validado -->
+<!-- QRManut 7.6.6.25: Onda 2B / B1 Integridade + UX seleção de ativo → Classificação inicial da OC -->
 <!doctype html>
 <html lang="pt-br">
 <head>
@@ -1044,7 +1044,7 @@ html,body{max-width:100%;overflow-x:hidden}
   <label>Buscar ativo cadastrado *<input id="solAssetSearch" placeholder="ID, equipamento, pavimento, local ou componente"></label>
   <div id="solAssetSelected" class="message"></div>
   <div id="solAssetResults" class="sol-asset-search-results"></div>
-  <h3 style="margin-bottom:4px">Classificação inicial da OC</h3>
+  <h3 id="solOccurrenceClassificationTitle" style="margin-bottom:4px">Classificação inicial da OC</h3>
   <div class="muted">A classificação pode ser alterada posteriormente na própria OC.</div>
   <label>Categoria *<select id="solOccurrenceCategory"><option value="">Selecione...</option></select></label>
   <label>Componente *<select id="solOccurrenceComponent"><option value="">Selecione...</option></select></label>
@@ -2953,12 +2953,28 @@ function normalizarBuscaUi7662412(v){
   return String(v||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim();
 }
 
+function scrollToSolOccurrenceClassification76625(){
+  const target=$("solOccurrenceClassificationTitle")||$("solOccurrenceCategory");
+  if(!target)return;
+  requestAnimationFrame(()=>{
+    target.scrollIntoView({behavior:"smooth",block:"start",inline:"nearest"});
+    setTimeout(()=>{
+      try{$("solOccurrenceCategory").focus({preventScroll:true})}catch(e){try{$("solOccurrenceCategory").focus()}catch(_e){}}
+    },320);
+  });
+}
+
 function selectSolAsset7662412(id){
   solSelectedAssetId=id;
   const a=(solTriageMeta?.assets||[]).find(x=>x.id===id);
   $("solAssetSelected").className="message success";
   $("solAssetSelected").textContent=a?solT7662412(`Ativo selecionado: ${a.id} — ${a.nome}`,`Selected asset: ${a.id} — ${a.nome}`):"";
   renderSolAssetOptions7662412();
+
+  // 7.6.6.25 — UX:
+  // após selecionar o ativo relacionado à SOL, leva o usuário diretamente
+  // para a classificação inicial da OC (Categoria / Componente).
+  scrollToSolOccurrenceClassification76625();
 }
 
 function populateSolOccurrenceCategories7662412(){
