@@ -1,11 +1,11 @@
-<!-- QRManut 7.6.6.25: B5.2.3 Status das Preventivas — prestadores carregados antecipadamente -->
+<!-- QRManut 7.6.6.25: B5.2.5 Gestão de Ativos — correção do status na edição -->
 <!doctype html>
 <html lang="pt-br">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>QRManut</title>
-<meta name="qrmanut-build" content="2026-09-12-b5.2.3">
+<meta name="qrmanut-build" content="2026-09-12-b5.2.5">
 <meta name="theme-color" content="#0b315e">
 <meta name="application-name" content="QRManut">
 <meta name="mobile-web-app-capable" content="yes">
@@ -1265,7 +1265,7 @@ window.addEventListener("appinstalled",()=>{
 /* ============================================================
  * QRManut 7.6.6.25 — B4.2 ATUALIZAÇÃO AUTOMÁTICA DO PWA
  * ============================================================ */
-const QR_BUILD_7662542="2026-09-12-b5.2.3";
+const QR_BUILD_7662542="2026-09-12-b5.2.5";
 let qrBuildCheckRunning7662542=false;
 let qrLastBuildCheck7662542=0;
 
@@ -4874,6 +4874,7 @@ async function saveAsset760(){
       tipoCodigo:$("assetTypeCode").value,
       pavimentoCodigo:$("assetFloorCode").value,
       nome:name,
+      assetStatus:newStatus,
       status:newStatus,
       dataBaixa:$("assetDisposalDate").value,
       motivoBaixa:$("assetDisposalReason").value,
