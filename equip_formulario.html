@@ -1,10 +1,11 @@
-<!-- QRManut 7.6.6.25: Onda 2B / B4.1 UX Offline — mensagens amigáveis e sessão preservada -->
+<!-- QRManut 7.6.6.25: Onda 2B / B4.2 Atualização PWA — recuperação automática de HTML antigo -->
 <!doctype html>
 <html lang="pt-br">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>QRManut</title>
+<meta name="qrmanut-build" content="2026-09-11-b4.2">
 <meta name="theme-color" content="#0b315e">
 <meta name="application-name" content="QRManut">
 <meta name="mobile-web-app-capable" content="yes">
@@ -1201,6 +1202,81 @@ window.addEventListener("appinstalled",()=>{
   deferredInstallPrompt=null;
   hide("installAppButton");
   hide("iosInstallHint");
+});
+
+
+/* ============================================================
+ * QRManut 7.6.6.25 — B4.2 ATUALIZAÇÃO AUTOMÁTICA DO PWA
+ * ============================================================ */
+const QR_BUILD_7662542="2026-09-11-b4.2";
+let qrBuildCheckRunning7662542=false;
+let qrLastBuildCheck7662542=0;
+
+async function qrCheckPublishedBuild7662542_(force=false){
+  if(navigator.onLine===false)return false;
+  if(qrBuildCheckRunning7662542)return false;
+
+  const now=Date.now();
+  if(!force && now-qrLastBuildCheck7662542<15000)return false;
+
+  qrLastBuildCheck7662542=now;
+  qrBuildCheckRunning7662542=true;
+
+  try{
+    const checkUrl=new URL(location.href);
+    checkUrl.searchParams.set("__qr_buildcheck",String(now));
+
+    const response=await fetch(checkUrl.toString(),{
+      method:"GET",
+      cache:"no-store",
+      credentials:"same-origin",
+      headers:{"Cache-Control":"no-cache"}
+    });
+
+    if(!response.ok)return false;
+
+    const text=await response.text();
+    const match=text.match(
+      /<meta\s+name=["']qrmanut-build["']\s+content=["']([^"']+)["'][^>]*>/i
+    );
+    if(!match)return false;
+
+    const remoteBuild=String(match[1]||"").trim();
+    if(!remoteBuild || remoteBuild===QR_BUILD_7662542)return false;
+
+    const reloadKey="QRMANUT_BUILD_RELOAD_"+remoteBuild;
+    let alreadyReloaded=false;
+    try{
+      alreadyReloaded=sessionStorage.getItem(reloadKey)==="1";
+      if(!alreadyReloaded)sessionStorage.setItem(reloadKey,"1");
+    }catch(_e){}
+
+    if(!alreadyReloaded){
+      const target=new URL(location.href);
+      target.searchParams.set("__qr_refresh",String(Date.now()));
+      location.replace(target.toString());
+      return true;
+    }
+  }catch(_e){
+    // Falha silenciosa: nunca impede o uso do QRManut.
+  }finally{
+    qrBuildCheckRunning7662542=false;
+  }
+  return false;
+}
+
+window.addEventListener("pageshow",()=>{
+  setTimeout(()=>qrCheckPublishedBuild7662542_(true),350);
+});
+
+document.addEventListener("visibilitychange",()=>{
+  if(document.visibilityState==="visible"){
+    setTimeout(()=>qrCheckPublishedBuild7662542_(false),350);
+  }
+});
+
+window.addEventListener("online",()=>{
+  setTimeout(()=>qrCheckPublishedBuild7662542_(true),350);
 });
 
 if("serviceWorker" in navigator){
