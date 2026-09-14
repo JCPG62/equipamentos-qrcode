@@ -1,4 +1,5 @@
-<!-- QRManut 7.6.6.25: B5.2.10 — correção de tela branca + retorno seguro para OCs Pendentes -->
+<!-- QRManut 7.6.6.25: B5.2.12 — resumo visual das OCs por status na ficha do ativo
+     Mantém B5.2.11: reset do botão Excluir OC entre exclusões consecutivas. -->
 <!-- B5.2.10: navegação contextual usa recarregamento controlado; exclusão de OC atualiza a ficha sem location.reload(). -->
 <!-- Mantém modal interno; SOL vinculada é reaberta como Em análise ao excluir a OC. Pendência/Providência continua protegida. -->
 <!doctype html>
@@ -525,6 +526,18 @@ html,body{max-width:100%;overflow-x:hidden}
   color:#166534;
 }
 
+
+/* QRManut PNCQ 7.6.6.25 B5.2.12 — resumo de OCs por status na ficha do ativo */
+.history-status-summary{display:flex;flex-wrap:wrap;gap:7px 14px;align-items:center;margin:7px 0 10px;font-size:.82rem;color:#374151}
+.history-status-item{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.history-status-dot{width:9px;height:9px;border-radius:50%;display:inline-block;flex:0 0 9px}
+.history-status-item strong{font-weight:800;color:#111827}
+.history-status-dot.open{background:#dc2626}
+.history-status-dot.progress{background:#eab308}
+.history-status-dot.waiting{background:#f97316}
+.history-status-dot.done{background:#16a34a}
+.history-status-dot.cancelled{background:#6b7280}
+@media(max-width:700px){.history-status-summary{gap:6px 11px;font-size:.79rem}}
 </style>
 </head>
 <body>
@@ -861,7 +874,7 @@ html,body{max-width:100%;overflow-x:hidden}
     <div class="actions"><button id="reportButton" class="chip">Reportar Serviço / Anomalia / Reparo</button><button id="preventiveButton" class="btn-preventive hidden">🛠️ Registrar Preventiva</button><button id="searchAssetsButton" class="btn-search">☰ Menu Principal</button></div>
     <div id="assetLifecycleNotice" class="asset-lifecycle-notice hidden"></div>
     <div class="other-problem-box"><div class="muted">O problema não é neste equipamento?</div><button id="otherProblemButton" class="btn-sol-public" type="button">📍 Problema em outro equipamento ou ambiente</button></div>
-    <div class="section"><h3>Histórico de Manutenção</h3><div id="historyStatus" class="muted"></div><select id="historySelect" class="hidden"></select><div id="historyDetail"></div></div>
+    <div class="section"><h3>Histórico de Manutenção</h3><div id="historyStatus" class="muted"></div><div id="historyStatusSummary" class="history-status-summary" aria-label="Resumo das OCs por status"></div><select id="historySelect" class="hidden"></select><div id="historyDetail"></div></div>
     <div id="preventiveHistorySection" class="section hidden"><h3>🛠️ Histórico de Preventivas</h3><div id="preventiveHistoryStatus" class="muted">Login necessário para visualizar.</div><div id="preventiveHistory"></div></div>
   </div>
 </div>
@@ -2775,8 +2788,37 @@ function renderStatus(s){
     : t("Nenhuma ocorrência ativa.","No active issues.");
 }
 function renderStatusFromCurrent(){if(currentAssetStatus)renderStatus(currentAssetStatus)}
+function historyStatusKey7662512_(status){
+  return String(status||"")
+    .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+    .trim().toLowerCase();
+}
+function renderHistoryStatusSummary7662512_(items){
+  const box=$("historyStatusSummary");
+  if(!box)return;
+  const counts={
+    "aberta":0,
+    "em atendimento":0,
+    "aguardando peca":0,
+    "concluida":0,
+    "cancelada":0
+  };
+  (items||[]).forEach(x=>{
+    const k=historyStatusKey7662512_(x&&x.status);
+    if(Object.prototype.hasOwnProperty.call(counts,k))counts[k]++;
+  });
+  const defs=[
+    ["Aberta","Open","open",counts["aberta"]],
+    ["Em atendimento","In progress","progress",counts["em atendimento"]],
+    ["Aguardando peça","Waiting for part","waiting",counts["aguardando peca"]],
+    ["Concluída","Completed","done",counts["concluida"]],
+    ["Cancelada","Cancelled","cancelled",counts["cancelada"]]
+  ];
+  box.innerHTML=defs.map(x=>`<span class="history-status-item"><span class="history-status-dot ${x[2]}" aria-hidden="true"></span><span>${esc(qrLanguage==="en-US"?x[1]:x[0])}: <strong>${x[3]}</strong></span></span>`).join("");
+}
 function renderHistory(items){
   history=items;
+  renderHistoryStatusSummary7662512_(items);
   if(!items.length){
     hide("historySelect");
     $("historyStatus").textContent=qrLanguage==="en-US"?"No maintenance history recorded.":"Nenhum histórico registrado.";
@@ -6835,6 +6877,7 @@ $("assetLocation").addEventListener("change",()=>assetToggleOther7610("assetLoca
 
 
 // QRManut PNCQ 7.6.6.25 B5.2.11 - Reset do botão Excluir OC entre exclusões consecutivas.
+// QRManut PNCQ 7.6.6.25 B5.2.12 - Resumo visual e dinâmico da quantidade de OCs por status na ficha do ativo.
 </script>
 
 </body>
