@@ -1,4 +1,8 @@
-<!-- QRManut 7.6.6.25: B5.2.13 — scanner de QR Code integrado à Busca de Ativos
+<!-- QRManut 7.6.6.25: B5.2.14 — correção da troca de câmera do scanner QR
+     - Um único toque alterna diretamente entre câmera traseira e frontal.
+     - Evita percorrer lentes traseiras (principal/ultrawide/tele) antes de inverter.
+     - Bloqueia toques repetidos enquanto a câmera está sendo reiniciada.
+     Mantém B5.2.13: scanner de QR Code integrado à Busca de Ativos.
      Mantém B5.2.12: resumo visual das OCs por status na ficha do ativo.
      Mantém B5.2.11: reset do botão Excluir OC entre exclusões consecutivas. -->
 <!-- B5.2.10: navegação contextual usa recarregamento controlado; exclusão de OC atualiza a ficha sem location.reload(). -->
@@ -9,7 +13,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>QRManut</title>
-<meta name="qrmanut-build" content="2026-09-14-b5.2.8">
+<meta name="qrmanut-build" content="2026-09-14-b5.2.14">
 <meta name="theme-color" content="#0b315e">
 <meta name="application-name" content="QRManut">
 <meta name="mobile-web-app-capable" content="yes">
@@ -2395,7 +2399,7 @@ async function searchDocuments(){
 }
 
 /* ============================================================
- * QRManut PNCQ 7.6.6.25 / B5.2.13 — SCANNER DE QR CODE
+ * QRManut PNCQ 7.6.6.25 / B5.2.14 — SCANNER DE QR CODE
  * - Usa BarcodeDetector nativo quando disponível.
  * - Prefere a câmera traseira.
  * - Valida o ID lido antes de abrir a ficha.
@@ -2410,6 +2414,8 @@ let qrScannerDevices7662513=[];
 let qrScannerDeviceIndex7662513=0;
 let qrScannerLastRead7662513="";
 let qrScannerLastReadAt7662513=0;
+let qrScannerFacingMode7662513="environment";
+let qrScannerSwitching7662513=false;
 
 function qrScannerT7662513(pt,en){return qrLanguage==="en-US"?en:pt}
 
@@ -2549,17 +2555,27 @@ async function qrScannerLoop7662513(){
   }
 }
 
-async function qrScannerStartCamera7662513(deviceId){
+async function qrScannerStartCamera7662513(deviceId,facingMode,exactFacing){
+  // B5.2.14: interrompe por completo o loop anterior antes de abrir outra câmera.
+  qrScannerActive7662513=false;
   qrScannerStopStream7662513();
   qrScannerProcessing7662513=false;
   qrScannerStatus7662513(qrScannerT7662513("Preparando câmera...","Preparing camera..."),"loading");
 
-  const constraints=deviceId
-    ?{video:{deviceId:{exact:deviceId}} ,audio:false}
-    :{video:{facingMode:{ideal:"environment"},width:{ideal:1280},height:{ideal:720}},audio:false};
+  const desiredFacing=(facingMode==="user"||facingMode==="environment")
+    ?facingMode
+    :qrScannerFacingMode7662513;
+
+  const videoConstraints=deviceId
+    ?{deviceId:{exact:deviceId},width:{ideal:1280},height:{ideal:720}}
+    :{
+        facingMode:exactFacing?{exact:desiredFacing}:{ideal:desiredFacing},
+        width:{ideal:1280},
+        height:{ideal:720}
+      };
 
   try{
-    qrScannerStream7662513=await navigator.mediaDevices.getUserMedia(constraints);
+    qrScannerStream7662513=await navigator.mediaDevices.getUserMedia({video:videoConstraints,audio:false});
     const video=$("qrScannerVideo");
     video.srcObject=qrScannerStream7662513;
     await video.play();
@@ -2571,6 +2587,12 @@ async function qrScannerStartCamera7662513(deviceId){
       const found=qrScannerDevices7662513.findIndex(d=>d.deviceId===settings.deviceId);
       if(found>=0)qrScannerDeviceIndex7662513=found;
     }
+    // Em navegadores móveis modernos, facingMode informa se a câmera ativa é frontal ou traseira.
+    if(settings.facingMode==="user"||settings.facingMode==="environment"){
+      qrScannerFacingMode7662513=settings.facingMode;
+    }else if(facingMode==="user"||facingMode==="environment"){
+      qrScannerFacingMode7662513=facingMode;
+    }
 
     qrScannerStatus7662513(
       qrScannerT7662513("Aponte a câmera para o QR Code do equipamento.","Point the camera at the asset QR Code."),
@@ -2578,15 +2600,17 @@ async function qrScannerStartCamera7662513(deviceId){
     );
     qrScannerActive7662513=true;
     qrScannerFrame7662513=requestAnimationFrame(qrScannerLoop7662513);
+    return true;
   }catch(e){
     qrScannerActive7662513=false;
     qrScannerStopStream7662513();
     let msg=qrScannerT7662513("Não foi possível acessar a câmera.","Unable to access the camera.");
     if(e&&e.name==="NotAllowedError")msg=qrScannerT7662513("Permissão da câmera negada. Autorize o uso da câmera no navegador e tente novamente.","Camera permission denied. Allow camera access in the browser and try again.");
-    else if(e&&e.name==="NotFoundError")msg=qrScannerT7662513("Nenhuma câmera foi encontrada neste dispositivo.","No camera was found on this device.");
+    else if(e&&e.name==="NotFoundError"||e&&e.name==="OverconstrainedError")msg=qrScannerT7662513("A câmera selecionada não está disponível neste dispositivo.","The selected camera is not available on this device.");
     else if(e&&e.name==="NotReadableError")msg=qrScannerT7662513("A câmera está em uso por outro aplicativo ou não pôde ser iniciada.","The camera is being used by another app or could not be started.");
     else if(e&&e.name==="SecurityError")msg=qrScannerT7662513("O navegador bloqueou o acesso à câmera por segurança.","The browser blocked camera access for security reasons.");
     qrScannerStatus7662513(msg,"error");
+    return false;
   }
 }
 
@@ -2627,14 +2651,55 @@ async function openQrScanner7662513(){
   qrScannerProcessing7662513=false;
   qrScannerLastRead7662513="";
   qrScannerLastReadAt7662513=0;
-  await qrScannerStartCamera7662513();
+  qrScannerFacingMode7662513="environment";
+  qrScannerSwitching7662513=false;
+  await qrScannerStartCamera7662513("","environment",false);
 }
 
 async function switchQrScannerCamera7662513(){
-  if(qrScannerDevices7662513.length<2)return;
-  qrScannerDeviceIndex7662513=(qrScannerDeviceIndex7662513+1)%qrScannerDevices7662513.length;
-  const d=qrScannerDevices7662513[qrScannerDeviceIndex7662513];
-  if(d&&d.deviceId)await qrScannerStartCamera7662513(d.deviceId);
+  if(qrScannerDevices7662513.length<2||qrScannerSwitching7662513)return;
+
+  const btn=$("qrScannerSwitch");
+  const previousFacing=qrScannerFacingMode7662513;
+  const targetFacing=previousFacing==="user"?"environment":"user";
+  qrScannerSwitching7662513=true;
+  if(btn)btn.disabled=true;
+  qrScannerStatus7662513(
+    qrScannerT7662513("Trocando câmera...","Switching camera..."),
+    "loading"
+  );
+
+  try{
+    // Primeiro tenta a inversão semântica frontal/traseira. Isso evita passar
+    // por ultrawide/teleobjetiva antes de chegar à câmera frontal.
+    let ok=await qrScannerStartCamera7662513("",targetFacing,true);
+
+    // Fallback para navegadores que não implementam facingMode exact corretamente.
+    if(!ok){
+      const frontRx=/(front|frontal|user|selfie|face)/i;
+      const backRx=/(back|rear|traseir|environment|world)/i;
+      const rx=targetFacing==="user"?frontRx:backRx;
+      const candidate=qrScannerDevices7662513.find(d=>d.deviceId&&rx.test(String(d.label||"")));
+      if(candidate)ok=await qrScannerStartCamera7662513(candidate.deviceId,targetFacing,false);
+    }
+
+    // Último fallback: escolhe qualquer câmera diferente da atual.
+    if(!ok&&qrScannerDevices7662513.length>1){
+      const currentTrack=qrScannerStream7662513&&qrScannerStream7662513.getVideoTracks()[0];
+      const currentSettings=currentTrack&&currentTrack.getSettings?currentTrack.getSettings():{};
+      const currentId=currentSettings.deviceId||"";
+      const candidate=qrScannerDevices7662513.find(d=>d.deviceId&&d.deviceId!==currentId);
+      if(candidate)ok=await qrScannerStartCamera7662513(candidate.deviceId,targetFacing,false);
+    }
+
+    if(!ok){
+      qrScannerFacingMode7662513=previousFacing;
+      await qrScannerStartCamera7662513("",previousFacing,false);
+    }
+  }finally{
+    qrScannerSwitching7662513=false;
+    if(btn)btn.disabled=false;
+  }
 }
 
 async function searchAssets(){let q=$("searchInput").value.trim();if(!q){$("searchStatus").textContent="Digite o ID, nome do equipamento, ambiente ou localização que deseja localizar.";focusSearchInput();return}if(q.length<2){$("searchStatus").textContent="Digite pelo menos 2 caracteres.";focusSearchInput();return}if(/^[a-z0-9_-]+$/i.test(q))q=normalizeId(q);$("searchStatus").textContent="Buscando...";try{const d=await menuApi({action:"search",q});const items=d.results||[];$("searchStatus").textContent=items.length+" resultado(s)";$("searchResults").innerHTML=items.map(item=>`<div class="search-result"><div class="search-result-id">${esc(item.id)}</div><div class="search-result-name">${esc(item.nome)}</div><div class="search-result-data">${item.pavimento?`<div><b>Pavimento:</b> ${esc(item.pavimento)}</div>`:""}${item.localizacao?`<div><b>Localização:</b> ${esc(item.localizacao)}</div>`:""}${item.prestador?`<div><b>Prestador:</b> ${esc(item.prestador)}</div>`:""}${item.periodicidade?`<div><b>Periodicidade:</b> ${esc(item.periodicidade)}</div>`:""}</div><a class="open-button" href="?id=${encodeURIComponent(normalizeId(item.id))}">Abrir ficha</a></div>`).join("")}catch(e){$("searchStatus").textContent="Erro ao realizar busca."}}
