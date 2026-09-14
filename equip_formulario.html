@@ -1,11 +1,12 @@
-<!-- QRManut 7.6.6.25: B5.2.6 Gestão de Ativos — baixa/descarte por ação dedicada -->
+<!-- QRManut 7.6.6.25: B5.2.8 — exclusão de OC vinculada a SOL com reabertura automática -->
+<!-- Mantém modal interno; SOL vinculada é reaberta como Em análise ao excluir a OC. Pendência/Providência continua protegida. -->
 <!doctype html>
 <html lang="pt-br">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>QRManut</title>
-<meta name="qrmanut-build" content="2026-09-12-b5.2.6">
+<meta name="qrmanut-build" content="2026-09-14-b5.2.8">
 <meta name="theme-color" content="#0b315e">
 <meta name="application-name" content="QRManut">
 <meta name="mobile-web-app-capable" content="yes">
@@ -240,7 +241,8 @@ html,body{max-width:100%;overflow-x:hidden}
 /* ============================================================
  * QRManut 7.5.0.5 - Aviso próprio do sistema
  * ============================================================ */
-#qrAlertModal{
+#qrAlertModal,
+#qrConfirmModal{
   position:fixed;
   inset:0;
   z-index:99999;
@@ -251,7 +253,8 @@ html,body{max-width:100%;overflow-x:hidden}
   background:rgba(15,23,42,.58);
   backdrop-filter:blur(2px);
 }
-#qrAlertModal.qr-alert-open{display:flex}
+#qrAlertModal.qr-alert-open,
+#qrConfirmModal.qr-alert-open{display:flex}
 .qr-alert-box{
   width:min(430px,calc(100vw - 32px));
   background:#fff;
@@ -291,18 +294,25 @@ html,body{max-width:100%;overflow-x:hidden}
   justify-content:flex-end;
   padding:0 20px 18px;
 }
-#qrAlertOk{
+#qrAlertOk,
+#qrConfirmOk,
+#qrConfirmCancel{
   min-width:88px;
   border:0;
   border-radius:10px;
   padding:11px 20px;
-  background:#0b315e;
-  color:#fff;
   font-weight:700;
   font-size:1rem;
   cursor:pointer;
 }
-#qrAlertOk:active{transform:translateY(1px)}
+#qrAlertOk,
+#qrConfirmOk{background:#0b315e;color:#fff}
+#qrConfirmCancel{background:#e2e8f0;color:#334155}
+#qrConfirmOk.qr-confirm-danger{background:#b91c1c}
+#qrAlertOk:active,
+#qrConfirmOk:active,
+#qrConfirmCancel:active{transform:translateY(1px)}
+#qrConfirmModal .qr-alert-actions{gap:8px;flex-wrap:wrap}
 
 
 /* ============================================================
@@ -870,6 +880,20 @@ html,body{max-width:100%;overflow-x:hidden}
   </div>
 </div>
 
+<div id="qrConfirmModal" role="dialog" aria-modal="true" aria-labelledby="qrConfirmTitle" aria-describedby="qrConfirmMessage">
+  <div class="qr-alert-box">
+    <div class="qr-alert-header">
+      <div class="qr-alert-logo">🔧</div>
+      <div id="qrConfirmTitle">QRManut</div>
+    </div>
+    <div id="qrConfirmMessage" class="qr-alert-message"></div>
+    <div class="qr-alert-actions">
+      <button id="qrConfirmCancel" type="button">Cancelar</button>
+      <button id="qrConfirmOk" type="button">Confirmar</button>
+    </div>
+  </div>
+</div>
+
 
 <section id="assetManagementPanel" class="hidden" style="margin-top:16px">
   <div class="card">
@@ -997,8 +1021,7 @@ html,body{max-width:100%;overflow-x:hidden}
         <label>Modelo<input id="assetModel"></label>
         <label>Número de Série<input id="assetSerialNumber"></label>
         <label>Capacidade<input id="assetCapacity"></label>
-        <label>Amperagem Nominal (FLA)<input id="assetRatedCurrent"></label>
-        <label>Amperagem de Partida (FLR)<input id="assetStartingCurrent"></label>
+        <label>Amperagem Nominal (FLA)<input id="assetRatedCurrent"></label><label>Amperagem de Partida (FLR)<input id="assetStartingCurrent"></label>
         <label>Amperagem Medida<input id="assetMeasuredCurrent"></label>
         <label>Voltagem<input id="assetVoltage"></label>
         <label>Peso<input id="assetWeight"></label>
@@ -1201,6 +1224,63 @@ window.alert=function(message){
   qrShowAlert(message,"QRManut");
 };
 
+/* B5.2.7 — confirmação interna do QRManut.
+ * Não usa window.confirm(), evitando que o navegador exiba o domínio técnico
+ * (ex.: jcpg62.github.io) nas confirmações operacionais. */
+function qrConfirm(message,title,confirmLabel,cancelLabel,danger){
+  const modal=document.getElementById("qrConfirmModal");
+  const msg=document.getElementById("qrConfirmMessage");
+  const ttl=document.getElementById("qrConfirmTitle");
+  const ok=document.getElementById("qrConfirmOk");
+  const cancel=document.getElementById("qrConfirmCancel");
+
+  return new Promise(resolve=>{
+    if(!modal||!msg||!ttl||!ok||!cancel){
+      qrShowAlert(
+        "Não foi possível abrir a confirmação desta ação. Atualize a página e tente novamente.",
+        "QRManut"
+      );
+      resolve(false);
+      return;
+    }
+
+    ttl.textContent=title||"QRManut";
+    msg.textContent=String(message??"");
+    ok.textContent=confirmLabel||"Confirmar";
+    cancel.textContent=cancelLabel||"Cancelar";
+    ok.classList.toggle("qr-confirm-danger",danger===true);
+    modal.classList.add("qr-alert-open");
+
+    let finished=false;
+    const finish=value=>{
+      if(finished)return;
+      finished=true;
+      modal.classList.remove("qr-alert-open");
+      ok.onclick=null;
+      cancel.onclick=null;
+      modal.onclick=null;
+      document.removeEventListener("keydown",onKey);
+      resolve(!!value);
+    };
+
+    const onKey=e=>{
+      if(e.key==="Escape"){
+        e.preventDefault();
+        finish(false);
+      }else if(e.key==="Enter"){
+        e.preventDefault();
+        finish(true);
+      }
+    };
+
+    ok.onclick=()=>finish(true);
+    cancel.onclick=()=>finish(false);
+    modal.onclick=e=>{if(e.target===modal)finish(false)};
+    document.addEventListener("keydown",onKey);
+    setTimeout(()=>cancel.focus(),0);
+  });
+}
+
 const show=id=>$(id).classList.remove("hidden");const hide=id=>$(id).classList.add("hidden");
 
 let deferredInstallPrompt=null;
@@ -1265,7 +1345,7 @@ window.addEventListener("appinstalled",()=>{
 /* ============================================================
  * QRManut 7.6.6.25 — B4.2 ATUALIZAÇÃO AUTOMÁTICA DO PWA
  * ============================================================ */
-const QR_BUILD_7662542="2026-09-12-b5.2.6";
+const QR_BUILD_7662542="2026-09-14-b5.2.7";
 let qrBuildCheckRunning7662542=false;
 let qrLastBuildCheck7662542=0;
 
@@ -1997,8 +2077,7 @@ function renderOccurrenceReport(){
   $("occReportPdf").disabled=false;
 
   $("occReportResults").innerHTML=items.map(item=>
-    `<div class="occ-report-card">`+
-      `<div class="occ-report-head">`+
+    `<div class="occ-report-card">`+`<div class="occ-report-head">`+
         `<div><b>${esc(item.ocorrencia)}</b><div>${esc(item.id)} – ${esc(item.equipamento)}</div></div>`+
         `<span class="control-status done">✅ ${t("Concluída","Completed")}</span>`+
       `</div>`+
@@ -2997,8 +3076,7 @@ async function openReport(){
       :`Ativo não operacional (${String(currentAsset?.status||"Inativo")}). Altere a situação para Ativo antes de registrar nova ocorrência.`);
   }
   if(systemSession&&!hasProfilePermission("OC_REGISTRAR"))return permissionDeniedMessage("Seu perfil não possui permissão para registrar ocorrências.","Your profile is not allowed to create work orders.");
-  photoData=null;reportAttachmentData=null;reportPosting=false;reportCompleted=false;
-  if($("reportCameraInput"))$("reportCameraInput").value="";
+  photoData=null;reportAttachmentData=null;reportPosting=false;reportCompleted=false;if($("reportCameraInput"))$("reportCameraInput").value="";
   if($("photoInput"))$("photoInput").value="";
   if($("reportAttachmentInput"))$("reportAttachmentInput").value="";
   if($("reportPhotoStatus"))$("reportPhotoStatus").textContent="";
@@ -3273,7 +3351,71 @@ $("conclusionPhotoInput").onchange=function(){handleManageSelectedImage(this.fil
 
 
 
-async function deleteOccurrenceRecord(){if(!selectedOccurrence||!hasProfilePermission("OC_EXCLUIR"))return;if(!confirm(`Excluir definitivamente a ocorrência ${selectedOccurrence.ocorrencia}?\n\nEsta ação remove o registro do aplicativo e ficará registrada na auditoria.`))return;const btn=$("deleteOccurrence");btn.disabled=true;btn.textContent="Excluindo...";try{const r=await menuApiPost({action:"deleteOccurrence",ocorrencia:selectedOccurrence.ocorrencia});if(!r.ok)throw new Error(r.detail||"Não foi possível excluir a ocorrência.");$("manageModal").style.display="none";location.reload()}catch(e){alert(e.message);btn.disabled=false;btn.textContent="🗑️ Excluir ocorrência"}}
+async function deleteOccurrenceRecord(){
+  if(!selectedOccurrence||!hasProfilePermission("OC_EXCLUIR"))return;
+
+  const oc=String(selectedOccurrence.ocorrencia||"").trim();
+  const solOrigem=String(selectedOccurrence.solOrigem||"").trim();
+  const pendenciaOrigem=String(selectedOccurrence.pendenciaOrigem||"").trim();
+
+  if(pendenciaOrigem){
+    qrShowAlert(
+      `A ocorrência ${oc} está vinculada à Pendência / Providência ${pendenciaOrigem}.\n\nEsse vínculo precisa ser tratado antes da exclusão da OC.`,
+      "Exclusão não permitida"
+    );
+    return;
+  }
+
+  const confirmMessage=solOrigem
+    ? `Excluir definitivamente a ocorrência ${oc}?\n\nEsta OC foi criada a partir da Solicitação ${solOrigem}. Ao excluir a OC, a Solicitação será automaticamente desvinculada e voltará para “Em análise”, permitindo uma nova triagem ou a criação de outra OC.\n\nA exclusão ficará registrada na auditoria.`
+    : `Excluir definitivamente a ocorrência ${oc}?\n\nEsta ação remove o registro do aplicativo e ficará registrada na auditoria.`;
+
+  const confirmed=await qrConfirm(
+    confirmMessage,
+    solOrigem?"Excluir OC e reabrir Solicitação":"Excluir ocorrência",
+    "Excluir",
+    "Cancelar",
+    true
+  );
+  if(!confirmed)return;
+
+  const btn=$("deleteOccurrence");
+  btn.disabled=true;
+  btn.textContent="Excluindo...";
+
+  try{
+    const r=await menuApiPost({action:"deleteOccurrence",ocorrencia:oc});
+    if(!r.ok)throw new Error(r.detail||"Não foi possível excluir a ocorrência.");
+
+    $("manageModal").style.display="none";
+
+    const reabertas=Array.isArray(r.solicitacoesReabertas)?r.solicitacoesReabertas:[];
+    if(reabertas.length){
+      qrShowAlert(
+        `A ocorrência ${oc} foi excluída com sucesso.\n\nA Solicitação ${reabertas.join(", ")} foi desvinculada da OC e voltou para “Em análise”.`,
+        "OC excluída / Solicitação reaberta"
+      );
+      setTimeout(()=>location.reload(),900);
+    }else{
+      location.reload();
+    }
+  }catch(e){
+    const raw=String(e?.message||"").trim();
+    let title="Não foi possível excluir";
+    let message=raw||"Não foi possível excluir a ocorrência.";
+
+    if(/Pend[eê]ncia/i.test(raw)||/Provid[eê]ncia/i.test(raw)){
+      title="Exclusão não permitida";
+      message=
+        "Esta OC está vinculada a uma Pendência / Providência.\n\n"+
+        "Esse vínculo precisa ser tratado antes da exclusão da OC.";
+    }
+
+    qrShowAlert(message,title);
+    btn.disabled=false;
+    btn.textContent="🗑️ Excluir ocorrência";
+  }
+}
 async function deletePreventiveRecord(registro){if(!hasProfilePermission("PREVENTIVA_EXCLUIR"))return;if(!confirm(`Excluir definitivamente a preventiva ${registro}?\n\nEsta ação ficará registrada na auditoria.`))return;try{const r=await menuApiPost({action:"deletePreventive",registro:registro});if(!r.ok)throw new Error(r.detail||"Não foi possível excluir a preventiva.");await loadPreventiveHistory()}catch(e){alert(e.message)}}
 const PASSWORD_EYE_OPEN=`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path><circle cx="12" cy="12" r="2.8"></circle></svg>`;
 const PASSWORD_EYE_CLOSED=`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3l18 18"></path><path d="M10.6 6.2A10.7 10.7 0 0 1 12 6c7 0 10 6 10 6a17.8 17.8 0 0 1-2.4 3.1"></path><path d="M6.4 6.4C3.5 8.2 2 12 2 12s3.5 6 10 6a10 10 0 0 0 4.1-.9"></path><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"></path></svg>`;
@@ -3997,8 +4139,7 @@ function openProviderModal(i){
 async function saveProviderAdmin(){
   if(!hasProfilePermission("PRESTADORES_EDITAR"))return alert(qrLanguage==="en-US"?"Your profile is not allowed to save service providers.":"Seu perfil não possui permissão para salvar prestadores.");
   const b=$("saveProvider");
-  if(!b || b.dataset.loading==="1")return;
-  b.dataset.loading="1";
+  if(!b || b.dataset.loading==="1")return;b.dataset.loading="1";
   b.disabled=true;
   b.textContent="Salvando...";
   $("providerMessage").className="message loading";
@@ -4997,8 +5138,7 @@ function openForgotPassword(){
   }
 }
 function openAccessRequestForm76616(){
-  const id=$("recoveryIdentifier").value.trim();
-  $("accessRequestName").value="";
+  const id=$("recoveryIdentifier").value.trim();$("accessRequestName").value="";
   $("accessRequestLogin").value=id.includes("@")?"":id;
   $("accessRequestEmail").value=id.includes("@")?id:"";
   $("accessRequestPhone").value="";
@@ -5997,8 +6137,7 @@ function qrTranslateAttributes(root){
 
     if(qrLanguage==="en-US"){
       const translated=qrTranslateCompositeText(el.dataset.qrOriginalPlaceholder);
-      if(translated!==el.dataset.qrOriginalPlaceholder){
-        el.setAttribute("placeholder",translated);
+      if(translated!==el.dataset.qrOriginalPlaceholder){el.setAttribute("placeholder",translated);
       }else if(el.dataset.qrOriginalPlaceholder==="Ex.: AC102_SP3P"){
         el.setAttribute("placeholder","E.g.: AC102_SP3P");
       }
