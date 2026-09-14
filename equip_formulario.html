@@ -3264,8 +3264,16 @@ function showExistingOccurrencePhoto(item){
   link.onclick=e=>{e.preventDefault();openSecureFile76624("occurrencePhoto",item.ocorrencia,"opening")};
   loadSecureImage76624(preview,"occurrencePhoto",item.ocorrencia,"opening");
 }
+function resetDeleteOccurrenceUi7662511_(){
+  const btn=$("deleteOccurrence");
+  if(!btn)return;
+  btn.disabled=false;
+  btn.textContent=qrLanguage==="en-US"?"🗑️ Delete work order":"🗑️ Excluir ocorrência";
+}
+
 function openManage(i){
   selectedOccurrence=history[i];
+  resetDeleteOccurrenceUi7662511_();
   correctionPhotoData=null;
   conclusionPhotoData=null;
   manageAttachmentData=null;
@@ -3486,6 +3494,7 @@ async function deleteOccurrenceRecord(){
     const r=await menuApiPost({action:"deleteOccurrence",ocorrencia:oc});
     if(!r.ok)throw new Error(r.detail||"Não foi possível excluir a ocorrência.");
 
+    resetDeleteOccurrenceUi7662511_();
     $("manageModal").style.display="none";
     selectedOccurrence=null;
 
@@ -3519,8 +3528,7 @@ async function deleteOccurrenceRecord(){
     }
 
     qrShowAlert(message,title);
-    btn.disabled=false;
-    btn.textContent="🗑️ Excluir ocorrência";
+    resetDeleteOccurrenceUi7662511_();
   }
 }
 async function deletePreventiveRecord(registro){if(!hasProfilePermission("PREVENTIVA_EXCLUIR"))return;if(!confirm(`Excluir definitivamente a preventiva ${registro}?\n\nEsta ação ficará registrada na auditoria.`))return;try{const r=await menuApiPost({action:"deletePreventive",registro:registro});if(!r.ok)throw new Error(r.detail||"Não foi possível excluir a preventiva.");await loadPreventiveHistory()}catch(e){alert(e.message)}}
@@ -6825,6 +6833,8 @@ $("assetFloor").addEventListener("change",()=>{
 $("assetFloorOther").addEventListener("input",()=>assetRefreshLocations7610(""));
 $("assetLocation").addEventListener("change",()=>assetToggleOther7610("assetLocation","assetLocationOther"));
 
+
+// QRManut PNCQ 7.6.6.25 B5.2.11 - Reset do botão Excluir OC entre exclusões consecutivas.
 </script>
 
 </body>
