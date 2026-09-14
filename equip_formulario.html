@@ -1,5 +1,5 @@
-<!-- QRManut 7.6.6.25: B5.2.9 — retorno contextual da ficha do ativo para OCs Pendentes -->
-<!-- B5.2.9: ao abrir uma ficha a partir de OCs Pendentes, preserva a rotina e os filtros e retorna diretamente à lista anterior. -->
+<!-- QRManut 7.6.6.25: B5.2.10 — correção de tela branca + retorno seguro para OCs Pendentes -->
+<!-- B5.2.10: navegação contextual usa recarregamento controlado; exclusão de OC atualiza a ficha sem location.reload(). -->
 <!-- Mantém modal interno; SOL vinculada é reaberta como Em análise ao excluir a OC. Pendência/Providência continua protegida. -->
 <!doctype html>
 <html lang="pt-br">
@@ -1794,36 +1794,39 @@ async function sessionIsValid(){return systemSessionIsValid()}
 function getOriginAsset(){try{return sessionStorage.getItem(ORIGIN_ASSET_KEY)||""}catch(e){return""}}function setOriginAsset(id){try{sessionStorage.setItem(ORIGIN_ASSET_KEY,normalizeId(id))}catch(e){}}function clearOriginAsset(){try{sessionStorage.removeItem(ORIGIN_ASSET_KEY)}catch(e){}}
 function updateBackAssetButton(){const id=getOriginAsset();if(id){show("backAssetWrap");$("backAssetButton").textContent=qrLanguage==="en-US"?"← Back to "+id:"← Voltar para "+id}else hide("backAssetWrap")}
 
-/* ============================================================
- * QRManut 7.6.6.25 / B5.2.9 — RETORNO CONTEXTUAL DA FICHA
- * Preserva a rotina OCs Pendentes e seus filtros ao abrir um ativo.
- * ============================================================ */
-const QR_ASSET_RETURN_CONTEXT_KEY_766259="QRMANUT_ASSET_RETURN_CONTEXT_766259";
-const QR_ASSET_RETURN_CONTEXT_MAX_AGE_766259=2*60*60*1000;
 
-function getAssetReturnContext766259_(){
+/* ============================================================
+ * QRManut 7.6.6.25 / B5.2.10 — RETORNO SEGURO PARA OCs PENDENTES
+ * - Salva somente o contexto/filtros em sessionStorage.
+ * - A abertura da ficha continua por link normal.
+ * - O retorno recarrega o Menu Principal e restaura OCs Pendentes.
+ * - Evita alternar assetScreen/searchScreen no mesmo estado assíncrono.
+ * ============================================================ */
+const QR_PENDING_RETURN_KEY_7662510="QRMANUT_PENDING_RETURN_7662510";
+const QR_PENDING_RETURN_MAX_AGE_7662510=2*60*60*1000;
+
+function getPendingReturnContext7662510_(){
   try{
-    const raw=sessionStorage.getItem(QR_ASSET_RETURN_CONTEXT_KEY_766259);
+    const raw=sessionStorage.getItem(QR_PENDING_RETURN_KEY_7662510);
     if(!raw)return null;
     const ctx=JSON.parse(raw);
-    if(!ctx||!ctx.routine||!ctx.createdAt)return null;
-    if(Date.now()-Number(ctx.createdAt)>QR_ASSET_RETURN_CONTEXT_MAX_AGE_766259){
-      sessionStorage.removeItem(QR_ASSET_RETURN_CONTEXT_KEY_766259);
+    if(!ctx||!ctx.createdAt)return null;
+    if(Date.now()-Number(ctx.createdAt)>QR_PENDING_RETURN_MAX_AGE_7662510){
+      sessionStorage.removeItem(QR_PENDING_RETURN_KEY_7662510);
       return null;
     }
     return ctx;
   }catch(e){return null}
 }
 
-function clearAssetReturnContext766259_(){
-  try{sessionStorage.removeItem(QR_ASSET_RETURN_CONTEXT_KEY_766259)}catch(e){}
+function clearPendingReturnContext7662510_(){
+  try{sessionStorage.removeItem(QR_PENDING_RETURN_KEY_7662510)}catch(e){}
 }
 
-function savePendingAssetReturnContext766259_(assetId){
+function savePendingReturnContext7662510_(assetId){
   try{
     const ctx={
-      routine:"pending",
-      targetAssetId:normalizeId(assetId||""),
+      assetId:normalizeId(assetId||""),
       createdAt:Date.now(),
       filters:{
         prestador:$("pendingProvider")?.value||"",
@@ -1833,57 +1836,43 @@ function savePendingAssetReturnContext766259_(assetId){
         localizacao:$("pendingLocation")?.value||""
       }
     };
-    sessionStorage.setItem(QR_ASSET_RETURN_CONTEXT_KEY_766259,JSON.stringify(ctx));
+    sessionStorage.setItem(QR_PENDING_RETURN_KEY_7662510,JSON.stringify(ctx));
   }catch(e){}
+  return true;
 }
 
-function openPendingAsset766259_(assetId){
-  const id=normalizeId(assetId||"");
-  if(!id)return false;
-  savePendingAssetReturnContext766259_(id);
-  location.href="?id="+encodeURIComponent(id);
-  return false;
-}
-
-function assetHasPendingReturnContext766259_(){
-  const ctx=getAssetReturnContext766259_();
-  if(!ctx||ctx.routine!=="pending")return false;
-  if(!currentAsset?.id)return true;
-  const currentId=normalizeId(currentAsset.id||"");
-  if(ctx.targetAssetId&&normalizeId(ctx.targetAssetId)!==currentId){
-    clearAssetReturnContext766259_();
+function pendingReturnMatchesAsset7662510_(){
+  const ctx=getPendingReturnContext7662510_();
+  if(!ctx)return false;
+  if(!currentAsset?.id)return false;
+  if(ctx.assetId&&normalizeId(ctx.assetId)!==normalizeId(currentAsset.id)){
+    clearPendingReturnContext7662510_();
     return false;
   }
   return true;
 }
 
-function updateAssetReturnButton766259_(){
+function updatePendingReturnButton7662510_(){
   const btn=$("searchAssetsButton");
   if(!btn)return;
-  if(assetHasPendingReturnContext766259_()){
+  if(pendingReturnMatchesAsset7662510_()){
     btn.textContent=qrLanguage==="en-US"?"← Back to Pending Work Orders":"← Voltar para OCs Pendentes";
-  }else{
-    const texts=QR_TEXT?.[qrLanguage]||QR_TEXT?.["pt-BR"]||{};
-    btn.textContent=texts.searchAssetsButton||(qrLanguage==="en-US"?"☰ Main Menu":"☰ Menu Principal");
   }
 }
 
-function setPendingReturnFilter766259_(id,value){
+function setPendingFilterValue7662510_(id,value){
   const el=$(id);
   if(!el)return;
   const v=String(value||"");
   if([...el.options].some(o=>o.value===v))el.value=v;
 }
 
-async function restoreAssetReturnRoutine766259_(){
-  const ctx=getAssetReturnContext766259_();
-  if(!ctx||ctx.routine!=="pending")return false;
-  if(currentAsset?.id&&ctx.targetAssetId&&normalizeId(ctx.targetAssetId)!==normalizeId(currentAsset.id)){
-    clearAssetReturnContext766259_();
-    return false;
-  }
-  if(!hasProfilePermission("OC_PENDENTES")){
-    clearAssetReturnContext766259_();
+async function restorePendingView7662510_(){
+  const view=new URLSearchParams(location.search).get("view");
+  if(view!=="pending")return false;
+  const ctx=getPendingReturnContext7662510_();
+  if(!ctx||!hasProfilePermission("OC_PENDENTES")){
+    clearPendingReturnContext7662510_();
     return false;
   }
 
@@ -1893,14 +1882,12 @@ async function restoreAssetReturnRoutine766259_(){
   await loadPendingFilters();
 
   const f=ctx.filters||{};
-  setPendingReturnFilter766259_("pendingProvider",f.prestador);
-  setPendingReturnFilter766259_("pendingStatus",f.status);
-  setPendingReturnFilter766259_("pendingCategory",f.categoria);
-  setPendingReturnFilter766259_("pendingFloor",f.pavimento);
-  setPendingReturnFilter766259_("pendingLocation",f.localizacao);
-
+  setPendingFilterValue7662510_("pendingProvider",f.prestador);
+  setPendingFilterValue7662510_("pendingStatus",f.status);
+  setPendingFilterValue7662510_("pendingCategory",f.categoria);
+  setPendingFilterValue7662510_("pendingFloor",f.pavimento);
+  setPendingFilterValue7662510_("pendingLocation",f.localizacao);
   await loadPending();
-  clearAssetReturnContext766259_();
   return true;
 }
 function focusSearchInput(){setTimeout(()=>{try{$("searchInput").focus()}catch(e){}},80)}function focusBackAssetButton(){setTimeout(()=>{try{if(!$("backAssetWrap").classList.contains("hidden"))$("backAssetButton").focus()}catch(e){}},100)}
@@ -2370,7 +2357,7 @@ async function loadPending(){
       return;
     }
 
-    $("pendingResults").innerHTML=items.map(item=>`<div class="pending-card"><b>${esc(item.ocorrencia)}</b><div>${esc(item.id)} – ${esc(item.nome)}</div><div class="search-result-data"><b>Status:</b> ${esc(item.status)}${item.prestador?`<br><b>Prestador:</b> ${esc(item.prestador)}`:""}${item.categoriaOcorrencia?`<br><b>Categoria:</b> ${esc(item.categoriaOcorrencia)}`:""}${item.pavimento?`<br><b>Pavimento:</b> ${esc(item.pavimento)}`:""}${item.localizacao?`<br><b>Localização:</b> ${esc(item.localizacao)}`:""}<br><b>Descrição:</b> ${esc(item.descricao)}</div><a class="open-button" href="?id=${encodeURIComponent(normalizeId(item.id))}" onclick="return openPendingAsset766259_('${esc(normalizeId(item.id))}')">Abrir ficha</a></div>`).join("");
+    $("pendingResults").innerHTML=items.map(item=>`<div class="pending-card"><b>${esc(item.ocorrencia)}</b><div>${esc(item.id)} – ${esc(item.nome)}</div><div class="search-result-data"><b>Status:</b> ${esc(item.status)}${item.prestador?`<br><b>Prestador:</b> ${esc(item.prestador)}`:""}${item.categoriaOcorrencia?`<br><b>Categoria:</b> ${esc(item.categoriaOcorrencia)}`:""}${item.pavimento?`<br><b>Pavimento:</b> ${esc(item.pavimento)}`:""}${item.localizacao?`<br><b>Localização:</b> ${esc(item.localizacao)}`:""}<br><b>Descrição:</b> ${esc(item.descricao)}</div><a class="open-button" href="?id=${encodeURIComponent(normalizeId(item.id))}" onclick="savePendingReturnContext7662510_('${esc(normalizeId(item.id))}')">Abrir ficha</a></div>`).join("");
   }catch(e){
     $("pendingSummary").innerHTML="";
     $("pendingResults").innerHTML="";
@@ -2702,7 +2689,6 @@ async function loadAsset(id){
   }
 
   hide("assetProgressNote");
-  updateAssetReturnButton766259_();
 }
 function renderAssetDocuments(items){if(!items||!items.length){hide("assetDocumentsSection");$("assetDocuments").innerHTML="";$("assetDocumentsStatus").textContent="";return}show("assetDocumentsSection");$("assetDocumentsStatus").textContent=items.length+" documento(s) relacionado(s) a este ativo";$("assetDocuments").innerHTML=items.map(d=>{const icon=String(d.tipoDocumento||"").toLowerCase()==="manual"?"📘":"📄";return `<div class="asset-document-card"><div class="document-title">${icon} ${esc(d.titulo)}</div><div class="document-meta">${d.tipoDocumento?`<b>Tipo:</b> ${esc(d.tipoDocumento)}<br>`:""}${d.disciplina?`<b>Disciplina:</b> ${esc(d.disciplina)}<br>`:""}${d.assunto?`<b>Assunto:</b> ${esc(d.assunto)}<br>`:""}${d.revisao?`<b>Revisão:</b> ${esc(d.revisao)}<br>`:""}${d.observacoes?`<b>Observações:</b> ${esc(d.observacoes)}`:""}</div>${d.linkPdf?`<button type="button" class="document-open" onclick="openSecureFile76624('technicalDocument','${esc(d.idDocumento)}')">👁️ Abrir PDF</button>`:""}</div>`}).join("")}
 function renderAsset(a){
@@ -3469,6 +3455,7 @@ async function deleteOccurrenceRecord(){
   const oc=String(selectedOccurrence.ocorrencia||"").trim();
   const solOrigem=String(selectedOccurrence.solOrigem||"").trim();
   const pendenciaOrigem=String(selectedOccurrence.pendenciaOrigem||"").trim();
+  const assetIdBeforeDelete=normalizeId(currentAsset?.id||"");
 
   if(pendenciaOrigem){
     qrShowAlert(
@@ -3500,6 +3487,15 @@ async function deleteOccurrenceRecord(){
     if(!r.ok)throw new Error(r.detail||"Não foi possível excluir a ocorrência.");
 
     $("manageModal").style.display="none";
+    selectedOccurrence=null;
+
+    /* B5.2.10 — não usa location.reload().
+     * Atualiza a própria ficha; assim não há transição para página branca
+     * nem dependência de cache/service worker durante a exclusão. */
+    if(assetIdBeforeDelete){
+      await loadAsset(assetIdBeforeDelete);
+      updatePendingReturnButton7662510_();
+    }
 
     const reabertas=Array.isArray(r.solicitacoesReabertas)?r.solicitacoesReabertas:[];
     if(reabertas.length){
@@ -3507,9 +3503,8 @@ async function deleteOccurrenceRecord(){
         `A ocorrência ${oc} foi excluída com sucesso.\n\nA Solicitação ${reabertas.join(", ")} foi desvinculada da OC e voltou para “Em análise”.`,
         "OC excluída / Solicitação reaberta"
       );
-      setTimeout(()=>location.reload(),900);
     }else{
-      location.reload();
+      qrShowAlert(`A ocorrência ${oc} foi excluída com sucesso.`,"OC excluída");
     }
   }catch(e){
     const raw=String(e?.message||"").trim();
@@ -6652,7 +6647,6 @@ function qrApplyLanguage(lang){
     renderStatusFromCurrent();
     if(systemSession&&Array.isArray(history))renderHistory(history);
     updateBackAssetButton();
-    updateAssetReturnButton766259_();
   }
   if($("pendingAccessNote")&&!$("pendingArea").classList.contains("hidden")){
     if(systemSession?.perfil==="PRESTADOR"){
@@ -6750,15 +6744,12 @@ $("openSystemLoginButton").onclick=()=>requireSystemLogin(openMainMenu);$("forgo
 $("companyPrimaryColor").addEventListener("input",updateCompanyPreview);
 $("companyPrimaryColor").addEventListener("change",updateCompanyPreview);$("auditRefresh").onclick=loadAudit;$("auditClear").onclick=clearAuditFilters;$("auditSearch").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();loadAudit()}};$("cancelUser").onclick=()=>{$("userModal").style.display="none"};$("saveUser").onclick=saveUser;$("userEmail").oninput=updateUserPrimaryAction76617;$("cancelAdminUserPassword").onclick=()=>{$("adminUserPasswordModal").style.display="none"};$("saveAdminUserPassword").onclick=saveAdminUserPassword76617;$("sendSystemLogin").onclick=doSystemLogin;$("systemPassword").onkeydown=e=>{if(e.key==="Enter")doSystemLogin()};$("cancelSystemLogin").onclick=()=>{systemLoginNextAction=null;$("systemLoginModal").style.display="none";if(!systemSession)showMenuGate()};$("systemLogoutButton").onclick=logoutSystemMenu;$("installAppButton").onclick=installQRManut;$("tabSearch").onclick=showSearchTab;$("tabPending").onclick=showPendingTab;$("pendingApplyFilters").onclick=loadPending;$("pendingClearFilters").onclick=clearPendingFilters;$("tabOccurrenceReport").onclick=showOccurrenceReportTab;$("tabPreventive").onclick=showPreventiveTab;$("tabDocuments").onclick=showDocumentsTab;$("tabMaintenancePending").onclick=showMaintenancePendingTab;$("maintenancePendingBackMenu").onclick=openDefaultAllowedTab;$("maintenancePendingRefresh").onclick=loadMaintenancePending;$("maintenancePendingClear").onclick=clearMaintenancePendingFilters;$("maintenancePendingSearch").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();loadMaintenancePending()}};$("maintenancePendingStatusFilter").onchange=loadMaintenancePending;$("maintenancePendingPriorityFilter").onchange=loadMaintenancePending;$("preventiveNeedsAction").onchange=togglePreventiveActionFields;$("tabOccurrenceCatalog").onclick=showOccurrenceCatalogTab;$("occurrenceCatalogBackMenu").onclick=openDefaultAllowedTab;$("saveCatalogCategory").onclick=saveCatalogCategory;$("clearCatalogCategory").onclick=clearCatalogCategoryForm;$("saveCatalogComponent").onclick=saveCatalogComponent;$("clearCatalogComponent").onclick=clearCatalogComponentForm;$("category").onchange=()=>populateOccurrenceComponentSelect();$("manageCategory").onchange=()=>populateManageCatalog($("manageCategory").value,"");$("tabDocumentUpload").onclick=showDocumentUploadTab;$("documentUploadBackMenu").onclick=cancelDocumentUpload;$("uploadDocumentChooseFileButton").onclick=()=>$("uploadDocumentFile").click();$("uploadDocumentFile").onchange=prepareDocumentUploadFile;$("sendDocumentUpload").onclick=sendDocumentUpload;$("clearDocumentUpload").onclick=clearDocumentUploadForm;$("searchButton").onclick=searchAssets;$("searchInput").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();searchAssets()}};$("documentSearchButton").onclick=searchDocuments;$("documentSearchInput").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();searchDocuments()}};$("documentTypeFilter").onchange=searchDocuments;$("documentDisciplineFilter").onchange=searchDocuments;$("documentFloorFilter").onchange=searchDocuments;$("reportButton").onclick=openReport;$("preventiveButton").onclick=requestPreventive;
 $("searchAssetsButton").onclick=function(){
-  const hasContext=assetHasPendingReturnContext766259_();
-  if(!hasContext&&currentAsset?.id)setOriginAsset(currentAsset.id);
-  requireSystemLogin(async()=>{
-    hide("assetScreen");
-    show("searchScreen");
-    openMainMenu();
-    if(hasContext&&await restoreAssetReturnRoutine766259_())return;
-    focusBackAssetButton();
-  });
+  if(pendingReturnMatchesAsset7662510_()){
+    location.href="?id=EQBUSCA&view=pending";
+    return;
+  }
+  if(currentAsset?.id)setOriginAsset(currentAsset.id);
+  requireSystemLogin(()=>{hide("assetScreen");show("searchScreen");openMainMenu();focusBackAssetButton()});
 };
 $("backAssetButton").onclick=function(){const id=getOriginAsset();if(!id)return;clearOriginAsset();location.href="?id="+encodeURIComponent(id)};
 $("occReportRefresh").onclick=loadOccurrenceReport;$("occReportPdf").onclick=generateOccurrenceReportPdf;["occReportStart","occReportEnd","occReportProvider","occReportCategory","occReportComponent","occReportFloor","occReportLocation"].forEach(id=>$(id).onchange=markOccurrenceReportDirty);$("controlRefresh").onclick=refreshPreventiveControl;$("controlCompetence").onchange=loadPreventiveControl;$("controlProvider").onchange=()=>{if(["MASTER","GESTOR"].includes(systemSession?.perfil))loadPreventiveControl();else renderControlList()};$("controlAll").onclick=()=>setControlMode("all");$("controlPending").onclick=()=>setControlMode("pending");$("controlDone").onclick=()=>setControlMode("done");$("sendMonthlyReport").onclick=sendMonthlyPreventiveReport;
@@ -6784,7 +6775,34 @@ qrTranslateAttributes(document.body);
 
 
 qrInstallLocalizedDateControls();
-async function main(){buildManageDropdowns();setupPasswordToggles();readPreventiveSession();readSystemSession();setupInstallExperience();await loadPublicAppConfig();qrApplyLanguage(qrLanguage);if(await openSetPasswordFromUrl())return;$("controlCompetence").value=currentCompetence();setDefaultOccurrenceReportDates();const id=getId();if(!id||id==="EQBUSCA"){clearOriginAsset();show("searchScreen");if(await systemSessionIsValid())openMainMenu();else showMenuGate();return}await loadAsset(id)}main();
+async function main(){
+  buildManageDropdowns();
+  setupPasswordToggles();
+  readPreventiveSession();
+  readSystemSession();
+  setupInstallExperience();
+  await loadPublicAppConfig();
+  qrApplyLanguage(qrLanguage);
+  if(await openSetPasswordFromUrl())return;
+  $("controlCompetence").value=currentCompetence();
+  setDefaultOccurrenceReportDates();
+  const id=getId();
+
+  if(!id||id==="EQBUSCA"){
+    clearOriginAsset();
+    show("searchScreen");
+    if(await systemSessionIsValid()){
+      openMainMenu();
+      if(await restorePendingView7662510_())return;
+    }else{
+      showMenuGate();
+    }
+    return;
+  }
+
+  await loadAsset(id);
+  updatePendingReturnButton7662510_();
+}main();
 
 $("tabAssetManagement").onclick=openAssetManagement760;
 $("assetNewButton").onclick=()=>openAssetModal760(null);
