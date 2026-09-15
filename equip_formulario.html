@@ -1,19 +1,11 @@
-<!-- QRManut 7.6.6.25: B5.2.14 — correção da troca de câmera do scanner QR
-     - Um único toque alterna diretamente entre câmera traseira e frontal.
-     - Evita percorrer lentes traseiras (principal/ultrawide/tele) antes de inverter.
-     - Bloqueia toques repetidos enquanto a câmera está sendo reiniciada.
-     Mantém B5.2.13: scanner de QR Code integrado à Busca de Ativos.
-     Mantém B5.2.12: resumo visual das OCs por status na ficha do ativo.
-     Mantém B5.2.11: reset do botão Excluir OC entre exclusões consecutivas. -->
-<!-- B5.2.10: navegação contextual usa recarregamento controlado; exclusão de OC atualiza a ficha sem location.reload(). -->
-<!-- Mantém modal interno; SOL vinculada é reaberta como Em análise ao excluir a OC. Pendência/Providência continua protegida. -->
+<!-- QRManut 7.6.6.25: B5.2.6 Gestão de Ativos — baixa/descarte por ação dedicada -->
 <!doctype html>
 <html lang="pt-br">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>QRManut</title>
-<meta name="qrmanut-build" content="2026-09-14-b5.2.14">
+<meta name="qrmanut-build" content="2026-09-12-b5.2.6">
 <meta name="theme-color" content="#0b315e">
 <meta name="application-name" content="QRManut">
 <meta name="mobile-web-app-capable" content="yes">
@@ -248,8 +240,7 @@ html,body{max-width:100%;overflow-x:hidden}
 /* ============================================================
  * QRManut 7.5.0.5 - Aviso próprio do sistema
  * ============================================================ */
-#qrAlertModal,
-#qrConfirmModal{
+#qrAlertModal{
   position:fixed;
   inset:0;
   z-index:99999;
@@ -260,8 +251,7 @@ html,body{max-width:100%;overflow-x:hidden}
   background:rgba(15,23,42,.58);
   backdrop-filter:blur(2px);
 }
-#qrAlertModal.qr-alert-open,
-#qrConfirmModal.qr-alert-open{display:flex}
+#qrAlertModal.qr-alert-open{display:flex}
 .qr-alert-box{
   width:min(430px,calc(100vw - 32px));
   background:#fff;
@@ -301,25 +291,18 @@ html,body{max-width:100%;overflow-x:hidden}
   justify-content:flex-end;
   padding:0 20px 18px;
 }
-#qrAlertOk,
-#qrConfirmOk,
-#qrConfirmCancel{
+#qrAlertOk{
   min-width:88px;
   border:0;
   border-radius:10px;
   padding:11px 20px;
+  background:#0b315e;
+  color:#fff;
   font-weight:700;
   font-size:1rem;
   cursor:pointer;
 }
-#qrAlertOk,
-#qrConfirmOk{background:#0b315e;color:#fff}
-#qrConfirmCancel{background:#e2e8f0;color:#334155}
-#qrConfirmOk.qr-confirm-danger{background:#b91c1c}
-#qrAlertOk:active,
-#qrConfirmOk:active,
-#qrConfirmCancel:active{transform:translateY(1px)}
-#qrConfirmModal .qr-alert-actions{gap:8px;flex-wrap:wrap}
+#qrAlertOk:active{transform:translateY(1px)}
 
 
 /* ============================================================
@@ -531,85 +514,6 @@ html,body{max-width:100%;overflow-x:hidden}
   color:#166534;
 }
 
-
-/* QRManut PNCQ 7.6.6.25 B5.2.12 — resumo de OCs por status na ficha do ativo */
-.history-status-summary{display:flex;flex-wrap:wrap;gap:7px 14px;align-items:center;margin:7px 0 10px;font-size:.82rem;color:#374151}
-.history-status-item{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
-.history-status-dot{width:9px;height:9px;border-radius:50%;display:inline-block;flex:0 0 9px}
-.history-status-item strong{font-weight:800;color:#111827}
-.history-status-dot.open{background:#dc2626}
-.history-status-dot.progress{background:#eab308}
-.history-status-dot.waiting{background:#f97316}
-.history-status-dot.done{background:#16a34a}
-.history-status-dot.cancelled{background:#6b7280}
-@media(max-width:700px){.history-status-summary{gap:6px 11px;font-size:.79rem}}
-
-/* QRManut PNCQ 7.6.6.25 B5.2.13 — Scanner de QR Code na Busca de Ativos */
-.search-box .qr-scan-button{
-  background:#0f766e;
-  color:#fff;
-  white-space:nowrap;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  gap:6px;
-}
-.qr-scanner-box{width:min(620px,96vw)}
-.qr-scanner-stage{
-  position:relative;
-  margin-top:12px;
-  overflow:hidden;
-  border-radius:14px;
-  background:#020617;
-  min-height:260px;
-}
-#qrScannerVideo{
-  display:block;
-  width:100%;
-  min-height:260px;
-  max-height:62vh;
-  object-fit:cover;
-  background:#020617;
-}
-.qr-scanner-guide{
-  position:absolute;
-  left:50%;
-  top:50%;
-  width:min(62%,280px);
-  aspect-ratio:1/1;
-  transform:translate(-50%,-50%);
-  border:3px solid rgba(255,255,255,.95);
-  border-radius:18px;
-  box-shadow:0 0 0 9999px rgba(2,6,23,.28);
-  pointer-events:none;
-}
-.qr-scanner-guide:before,.qr-scanner-guide:after{
-  content:"";
-  position:absolute;
-  left:12%;
-  right:12%;
-  height:2px;
-  background:rgba(34,197,94,.92);
-  box-shadow:0 0 8px rgba(34,197,94,.7);
-}
-.qr-scanner-guide:before{top:49%}
-.qr-scanner-guide:after{top:51%;opacity:.35}
-.qr-scanner-status{
-  margin-top:10px;
-  padding:10px 12px;
-  border-radius:10px;
-  background:#f8fafc;
-  color:#334155;
-  line-height:1.45;
-}
-.qr-scanner-status.error{background:#fee2e2;color:#991b1b}
-.qr-scanner-status.success{background:#dcfce7;color:#166534}
-.qr-scanner-status.loading{background:#fef3c7;color:#92400e}
-@media(max-width:700px){
-  .search-box .qr-scan-button{width:100%;padding:12px}
-  .qr-scanner-stage,#qrScannerVideo{min-height:300px}
-}
-
 </style>
 </head>
 <body>
@@ -651,7 +555,6 @@ html,body{max-width:100%;overflow-x:hidden}
       <div class="search-box">
         <input id="searchInput" placeholder="Buscar por ID, nome, categoria, componente, pavimento ou localização">
         <button id="searchButton">Buscar</button>
-        <button id="qrScanButton" class="qr-scan-button" type="button">📷 Escanear QR Code</button>
       </div>
       <div id="searchHint" class="muted" style="margin-top:8px">Digite pelo menos 2 caracteres para iniciar a busca.</div>
     </div>
@@ -947,7 +850,7 @@ html,body{max-width:100%;overflow-x:hidden}
     <div class="actions"><button id="reportButton" class="chip">Reportar Serviço / Anomalia / Reparo</button><button id="preventiveButton" class="btn-preventive hidden">🛠️ Registrar Preventiva</button><button id="searchAssetsButton" class="btn-search">☰ Menu Principal</button></div>
     <div id="assetLifecycleNotice" class="asset-lifecycle-notice hidden"></div>
     <div class="other-problem-box"><div class="muted">O problema não é neste equipamento?</div><button id="otherProblemButton" class="btn-sol-public" type="button">📍 Problema em outro equipamento ou ambiente</button></div>
-    <div class="section"><h3>Histórico de Manutenção</h3><div id="historyStatus" class="muted"></div><div id="historyStatusSummary" class="history-status-summary" aria-label="Resumo das OCs por status"></div><select id="historySelect" class="hidden"></select><div id="historyDetail"></div></div>
+    <div class="section"><h3>Histórico de Manutenção</h3><div id="historyStatus" class="muted"></div><select id="historySelect" class="hidden"></select><div id="historyDetail"></div></div>
     <div id="preventiveHistorySection" class="section hidden"><h3>🛠️ Histórico de Preventivas</h3><div id="preventiveHistoryStatus" class="muted">Login necessário para visualizar.</div><div id="preventiveHistory"></div></div>
   </div>
 </div>
@@ -963,20 +866,6 @@ html,body{max-width:100%;overflow-x:hidden}
     <div id="qrAlertMessage" class="qr-alert-message"></div>
     <div class="qr-alert-actions">
       <button id="qrAlertOk" type="button">OK</button>
-    </div>
-  </div>
-</div>
-
-<div id="qrConfirmModal" role="dialog" aria-modal="true" aria-labelledby="qrConfirmTitle" aria-describedby="qrConfirmMessage">
-  <div class="qr-alert-box">
-    <div class="qr-alert-header">
-      <div class="qr-alert-logo">🔧</div>
-      <div id="qrConfirmTitle">QRManut</div>
-    </div>
-    <div id="qrConfirmMessage" class="qr-alert-message"></div>
-    <div class="qr-alert-actions">
-      <button id="qrConfirmCancel" type="button">Cancelar</button>
-      <button id="qrConfirmOk" type="button">Confirmar</button>
     </div>
   </div>
 </div>
@@ -1108,7 +997,8 @@ html,body{max-width:100%;overflow-x:hidden}
         <label>Modelo<input id="assetModel"></label>
         <label>Número de Série<input id="assetSerialNumber"></label>
         <label>Capacidade<input id="assetCapacity"></label>
-        <label>Amperagem Nominal (FLA)<input id="assetRatedCurrent"></label><label>Amperagem de Partida (FLR)<input id="assetStartingCurrent"></label>
+        <label>Amperagem Nominal (FLA)<input id="assetRatedCurrent"></label>
+        <label>Amperagem de Partida (FLR)<input id="assetStartingCurrent"></label>
         <label>Amperagem Medida<input id="assetMeasuredCurrent"></label>
         <label>Voltagem<input id="assetVoltage"></label>
         <label>Peso<input id="assetWeight"></label>
@@ -1253,21 +1143,6 @@ html,body{max-width:100%;overflow-x:hidden}
   <div class="modal-actions"><button id="cancelSolClose" class="btn btn-secondary">Cancelar</button><button id="confirmSolClose" class="btn">Encerrar sem OC</button></div>
 </div></div>
 
-
-<div id="qrScannerModal" class="modal" aria-hidden="true"><div class="modal-box qr-scanner-box">
-  <h2 id="qrScannerTitle">📷 Escanear QR Code</h2>
-  <div id="qrScannerHelp" class="muted">Aponte a câmera para o QR Code do equipamento. A ficha será aberta automaticamente após a leitura.</div>
-  <div class="qr-scanner-stage">
-    <video id="qrScannerVideo" playsinline muted autoplay></video>
-    <div class="qr-scanner-guide" aria-hidden="true"></div>
-  </div>
-  <div id="qrScannerStatus" class="qr-scanner-status loading" role="status" aria-live="polite">Preparando câmera...</div>
-  <div class="modal-actions">
-    <button id="qrScannerCancel" class="btn btn-secondary" type="button">Cancelar</button>
-    <button id="qrScannerSwitch" class="btn btn-blue hidden" type="button">🔄 Trocar câmera</button>
-  </div>
-</div></div>
-
 <div id="reportModal" class="modal"><div class="modal-box"><h2>Reportar Serviço / Anomalia / Reparo</h2><label>Seu nome *<input id="reporterName"></label><label>Contato<input id="reporterContact"></label><label><span id="reportCategoryLabel">Categoria *</span><select id="category"><option value="">Selecione...</option></select></label><label><span id="reportComponentLabel">Componente *</span><select id="component"><option value="">Selecione...</option></select></label><label>Descrição *<textarea id="description" rows="5"></textarea></label><label>Imagem / evidência (opcional)</label><div class="photo-source-actions"><button type="button" id="reportCameraButton" class="btn btn-blue">📷 Tirar foto</button><button type="button" id="reportGalleryButton" class="btn btn-secondary">🖼️ Escolher imagem do celular</button></div><input id="reportCameraInput" class="photo-source-hidden" type="file" accept="image/*" capture="environment"><input id="photoInput" class="photo-source-hidden" type="file" accept="image/*"><div id="reportPhotoStatus" class="muted" style="margin-top:5px"></div><img id="photoPreview" class="photo-preview"><div class="upload-file-box" style="margin-top:12px"><div style="font-weight:800">📎 Arquivo da ocorrência (opcional)</div><div class="muted" style="margin-top:4px">PDF, Word, Excel ou outro arquivo de evidência, até 8 MB.</div><button id="reportAttachmentButton" type="button" class="btn btn-secondary" style="margin-top:8px">📎 Escolher arquivo</button><input id="reportAttachmentInput" class="photo-source-hidden" type="file"><div id="reportAttachmentName" class="upload-file-name">Nenhum arquivo selecionado.</div></div><div id="reportMessage" class="message"></div><div class="modal-actions"><button id="cancelReport" class="btn btn-secondary">Cancelar</button><button id="sendReport" class="btn">Gravar ocorrência</button></div></div></div>
 
 <div id="manageModal" class="modal"><div class="modal-box"><h2>Gerenciar ocorrência</h2><label>Alterado por *<input id="manageChangedBy"></label><label>Categoria<select id="manageCategory"></select></label><label>Componente<select id="manageComponent"></select></label><label>Descrição<textarea id="manageDescription" rows="4"></textarea></label><label>Status<select id="manageStatus"><option>Aberta</option><option>Em atendimento</option><option>Aguardando peça</option><option>Concluída</option><option>Cancelada</option></select></label><label>Responsável<input id="manageResponsible"></label><label>Solução<textarea id="manageSolution" rows="4"></textarea></label><div id="existingOccurrencePhotoBox" class="hidden" style="margin-top:14px;padding:12px;border:1px solid #bfdbfe;background:#eff6ff;border-radius:12px">
@@ -1325,63 +1200,6 @@ function qrShowAlert(message,title){
 window.alert=function(message){
   qrShowAlert(message,"QRManut");
 };
-
-/* B5.2.7 — confirmação interna do QRManut.
- * Não usa window.confirm(), evitando que o navegador exiba o domínio técnico
- * (ex.: jcpg62.github.io) nas confirmações operacionais. */
-function qrConfirm(message,title,confirmLabel,cancelLabel,danger){
-  const modal=document.getElementById("qrConfirmModal");
-  const msg=document.getElementById("qrConfirmMessage");
-  const ttl=document.getElementById("qrConfirmTitle");
-  const ok=document.getElementById("qrConfirmOk");
-  const cancel=document.getElementById("qrConfirmCancel");
-
-  return new Promise(resolve=>{
-    if(!modal||!msg||!ttl||!ok||!cancel){
-      qrShowAlert(
-        "Não foi possível abrir a confirmação desta ação. Atualize a página e tente novamente.",
-        "QRManut"
-      );
-      resolve(false);
-      return;
-    }
-
-    ttl.textContent=title||"QRManut";
-    msg.textContent=String(message??"");
-    ok.textContent=confirmLabel||"Confirmar";
-    cancel.textContent=cancelLabel||"Cancelar";
-    ok.classList.toggle("qr-confirm-danger",danger===true);
-    modal.classList.add("qr-alert-open");
-
-    let finished=false;
-    const finish=value=>{
-      if(finished)return;
-      finished=true;
-      modal.classList.remove("qr-alert-open");
-      ok.onclick=null;
-      cancel.onclick=null;
-      modal.onclick=null;
-      document.removeEventListener("keydown",onKey);
-      resolve(!!value);
-    };
-
-    const onKey=e=>{
-      if(e.key==="Escape"){
-        e.preventDefault();
-        finish(false);
-      }else if(e.key==="Enter"){
-        e.preventDefault();
-        finish(true);
-      }
-    };
-
-    ok.onclick=()=>finish(true);
-    cancel.onclick=()=>finish(false);
-    modal.onclick=e=>{if(e.target===modal)finish(false)};
-    document.addEventListener("keydown",onKey);
-    setTimeout(()=>cancel.focus(),0);
-  });
-}
 
 const show=id=>$(id).classList.remove("hidden");const hide=id=>$(id).classList.add("hidden");
 
@@ -1447,7 +1265,7 @@ window.addEventListener("appinstalled",()=>{
 /* ============================================================
  * QRManut 7.6.6.25 — B4.2 ATUALIZAÇÃO AUTOMÁTICA DO PWA
  * ============================================================ */
-const QR_BUILD_7662542="2026-09-14-b5.2.7";
+const QR_BUILD_7662542="2026-09-12-b5.2.6";
 let qrBuildCheckRunning7662542=false;
 let qrLastBuildCheck7662542=0;
 
@@ -1894,103 +1712,6 @@ async function logoutSystemMenu(){try{if(systemSession?.systemSessionToken)await
 async function sessionIsValid(){return systemSessionIsValid()}
 function getOriginAsset(){try{return sessionStorage.getItem(ORIGIN_ASSET_KEY)||""}catch(e){return""}}function setOriginAsset(id){try{sessionStorage.setItem(ORIGIN_ASSET_KEY,normalizeId(id))}catch(e){}}function clearOriginAsset(){try{sessionStorage.removeItem(ORIGIN_ASSET_KEY)}catch(e){}}
 function updateBackAssetButton(){const id=getOriginAsset();if(id){show("backAssetWrap");$("backAssetButton").textContent=qrLanguage==="en-US"?"← Back to "+id:"← Voltar para "+id}else hide("backAssetWrap")}
-
-
-/* ============================================================
- * QRManut 7.6.6.25 / B5.2.10 — RETORNO SEGURO PARA OCs PENDENTES
- * - Salva somente o contexto/filtros em sessionStorage.
- * - A abertura da ficha continua por link normal.
- * - O retorno recarrega o Menu Principal e restaura OCs Pendentes.
- * - Evita alternar assetScreen/searchScreen no mesmo estado assíncrono.
- * ============================================================ */
-const QR_PENDING_RETURN_KEY_7662510="QRMANUT_PENDING_RETURN_7662510";
-const QR_PENDING_RETURN_MAX_AGE_7662510=2*60*60*1000;
-
-function getPendingReturnContext7662510_(){
-  try{
-    const raw=sessionStorage.getItem(QR_PENDING_RETURN_KEY_7662510);
-    if(!raw)return null;
-    const ctx=JSON.parse(raw);
-    if(!ctx||!ctx.createdAt)return null;
-    if(Date.now()-Number(ctx.createdAt)>QR_PENDING_RETURN_MAX_AGE_7662510){
-      sessionStorage.removeItem(QR_PENDING_RETURN_KEY_7662510);
-      return null;
-    }
-    return ctx;
-  }catch(e){return null}
-}
-
-function clearPendingReturnContext7662510_(){
-  try{sessionStorage.removeItem(QR_PENDING_RETURN_KEY_7662510)}catch(e){}
-}
-
-function savePendingReturnContext7662510_(assetId){
-  try{
-    const ctx={
-      assetId:normalizeId(assetId||""),
-      createdAt:Date.now(),
-      filters:{
-        prestador:$("pendingProvider")?.value||"",
-        status:$("pendingStatus")?.value||"",
-        categoria:$("pendingCategory")?.value||"",
-        pavimento:$("pendingFloor")?.value||"",
-        localizacao:$("pendingLocation")?.value||""
-      }
-    };
-    sessionStorage.setItem(QR_PENDING_RETURN_KEY_7662510,JSON.stringify(ctx));
-  }catch(e){}
-  return true;
-}
-
-function pendingReturnMatchesAsset7662510_(){
-  const ctx=getPendingReturnContext7662510_();
-  if(!ctx)return false;
-  if(!currentAsset?.id)return false;
-  if(ctx.assetId&&normalizeId(ctx.assetId)!==normalizeId(currentAsset.id)){
-    clearPendingReturnContext7662510_();
-    return false;
-  }
-  return true;
-}
-
-function updatePendingReturnButton7662510_(){
-  const btn=$("searchAssetsButton");
-  if(!btn)return;
-  if(pendingReturnMatchesAsset7662510_()){
-    btn.textContent=qrLanguage==="en-US"?"← Back to Pending Work Orders":"← Voltar para OCs Pendentes";
-  }
-}
-
-function setPendingFilterValue7662510_(id,value){
-  const el=$(id);
-  if(!el)return;
-  const v=String(value||"");
-  if([...el.options].some(o=>o.value===v))el.value=v;
-}
-
-async function restorePendingView7662510_(){
-  const view=new URLSearchParams(location.search).get("view");
-  if(view!=="pending")return false;
-  const ctx=getPendingReturnContext7662510_();
-  if(!ctx||!hasProfilePermission("OC_PENDENTES")){
-    clearPendingReturnContext7662510_();
-    return false;
-  }
-
-  clearTabs();
-  $("tabPending").classList.add("active");
-  showOnly("pendingArea");
-  await loadPendingFilters();
-
-  const f=ctx.filters||{};
-  setPendingFilterValue7662510_("pendingProvider",f.prestador);
-  setPendingFilterValue7662510_("pendingStatus",f.status);
-  setPendingFilterValue7662510_("pendingCategory",f.categoria);
-  setPendingFilterValue7662510_("pendingFloor",f.pavimento);
-  setPendingFilterValue7662510_("pendingLocation",f.localizacao);
-  await loadPending();
-  return true;
-}
 function focusSearchInput(){setTimeout(()=>{try{$("searchInput").focus()}catch(e){}},80)}function focusBackAssetButton(){setTimeout(()=>{try{if(!$("backAssetWrap").classList.contains("hidden"))$("backAssetButton").focus()}catch(e){}},100)}
 async function requirePreventiveLogin(nextAction,provider){await requireSystemLogin(()=>{if(systemSession?.perfil==="PRESTADOR"&&provider&&String(systemSession.prestador||"").trim().toLowerCase()!==String(provider).trim().toLowerCase()){alert("Este equipamento não pertence ao escopo do seu prestador.");return}nextAction()})}
 function processPhoto(file){return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=e=>{const img=new Image();img.onload=()=>{let w=img.width,h=img.height;if(w>MAX_DIM||h>MAX_DIM){if(w>h){h=Math.round(h*MAX_DIM/w);w=MAX_DIM}else{w=Math.round(w*MAX_DIM/h);h=MAX_DIM}}const c=document.createElement("canvas");c.width=w;c.height=h;c.getContext("2d").drawImage(img,0,0,w,h);const url=c.toDataURL("image/jpeg",QUALITY);resolve({base64:url.split(",")[1],dataUrl:url,mime:"image/jpeg",name:"foto_"+Date.now()+".jpg"})};img.src=e.target.result};reader.onerror=reject;reader.readAsDataURL(file)})}
@@ -2276,7 +1997,8 @@ function renderOccurrenceReport(){
   $("occReportPdf").disabled=false;
 
   $("occReportResults").innerHTML=items.map(item=>
-    `<div class="occ-report-card">`+`<div class="occ-report-head">`+
+    `<div class="occ-report-card">`+
+      `<div class="occ-report-head">`+
         `<div><b>${esc(item.ocorrencia)}</b><div>${esc(item.id)} – ${esc(item.equipamento)}</div></div>`+
         `<span class="control-status done">✅ ${t("Concluída","Completed")}</span>`+
       `</div>`+
@@ -2398,310 +2120,6 @@ async function searchDocuments(){
   }
 }
 
-/* ============================================================
- * QRManut PNCQ 7.6.6.25 / B5.2.14 — SCANNER DE QR CODE
- * - Usa BarcodeDetector nativo quando disponível.
- * - Prefere a câmera traseira.
- * - Valida o ID lido antes de abrir a ficha.
- * - Não altera GS, banco ou regras de negócio.
- * ============================================================ */
-let qrScannerStream7662513=null;
-let qrScannerDetector7662513=null;
-let qrScannerFrame7662513=0;
-let qrScannerActive7662513=false;
-let qrScannerProcessing7662513=false;
-let qrScannerDevices7662513=[];
-let qrScannerDeviceIndex7662513=0;
-let qrScannerLastRead7662513="";
-let qrScannerLastReadAt7662513=0;
-let qrScannerFacingMode7662513="environment";
-let qrScannerSwitching7662513=false;
-
-function qrScannerT7662513(pt,en){return qrLanguage==="en-US"?en:pt}
-
-function qrScannerStatus7662513(text,type){
-  const el=$("qrScannerStatus");
-  if(!el)return;
-  el.textContent=text||"";
-  el.className="qr-scanner-status "+(type||"");
-}
-
-function qrScannerExtractAssetId7662513(raw){
-  const text=String(raw||"").trim();
-  if(!text)return"";
-
-  // QR oficial: URL da ficha com ?id=...
-  try{
-    const u=new URL(text,location.href);
-    const id=u.searchParams.get("id")||u.searchParams.get("assetId")||"";
-    if(id)return normalizeId(id);
-  }catch(e){}
-
-  // Também aceita QR contendo somente o ID do ativo.
-  if(/^[A-Za-z0-9_-]{2,80}$/.test(text))return normalizeId(text);
-
-  // Compatibilidade com texto que contenha uma URL/consulta embutida.
-  const m=text.match(/[?&](?:id|assetId)=([^&#\s]+)/i);
-  if(m&&m[1]){
-    try{return normalizeId(decodeURIComponent(m[1]))}catch(e){return normalizeId(m[1])}
-  }
-  return"";
-}
-
-function qrScannerStopStream7662513(){
-  if(qrScannerFrame7662513){
-    cancelAnimationFrame(qrScannerFrame7662513);
-    qrScannerFrame7662513=0;
-  }
-  if(qrScannerStream7662513){
-    try{qrScannerStream7662513.getTracks().forEach(t=>t.stop())}catch(e){}
-    qrScannerStream7662513=null;
-  }
-  const video=$("qrScannerVideo");
-  if(video){
-    try{video.pause()}catch(e){}
-    try{video.srcObject=null}catch(e){}
-  }
-}
-
-function closeQrScanner7662513(){
-  qrScannerActive7662513=false;
-  qrScannerProcessing7662513=false;
-  qrScannerStopStream7662513();
-  const modal=$("qrScannerModal");
-  if(modal){modal.style.display="none";modal.setAttribute("aria-hidden","true")}
-}
-
-async function qrScannerRefreshDevices7662513(){
-  try{
-    const all=await navigator.mediaDevices.enumerateDevices();
-    qrScannerDevices7662513=all.filter(d=>d.kind==="videoinput");
-  }catch(e){qrScannerDevices7662513=[]}
-  const sw=$("qrScannerSwitch");
-  if(sw)sw.classList.toggle("hidden",qrScannerDevices7662513.length<2);
-}
-
-async function qrScannerValidateAndOpen7662513(raw){
-  if(qrScannerProcessing7662513)return;
-  const id=qrScannerExtractAssetId7662513(raw);
-  if(!id){
-    const now=Date.now();
-    if(raw!==qrScannerLastRead7662513||now-qrScannerLastReadAt7662513>1800){
-      qrScannerLastRead7662513=raw;qrScannerLastReadAt7662513=now;
-      qrScannerStatus7662513(
-        qrScannerT7662513("QR Code lido, mas ele não corresponde a um ativo do QRManut.","QR Code read, but it does not match a QRManut asset."),
-        "error"
-      );
-    }
-    return;
-  }
-
-  qrScannerProcessing7662513=true;
-  qrScannerStatus7662513(
-    qrScannerT7662513("QR Code identificado. Validando o ativo...","QR Code identified. Validating asset..."),
-    "loading"
-  );
-
-  try{
-    const d=await menuApi({action:"search",q:id});
-    const items=d.results||[];
-    const target=items.find(x=>normalizeId(x.id)===normalizeId(id));
-    if(!target){
-      throw new Error(qrScannerT7662513(
-        "O QR Code foi reconhecido, mas o ativo não foi localizado entre os ativos disponíveis.",
-        "The QR Code was recognized, but the asset was not found among the available assets."
-      ));
-    }
-
-    qrScannerStatus7662513(
-      qrScannerT7662513("Ativo localizado. Abrindo ficha...","Asset found. Opening asset page..."),
-      "success"
-    );
-    qrScannerActive7662513=false;
-    qrScannerStopStream7662513();
-
-    const u=new URL(location.href);
-    u.search="";
-    u.searchParams.set("id",normalizeId(target.id));
-    u.hash="";
-    setTimeout(()=>{location.href=u.toString()},180);
-  }catch(e){
-    qrScannerProcessing7662513=false;
-    qrScannerStatus7662513(e.message||qrScannerT7662513("Não foi possível validar o ativo.","Unable to validate the asset."),"error");
-  }
-}
-
-async function qrScannerLoop7662513(){
-  if(!qrScannerActive7662513||!qrScannerDetector7662513)return;
-  const video=$("qrScannerVideo");
-  if(!video)return;
-
-  if(video.readyState>=2&&!qrScannerProcessing7662513){
-    try{
-      const codes=await qrScannerDetector7662513.detect(video);
-      if(codes&&codes.length){
-        const value=String(codes[0].rawValue||"").trim();
-        if(value)await qrScannerValidateAndOpen7662513(value);
-      }
-    }catch(e){
-      // Falhas transitórias de frame não encerram a câmera.
-    }
-  }
-
-  if(qrScannerActive7662513){
-    setTimeout(()=>{
-      if(qrScannerActive7662513)qrScannerFrame7662513=requestAnimationFrame(qrScannerLoop7662513);
-    },120);
-  }
-}
-
-async function qrScannerStartCamera7662513(deviceId,facingMode,exactFacing){
-  // B5.2.14: interrompe por completo o loop anterior antes de abrir outra câmera.
-  qrScannerActive7662513=false;
-  qrScannerStopStream7662513();
-  qrScannerProcessing7662513=false;
-  qrScannerStatus7662513(qrScannerT7662513("Preparando câmera...","Preparing camera..."),"loading");
-
-  const desiredFacing=(facingMode==="user"||facingMode==="environment")
-    ?facingMode
-    :qrScannerFacingMode7662513;
-
-  const videoConstraints=deviceId
-    ?{deviceId:{exact:deviceId},width:{ideal:1280},height:{ideal:720}}
-    :{
-        facingMode:exactFacing?{exact:desiredFacing}:{ideal:desiredFacing},
-        width:{ideal:1280},
-        height:{ideal:720}
-      };
-
-  try{
-    qrScannerStream7662513=await navigator.mediaDevices.getUserMedia({video:videoConstraints,audio:false});
-    const video=$("qrScannerVideo");
-    video.srcObject=qrScannerStream7662513;
-    await video.play();
-    await qrScannerRefreshDevices7662513();
-
-    const track=qrScannerStream7662513.getVideoTracks()[0];
-    const settings=track&&track.getSettings?track.getSettings():{};
-    if(settings.deviceId&&qrScannerDevices7662513.length){
-      const found=qrScannerDevices7662513.findIndex(d=>d.deviceId===settings.deviceId);
-      if(found>=0)qrScannerDeviceIndex7662513=found;
-    }
-    // Em navegadores móveis modernos, facingMode informa se a câmera ativa é frontal ou traseira.
-    if(settings.facingMode==="user"||settings.facingMode==="environment"){
-      qrScannerFacingMode7662513=settings.facingMode;
-    }else if(facingMode==="user"||facingMode==="environment"){
-      qrScannerFacingMode7662513=facingMode;
-    }
-
-    qrScannerStatus7662513(
-      qrScannerT7662513("Aponte a câmera para o QR Code do equipamento.","Point the camera at the asset QR Code."),
-      ""
-    );
-    qrScannerActive7662513=true;
-    qrScannerFrame7662513=requestAnimationFrame(qrScannerLoop7662513);
-    return true;
-  }catch(e){
-    qrScannerActive7662513=false;
-    qrScannerStopStream7662513();
-    let msg=qrScannerT7662513("Não foi possível acessar a câmera.","Unable to access the camera.");
-    if(e&&e.name==="NotAllowedError")msg=qrScannerT7662513("Permissão da câmera negada. Autorize o uso da câmera no navegador e tente novamente.","Camera permission denied. Allow camera access in the browser and try again.");
-    else if(e&&e.name==="NotFoundError"||e&&e.name==="OverconstrainedError")msg=qrScannerT7662513("A câmera selecionada não está disponível neste dispositivo.","The selected camera is not available on this device.");
-    else if(e&&e.name==="NotReadableError")msg=qrScannerT7662513("A câmera está em uso por outro aplicativo ou não pôde ser iniciada.","The camera is being used by another app or could not be started.");
-    else if(e&&e.name==="SecurityError")msg=qrScannerT7662513("O navegador bloqueou o acesso à câmera por segurança.","The browser blocked camera access for security reasons.");
-    qrScannerStatus7662513(msg,"error");
-    return false;
-  }
-}
-
-async function openQrScanner7662513(){
-  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){
-    return qrShowAlert(
-      qrScannerT7662513("Este navegador não permite acesso à câmera para leitura do QR Code.","This browser does not allow camera access for QR scanning."),
-      "QRManut"
-    );
-  }
-
-  if(typeof BarcodeDetector==="undefined"){
-    return qrShowAlert(
-      qrScannerT7662513(
-        "O leitor de QR Code não é suportado por este navegador. Use uma versão atualizada do Chrome ou Edge.",
-        "QR scanning is not supported by this browser. Use an updated version of Chrome or Edge."
-      ),
-      "QRManut"
-    );
-  }
-
-  try{
-    if(BarcodeDetector.getSupportedFormats){
-      const formats=await BarcodeDetector.getSupportedFormats();
-      if(formats&&formats.length&&!formats.includes("qr_code")){
-        throw new Error(qrScannerT7662513("Este navegador não oferece leitura de QR Code.","This browser does not provide QR Code detection."));
-      }
-    }
-    qrScannerDetector7662513=new BarcodeDetector({formats:["qr_code"]});
-  }catch(e){
-    return qrShowAlert(e.message||qrScannerT7662513("Não foi possível iniciar o leitor de QR Code.","Unable to start QR scanner."),"QRManut");
-  }
-
-  const modal=$("qrScannerModal");
-  modal.style.display="flex";
-  modal.setAttribute("aria-hidden","false");
-  qrScannerActive7662513=false;
-  qrScannerProcessing7662513=false;
-  qrScannerLastRead7662513="";
-  qrScannerLastReadAt7662513=0;
-  qrScannerFacingMode7662513="environment";
-  qrScannerSwitching7662513=false;
-  await qrScannerStartCamera7662513("","environment",false);
-}
-
-async function switchQrScannerCamera7662513(){
-  if(qrScannerDevices7662513.length<2||qrScannerSwitching7662513)return;
-
-  const btn=$("qrScannerSwitch");
-  const previousFacing=qrScannerFacingMode7662513;
-  const targetFacing=previousFacing==="user"?"environment":"user";
-  qrScannerSwitching7662513=true;
-  if(btn)btn.disabled=true;
-  qrScannerStatus7662513(
-    qrScannerT7662513("Trocando câmera...","Switching camera..."),
-    "loading"
-  );
-
-  try{
-    // Primeiro tenta a inversão semântica frontal/traseira. Isso evita passar
-    // por ultrawide/teleobjetiva antes de chegar à câmera frontal.
-    let ok=await qrScannerStartCamera7662513("",targetFacing,true);
-
-    // Fallback para navegadores que não implementam facingMode exact corretamente.
-    if(!ok){
-      const frontRx=/(front|frontal|user|selfie|face)/i;
-      const backRx=/(back|rear|traseir|environment|world)/i;
-      const rx=targetFacing==="user"?frontRx:backRx;
-      const candidate=qrScannerDevices7662513.find(d=>d.deviceId&&rx.test(String(d.label||"")));
-      if(candidate)ok=await qrScannerStartCamera7662513(candidate.deviceId,targetFacing,false);
-    }
-
-    // Último fallback: escolhe qualquer câmera diferente da atual.
-    if(!ok&&qrScannerDevices7662513.length>1){
-      const currentTrack=qrScannerStream7662513&&qrScannerStream7662513.getVideoTracks()[0];
-      const currentSettings=currentTrack&&currentTrack.getSettings?currentTrack.getSettings():{};
-      const currentId=currentSettings.deviceId||"";
-      const candidate=qrScannerDevices7662513.find(d=>d.deviceId&&d.deviceId!==currentId);
-      if(candidate)ok=await qrScannerStartCamera7662513(candidate.deviceId,targetFacing,false);
-    }
-
-    if(!ok){
-      qrScannerFacingMode7662513=previousFacing;
-      await qrScannerStartCamera7662513("",previousFacing,false);
-    }
-  }finally{
-    qrScannerSwitching7662513=false;
-    if(btn)btn.disabled=false;
-  }
-}
-
 async function searchAssets(){let q=$("searchInput").value.trim();if(!q){$("searchStatus").textContent="Digite o ID, nome do equipamento, ambiente ou localização que deseja localizar.";focusSearchInput();return}if(q.length<2){$("searchStatus").textContent="Digite pelo menos 2 caracteres.";focusSearchInput();return}if(/^[a-z0-9_-]+$/i.test(q))q=normalizeId(q);$("searchStatus").textContent="Buscando...";try{const d=await menuApi({action:"search",q});const items=d.results||[];$("searchStatus").textContent=items.length+" resultado(s)";$("searchResults").innerHTML=items.map(item=>`<div class="search-result"><div class="search-result-id">${esc(item.id)}</div><div class="search-result-name">${esc(item.nome)}</div><div class="search-result-data">${item.pavimento?`<div><b>Pavimento:</b> ${esc(item.pavimento)}</div>`:""}${item.localizacao?`<div><b>Localização:</b> ${esc(item.localizacao)}</div>`:""}${item.prestador?`<div><b>Prestador:</b> ${esc(item.prestador)}</div>`:""}${item.periodicidade?`<div><b>Periodicidade:</b> ${esc(item.periodicidade)}</div>`:""}</div><a class="open-button" href="?id=${encodeURIComponent(normalizeId(item.id))}">Abrir ficha</a></div>`).join("")}catch(e){$("searchStatus").textContent="Erro ao realizar busca."}}
 function pendingParams(){
   return{
@@ -2762,7 +2180,7 @@ async function loadPending(){
       return;
     }
 
-    $("pendingResults").innerHTML=items.map(item=>`<div class="pending-card"><b>${esc(item.ocorrencia)}</b><div>${esc(item.id)} – ${esc(item.nome)}</div><div class="search-result-data"><b>Status:</b> ${esc(item.status)}${item.prestador?`<br><b>Prestador:</b> ${esc(item.prestador)}`:""}${item.categoriaOcorrencia?`<br><b>Categoria:</b> ${esc(item.categoriaOcorrencia)}`:""}${item.pavimento?`<br><b>Pavimento:</b> ${esc(item.pavimento)}`:""}${item.localizacao?`<br><b>Localização:</b> ${esc(item.localizacao)}`:""}<br><b>Descrição:</b> ${esc(item.descricao)}</div><a class="open-button" href="?id=${encodeURIComponent(normalizeId(item.id))}" onclick="savePendingReturnContext7662510_('${esc(normalizeId(item.id))}')">Abrir ficha</a></div>`).join("");
+    $("pendingResults").innerHTML=items.map(item=>`<div class="pending-card"><b>${esc(item.ocorrencia)}</b><div>${esc(item.id)} – ${esc(item.nome)}</div><div class="search-result-data"><b>Status:</b> ${esc(item.status)}${item.prestador?`<br><b>Prestador:</b> ${esc(item.prestador)}`:""}${item.categoriaOcorrencia?`<br><b>Categoria:</b> ${esc(item.categoriaOcorrencia)}`:""}${item.pavimento?`<br><b>Pavimento:</b> ${esc(item.pavimento)}`:""}${item.localizacao?`<br><b>Localização:</b> ${esc(item.localizacao)}`:""}<br><b>Descrição:</b> ${esc(item.descricao)}</div><a class="open-button" href="?id=${encodeURIComponent(normalizeId(item.id))}">Abrir ficha</a></div>`).join("");
   }catch(e){
     $("pendingSummary").innerHTML="";
     $("pendingResults").innerHTML="";
@@ -3180,37 +2598,8 @@ function renderStatus(s){
     : t("Nenhuma ocorrência ativa.","No active issues.");
 }
 function renderStatusFromCurrent(){if(currentAssetStatus)renderStatus(currentAssetStatus)}
-function historyStatusKey7662512_(status){
-  return String(status||"")
-    .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
-    .trim().toLowerCase();
-}
-function renderHistoryStatusSummary7662512_(items){
-  const box=$("historyStatusSummary");
-  if(!box)return;
-  const counts={
-    "aberta":0,
-    "em atendimento":0,
-    "aguardando peca":0,
-    "concluida":0,
-    "cancelada":0
-  };
-  (items||[]).forEach(x=>{
-    const k=historyStatusKey7662512_(x&&x.status);
-    if(Object.prototype.hasOwnProperty.call(counts,k))counts[k]++;
-  });
-  const defs=[
-    ["Aberta","Open","open",counts["aberta"]],
-    ["Em atendimento","In progress","progress",counts["em atendimento"]],
-    ["Aguardando peça","Waiting for part","waiting",counts["aguardando peca"]],
-    ["Concluída","Completed","done",counts["concluida"]],
-    ["Cancelada","Cancelled","cancelled",counts["cancelada"]]
-  ];
-  box.innerHTML=defs.map(x=>`<span class="history-status-item"><span class="history-status-dot ${x[2]}" aria-hidden="true"></span><span>${esc(qrLanguage==="en-US"?x[1]:x[0])}: <strong>${x[3]}</strong></span></span>`).join("");
-}
 function renderHistory(items){
   history=items;
-  renderHistoryStatusSummary7662512_(items);
   if(!items.length){
     hide("historySelect");
     $("historyStatus").textContent=qrLanguage==="en-US"?"No maintenance history recorded.":"Nenhum histórico registrado.";
@@ -3608,7 +2997,8 @@ async function openReport(){
       :`Ativo não operacional (${String(currentAsset?.status||"Inativo")}). Altere a situação para Ativo antes de registrar nova ocorrência.`);
   }
   if(systemSession&&!hasProfilePermission("OC_REGISTRAR"))return permissionDeniedMessage("Seu perfil não possui permissão para registrar ocorrências.","Your profile is not allowed to create work orders.");
-  photoData=null;reportAttachmentData=null;reportPosting=false;reportCompleted=false;if($("reportCameraInput"))$("reportCameraInput").value="";
+  photoData=null;reportAttachmentData=null;reportPosting=false;reportCompleted=false;
+  if($("reportCameraInput"))$("reportCameraInput").value="";
   if($("photoInput"))$("photoInput").value="";
   if($("reportAttachmentInput"))$("reportAttachmentInput").value="";
   if($("reportPhotoStatus"))$("reportPhotoStatus").textContent="";
@@ -3698,16 +3088,8 @@ function showExistingOccurrencePhoto(item){
   link.onclick=e=>{e.preventDefault();openSecureFile76624("occurrencePhoto",item.ocorrencia,"opening")};
   loadSecureImage76624(preview,"occurrencePhoto",item.ocorrencia,"opening");
 }
-function resetDeleteOccurrenceUi7662511_(){
-  const btn=$("deleteOccurrence");
-  if(!btn)return;
-  btn.disabled=false;
-  btn.textContent=qrLanguage==="en-US"?"🗑️ Delete work order":"🗑️ Excluir ocorrência";
-}
-
 function openManage(i){
   selectedOccurrence=history[i];
-  resetDeleteOccurrenceUi7662511_();
   correctionPhotoData=null;
   conclusionPhotoData=null;
   manageAttachmentData=null;
@@ -3891,80 +3273,7 @@ $("conclusionPhotoInput").onchange=function(){handleManageSelectedImage(this.fil
 
 
 
-async function deleteOccurrenceRecord(){
-  if(!selectedOccurrence||!hasProfilePermission("OC_EXCLUIR"))return;
-
-  const oc=String(selectedOccurrence.ocorrencia||"").trim();
-  const solOrigem=String(selectedOccurrence.solOrigem||"").trim();
-  const pendenciaOrigem=String(selectedOccurrence.pendenciaOrigem||"").trim();
-  const assetIdBeforeDelete=normalizeId(currentAsset?.id||"");
-
-  if(pendenciaOrigem){
-    qrShowAlert(
-      `A ocorrência ${oc} está vinculada à Pendência / Providência ${pendenciaOrigem}.\n\nEsse vínculo precisa ser tratado antes da exclusão da OC.`,
-      "Exclusão não permitida"
-    );
-    return;
-  }
-
-  const confirmMessage=solOrigem
-    ? `Excluir definitivamente a ocorrência ${oc}?\n\nEsta OC foi criada a partir da Solicitação ${solOrigem}. Ao excluir a OC, a Solicitação será automaticamente desvinculada e voltará para “Em análise”, permitindo uma nova triagem ou a criação de outra OC.\n\nA exclusão ficará registrada na auditoria.`
-    : `Excluir definitivamente a ocorrência ${oc}?\n\nEsta ação remove o registro do aplicativo e ficará registrada na auditoria.`;
-
-  const confirmed=await qrConfirm(
-    confirmMessage,
-    solOrigem?"Excluir OC e reabrir Solicitação":"Excluir ocorrência",
-    "Excluir",
-    "Cancelar",
-    true
-  );
-  if(!confirmed)return;
-
-  const btn=$("deleteOccurrence");
-  btn.disabled=true;
-  btn.textContent="Excluindo...";
-
-  try{
-    const r=await menuApiPost({action:"deleteOccurrence",ocorrencia:oc});
-    if(!r.ok)throw new Error(r.detail||"Não foi possível excluir a ocorrência.");
-
-    resetDeleteOccurrenceUi7662511_();
-    $("manageModal").style.display="none";
-    selectedOccurrence=null;
-
-    /* B5.2.10 — não usa location.reload().
-     * Atualiza a própria ficha; assim não há transição para página branca
-     * nem dependência de cache/service worker durante a exclusão. */
-    if(assetIdBeforeDelete){
-      await loadAsset(assetIdBeforeDelete);
-      updatePendingReturnButton7662510_();
-    }
-
-    const reabertas=Array.isArray(r.solicitacoesReabertas)?r.solicitacoesReabertas:[];
-    if(reabertas.length){
-      qrShowAlert(
-        `A ocorrência ${oc} foi excluída com sucesso.\n\nA Solicitação ${reabertas.join(", ")} foi desvinculada da OC e voltou para “Em análise”.`,
-        "OC excluída / Solicitação reaberta"
-      );
-    }else{
-      qrShowAlert(`A ocorrência ${oc} foi excluída com sucesso.`,"OC excluída");
-    }
-  }catch(e){
-    const raw=String(e?.message||"").trim();
-    let title="Não foi possível excluir";
-    let message=raw||"Não foi possível excluir a ocorrência.";
-
-    if(/Pend[eê]ncia/i.test(raw)||/Provid[eê]ncia/i.test(raw)){
-      title="Exclusão não permitida";
-      message=
-        "Esta OC está vinculada a uma Pendência / Providência.\n\n"+
-        "Esse vínculo precisa ser tratado antes da exclusão da OC.";
-    }
-
-    qrShowAlert(message,title);
-    resetDeleteOccurrenceUi7662511_();
-  }
-}
+async function deleteOccurrenceRecord(){if(!selectedOccurrence||!hasProfilePermission("OC_EXCLUIR"))return;if(!confirm(`Excluir definitivamente a ocorrência ${selectedOccurrence.ocorrencia}?\n\nEsta ação remove o registro do aplicativo e ficará registrada na auditoria.`))return;const btn=$("deleteOccurrence");btn.disabled=true;btn.textContent="Excluindo...";try{const r=await menuApiPost({action:"deleteOccurrence",ocorrencia:selectedOccurrence.ocorrencia});if(!r.ok)throw new Error(r.detail||"Não foi possível excluir a ocorrência.");$("manageModal").style.display="none";location.reload()}catch(e){alert(e.message);btn.disabled=false;btn.textContent="🗑️ Excluir ocorrência"}}
 async function deletePreventiveRecord(registro){if(!hasProfilePermission("PREVENTIVA_EXCLUIR"))return;if(!confirm(`Excluir definitivamente a preventiva ${registro}?\n\nEsta ação ficará registrada na auditoria.`))return;try{const r=await menuApiPost({action:"deletePreventive",registro:registro});if(!r.ok)throw new Error(r.detail||"Não foi possível excluir a preventiva.");await loadPreventiveHistory()}catch(e){alert(e.message)}}
 const PASSWORD_EYE_OPEN=`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path><circle cx="12" cy="12" r="2.8"></circle></svg>`;
 const PASSWORD_EYE_CLOSED=`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3l18 18"></path><path d="M10.6 6.2A10.7 10.7 0 0 1 12 6c7 0 10 6 10 6a17.8 17.8 0 0 1-2.4 3.1"></path><path d="M6.4 6.4C3.5 8.2 2 12 2 12s3.5 6 10 6a10 10 0 0 0 4.1-.9"></path><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"></path></svg>`;
@@ -4688,7 +3997,8 @@ function openProviderModal(i){
 async function saveProviderAdmin(){
   if(!hasProfilePermission("PRESTADORES_EDITAR"))return alert(qrLanguage==="en-US"?"Your profile is not allowed to save service providers.":"Seu perfil não possui permissão para salvar prestadores.");
   const b=$("saveProvider");
-  if(!b || b.dataset.loading==="1")return;b.dataset.loading="1";
+  if(!b || b.dataset.loading==="1")return;
+  b.dataset.loading="1";
   b.disabled=true;
   b.textContent="Salvando...";
   $("providerMessage").className="message loading";
@@ -5687,7 +4997,8 @@ function openForgotPassword(){
   }
 }
 function openAccessRequestForm76616(){
-  const id=$("recoveryIdentifier").value.trim();$("accessRequestName").value="";
+  const id=$("recoveryIdentifier").value.trim();
+  $("accessRequestName").value="";
   $("accessRequestLogin").value=id.includes("@")?"":id;
   $("accessRequestEmail").value=id.includes("@")?id:"";
   $("accessRequestPhone").value="";
@@ -5979,9 +5290,6 @@ const QR_TEXT={
     tabProvidersAdmin:"🏢 Prestadores",
     tabCompany:"⚙️ Empresa",
     searchAssetsButton:"☰ Menu Principal",
-    qrScanButton:"📷 Escanear QR Code",
-    qrScannerCancel:"Cancelar",
-    qrScannerSwitch:"🔄 Trocar câmera",
     openSystemLoginButton:"🔐 Entrar no Menu Principal",
     pendingApplyFilters:"Aplicar filtros",
     pendingClearFilters:"Limpar filtros",
@@ -6026,9 +5334,6 @@ const QR_TEXT={
     tabProvidersAdmin:"🏢 Service Providers",
     tabCompany:"⚙️ Company",
     searchAssetsButton:"☰ Main Menu",
-    qrScanButton:"📷 Scan QR Code",
-    qrScannerCancel:"Cancel",
-    qrScannerSwitch:"🔄 Switch Camera",
     openSystemLoginButton:"🔐 Sign In to Main Menu",
     pendingApplyFilters:"Apply Filters",
     pendingClearFilters:"Clear Filters",
@@ -6692,7 +5997,8 @@ function qrTranslateAttributes(root){
 
     if(qrLanguage==="en-US"){
       const translated=qrTranslateCompositeText(el.dataset.qrOriginalPlaceholder);
-      if(translated!==el.dataset.qrOriginalPlaceholder){el.setAttribute("placeholder",translated);
+      if(translated!==el.dataset.qrOriginalPlaceholder){
+        el.setAttribute("placeholder",translated);
       }else if(el.dataset.qrOriginalPlaceholder==="Ex.: AC102_SP3P"){
         el.setAttribute("placeholder","E.g.: AC102_SP3P");
       }
@@ -7085,11 +6391,6 @@ function qrApplyLanguage(lang){
     if(el)el.textContent=qrLanguage==="en-US"?enText:ptText;
   });
 
-  if($("qrScannerTitle"))$("qrScannerTitle").textContent=qrLanguage==="en-US"?"📷 Scan QR Code":"📷 Escanear QR Code";
-  if($("qrScannerHelp"))$("qrScannerHelp").textContent=qrLanguage==="en-US"
-    ?"Point the camera at the asset QR Code. The asset page will open automatically after scanning."
-    :"Aponte a câmera para o QR Code do equipamento. A ficha será aberta automaticamente após a leitura.";
-
   if($("searchInput"))$("searchInput").placeholder=(QR_PLACEHOLDERS[qrLanguage]||QR_PLACEHOLDERS["pt-BR"]).searchInput;
   if($("documentSearchInput"))$("documentSearchInput").placeholder=(QR_PLACEHOLDERS[qrLanguage]||QR_PLACEHOLDERS["pt-BR"]).documentSearchInput;
   if($("auditSearch"))$("auditSearch").placeholder=(QR_PLACEHOLDERS[qrLanguage]||QR_PLACEHOLDERS["pt-BR"]).auditSearch;
@@ -7195,15 +6496,8 @@ $("cancelSolClose").onclick=()=>{if(!solActionPosting)$("solCloseModal").style.d
 $("confirmSolClose").onclick=confirmSolClose7662412;
 $("openSystemLoginButton").onclick=()=>requireSystemLogin(openMainMenu);$("forgotPasswordButton").onclick=openForgotPassword;$("cancelRecovery").onclick=()=>{$("forgotPasswordModal").style.display="none";$("systemLoginModal").style.display="flex"};$("sendRecovery").onclick=sendRecovery;$("openAccessRequestButton").onclick=openAccessRequestForm76616;$("cancelAccessRequestButton").onclick=()=>{hide("accessRequestForm");show("recoveryNotRegisteredBox")};$("sendAccessRequestButton").onclick=sendAccessRequest76616;$("accessRequestBackToLoginButton").onclick=backToLoginAfterAccessRequest76617;$("resendPendingInviteButton").onclick=resendPendingInvite76616;$("saveNewPassword").onclick=savePasswordFromToken;$("tabUsers").onclick=showUsersTab;$("newUserButton").onclick=openNewUser;$("tabPermissions").onclick=showProfilePermissionsTab;$("permissionsBackMenu").onclick=openDefaultAllowedTab;$("saveProfilePermissions").onclick=saveProfilePermissions76613;$("resetProfilePermissions").onclick=resetProfilePermissions76613;$("tabAudit").onclick=showAuditTab;$("tabProvidersAdmin").onclick=showProvidersAdminTab;$("tabCompany").onclick=showCompanyTab;$("companyBackMenu").onclick=openDefaultAllowedTab;$("providersBackMenu").onclick=openDefaultAllowedTab;$("newProviderButton").onclick=()=>openProviderModal(null);$("cancelProvider").onclick=()=>{$("providerModal").style.display="none"};$("closeProviderConsult").onclick=()=>{$("providerConsultModal").style.display="none"};$("saveProvider").onclick=saveProviderAdmin;$("saveCompanyConfig").onclick=saveCompanyConfig;["companyName","companyTradeName","companySystemName","companyLogo"].forEach(id=>$(id).oninput=updateCompanyPreview);
 $("companyPrimaryColor").addEventListener("input",updateCompanyPreview);
-$("companyPrimaryColor").addEventListener("change",updateCompanyPreview);$("auditRefresh").onclick=loadAudit;$("auditClear").onclick=clearAuditFilters;$("auditSearch").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();loadAudit()}};$("cancelUser").onclick=()=>{$("userModal").style.display="none"};$("saveUser").onclick=saveUser;$("userEmail").oninput=updateUserPrimaryAction76617;$("cancelAdminUserPassword").onclick=()=>{$("adminUserPasswordModal").style.display="none"};$("saveAdminUserPassword").onclick=saveAdminUserPassword76617;$("sendSystemLogin").onclick=doSystemLogin;$("systemPassword").onkeydown=e=>{if(e.key==="Enter")doSystemLogin()};$("cancelSystemLogin").onclick=()=>{systemLoginNextAction=null;$("systemLoginModal").style.display="none";if(!systemSession)showMenuGate()};$("systemLogoutButton").onclick=logoutSystemMenu;$("installAppButton").onclick=installQRManut;$("tabSearch").onclick=showSearchTab;$("tabPending").onclick=showPendingTab;$("pendingApplyFilters").onclick=loadPending;$("pendingClearFilters").onclick=clearPendingFilters;$("tabOccurrenceReport").onclick=showOccurrenceReportTab;$("tabPreventive").onclick=showPreventiveTab;$("tabDocuments").onclick=showDocumentsTab;$("tabMaintenancePending").onclick=showMaintenancePendingTab;$("maintenancePendingBackMenu").onclick=openDefaultAllowedTab;$("maintenancePendingRefresh").onclick=loadMaintenancePending;$("maintenancePendingClear").onclick=clearMaintenancePendingFilters;$("maintenancePendingSearch").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();loadMaintenancePending()}};$("maintenancePendingStatusFilter").onchange=loadMaintenancePending;$("maintenancePendingPriorityFilter").onchange=loadMaintenancePending;$("preventiveNeedsAction").onchange=togglePreventiveActionFields;$("tabOccurrenceCatalog").onclick=showOccurrenceCatalogTab;$("occurrenceCatalogBackMenu").onclick=openDefaultAllowedTab;$("saveCatalogCategory").onclick=saveCatalogCategory;$("clearCatalogCategory").onclick=clearCatalogCategoryForm;$("saveCatalogComponent").onclick=saveCatalogComponent;$("clearCatalogComponent").onclick=clearCatalogComponentForm;$("category").onchange=()=>populateOccurrenceComponentSelect();$("manageCategory").onchange=()=>populateManageCatalog($("manageCategory").value,"");$("tabDocumentUpload").onclick=showDocumentUploadTab;$("documentUploadBackMenu").onclick=cancelDocumentUpload;$("uploadDocumentChooseFileButton").onclick=()=>$("uploadDocumentFile").click();$("uploadDocumentFile").onchange=prepareDocumentUploadFile;$("sendDocumentUpload").onclick=sendDocumentUpload;$("clearDocumentUpload").onclick=clearDocumentUploadForm;$("searchButton").onclick=searchAssets;$("qrScanButton").onclick=openQrScanner7662513;$("qrScannerCancel").onclick=closeQrScanner7662513;$("qrScannerSwitch").onclick=switchQrScannerCamera7662513;$("searchInput").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();searchAssets()}};$("documentSearchButton").onclick=searchDocuments;$("documentSearchInput").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();searchDocuments()}};$("documentTypeFilter").onchange=searchDocuments;$("documentDisciplineFilter").onchange=searchDocuments;$("documentFloorFilter").onchange=searchDocuments;$("reportButton").onclick=openReport;$("preventiveButton").onclick=requestPreventive;
-$("searchAssetsButton").onclick=function(){
-  if(pendingReturnMatchesAsset7662510_()){
-    location.href="?id=EQBUSCA&view=pending";
-    return;
-  }
-  if(currentAsset?.id)setOriginAsset(currentAsset.id);
-  requireSystemLogin(()=>{hide("assetScreen");show("searchScreen");openMainMenu();focusBackAssetButton()});
-};
+$("companyPrimaryColor").addEventListener("change",updateCompanyPreview);$("auditRefresh").onclick=loadAudit;$("auditClear").onclick=clearAuditFilters;$("auditSearch").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();loadAudit()}};$("cancelUser").onclick=()=>{$("userModal").style.display="none"};$("saveUser").onclick=saveUser;$("userEmail").oninput=updateUserPrimaryAction76617;$("cancelAdminUserPassword").onclick=()=>{$("adminUserPasswordModal").style.display="none"};$("saveAdminUserPassword").onclick=saveAdminUserPassword76617;$("sendSystemLogin").onclick=doSystemLogin;$("systemPassword").onkeydown=e=>{if(e.key==="Enter")doSystemLogin()};$("cancelSystemLogin").onclick=()=>{systemLoginNextAction=null;$("systemLoginModal").style.display="none";if(!systemSession)showMenuGate()};$("systemLogoutButton").onclick=logoutSystemMenu;$("installAppButton").onclick=installQRManut;$("tabSearch").onclick=showSearchTab;$("tabPending").onclick=showPendingTab;$("pendingApplyFilters").onclick=loadPending;$("pendingClearFilters").onclick=clearPendingFilters;$("tabOccurrenceReport").onclick=showOccurrenceReportTab;$("tabPreventive").onclick=showPreventiveTab;$("tabDocuments").onclick=showDocumentsTab;$("tabMaintenancePending").onclick=showMaintenancePendingTab;$("maintenancePendingBackMenu").onclick=openDefaultAllowedTab;$("maintenancePendingRefresh").onclick=loadMaintenancePending;$("maintenancePendingClear").onclick=clearMaintenancePendingFilters;$("maintenancePendingSearch").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();loadMaintenancePending()}};$("maintenancePendingStatusFilter").onchange=loadMaintenancePending;$("maintenancePendingPriorityFilter").onchange=loadMaintenancePending;$("preventiveNeedsAction").onchange=togglePreventiveActionFields;$("tabOccurrenceCatalog").onclick=showOccurrenceCatalogTab;$("occurrenceCatalogBackMenu").onclick=openDefaultAllowedTab;$("saveCatalogCategory").onclick=saveCatalogCategory;$("clearCatalogCategory").onclick=clearCatalogCategoryForm;$("saveCatalogComponent").onclick=saveCatalogComponent;$("clearCatalogComponent").onclick=clearCatalogComponentForm;$("category").onchange=()=>populateOccurrenceComponentSelect();$("manageCategory").onchange=()=>populateManageCatalog($("manageCategory").value,"");$("tabDocumentUpload").onclick=showDocumentUploadTab;$("documentUploadBackMenu").onclick=cancelDocumentUpload;$("uploadDocumentChooseFileButton").onclick=()=>$("uploadDocumentFile").click();$("uploadDocumentFile").onchange=prepareDocumentUploadFile;$("sendDocumentUpload").onclick=sendDocumentUpload;$("clearDocumentUpload").onclick=clearDocumentUploadForm;$("searchButton").onclick=searchAssets;$("searchInput").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();searchAssets()}};$("documentSearchButton").onclick=searchDocuments;$("documentSearchInput").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();searchDocuments()}};$("documentTypeFilter").onchange=searchDocuments;$("documentDisciplineFilter").onchange=searchDocuments;$("documentFloorFilter").onchange=searchDocuments;$("reportButton").onclick=openReport;$("preventiveButton").onclick=requestPreventive;
+$("searchAssetsButton").onclick=function(){if(currentAsset?.id)setOriginAsset(currentAsset.id);requireSystemLogin(()=>{hide("assetScreen");show("searchScreen");openMainMenu();focusBackAssetButton()})};
 $("backAssetButton").onclick=function(){const id=getOriginAsset();if(!id)return;clearOriginAsset();location.href="?id="+encodeURIComponent(id)};
 $("occReportRefresh").onclick=loadOccurrenceReport;$("occReportPdf").onclick=generateOccurrenceReportPdf;["occReportStart","occReportEnd","occReportProvider","occReportCategory","occReportComponent","occReportFloor","occReportLocation"].forEach(id=>$(id).onchange=markOccurrenceReportDirty);$("controlRefresh").onclick=refreshPreventiveControl;$("controlCompetence").onchange=loadPreventiveControl;$("controlProvider").onchange=()=>{if(["MASTER","GESTOR"].includes(systemSession?.perfil))loadPreventiveControl();else renderControlList()};$("controlAll").onclick=()=>setControlMode("all");$("controlPending").onclick=()=>setControlMode("pending");$("controlDone").onclick=()=>setControlMode("done");$("sendMonthlyReport").onclick=sendMonthlyPreventiveReport;
 $("preventiveLogout").onclick=()=>openDefaultAllowedTab();$("cancelPreventive").onclick=()=>{if(!preventivePosting)$("preventiveModal").style.display="none"};$("savePreventive").onclick=savePreventive;$("cancelReport").onclick=function(){if(reportPosting){if(reportCompleted){reportPosting=false;reportCompleted=false;$("reportModal").style.display="none";location.reload()}return}$("reportModal").style.display="none"};$("sendReport").onclick=sendReport;$("historySelect").onchange=function(){renderHistoryItem(Number(this.value))};$("manageStatus").onchange=toggleConclusion;$("cancelManage").onclick=()=>{if(!managePosting)$("manageModal").style.display="none"};$("saveManage").onclick=saveManage;$("deleteOccurrence").onclick=deleteOccurrenceRecord;$("signatureCanvas").addEventListener("pointerdown",signatureStart);$("signatureCanvas").addEventListener("pointermove",signatureMove);window.addEventListener("pointerup",signatureEnd);$("clearSignature").onclick=clearSignatureCanvas;
@@ -7228,34 +6522,7 @@ qrTranslateAttributes(document.body);
 
 
 qrInstallLocalizedDateControls();
-async function main(){
-  buildManageDropdowns();
-  setupPasswordToggles();
-  readPreventiveSession();
-  readSystemSession();
-  setupInstallExperience();
-  await loadPublicAppConfig();
-  qrApplyLanguage(qrLanguage);
-  if(await openSetPasswordFromUrl())return;
-  $("controlCompetence").value=currentCompetence();
-  setDefaultOccurrenceReportDates();
-  const id=getId();
-
-  if(!id||id==="EQBUSCA"){
-    clearOriginAsset();
-    show("searchScreen");
-    if(await systemSessionIsValid()){
-      openMainMenu();
-      if(await restorePendingView7662510_())return;
-    }else{
-      showMenuGate();
-    }
-    return;
-  }
-
-  await loadAsset(id);
-  updatePendingReturnButton7662510_();
-}main();
+async function main(){buildManageDropdowns();setupPasswordToggles();readPreventiveSession();readSystemSession();setupInstallExperience();await loadPublicAppConfig();qrApplyLanguage(qrLanguage);if(await openSetPasswordFromUrl())return;$("controlCompetence").value=currentCompetence();setDefaultOccurrenceReportDates();const id=getId();if(!id||id==="EQBUSCA"){clearOriginAsset();show("searchScreen");if(await systemSessionIsValid())openMainMenu();else showMenuGate();return}await loadAsset(id)}main();
 
 $("tabAssetManagement").onclick=openAssetManagement760;
 $("assetNewButton").onclick=()=>openAssetModal760(null);
@@ -7278,15 +6545,6 @@ $("assetFloor").addEventListener("change",()=>{
 $("assetFloorOther").addEventListener("input",()=>assetRefreshLocations7610(""));
 $("assetLocation").addEventListener("change",()=>assetToggleOther7610("assetLocation","assetLocationOther"));
 
-
-window.addEventListener("pagehide",closeQrScanner7662513);
-document.addEventListener("visibilitychange",()=>{
-  if(document.hidden&&qrScannerActive7662513)closeQrScanner7662513();
-});
-
-// QRManut PNCQ 7.6.6.25 B5.2.11 - Reset do botão Excluir OC entre exclusões consecutivas.
-// QRManut PNCQ 7.6.6.25 B5.2.12 - Resumo visual e dinâmico da quantidade de OCs por status na ficha do ativo.
-// QRManut PNCQ 7.6.6.25 B5.2.13 - Scanner de QR Code integrado à Busca de Ativos.
 </script>
 
 </body>
