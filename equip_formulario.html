@@ -1,4 +1,10 @@
-<!-- QRManut 7.6.6.25: B5.3.9 — Performance da Ficha / Documentos + Preventivas
+<!-- QRManut 7.6.6.25: B5.3.10 — Ficha do Ativo / Preventivas + Menos Viagens
+     - Histórico de Preventivas incorporado ao assetbundle autenticado.
+     - Evita preventivehistory e assetbasic separados na abertura normal da ficha.
+     - Appconfig público reaproveitado na mesma aba e badge MASTER não é buscado dentro da ficha.
+     - Mantém fallback público por QR e rotas legadas para compatibilidade.
+
+     Histórico B5.3.9 — Performance da Ficha / Documentos + Preventivas
      - Otimiza Documentos Técnicos vinculados ao ativo e Histórico de Preventivas.
      - Instrumenta tempos internos dessas duas rotinas no Diagnóstico.
      - Mantém o diagnóstico persistente da B5.3.8 e todas as regras de negócio.
@@ -29,7 +35,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>QRManut</title>
-<meta name="qrmanut-build" content="2026-09-20-b5.3.9">
+<meta name="qrmanut-build" content="2026-09-20-b5.3.10">
 <meta name="theme-color" content="#0b315e">
 <meta name="application-name" content="QRManut">
 <meta name="mobile-web-app-capable" content="yes">
@@ -1753,10 +1759,13 @@ function qrPerfDetailsB531(data){
   if(Number.isFinite(Number(dm.documentRows)))parts.push(`docs-linhas=${Number(dm.documentRows)}`);
   if(Number.isFinite(Number(dm.matched)))parts.push(`docs-ativo-n=${Number(dm.matched)}`);
   const ph=b.preventiveHistory||{};
+  if(f(b.preventiveHistoryMs)!=null)parts.push(`prev-total ${f(b.preventiveHistoryMs)} ms`);
+  if(Number(b.preventiveBundled||0)>0)parts.push(`prev-bundle=${Number(b.preventiveBundled)}`);
   if(f(ph.authorizeMs)!=null)parts.push(`prev-auth ${f(ph.authorizeMs)} ms`);
   if(f(ph.prepareMs)!=null)parts.push(`prev-prep ${f(ph.prepareMs)} ms`);
   if(f(ph.readMs)!=null)parts.push(`prev-leitura ${f(ph.readMs)} ms`);
   if(f(ph.filterMs)!=null)parts.push(`prev-filtro ${f(ph.filterMs)} ms`);
+  if(f(ph.buildMs)!=null)parts.push(`prev-montagem ${f(ph.buildMs)} ms`);
   if(f(ph.sortMs)!=null)parts.push(`prev-ordena ${f(ph.sortMs)} ms`);
   if(f(ph.documentsPrepareMs)!=null)parts.push(`prevdocs-prep ${f(ph.documentsPrepareMs)} ms`);
   if(f(ph.documentsReadMs)!=null)parts.push(`prevdocs-leitura ${f(ph.documentsReadMs)} ms`);
@@ -1765,6 +1774,7 @@ function qrPerfDetailsB531(data){
   if(Number.isFinite(Number(ph.rowsMatched)))parts.push(`prev-ativo=${Number(ph.rowsMatched)}`);
   if(Number.isFinite(Number(ph.documentRows)))parts.push(`prevdocs-linhas=${Number(ph.documentRows)}`);
   if(Number.isFinite(Number(ph.documentMatched)))parts.push(`prevdocs-ativo=${Number(ph.documentMatched)}`);
+  if(Number(ph.documentsSkippedNoPreventive||0)>0)parts.push("prevdocs=skip-sem-preventiva");
   if(Number(b.historyDuplicateReadsAvoided||0)>0)parts.push(`hist-duplicada-evitada=${Number(b.historyDuplicateReadsAvoided)}`);
   if(f(b.readMs)!=null)parts.push(`leitura ${f(b.readMs)} ms`);
   if(f(b.filtersMs)!=null)parts.push(`filtros ${f(b.filtersMs)} ms`);
@@ -3362,6 +3372,7 @@ async function loadAsset(id){
   $("assetDocumentsStatus").textContent="";
   $("assetDocuments").innerHTML="";
   $("preventiveHistoryStatus").textContent=qrLanguage==="en-US"?"Sign in to view.":"Login necessário para visualizar.";
+  $("preventiveHistory").innerHTML="";
 
   show("assetProgressNote");
   $("assetProgressNote").textContent=qrLanguage==="en-US"
@@ -3370,129 +3381,101 @@ async function loadAsset(id){
 
   let basicOk=false;
   let bundleOk=false;
-  let authenticated=false;
+  const hasAuthenticatedSession=!!systemSession?.systemSessionToken;
 
-  /*
-   * 7.6.6.18:
-   * - assetbasic é o contrato público mínimo do QR;
-   * - assetbundle exige sessão e carrega a ficha completa conforme permissões.
-   */
-  const basicPromise=api({action:"assetbasic",id})
-    .then(basic=>{
-      if(basic?.ok&&basic.data){
-        basicOk=true;
-        if(!currentAsset){
-          currentAsset=basic.data;
-          renderAsset(currentAsset);
-          $("assetProgressNote").textContent=qrLanguage==="en-US"
-            ?"Public asset data loaded."
-            :"Dados públicos do equipamento carregados.";
-        }
-      }
-      return basic;
-    })
-    .catch(()=>null);
-
-  const bundlePromise=(async()=>{
-    // B5.2.15 — assetbundle já valida token/permissões no backend.
-    // Evita a chamada systemsession + assetbundle em sequência a cada ficha.
-    if(!systemSession?.systemSessionToken)return null;
-    authenticated=true;
-    return menuApi({action:"assetbundle",id});
-  })()
-    .then(bundle=>{
-      if(bundle?.ok&&bundle.data){
-        bundleOk=true;
-        currentAsset=bundle.data;
-        renderAsset(currentAsset);
-
-        if(bundle.access?.status&&bundle.status){
-          currentAssetStatus=bundle.status;
-          show("statusCard");
-          renderStatus(bundle.status);
-        }else{
-          hide("statusCard");
-        }
-
-        if(bundle.access?.history){
-          renderHistory(bundle.history||[]);
-        }else{
-          hide("historySelect");
-          $("historyStatus").textContent=qrLanguage==="en-US"
-            ?"Your profile cannot view work order history."
-            :"Seu perfil não possui permissão para consultar o histórico de ocorrências.";
-          $("historyDetail").innerHTML="";
-        }
-
-        if(bundle.access?.documents){
-          renderAssetDocuments(bundle.documents||[]);
-        }else{
-          hide("assetDocumentsSection");
-          $("assetDocuments").innerHTML="";
-          $("assetDocumentsStatus").textContent="";
-        }
-
-        $("assetProgressNote").textContent=qrLanguage==="en-US"
-          ?"Full record loaded."
-          :"Ficha completa carregada.";
-      }
-      return bundle;
-    })
-    .catch(error=>{
-      console.warn("Não foi possível carregar a ficha autenticada.",error);
-      return null;
-    });
-
-  await Promise.race([
-    basicPromise.then(r=>r?.ok&&r.data?true:new Promise(()=>{})),
-    bundlePromise.then(r=>r?.ok&&r.data?true:new Promise(()=>{})),
-    new Promise(resolve=>setTimeout(()=>resolve(false),12000))
-  ]);
-
-  if(!currentAsset){
-    await Promise.allSettled([basicPromise,bundlePromise]);
-
-    if(!basicOk&&!bundleOk){
-      $("titulo").textContent=qrLanguage==="en-US"?"Asset not found":"Ativo não encontrado";
-      $("meta").textContent="";
-      $("tipoBadge").textContent="";
-      $("historyStatus").textContent="";
-      $("assetDocumentsStatus").textContent="";
-      $("preventiveHistoryStatus").textContent="";
-      hide("statusCard");
-      hide("assetProgressNote");
-      return;
+  const renderBasic=basic=>{
+    if(basic?.ok&&basic.data){
+      basicOk=true;
+      currentAsset=basic.data;
+      renderAsset(currentAsset);
+      $("assetProgressNote").textContent=qrLanguage==="en-US"
+        ?"Public asset data loaded."
+        :"Dados públicos do equipamento carregados.";
     }
+    return basic;
+  };
+
+  const renderBundle=bundle=>{
+    if(bundle?.ok&&bundle.data){
+      bundleOk=true;
+      currentAsset=bundle.data;
+      renderAsset(currentAsset);
+
+      if(bundle.access?.status&&bundle.status){
+        currentAssetStatus=bundle.status;
+        show("statusCard");
+        renderStatus(bundle.status);
+      }else hide("statusCard");
+
+      if(bundle.access?.history){
+        renderHistory(bundle.history||[]);
+      }else{
+        hide("historySelect");
+        $("historyStatus").textContent=qrLanguage==="en-US"
+          ?"Your profile cannot view work order history."
+          :"Seu perfil não possui permissão para consultar o histórico de ocorrências.";
+        $("historyDetail").innerHTML="";
+      }
+
+      if(bundle.access?.documents)renderAssetDocuments(bundle.documents||[]);
+      else{
+        hide("assetDocumentsSection");
+        $("assetDocuments").innerHTML="";
+        $("assetDocumentsStatus").textContent="";
+      }
+
+      // B5.3.10 — preventivas já vieram na mesma viagem do assetbundle.
+      if(bundle.access?.preventives){
+        renderPreventiveHistoryItemsB5310_(bundle.preventives||[]);
+      }else if(currentAsset?.periodicidade){
+        $("preventiveHistoryStatus").textContent=qrLanguage==="en-US"
+          ?"Sign in with permission to view."
+          :"Login com permissão necessário para visualizar.";
+      }
+
+      $("assetProgressNote").textContent=qrLanguage==="en-US"?"Full record loaded.":"Ficha completa carregada.";
+    }
+    return bundle;
+  };
+
+  if(hasAuthenticatedSession){
+    // B5.3.10 — fluxo autenticado faz uma única viagem principal: assetbundle.
+    // assetbasic permanece apenas como fallback público se a sessão/bundle falhar.
+    try{
+      const bundle=await menuApi({action:"assetbundle",id});
+      renderBundle(bundle);
+    }catch(error){
+      console.warn("Não foi possível carregar a ficha autenticada; tentando dados públicos.",error);
+    }
+    if(!bundleOk){
+      try{renderBasic(await api({action:"assetbasic",id}));}catch(_e){}
+    }
+  }else{
+    try{renderBasic(await api({action:"assetbasic",id}));}catch(_e){}
   }
 
-  await Promise.allSettled([basicPromise,bundlePromise]);
+  if(!currentAsset){
+    $("titulo").textContent=qrLanguage==="en-US"?"Asset not found":"Ativo não encontrado";
+    $("meta").textContent="";
+    $("tipoBadge").textContent="";
+    $("historyStatus").textContent="";
+    $("assetDocumentsStatus").textContent="";
+    $("preventiveHistoryStatus").textContent="";
+    hide("statusCard");
+    hide("assetProgressNote");
+    return;
+  }
 
-  if(currentAsset&&!bundleOk){
+  if(!bundleOk){
     hide("statusCard");
     hide("historySelect");
     $("historyDetail").innerHTML="";
-    $("historyStatus").textContent=authenticated
-      ?(qrLanguage==="en-US"
-        ?"The complete record could not be loaded with this session."
-        :"Não foi possível carregar a ficha completa com esta sessão.")
-      :(qrLanguage==="en-US"
-        ?"Sign in to view maintenance history."
-        :"Faça login para visualizar o histórico de manutenção.");
+    $("historyStatus").textContent=hasAuthenticatedSession
+      ?(qrLanguage==="en-US"?"The complete record could not be loaded with this session.":"Não foi possível carregar a ficha completa com esta sessão.")
+      :(qrLanguage==="en-US"?"Sign in to view maintenance history.":"Faça login para visualizar o histórico de manutenção.");
     hide("assetDocumentsSection");
     $("assetDocuments").innerHTML="";
     $("assetDocumentsStatus").textContent="";
-  }
-
-  if(bundleOk&&systemSession&&hasProfilePermission("PREVENTIVA_CONSULTAR")&&(
-    ["MASTER","GESTOR"].includes(systemSession.perfil)||
-    !systemSession.prestador||
-    String(systemSession.prestador).toLowerCase()===String(currentAsset.prestador||"").toLowerCase()
-  )){
-    loadPreventiveHistory().catch(()=>{});
-  }else if(currentAsset?.periodicidade){
-    $("preventiveHistoryStatus").textContent=qrLanguage==="en-US"
-      ?"Sign in with permission to view."
-      :"Login com permissão necessário para visualizar.";
   }
 
   hide("assetProgressNote");
@@ -3632,11 +3615,9 @@ function renderHistoryItem(i){
   const t=(pt,en)=>qrLanguage==="en-US"?en:pt;
   $("historyDetail").innerHTML=`<div class="history-card"><b>${esc(x.ocorrencia)}</b><div class="muted">${esc(formatDate(x.data))}</div><span class="tag">${esc(qrLanguage==="en-US"?qrTranslateExactText(x.status):x.status)}</span>${x.categoriaOcorrencia?`<span class="tag">${esc(x.categoriaOcorrencia)}</span>`:""}${x.componenteAfetado?`<span class="tag">${esc(x.componenteAfetado)}</span>`:""}${x.solOrigem?`<div style="margin-top:7px"><b>${t("Origem","Origin")}:</b> ${esc(x.solOrigem)}</div>`:""}<div style="margin-top:8px"><b>${t("Descrição","Description")}:</b><br>${esc(x.descricao)}</div>${x.foto?`<div style="margin-top:8px"><button type="button" class="document-open" onclick="openSecureFile76624('occurrencePhoto','${esc(x.ocorrencia)}','opening')">📷 ${t("Ver foto","View photo")}</button></div>`:""}${(x.anexos||[]).length?`<div style="margin-top:8px"><b>📎 ${t("Arquivos","Files")}:</b> ${(x.anexos||[]).map(a=>`<button type="button" class="auth-link" onclick="openSecureFile76624('occurrenceDocument','${esc(a.idDocumento)}')" style="display:block;margin-top:4px">📎 ${esc(a.nomeArquivo)}</button>`).join("")}</div>`:""}${x.solucao?`<div style="margin-top:8px"><b>${t("Solução","Solution")}:</b><br>${esc(x.solucao)}</div>`:""}${systemSession&&hasProfilePermission("OC_CONSULTAR")&&(hasProfilePermission("OC_ALTERAR")||hasProfilePermission("OC_CONCLUIR"))&&(systemSession.perfil!=="PRESTADOR"||systemSession.podeAtenderOC)?`<button class="btn" style="width:100%;margin-top:12px" onclick="openManage(${i})">${t("Gerenciar ocorrência","Manage Work Order")}</button>`:""}</div>`;
 }
-async function loadPreventiveHistory(){
-  const r=await menuApi({action:"preventivehistory",id:currentAsset.id});
-  if(!r.ok)return;
-
-  const items=r.preventives||[],t=(pt,en)=>qrLanguage==="en-US"?en:pt;
+function renderPreventiveHistoryItemsB5310_(items){
+  items=items||[];
+  const t=(pt,en)=>qrLanguage==="en-US"?en:pt;
   $("preventiveHistoryStatus").textContent=items.length
     ? (qrLanguage==="en-US"?`${items.length} preventive maintenance record(s)`:`${items.length} preventiva(s) registrada(s)`)
     : t("Nenhuma preventiva registrada.","No preventive maintenance recorded.");
@@ -3664,17 +3645,11 @@ async function loadPreventiveHistory(){
     </div>`;
   }).join("");
 }
-
-const PREVENTIVE_DOCUMENT_MAX_BYTES=8*1024*1024;
-const PREVENTIVE_DOCUMENT_TYPES=[
-  "Relatório do prestador",
-  "Checklist de manutenção",
-  "Relatório técnico",
-  "Certificado",
-  "Laudo",
-  "Ordem de serviço externa",
-  "Outro"
-];
+async function loadPreventiveHistory(){
+  const r=await menuApi({action:"preventivehistory",id:currentAsset.id});
+  if(!r.ok)return;
+  renderPreventiveHistoryItemsB5310_(r.preventives||[]);
+}
 
 function preventiveDocumentTypeLabel7606(v){
   if(qrLanguage!=="en-US")return v;
@@ -4871,17 +4846,32 @@ function applyPrimaryColor7662411_(value){
   if(hex)hex.textContent=color;
   return color;
 }
+const QR_APP_CONFIG_CACHE_KEY_B5310="qrmanut_appconfig_b5310";
+const QR_APP_CONFIG_TTL_B5310=15*60*1000;
+function applyPublicAppConfigB5310_(a){
+  if(!a)return;
+  document.title=a.nomeSistema||"QRManut";
+  applyPrimaryColor7662411_(a.corPrincipal||"#0b315e");
+  const title=document.querySelector(".search-title");
+  if(title&&a.nomeSistema)title.textContent=a.nomeSistema;
+  const sub=document.getElementById("qrAppSubtitle");
+  if(sub)sub.textContent=qrLanguage==="en-US"?"Quick Maintenance Management":"Gestão rápida de manutenção";
+}
+function clearPublicAppConfigCacheB5310_(){try{sessionStorage.removeItem(QR_APP_CONFIG_CACHE_KEY_B5310)}catch(_e){}}
 async function loadPublicAppConfig(){
   try{
+    const now=Date.now();
+    try{
+      const raw=sessionStorage.getItem(QR_APP_CONFIG_CACHE_KEY_B5310);
+      if(raw){
+        const c=JSON.parse(raw);
+        if(c&&c.app&&now-Number(c.savedAt||0)<QR_APP_CONFIG_TTL_B5310){applyPublicAppConfigB5310_(c.app);return;}
+      }
+    }catch(_e){}
     const r=await api({action:"appconfig"});
     if(!r.ok||!r.app)return;
-    const a=r.app;
-    document.title=a.nomeSistema||"QRManut";
-    applyPrimaryColor7662411_(a.corPrincipal||"#0b315e");
-    const t=document.querySelector(".search-title");
-    if(t&&a.nomeSistema)t.textContent=a.nomeSistema;
-    const sub=document.getElementById("qrAppSubtitle");
-    if(sub)sub.textContent=qrLanguage==="en-US"?"Quick Maintenance Management":"Gestão rápida de manutenção";
+    applyPublicAppConfigB5310_(r.app);
+    try{sessionStorage.setItem(QR_APP_CONFIG_CACHE_KEY_B5310,JSON.stringify({savedAt:now,app:r.app}))}catch(_e){}
   }catch(e){}
 }
 async function showCompanyTab(){if(!requireUiPermission("CONFIGURACAO_EMPRESA","Seu perfil não possui permissão para acessar a configuração da empresa.","Your profile is not allowed to access company settings."))return;clearTabs();$("tabCompany").classList.add("active");showOnly("companyArea");await loadCompanyConfig()}
@@ -4925,6 +4915,7 @@ async function saveCompanyConfig(){
     if(!r.ok)throw new Error(r.detail||"Erro ao salvar.");
     $("companyMessage").className="message success";
     $("companyMessage").textContent="✅ Configuração atualizada.";
+    clearPublicAppConfigCacheB5310_();
     await loadPublicAppConfig();
 
     // CORREÇÃO 7.6.6.24 R3 — salva e retorna diretamente ao menu.
@@ -7520,7 +7511,7 @@ function qrApplyLanguage(lang){
 
   qrTranslateRoutineScreens();
   qrRefreshLocalizedDateControls();
-  if(systemSession?.perfil==="MASTER")refreshAccessRequestMenuBadge76616();
+  if(systemSession?.perfil==="MASTER"&&(!getId()||getId()==="EQBUSCA"))refreshAccessRequestMenuBadge76616();
 
   // Headings/labels that have no functional event attached.
   const safeText=[
@@ -7762,6 +7753,7 @@ document.addEventListener("visibilitychange",()=>{
 // QRManut PNCQ 7.6.6.25 B5.2.13 - Scanner de QR Code integrado à Busca de Ativos.
 // QRManut PNCQ 7.6.6.25 B5.3.5 - Filtros do Relatório de OCs otimizados e cacheados no backend.
 // QRManut PNCQ 7.6.6.25 B5.3.3 - Bundles de primeira carga reduzem viagens à API em OCs Pendentes, Documentos e Relatório de OCs.
+// QRManut PNCQ 7.6.6.25 B5.3.10 - Preventivas incorporadas ao assetbundle, menos viagens na ficha e appconfig reaproveitado.
 // QRManut PNCQ 7.6.6.25 B5.3.0 - Cache local controlado, deduplicação in-flight e Diagnóstico de Performance.
 </script>
 
