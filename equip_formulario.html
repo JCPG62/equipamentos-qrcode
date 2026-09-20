@@ -1,4 +1,17 @@
-<!-- QRManut 7.6.6.25: B5.3.4 — Bundle Único / Remoção de Chamadas Duplicadas
+<!-- QRManut 7.6.6.25: B5.3.6 — Relatório de OCs / Cache de Filtros Unificado
+     - Unifica o caminho otimizado dos filtros do Relatório de OCs no bundle e na rota occurrencereportfilters.
+     - Limpar cache local passa a limpar também estados carregados em memória, inclusive occurrenceReportData.
+     - Garante que a próxima abertura após limpeza manual refaça o bundle e possa aproveitar o cache do servidor.
+     - Mantém diagnóstico detalhado de origem dos filtros: rebuild, execution-cache ou script-cache.
+     - Trabalha em conjunto com GS B5.3.6, que amplia o cache dos filtros para 15 minutos e instrumenta a rota de filtros.
+     - Não altera regras de negócio, permissões, resultados ou RELEASE 7.6.6.25.
+
+     Histórico B5.3.5 — Performance / Filtros do Relatório de OCs
+     - Otimiza a primeira carga dos filtros do Relatório de OCs.
+     - Evita regravar cabeçalhos e validações de Categorias/Componentes em toda leitura.
+     - Adiciona cache de servidor para filtros globais do relatório e detalhamento de performance.
+
+     Histórico B5.3.4 — Bundle Único / Remoção de Chamadas Duplicadas
      - Corrige a primeira abertura de OCs Pendentes para usar pendingbundle como fonte única de filtros + dados.
      - Corrige a primeira abertura de Documentos Técnicos para usar documentsbundle como fonte única de filtros + dados.
      - Remove a chamada POST redundante a pending/documents imediatamente após o respectivo bundle.
@@ -34,7 +47,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>QRManut</title>
-<meta name="qrmanut-build" content="2026-09-20-b5.3.4">
+<meta name="qrmanut-build" content="2026-09-20-b5.3.6">
 <meta name="theme-color" content="#0b315e">
 <meta name="application-name" content="QRManut">
 <meta name="mobile-web-app-capable" content="yes">
@@ -1833,7 +1846,27 @@ function qrTtlForActionB530(action,requested){
   if(action==="audit")return QR_AUDIT_CACHE_TTL_B530;
   return QR_LOCAL_CACHE_TTL_B530;
 }
-function qrClearCacheFromDiagnosticsB530(){qrInvalidateLocalCacheB530("manual");qrRenderPerformanceB530()}
+function qrResetLoadedViewStateB536(){
+  // B5.3.6 — limpeza manual deve eliminar também os estados em memória
+  // que poderiam fazer a tela pular o bundle mesmo sem cache local.
+  occurrenceReportData=null;
+  occurrenceReportFiltersLoaded=false;
+  preventiveControlData=null;
+  solTriageData=null;
+  solTriageMeta=null;
+  pendingFiltersLoaded=false;
+  documentFiltersLoaded=false;
+  auditFiltersLoaded=false;
+  companyConfigLoaded=false;
+  profilePermissionsAdminData=null;
+  providersAdminData=[];
+  usersAdminData=[];
+}
+function qrClearCacheFromDiagnosticsB530(){
+  qrInvalidateLocalCacheB530("manual");
+  qrResetLoadedViewStateB536();
+  qrRenderPerformanceB530();
+}
 function qrSeedRelatedCacheB533(action,params,value,ttlMs){
   const payload={...(params||{})};
   delete payload.__qrForce;delete payload.__qrContext;delete payload.__qrTtlMs;
