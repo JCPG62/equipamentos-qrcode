@@ -1,4 +1,12 @@
-<!-- QRManut 7.6.6.25: B5.3.3 — Performance / Menos Viagens à API
+<!-- QRManut 7.6.6.25: B5.3.4 — Bundle Único / Remoção de Chamadas Duplicadas
+     - Corrige a primeira abertura de OCs Pendentes para usar pendingbundle como fonte única de filtros + dados.
+     - Corrige a primeira abertura de Documentos Técnicos para usar documentsbundle como fonte única de filtros + dados.
+     - Remove a chamada POST redundante a pending/documents imediatamente após o respectivo bundle.
+     - Mantém cache relacionado para que reaberturas dentro do TTL sejam LOCAL 0 ms.
+     - Corrige a chave do cache relacionado para não duplicar o campo action nos parâmetros.
+     - Não altera GS, regras de negócio, permissões, filtros ou resultados.
+
+     Histórico B5.3.3 — Performance / Menos Viagens à API
      - Consolida filtros + dados em uma única chamada inicial para OCs Pendentes, Documentos e Relatório de OCs.
      - Reduz round-trips ao Google Apps Script sem alterar regras de negócio, permissões ou resultados.
      - Mantém integralmente a otimização de Preventivas da B5.3.2 e o diagnóstico da B5.3.1.
@@ -26,7 +34,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>QRManut</title>
-<meta name="qrmanut-build" content="2026-09-20-b5.3.2">
+<meta name="qrmanut-build" content="2026-09-20-b5.3.4">
 <meta name="theme-color" content="#0b315e">
 <meta name="application-name" content="QRManut">
 <meta name="mobile-web-app-capable" content="yes">
@@ -1789,7 +1797,8 @@ function qrSessionScopeB530(){
   return [systemSession.idUsuario||systemSession.usuario||"",systemSession.perfil||"",systemSession.idPrestador||"",systemSession.prestador||""].map(v=>String(v)).join("|");
 }
 function qrStableParamsB530(obj){
-  return Object.keys(obj||{}).filter(k=>k!=="systemSessionToken"&&!k.startsWith("__qr")).sort().map(k=>`${k}=${String(obj[k]??"")}`).join("&");
+  // B5.3.4: action já faz parte do prefixo da chave; não duplicar action nos parâmetros.
+  return Object.keys(obj||{}).filter(k=>k!=="action"&&k!=="systemSessionToken"&&!k.startsWith("__qr")).sort().map(k=>`${k}=${String(obj[k]??"")}`).join("&");
 }
 function qrCacheKeyB530(action,params){return `${qrSessionScopeB530()}::${action}::${qrStableParamsB530(params)}`}
 function qrReadLocalCacheB530(key){
@@ -2613,82 +2622,69 @@ async function loadDocumentFilters(){
   if(documentFiltersLoaded)return;
   try{const r=await menuApi({action:"documentfilters"});if(!r.ok)return;applyDocumentFiltersB533(r.filters||{})}catch(e){}
 }
+function renderDocumentsB534(items){
+  const t=(pt,en)=>qrLanguage==="en-US"?en:pt;
+  items=items||[];
+  $("documentStatus").textContent=qrLanguage==="en-US"?`${items.length} document(s) found`:`${items.length} documento(s) encontrado(s)`;
+  if(!items.length){
+    $("documentResults").innerHTML=`<div class="document-empty">${t("Nenhum documento encontrado para os filtros informados.","No documents were found for the selected filters.")}</div>`;
+    return;
+  }
+  $("documentResults").innerHTML=items.map(d=>
+    `<div class="document-card">`+
+      `<div class="document-title">📄 ${esc(qrDocumentTitle7613(d.titulo))}</div>`+
+      `<div class="document-meta">`+
+        `${d.idDocumento?`<b>ID:</b> ${esc(d.idDocumento)}<br>`:""}`+
+        `${d.tipoDocumento?`<b>${t("Tipo","Type")}:</b> ${esc(qrStructuredValue7613(d.tipoDocumento))}<br>`:""}`+
+        `${d.disciplina?`<b>${t("Disciplina","Discipline")}:</b> ${esc(qrStructuredValue7613(d.disciplina))}<br>`:""}`+
+        `${d.assunto?`<b>${t("Assunto","Subject")}:</b> ${esc(qrStructuredValue7613(d.assunto))}<br>`:""}`+
+        `${d.pavimento?`<b>${t("Pavimento","Floor")}:</b> ${esc(qrStructuredValue7613(d.pavimento))}<br>`:""}`+
+        `${d.ambiente?`<b>${t("Ambiente","Environment")}:</b> ${esc(qrStructuredValue7613(d.ambiente))}<br>`:""}`+
+        `${d.prestador?`<b>${t("Prestador","Service Provider")}:</b> ${esc(d.prestador)}<br>`:""}`+
+        `${d.idAtivo?`<b>${t("Ativo","Asset")}:</b> ${esc(d.idAtivo)}<br>`:""}`+
+        `${d.revisao?`<b>${t("Revisão","Revision")}:</b> ${esc(d.revisao)}<br>`:""}`+
+        `${d.observacoes?`<b>${t("Observações","Notes")}:</b> ${esc(qrDocumentNotes7613(d.observacoes))}`:""}`+
+      `</div>`+
+      `${d.linkPdf?`<button type="button" class="document-open" onclick="openSecureFile76624('technicalDocument','${esc(d.idDocumento)}')">👁️ ${t("Abrir PDF","Open PDF")}</button>`:""}`+
+    `</div>`
+  ).join("");
+}
 async function loadDocumentsBundleB533(){
   const params={q:$("documentSearchInput").value.trim(),tipo:$("documentTypeFilter").value,disciplina:$("documentDisciplineFilter").value,pavimento:$("documentFloorFilter").value};
   $("documentStatus").textContent=qrLanguage==="en-US"?"Loading documents and filters...":"Carregando documentos e filtros...";
+  $("documentResults").innerHTML="";
   try{
     const r=await menuApi({action:"documentsbundle",...params,__qrContext:"documentos-pacote"});
     if(!r.ok)throw new Error(r.detail||(qrLanguage==="en-US"?"Error loading documents.":"Erro ao carregar documentos."));
     applyDocumentFiltersB533(r.filters||{});
-    qrSeedRelatedCacheB533("documents",params,{ok:true,total:r.total||0,documents:r.documents||[],performanceMs:r.performanceMs,performanceBreakdown:r.performanceBreakdown});
-    await searchDocuments();
-  }catch(e){$("documentStatus").textContent=e.message||"Erro ao carregar documentos."}
+    const effectiveParams={q:$("documentSearchInput").value.trim(),tipo:$("documentTypeFilter").value,disciplina:$("documentDisciplineFilter").value,pavimento:$("documentFloorFilter").value};
+    qrSeedRelatedCacheB533("documents",effectiveParams,{ok:true,total:r.total||0,documents:r.documents||[],performanceMs:r.performanceMs,performanceBreakdown:r.performanceBreakdown});
+    // B5.3.4: o bundle já trouxe os documentos. Renderizar diretamente; não fazer um segundo POST documents.
+    renderDocumentsB534(r.documents||[]);
+  }catch(e){
+    $("documentStatus").textContent="";
+    $("documentResults").innerHTML=`<div class="message error" style="display:block">${esc(e.message||(qrLanguage==="en-US"?"Error loading documents.":"Erro ao carregar documentos."))}</div>`;
+  }
 }
 async function searchDocuments(options={}){
   const t=(pt,en)=>qrLanguage==="en-US"?en:pt;
-  const q=$("documentSearchInput").value.trim();
-
   $("documentStatus").textContent=t("Buscando documentos...","Searching documents...");
   $("documentResults").innerHTML="";
-
   try{
     const r=await menuApi({
       action:"documents",
-      q:q,
+      q:$("documentSearchInput").value.trim(),
       tipo:$("documentTypeFilter").value,
       disciplina:$("documentDisciplineFilter").value,
       pavimento:$("documentFloorFilter").value,
       __qrForce:!!options.force,
       __qrContext:options.context||"documentos"
     });
-
-    if(!r.ok){
-      throw new Error(
-        r.detail||t("Erro ao consultar documentos.","Error searching documents.")
-      );
-    }
-
-    const items=r.documents||[];
-
-    $("documentStatus").textContent=
-      qrLanguage==="en-US"
-        ?`${items.length} document(s) found`
-        :`${items.length} documento(s) encontrado(s)`;
-
-    if(!items.length){
-      $("documentResults").innerHTML=
-        `<div class="document-empty">${t(
-          "Nenhum documento encontrado para os filtros informados.",
-          "No documents were found for the selected filters."
-        )}</div>`;
-      return;
-    }
-
-    $("documentResults").innerHTML=items.map(d=>
-      `<div class="document-card">`+
-        `<div class="document-title">📄 ${esc(qrDocumentTitle7613(d.titulo))}</div>`+
-        `<div class="document-meta">`+
-          `${d.idDocumento?`<b>ID:</b> ${esc(d.idDocumento)}<br>`:""}`+
-          `${d.tipoDocumento?`<b>${t("Tipo","Type")}:</b> ${esc(qrStructuredValue7613(d.tipoDocumento))}<br>`:""}`+
-          `${d.disciplina?`<b>${t("Disciplina","Discipline")}:</b> ${esc(qrStructuredValue7613(d.disciplina))}<br>`:""}`+
-          `${d.assunto?`<b>${t("Assunto","Subject")}:</b> ${esc(qrStructuredValue7613(d.assunto))}<br>`:""}`+
-          `${d.pavimento?`<b>${t("Pavimento","Floor")}:</b> ${esc(qrStructuredValue7613(d.pavimento))}<br>`:""}`+
-          `${d.ambiente?`<b>${t("Ambiente","Environment")}:</b> ${esc(qrStructuredValue7613(d.ambiente))}<br>`:""}`+
-          `${d.prestador?`<b>${t("Prestador","Service Provider")}:</b> ${esc(d.prestador)}<br>`:""}`+
-          `${d.idAtivo?`<b>${t("Ativo","Asset")}:</b> ${esc(d.idAtivo)}<br>`:""}`+
-          `${d.revisao?`<b>${t("Revisão","Revision")}:</b> ${esc(d.revisao)}<br>`:""}`+
-          `${d.observacoes?`<b>${t("Observações","Notes")}:</b> ${esc(qrDocumentNotes7613(d.observacoes))}`:""}`+
-        `</div>`+
-        `${d.linkPdf?`<button type="button" class="document-open" onclick="openSecureFile76624('technicalDocument','${esc(d.idDocumento)}')">👁️ ${t("Abrir PDF","Open PDF")}</button>`:""}`+
-      `</div>`
-    ).join("");
-
+    if(!r.ok)throw new Error(r.detail||t("Erro ao consultar documentos.","Error searching documents."));
+    renderDocumentsB534(r.documents||[]);
   }catch(e){
     $("documentStatus").textContent="";
-    $("documentResults").innerHTML=
-      `<div class="message error" style="display:block">${esc(
-        e.message||t("Erro ao buscar documentos.","Error searching documents.")
-      )}</div>`;
+    $("documentResults").innerHTML=`<div class="message error" style="display:block">${esc(e.message||t("Erro ao buscar documentos.","Error searching documents."))}</div>`;
   }
 }
 
@@ -3026,6 +3022,17 @@ async function loadPendingFilters(){
   try{const r=await menuApi({action:"pendingfilters"});if(!r.ok)throw new Error(r.detail||"Erro ao carregar filtros.");applyPendingFiltersB533(r.filters||{})}
   catch(e){$("pendingStatusText").textContent=e.message||"Erro ao carregar filtros."}
 }
+function renderPendingB534(d){
+  d=d||{};
+  const s=d.summary||{},items=d.occurrences||[];
+  $("pendingSummary").innerHTML=`<div class="pending-number"><strong>${s.total||0}</strong>Total</div><div class="pending-number"><strong>🔴 ${s.abertas||0}</strong>Abertas</div><div class="pending-number"><strong>🟡 ${s.emAtendimento||0}</strong>Atendimento</div><div class="pending-number"><strong>🟠 ${s.aguardandoPeca||0}</strong>Aguardando peça</div>`;
+  $("pendingStatusText").textContent=items.length+" OC(s) encontrada(s) com os filtros aplicados.";
+  if(!items.length){
+    $("pendingResults").innerHTML='<div class="document-empty">Nenhuma OC pendente encontrada para os filtros informados.</div>';
+    return;
+  }
+  $("pendingResults").innerHTML=items.map(item=>`<div class="pending-card"><b>${esc(item.ocorrencia)}</b><div>${esc(item.id)} – ${esc(item.nome)}</div><div class="search-result-data"><b>Status:</b> ${esc(item.status)}${item.prestador?`<br><b>Prestador:</b> ${esc(item.prestador)}`:""}${item.categoriaOcorrencia?`<br><b>Categoria:</b> ${esc(item.categoriaOcorrencia)}`:""}${item.pavimento?`<br><b>Pavimento:</b> ${esc(item.pavimento)}`:""}${item.localizacao?`<br><b>Localização:</b> ${esc(item.localizacao)}`:""}<br><b>Descrição:</b> ${esc(item.descricao)}</div><a class="open-button" href="?id=${encodeURIComponent(normalizeId(item.id))}" onclick="savePendingReturnContext7662510_('${esc(normalizeId(item.id))}')">Abrir ficha</a></div>`).join("");
+}
 async function loadPendingBundleB533(){
   const params=pendingParams();
   const btn=$("pendingApplyFilters");if(btn){btn.disabled=true;btn.textContent="Consultando..."}
@@ -3035,9 +3042,11 @@ async function loadPendingBundleB533(){
     if(!r.ok)throw new Error(r.detail||"Não foi possível consultar as OCs pendentes.");
     applyPendingFiltersB533(r.filters||{});
     const effectiveParams=pendingParams();
-    qrSeedRelatedCacheB533("pending",effectiveParams,{ok:true,summary:r.summary||{},occurrences:r.occurrences||[],performanceMs:r.performanceMs,performanceBreakdown:r.performanceBreakdown});
-    await loadPending();
-  }catch(e){$("pendingSummary").innerHTML="";$("pendingStatusText").textContent=e.message||"Erro ao carregar OCs pendentes."}
+    const related={ok:true,summary:r.summary||{},occurrences:r.occurrences||[],performanceMs:r.performanceMs,performanceBreakdown:r.performanceBreakdown};
+    qrSeedRelatedCacheB533("pending",effectiveParams,related);
+    // B5.3.4: o bundle já trouxe as OCs. Renderizar diretamente; não fazer um segundo POST pending.
+    renderPendingB534(related);
+  }catch(e){$("pendingSummary").innerHTML="";$("pendingResults").innerHTML="";$("pendingStatusText").textContent=e.message||"Erro ao carregar OCs pendentes."}
   finally{if(btn){btn.disabled=false;btn.textContent="Aplicar filtros"}}
 }
 
@@ -3045,23 +3054,10 @@ async function loadPending(options={}){
   const btn=$("pendingApplyFilters");
   if(btn){btn.disabled=true;btn.textContent="Consultando...";}
   $("pendingStatusText").textContent="Consultando OCs pendentes...";
-
   try{
     const d=await menuApi({action:"pending",...pendingParams(),__qrForce:!!options.force,__qrContext:options.context||"ocs-pendentes"});
     if(!d.ok)throw new Error(d.detail||"Não foi possível consultar as OCs pendentes.");
-
-    const s=d.summary||{};
-    const items=d.occurrences||[];
-
-    $("pendingSummary").innerHTML=`<div class="pending-number"><strong>${s.total||0}</strong>Total</div><div class="pending-number"><strong>🔴 ${s.abertas||0}</strong>Abertas</div><div class="pending-number"><strong>🟡 ${s.emAtendimento||0}</strong>Atendimento</div><div class="pending-number"><strong>🟠 ${s.aguardandoPeca||0}</strong>Aguardando peça</div>`;
-    $("pendingStatusText").textContent=items.length+" OC(s) encontrada(s) com os filtros aplicados.";
-
-    if(!items.length){
-      $("pendingResults").innerHTML='<div class="document-empty">Nenhuma OC pendente encontrada para os filtros informados.</div>';
-      return;
-    }
-
-    $("pendingResults").innerHTML=items.map(item=>`<div class="pending-card"><b>${esc(item.ocorrencia)}</b><div>${esc(item.id)} – ${esc(item.nome)}</div><div class="search-result-data"><b>Status:</b> ${esc(item.status)}${item.prestador?`<br><b>Prestador:</b> ${esc(item.prestador)}`:""}${item.categoriaOcorrencia?`<br><b>Categoria:</b> ${esc(item.categoriaOcorrencia)}`:""}${item.pavimento?`<br><b>Pavimento:</b> ${esc(item.pavimento)}`:""}${item.localizacao?`<br><b>Localização:</b> ${esc(item.localizacao)}`:""}<br><b>Descrição:</b> ${esc(item.descricao)}</div><a class="open-button" href="?id=${encodeURIComponent(normalizeId(item.id))}" onclick="savePendingReturnContext7662510_('${esc(normalizeId(item.id))}')">Abrir ficha</a></div>`).join("");
+    renderPendingB534(d);
   }catch(e){
     $("pendingSummary").innerHTML="";
     $("pendingResults").innerHTML="";
