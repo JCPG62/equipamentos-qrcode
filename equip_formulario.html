@@ -1,4 +1,12 @@
-<!-- QRManut 7.6.6.25: B5.3.10 — Ficha do Ativo / Preventivas + Menos Viagens
+<!-- QRManut 7.6.6.25: B5.3.11 — Retorno Rápido OCs Pendentes / Ficha
+     - Preserva por até 45 s, somente na mesma aba, a lista/filtros de OCs Pendentes antes de abrir uma ficha.
+     - O botão “Voltar para OCs Pendentes” restaura a tela sem recarregar a página e sem novas chamadas API.
+     - Evita no retorno systemsession + accessrequests + pendingfilters + solsummary + pending quando o snapshot ainda é válido.
+     - Snapshot é invalidado em qualquer gravação relevante, limpeza de cache, logout, troca de sessão ou expiração.
+     - Não persiste token/senha no snapshot; associa o snapshot ao mesmo usuário/perfil/escopo da sessão.
+     - Se o snapshot estiver ausente/expirado, mantém automaticamente o fluxo seguro legado com recarga e backend.
+
+     Histórico B5.3.10 — Ficha do Ativo / Preventivas + Menos Viagens
      - Histórico de Preventivas incorporado ao assetbundle autenticado.
      - Evita preventivehistory e assetbasic separados na abertura normal da ficha.
      - Appconfig público reaproveitado na mesma aba e badge MASTER não é buscado dentro da ficha.
@@ -1909,6 +1917,7 @@ function qrInvalidateLocalCacheB530(reason){
   qrCacheGenerationB530++;
   qrLocalCacheB530.clear();
   qrInflightB530.clear();
+  if(typeof clearPendingFastSnapshotB5311_==="function")clearPendingFastSnapshotB5311_();
   // Metadados carregados em memória também precisam voltar a consultar o backend após gravações.
   pendingFiltersLoaded=false;documentFiltersLoaded=false;auditFiltersLoaded=false;occurrenceReportFiltersLoaded=false;
   try{sessionStorage.removeItem(QR_PREVENTIVE_PROVIDER_CACHE_KEY_766253)}catch(_e){}
@@ -2298,6 +2307,87 @@ function updateBackAssetButton(){const id=getOriginAsset();if(id){show("backAsse
 
 
 /* ============================================================
+ * QRManut 7.6.6.25 / B5.3.11 — SNAPSHOT CURTO OCs PENDENTES
+ * Mantém somente dados necessários para voltar da ficha à mesma lista
+ * sem uma nova viagem ao Apps Script. Não persiste credenciais.
+ * ============================================================ */
+const QR_PENDING_SNAPSHOT_KEY_B5311="QRMANUT_PENDING_SNAPSHOT_B5311";
+const QR_PENDING_SNAPSHOT_TTL_B5311=45000;
+let qrPendingLastFiltersB5311=null;
+let qrPendingLastDataB5311=null;
+
+function clearPendingFastSnapshotB5311_(){
+  qrPendingLastFiltersB5311=null;
+  qrPendingLastDataB5311=null;
+  try{sessionStorage.removeItem(QR_PENDING_SNAPSHOT_KEY_B5311)}catch(_e){}
+}
+
+function getPendingFastSnapshotB5311_(){
+  try{
+    const raw=sessionStorage.getItem(QR_PENDING_SNAPSHOT_KEY_B5311);
+    if(!raw)return null;
+    const snap=JSON.parse(raw);
+    if(!snap||!snap.createdAt||Date.now()-Number(snap.createdAt)>QR_PENDING_SNAPSHOT_TTL_B5311){
+      clearPendingFastSnapshotB5311_();return null;
+    }
+    if(String(snap.scope||"")!==String(qrSessionScopeB530())){
+      clearPendingFastSnapshotB5311_();return null;
+    }
+    return snap;
+  }catch(_e){clearPendingFastSnapshotB5311_();return null}
+}
+
+function savePendingFastSnapshotB5311_(assetId){
+  if(!qrPendingLastFiltersB5311||!qrPendingLastDataB5311)return false;
+  try{
+    const snap={
+      createdAt:Date.now(),
+      scope:qrSessionScopeB530(),
+      assetId:normalizeId(assetId||""),
+      filtersMeta:qrPendingLastFiltersB5311,
+      data:qrPendingLastDataB5311,
+      selected:pendingParams(),
+      tabUsersText:$("tabUsers")?.textContent||"",
+      tabSolicitationsText:$("tabSolicitations")?.textContent||""
+    };
+    sessionStorage.setItem(QR_PENDING_SNAPSHOT_KEY_B5311,JSON.stringify(snap));
+    return true;
+  }catch(_e){return false}
+}
+
+function restorePendingViewFastB5311_(){
+  const ctx=getPendingReturnContext7662510_();
+  const snap=getPendingFastSnapshotB5311_();
+  if(!ctx||!snap||!systemSession?.systemSessionToken||!hasProfilePermission("OC_PENDENTES"))return false;
+  if(ctx.assetId&&snap.assetId&&normalizeId(ctx.assetId)!==normalizeId(snap.assetId))return false;
+  if(currentAsset?.id&&snap.assetId&&normalizeId(currentAsset.id)!==normalizeId(snap.assetId))return false;
+
+  hide("assetScreen");show("searchScreen");
+  hide("menuLockedCard");show("mainMenuButtons");
+  renderSystemAccess();updateRoleUi();
+  clearTabs();$("tabPending").classList.add("active");showOnly("pendingArea");
+
+  applyPendingFiltersB533(snap.filtersMeta||{});
+  const f=snap.selected||{};
+  setPendingFilterValue7662510_("pendingProvider",f.prestador);
+  setPendingFilterValue7662510_("pendingStatus",f.status);
+  setPendingFilterValue7662510_("pendingCategory",f.categoria);
+  setPendingFilterValue7662510_("pendingFloor",f.pavimento);
+  setPendingFilterValue7662510_("pendingLocation",f.localizacao);
+  renderPendingB534(snap.data||{});
+  pendingFiltersLoaded=true;
+  if(snap.tabUsersText&&$("tabUsers"))$("tabUsers").textContent=snap.tabUsersText;
+  if(snap.tabSolicitationsText&&$("tabSolicitations"))$("tabSolicitations").textContent=snap.tabSolicitationsText;
+  if(systemSession?.perfil==="PRESTADOR")$("occReportProvider").disabled=true;else $("occReportProvider").disabled=false;
+
+  try{history.replaceState(null,"","?id=EQBUSCA&view=pending")}catch(_e){}
+  currentAsset=null;historyData=[];preventiveHistoryData=[];
+  qrPerfRecordB530("LOCAL","pending","retorno-ficha-snapshot",0,null,"OK");
+  qrPerfRecordB530("LOCAL","pendingfilters","retorno-ficha-snapshot",0,null,"OK");
+  return true;
+}
+
+/* ============================================================
  * QRManut 7.6.6.25 / B5.2.10 — RETORNO SEGURO PARA OCs PENDENTES
  * - Salva somente o contexto/filtros em sessionStorage.
  * - A abertura da ficha continua por link normal.
@@ -2339,6 +2429,7 @@ function savePendingReturnContext7662510_(assetId){
       }
     };
     sessionStorage.setItem(QR_PENDING_RETURN_KEY_7662510,JSON.stringify(ctx));
+    savePendingFastSnapshotB5311_(assetId);
   }catch(e){}
   return true;
 }
@@ -3120,6 +3211,7 @@ function pendingParams(){
 
 function applyPendingFiltersB533(f){
   f=f||{};
+  try{qrPendingLastFiltersB5311=JSON.parse(JSON.stringify(f))}catch(_e){qrPendingLastFiltersB5311=f}
   fillSelect("pendingProvider",f.prestadores,"Todos os prestadores");
   fillSelect("pendingStatus",f.status,"Todos os status");
   fillSelect("pendingCategory",f.categorias,"Todas as categorias");
@@ -3139,6 +3231,7 @@ async function loadPendingFilters(){
 }
 function renderPendingB534(d){
   d=d||{};
+  try{qrPendingLastDataB5311={summary:JSON.parse(JSON.stringify(d.summary||{})),occurrences:JSON.parse(JSON.stringify(d.occurrences||[]))}}catch(_e){qrPendingLastDataB5311={summary:d.summary||{},occurrences:d.occurrences||[]}}
   const s=d.summary||{},items=d.occurrences||[];
   $("pendingSummary").innerHTML=`<div class="pending-number"><strong>${s.total||0}</strong>Total</div><div class="pending-number"><strong>🔴 ${s.abertas||0}</strong>Abertas</div><div class="pending-number"><strong>🟡 ${s.emAtendimento||0}</strong>Atendimento</div><div class="pending-number"><strong>🟠 ${s.aguardandoPeca||0}</strong>Aguardando peça</div>`;
   $("pendingStatusText").textContent=items.length+" OC(s) encontrada(s) com os filtros aplicados.";
@@ -7644,6 +7737,7 @@ $("companyPrimaryColor").addEventListener("input",updateCompanyPreview);
 $("companyPrimaryColor").addEventListener("change",updateCompanyPreview);$("auditRefresh").onclick=()=>loadAudit({force:true,context:"buscar-manual"});$("auditClear").onclick=clearAuditFilters;$("auditSearch").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();loadAudit()}};$("cancelUser").onclick=()=>{$("userModal").style.display="none"};$("saveUser").onclick=saveUser;$("userEmail").oninput=updateUserPrimaryAction76617;$("cancelAdminUserPassword").onclick=()=>{$("adminUserPasswordModal").style.display="none"};$("saveAdminUserPassword").onclick=saveAdminUserPassword76617;$("sendSystemLogin").onclick=doSystemLogin;$("systemPassword").onkeydown=e=>{if(e.key==="Enter")doSystemLogin()};$("cancelSystemLogin").onclick=()=>{systemLoginNextAction=null;$("systemLoginModal").style.display="none";if(!systemSession)showMenuGate()};$("systemLogoutButton").onclick=logoutSystemMenu;$("installAppButton").onclick=installQRManut;$("tabSearch").onclick=showSearchTab;$("tabPending").onclick=showPendingTab;$("pendingApplyFilters").onclick=()=>loadPending({force:true,context:"buscar-manual"});$("pendingClearFilters").onclick=clearPendingFilters;$("tabOccurrenceReport").onclick=showOccurrenceReportTab;$("tabPreventive").onclick=showPreventiveTab;$("tabDocuments").onclick=showDocumentsTab;$("tabMaintenancePending").onclick=showMaintenancePendingTab;$("maintenancePendingBackMenu").onclick=openDefaultAllowedTab;$("maintenancePendingRefresh").onclick=()=>loadMaintenancePending({force:true,context:"buscar-manual"});$("maintenancePendingClear").onclick=clearMaintenancePendingFilters;$("maintenancePendingSearch").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();loadMaintenancePending()}};$("maintenancePendingStatusFilter").onchange=loadMaintenancePending;$("maintenancePendingPriorityFilter").onchange=loadMaintenancePending;$("preventiveNeedsAction").onchange=togglePreventiveActionFields;$("tabOccurrenceCatalog").onclick=showOccurrenceCatalogTab;$("occurrenceCatalogBackMenu").onclick=openDefaultAllowedTab;$("saveCatalogCategory").onclick=saveCatalogCategory;$("clearCatalogCategory").onclick=clearCatalogCategoryForm;$("saveCatalogComponent").onclick=saveCatalogComponent;$("clearCatalogComponent").onclick=clearCatalogComponentForm;$("category").onchange=()=>populateOccurrenceComponentSelect();$("manageCategory").onchange=()=>populateManageCatalog($("manageCategory").value,"");$("tabDocumentUpload").onclick=showDocumentUploadTab;$("documentUploadBackMenu").onclick=cancelDocumentUpload;$("uploadDocumentChooseFileButton").onclick=()=>$("uploadDocumentFile").click();$("uploadDocumentFile").onchange=prepareDocumentUploadFile;$("sendDocumentUpload").onclick=sendDocumentUpload;$("clearDocumentUpload").onclick=clearDocumentUploadForm;$("searchButton").onclick=searchAssets;$("qrScanButton").onclick=openQrScanner7662513;$("qrScannerCancel").onclick=closeQrScanner7662513;$("qrScannerSwitch").onclick=switchQrScannerCamera7662513;$("searchInput").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();searchAssets()}};$("documentSearchButton").onclick=()=>searchDocuments({force:true,context:"buscar-manual"});$("documentSearchInput").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();searchDocuments()}};$("documentTypeFilter").onchange=searchDocuments;$("documentDisciplineFilter").onchange=searchDocuments;$("documentFloorFilter").onchange=searchDocuments;$("reportButton").onclick=openReport;$("preventiveButton").onclick=requestPreventive;
 $("searchAssetsButton").onclick=function(){
   if(pendingReturnMatchesAsset7662510_()){
+    if(restorePendingViewFastB5311_())return;
     location.href="?id=EQBUSCA&view=pending";
     return;
   }
@@ -7753,7 +7847,7 @@ document.addEventListener("visibilitychange",()=>{
 // QRManut PNCQ 7.6.6.25 B5.2.13 - Scanner de QR Code integrado à Busca de Ativos.
 // QRManut PNCQ 7.6.6.25 B5.3.5 - Filtros do Relatório de OCs otimizados e cacheados no backend.
 // QRManut PNCQ 7.6.6.25 B5.3.3 - Bundles de primeira carga reduzem viagens à API em OCs Pendentes, Documentos e Relatório de OCs.
-// QRManut PNCQ 7.6.6.25 B5.3.10 - Preventivas incorporadas ao assetbundle, menos viagens na ficha e appconfig reaproveitado.
+// QRManut PNCQ 7.6.6.25 B5.3.11 - Retorno rápido para OCs Pendentes com snapshot curto na mesma aba.
 // QRManut PNCQ 7.6.6.25 B5.3.0 - Cache local controlado, deduplicação in-flight e Diagnóstico de Performance.
 </script>
 
