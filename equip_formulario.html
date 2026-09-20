@@ -1727,6 +1727,14 @@ function qrPerfDetailsB531(data){
   if(b.bundleType)parts.push(`pacote=${String(b.bundleType)}`);
   if(f(b.readMs)!=null)parts.push(`leitura ${f(b.readMs)} ms`);
   if(f(b.filtersMs)!=null)parts.push(`filtros ${f(b.filtersMs)} ms`);
+  if(b.filterSource)parts.push(`filtros-src=${String(b.filterSource)}`);
+  if(f(b.filterAssetsMs)!=null)parts.push(`filtros-ativos ${f(b.filterAssetsMs)} ms`);
+  if(f(b.filterCategoriesMs)!=null)parts.push(`filtros-cat ${f(b.filterCategoriesMs)} ms`);
+  if(f(b.filterComponentsMs)!=null)parts.push(`filtros-comp ${f(b.filterComponentsMs)} ms`);
+  if(f(b.filterBuildMs)!=null)parts.push(`filtros-montagem ${f(b.filterBuildMs)} ms`);
+  if(Number.isFinite(Number(b.filterAssetsRead))&&Number(b.filterAssetsRead)>0)parts.push(`filtros-ativos-n=${Number(b.filterAssetsRead)}`);
+  if(Number.isFinite(Number(b.filterCategoriesRead))&&Number(b.filterCategoriesRead)>0)parts.push(`filtros-cat-n=${Number(b.filterCategoriesRead)}`);
+  if(Number.isFinite(Number(b.filterComponentsRead))&&Number(b.filterComponentsRead)>0)parts.push(`filtros-comp-n=${Number(b.filterComponentsRead)}`);
   if(f(b.dataMs)!=null)parts.push(`dados ${f(b.dataMs)} ms`);
   if(f(b.reportMs)!=null)parts.push(`relatório ${f(b.reportMs)} ms`);
   if(f(b.scopeMs)!=null)parts.push(`escopo ${f(b.scopeMs)} ms`);
@@ -7655,6 +7663,7 @@ document.addEventListener("visibilitychange",()=>{
 // QRManut PNCQ 7.6.6.25 B5.2.11 - Reset do botão Excluir OC entre exclusões consecutivas.
 // QRManut PNCQ 7.6.6.25 B5.2.12 - Resumo visual e dinâmico da quantidade de OCs por status na ficha do ativo.
 // QRManut PNCQ 7.6.6.25 B5.2.13 - Scanner de QR Code integrado à Busca de Ativos.
+// QRManut PNCQ 7.6.6.25 B5.3.5 - Filtros do Relatório de OCs otimizados e cacheados no backend.
 // QRManut PNCQ 7.6.6.25 B5.3.3 - Bundles de primeira carga reduzem viagens à API em OCs Pendentes, Documentos e Relatório de OCs.
 // QRManut PNCQ 7.6.6.25 B5.3.0 - Cache local controlado, deduplicação in-flight e Diagnóstico de Performance.
 </script>
