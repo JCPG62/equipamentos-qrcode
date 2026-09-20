@@ -1,4 +1,9 @@
-<!-- QRManut 7.6.6.25: B5.3.17 — Refinamento mobile compacto
+<!-- QRManut 7.6.6.25: B5.3.18 — Login limpo e busca vazia ao entrar
+     - Ao entrar no Menu Principal, a busca de ativos começa sempre vazia.
+     - Ao sair do Menu Principal, nenhum card de operação/administração permanece visível.
+     - Mantém integralmente o refinamento visual mobile da B5.3.17.
+
+     Histórico B5.3.17 — Refinamento mobile compacto
      - Mantém a identidade visual da B5.3.16 com cards menores e mais funcionais.
      - Menu mobile em duas colunas para reduzir rolagem.
      - Bloco de acesso mais compacto e estado ativo mais leve.
@@ -82,7 +87,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>QRManut</title>
-<meta name="qrmanut-build" content="2026-09-20-b5.3.17">
+<meta name="qrmanut-build" content="2026-09-20-b5.3.18">
 <meta name="theme-color" content="#0b315e">
 <meta name="application-name" content="QRManut">
 <meta name="mobile-web-app-capable" content="yes">
@@ -964,6 +969,15 @@ body{
   #systemAccessText{font-size:.88rem}
   #systemLogoutButton{min-width:84px;padding:8px 10px;font-size:.88rem}
 }
+
+
+
+/* ============================================================
+ * QRManut 7.6.6.25 B5.3.18 - Login limpo
+ * ============================================================ */
+#mainMenuButtons.hidden{display:none!important}
+#mainMenuButtons.hidden .menu-section{display:none!important}
+#menuLockedCard:not(.hidden)~#mainMenuButtons{display:none!important}
 
 </style>
 </head>
@@ -2649,7 +2663,15 @@ function updateRoleUi(){
     ?'<option value="PRESTADOR">PRESTADOR</option><option value="CONSULTA">CONSULTA</option><option value="GESTOR">GESTOR</option><option value="MASTER">MASTER</option>'
     :'<option value="PRESTADOR">PRESTADOR</option><option value="CONSULTA">CONSULTA</option><option value="GESTOR">GESTOR</option>';
 }
-function showMenuGate(){show("searchScreen");hide("mainMenuButtons");["searchArea","pendingArea","solicitationsArea","occurrenceReportArea","preventiveControlArea","documentsArea","usersArea","permissionsArea","auditArea","companyArea","providersAdminArea","documentUploadArea","occurrenceCatalogArea","maintenancePendingArea","assetManagementPanel","performanceArea"].forEach(hide);hide("systemAccessInfo");show("menuLockedCard")}
+function showMenuGate(){
+  show("searchScreen");
+  hide("mainMenuButtons");
+  document.querySelectorAll("#mainMenuButtons .menu-section").forEach(el=>el.classList.add("hidden"));
+  ["searchArea","pendingArea","solicitationsArea","occurrenceReportArea","preventiveControlArea","documentsArea","usersArea","permissionsArea","auditArea","companyArea","providersAdminArea","documentUploadArea","occurrenceCatalogArea","maintenancePendingArea","assetManagementPanel","performanceArea"].forEach(hide);
+  hide("systemAccessInfo");
+  clearSearchOnMenuEntryB5318();
+  show("menuLockedCard");
+}
 function openDefaultAllowedTab(){
   if(hasProfilePermission("BUSCAR_ATIVOS"))return showSearchTab();
   if(hasProfilePermission("OC_PENDENTES"))return showPendingTab();
@@ -2661,11 +2683,24 @@ function openDefaultAllowedTab(){
   if(hasProfilePermission("PRESTADORES_CONSULTAR"))return showProvidersAdminTab();
   clearTabs();showOnly("searchArea");$("searchResults").innerHTML='<div class="document-empty">Seu perfil não possui nenhuma rotina de menu habilitada. Contate o administrador MASTER.</div>';
 }
+function clearSearchOnMenuEntryB5318(){
+  const input=$("searchInput");
+  const status=$("searchStatus");
+  const results=$("searchResults");
+  if(input)input.value="";
+  if(status)status.textContent="";
+  if(results)results.innerHTML="";
+}
 function openMainMenu(){
+  clearSearchOnMenuEntryB5318();
   hide("menuLockedCard");
   show("mainMenuButtons");
   renderSystemAccess();
   updateRoleUi();
+  document.querySelectorAll("#mainMenuButtons .menu-section").forEach(section=>{
+    const visible=[...section.querySelectorAll(".menu-button")].filter(btn=>!btn.classList.contains("hidden"));
+    section.classList.toggle("hidden",visible.length===0);
+  });
 
   // B5.2.15 — primeiro abre a rotina principal. Badges secundários entram depois,
   // evitando três chamadas simultâneas ao Apps Script durante a navegação.
@@ -2680,7 +2715,7 @@ function openMainMenu(){
 }
 async function refreshAccessRequestMenuBadge76616(){const el=$("tabUsers");if(!el)return;const base=qrLanguage==="en-US"?"👥 User Management":"👥 Gestão de Usuários";if(systemSession?.perfil!=="MASTER"){el.textContent=base;return}try{const r=await menuApi({action:"accessrequests"});const n=(r.requests||[]).filter(x=>x.status==="Pendente").length;el.textContent=base+(n?` 🔴 ${n}`:"")}catch(e){el.textContent=base}}
 async function requireSystemLogin(nextAction){if(await systemSessionIsValid()){nextAction();return}systemLoginNextAction=nextAction;$("systemUsername").value="";$("systemPassword").value="";$("systemLoginMessage").className="message";$("systemLoginModal").style.display="flex";setTimeout(()=>$("systemUsername").focus(),80)}
-async function doSystemLogin(){const user=$("systemUsername").value.trim(),password=$("systemPassword").value;if(!user||!password){$("systemLoginMessage").className="message error";$("systemLoginMessage").textContent="Informe usuário e senha.";return}$("sendSystemLogin").disabled=true;$("sendSystemLogin").textContent="Entrando...";try{const r=await apiPost({action:"systemLogin",systemUsername:user,systemPassword:password});if(!r.ok)throw new Error(r.detail||"Usuário ou senha inválidos.");saveSystemSession(r);$("systemLoginModal").style.display="none";occurrenceReportFiltersLoaded=false;documentFiltersLoaded=false;pendingFiltersLoaded=false;if(systemLoginNextAction){const fn=systemLoginNextAction;systemLoginNextAction=null;fn()}else openMainMenu()}catch(e){$("systemLoginMessage").className="message error";$("systemLoginMessage").textContent=e.message}finally{$("sendSystemLogin").disabled=false;$("sendSystemLogin").textContent="Entrar"}}
+async function doSystemLogin(){const user=$("systemUsername").value.trim(),password=$("systemPassword").value;if(!user||!password){$("systemLoginMessage").className="message error";$("systemLoginMessage").textContent="Informe usuário e senha.";return}$("sendSystemLogin").disabled=true;$("sendSystemLogin").textContent="Entrando...";try{const r=await apiPost({action:"systemLogin",systemUsername:user,systemPassword:password});if(!r.ok)throw new Error(r.detail||"Usuário ou senha inválidos.");saveSystemSession(r);$("systemLoginModal").style.display="none";clearSearchOnMenuEntryB5318();occurrenceReportFiltersLoaded=false;documentFiltersLoaded=false;pendingFiltersLoaded=false;if(systemLoginNextAction){const fn=systemLoginNextAction;systemLoginNextAction=null;fn()}else openMainMenu()}catch(e){$("systemLoginMessage").className="message error";$("systemLoginMessage").textContent=e.message}finally{$("sendSystemLogin").disabled=false;$("sendSystemLogin").textContent="Entrar"}}
 async function logoutSystemMenu(){try{if(systemSession?.systemSessionToken)await apiPost({action:"systemLogout",systemSessionToken:systemSession.systemSessionToken})}catch(e){}clearSystemSession();clearPreventiveSession();preventiveControlData=null;occurrenceReportData=null;occurrenceReportFiltersLoaded=false;documentFiltersLoaded=false;pendingFiltersLoaded=false;showMenuGate()}
 
 async function sessionIsValid(){return systemSessionIsValid()}
@@ -8338,6 +8373,7 @@ document.addEventListener("visibilitychange",()=>{
 // QRManut PNCQ 7.6.6.25 B5.2.13 - Scanner de QR Code integrado à Busca de Ativos.
 // QRManut PNCQ 7.6.6.25 B5.3.5 - Filtros do Relatório de OCs otimizados e cacheados no backend.
 // QRManut PNCQ 7.6.6.25 B5.3.3 - Bundles de primeira carga reduzem viagens à API em OCs Pendentes, Documentos e Relatório de OCs.
+// QRManut PNCQ 7.6.6.25 B5.3.18 - Login limpo após logout e busca de ativos vazia ao entrar.
 // QRManut PNCQ 7.6.6.25 B5.3.17 - Refinamento mobile compacto com menu em duas colunas.
 // QRManut PNCQ 7.6.6.25 B5.3.16 - Modernização visual mobile do Menu Principal e Status das Preventivas.
 // QRManut PNCQ 7.6.6.25 B5.3.15 - Histórico de Manutenção e anexos com cache de servidor de 15 min e invalidação automática.
