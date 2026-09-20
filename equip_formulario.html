@@ -1,4 +1,10 @@
-<!-- QRManut 7.6.6.25: B5.3.15 — Histórico de Manutenção com cache de servidor
+<!-- QRManut 7.6.6.25: B5.3.16 — Modernização visual mobile do Menu Principal e Preventivas
+     - Reorganiza o Menu Principal em seções Operação e Administração com layout em cards mais moderno.
+     - Refina o cabeçalho, a faixa de acesso e a aparência dos cards/botões no celular e desktop.
+     - Moderniza visualmente a tela Status das Preventivas, KPIs, filtros e barra de progresso.
+     - Não altera regras de negócio, integrações, permissões ou otimizações já implantadas.
+
+     Histórico B5.3.15 — Histórico de Manutenção com cache de servidor
      - Base do Histórico de Manutenção e anexos de OCs permanecem em cache de servidor por 15 min.
      - Diagnóstico mostra hist-src/hist-ttl e anexos-src/anexos-ttl para confirmar a origem dos dados.
      - Invalidação ocorre imediatamente após criar, alterar ou excluir OC/anexo.
@@ -69,7 +75,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>QRManut</title>
-<meta name="qrmanut-build" content="2026-09-20-b5.3.14">
+<meta name="qrmanut-build" content="2026-09-20-b5.3.16">
 <meta name="theme-color" content="#0b315e">
 <meta name="application-name" content="QRManut">
 <meta name="mobile-web-app-capable" content="yes">
@@ -685,6 +691,185 @@ html,body{max-width:100%;overflow-x:hidden}
 .perf-note{padding:10px 12px;border-radius:10px;background:#f8fafc;border:1px solid #e5e7eb;line-height:1.45;font-size:.84rem}
 @media(max-width:700px){.perf-summary-grid{grid-template-columns:repeat(2,1fr)}}
 
+
+
+/* ============================================================
+ * QRManut 7.6.6.25 B5.3.16 - Modernização visual mobile
+ * ============================================================ */
+:root{
+  --qr-primary:#21356b;
+  --qr-primary-soft:#eef3ff;
+  --qr-success:#0f8a61;
+  --qr-success-soft:#e8f8f1;
+  --qr-surface:#ffffff;
+  --qr-surface-2:#f8fafc;
+  --qr-border:#dbe4f0;
+  --qr-text:#0f172a;
+  --qr-muted:#64748b;
+  --qr-shadow:0 10px 30px rgba(15,23,42,.08);
+}
+body{
+  background:linear-gradient(180deg,#f3f6fb 0%,#eef2f7 100%);
+  color:var(--qr-text);
+}
+.container{max-width:1180px;padding:18px 16px 28px}
+.qr-language-switcher{
+  position:sticky;top:0;z-index:20;
+  padding:10px 14px 4px;
+  background:linear-gradient(180deg,rgba(243,246,251,.96),rgba(243,246,251,.75));
+  backdrop-filter:blur(8px);
+}
+.qr-language-switcher button{box-shadow:0 6px 18px rgba(15,23,42,.06)}
+.qr-home-screen .search-title{
+  font-size:clamp(2rem,3vw,2.6rem);
+  line-height:1;
+  letter-spacing:-.03em;
+  color:var(--qr-primary);
+  margin-top:6px;
+}
+#qrAppSubtitle{font-size:1.05rem;margin-top:6px;color:var(--qr-muted)}
+.system-access-info{
+  margin:16px 0 18px;
+  padding:14px 16px;
+  border:1px solid #c9d8ff;
+  background:linear-gradient(135deg,#f7f9ff 0%,#eef4ff 100%);
+  border-radius:18px;
+  box-shadow:var(--qr-shadow);
+}
+#systemAccessText{font-size:1rem;font-weight:700;color:var(--qr-primary)}
+#systemLogoutButton{border-radius:14px;padding:12px 16px;font-weight:800;background:#e8edf6}
+#menuLockedCard{border-radius:22px;box-shadow:var(--qr-shadow)}
+#mainMenuButtons.menu-busca{display:block!important;margin:18px 0 22px!important}
+.menu-section{margin-top:18px}
+.menu-section:first-child{margin-top:0}
+.menu-section-title{
+  display:flex;align-items:center;gap:10px;
+  margin:0 0 12px;
+  font-size:1rem;font-weight:800;letter-spacing:.01em;color:var(--qr-primary);
+}
+.menu-section-title::before{
+  content:"";width:10px;height:10px;border-radius:999px;background:var(--qr-primary);
+  box-shadow:0 0 0 6px rgba(33,53,107,.10);
+}
+.menu-section-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.menu-button{
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  min-height:94px!important;
+  padding:16px 14px!important;
+  border:1px solid var(--qr-border)!important;
+  border-radius:22px!important;
+  background:linear-gradient(180deg,#fff 0%,#fbfdff 100%)!important;
+  color:var(--qr-text)!important;
+  box-shadow:0 8px 22px rgba(15,23,42,.05);
+  font-size:1rem!important;font-weight:800!important;
+  transition:transform .16s ease,box-shadow .16s ease,border-color .16s ease,background .16s ease;
+}
+.menu-button:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(15,23,42,.10);border-color:#bfd0ef!important}
+.menu-button.active{background:linear-gradient(180deg,#233768 0%,#1b2d58 100%)!important;color:#fff!important;border-color:#233768!important}
+.menu-button.preventive.active{background:linear-gradient(180deg,#12825d 0%,#0f7454 100%)!important;border-color:#0f7454!important}
+.menu-button.documents.active{background:linear-gradient(180deg,#7c3aed 0%,#6d28d9 100%)!important;border-color:#6d28d9!important}
+.menu-button.reports.active{background:linear-gradient(180deg,#0f766e 0%,#0d5f59 100%)!important;border-color:#0d5f59!important}
+.menu-button.users.active{background:linear-gradient(180deg,#4338ca 0%,#3730a3 100%)!important;border-color:#3730a3!important}
+.menu-button.permissions.active{background:linear-gradient(180deg,#6d28d9 0%,#5b21b6 100%)!important;border-color:#5b21b6!important}
+#searchArea>.card,#pendingArea>.card,#solicitationsArea>.card,#occurrenceReportArea>.card,#documentsArea>.card,#preventiveControlArea>.card,#maintenancePendingArea>.card,#auditArea>.card,#usersArea>.card,#permissionsArea>.card,#providersAdminArea>.card,#companyArea>.card,#documentUploadArea>.card,#occurrenceCatalogArea>.card,#performanceArea>.card{
+  border-radius:24px;
+  border:1px solid rgba(219,228,240,.95);
+  box-shadow:var(--qr-shadow);
+}
+#preventiveControlArea .card{padding:20px}
+.control-header{
+  gap:14px;align-items:end;
+  margin-bottom:10px;
+  padding:16px;
+  border:1px solid #dce7f4;
+  border-radius:20px;
+  background:linear-gradient(180deg,#fcfdff 0%,#f7f9fc 100%);
+}
+.control-field label{font-weight:800;color:var(--qr-text);margin-top:0}
+.control-field input,.control-field select{
+  min-height:52px;border-radius:16px;border:1px solid #d6dfeb;background:#fff;
+}
+#controlRefresh,#preventiveLogout{min-height:52px;border-radius:16px;padding:0 18px;font-weight:800}
+#controlTitle{font-size:1.4rem;color:#0f172a;margin:16px 0 12px}
+#controlSummary{gap:12px}
+.control-summary-card{
+  border-radius:20px;
+  padding:18px 16px;
+  background:linear-gradient(180deg,#ffffff 0%,#fbfcfe 100%);
+  border:1px solid #dce7f4;
+  box-shadow:0 10px 24px rgba(15,23,42,.05);
+}
+.control-summary-card strong{font-size:2rem;line-height:1.05;margin-bottom:6px;color:#0f172a}
+.progress-box{
+  border-radius:20px;
+  padding:18px;
+  background:linear-gradient(180deg,#ffffff 0%,#fbfcfe 100%);
+  border:1px solid #dce7f4;
+  box-shadow:0 10px 24px rgba(15,23,42,.05);
+}
+.progress-head{font-size:1rem;color:#0f172a}
+.progress-track{height:16px;margin-top:12px;background:#e5e7eb}
+.progress-fill{background:linear-gradient(90deg,#19a06b 0%,#0f8a61 100%)}
+.provider-card{
+  border-radius:16px;
+  border:1px solid #dce7f4;
+  background:linear-gradient(180deg,#fff 0%,#fbfdff 100%);
+  box-shadow:0 8px 18px rgba(15,23,42,.04);
+}
+.control-tabs{gap:10px;margin-top:16px}
+.control-tab{
+  border-radius:999px;
+  padding:11px 15px;
+  border:1px solid #d6dfeb;
+  background:#fff;
+  color:#334155;
+}
+.control-tab.active{background:var(--qr-primary);color:#fff;border-color:var(--qr-primary)}
+.report-action-box{
+  border-radius:20px;
+  border:1px solid #cde7db;
+  background:linear-gradient(180deg,#f6fffb 0%,#ecfdf5 100%);
+  text-align:left;
+  box-shadow:0 10px 24px rgba(15,23,42,.04);
+}
+.report-action-box strong{display:block;font-size:1rem;color:#065f46}
+@media (max-width:980px){
+  .menu-section-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media (max-width:700px){
+  .container{padding:14px 12px 26px}
+  .qr-home-screen .search-title{font-size:2.2rem}
+  #qrAppSubtitle{font-size:1rem}
+  .system-access-row{align-items:flex-start}
+  #systemLogoutButton{width:100%}
+  .menu-section-title{margin-bottom:10px}
+  .menu-section-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .menu-button{
+    min-height:92px!important;
+    justify-content:flex-start;
+    text-align:left;
+    border-radius:20px!important;
+    padding:16px 14px!important;
+    font-size:1rem!important;
+  }
+  .menu-button.hidden{display:none!important}
+  .control-header{display:grid;grid-template-columns:1fr 1fr;align-items:end}
+  .control-header .control-field{min-width:0}
+  #controlRefresh,#preventiveLogout{width:100%}
+  .control-summary,.pending-summary,.occ-report-summary{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .control-summary-card{padding:16px 12px}
+  .control-summary-card strong{font-size:1.75rem}
+  .progress-box,.report-action-box{padding:16px}
+  .control-tabs{display:grid;grid-template-columns:1fr 1fr 1fr}
+  .control-tab{text-align:center}
+}
+@media (max-width:480px){
+  .menu-section-grid{grid-template-columns:1fr}
+  .control-header{grid-template-columns:1fr}
+  .control-tabs{grid-template-columns:1fr}
+  .control-summary,.pending-summary,.occ-report-summary{grid-template-columns:1fr 1fr!important}
+}
+
 </style>
 </head>
 <body>
@@ -695,7 +880,7 @@ html,body{max-width:100%;overflow-x:hidden}
 <div class="container">
 <div id="qrNetworkStatus" class="qr-network-status hidden" role="status" aria-live="polite"></div>
 
-<div id="searchScreen" class="hidden">
+<div id="searchScreen" class="hidden qr-home-screen">
   <div class="search-title">QRManut</div>
   <div id="qrAppSubtitle" class="muted">Gestão rápida de manutenção</div>
   <button id="installAppButton" type="button" class="install-app-button hidden">📲 Instalar QRManut no celular</button>
@@ -7950,6 +8135,46 @@ qrTranslateAttributes(document.body);
 });
 
 
+function setupModernMenuSectionsB5316(){
+  const root=$("mainMenuButtons");
+  if(!root||root.dataset.modernized5316==="1")return;
+  const groups=[
+    {title:"Operação", ids:["tabSearch","tabPending","tabSolicitations","tabOccurrenceReport","tabPreventive","tabDocuments","tabOccurrenceCatalog","tabMaintenancePending","tabAssetManagement","tabDocumentUpload"]},
+    {title:"Administração", ids:["tabUsers","tabPermissions","tabAudit","tabProvidersAdmin","tabCompany","tabPerformance"]}
+  ];
+  const frag=document.createDocumentFragment();
+  groups.forEach(group=>{
+    const section=document.createElement("section");
+    section.className="menu-section";
+    section.dataset.menuSection=group.title;
+    const title=document.createElement("h3");
+    title.className="menu-section-title";
+    title.textContent=group.title;
+    const grid=document.createElement("div");
+    grid.className="menu-section-grid";
+    group.ids.forEach(id=>{
+      const btn=$(id);
+      if(btn)grid.appendChild(btn);
+    });
+    section.appendChild(title);
+    section.appendChild(grid);
+    frag.appendChild(section);
+  });
+  root.innerHTML="";
+  root.appendChild(frag);
+  root.dataset.modernized5316="1";
+  const refresh=()=>{
+    root.querySelectorAll('.menu-section').forEach(section=>{
+      const visible=[...section.querySelectorAll('.menu-button')].filter(btn=>!btn.classList.contains('hidden'));
+      section.classList.toggle('hidden',visible.length===0);
+    });
+  };
+  const observer=new MutationObserver(refresh);
+  root.querySelectorAll('.menu-button').forEach(btn=>observer.observe(btn,{attributes:true,attributeFilter:['class']}));
+  refresh();
+}
+
+
 qrInstallLocalizedDateControls();
 async function main(){
   buildManageDropdowns();
@@ -7959,6 +8184,7 @@ async function main(){
   setupInstallExperience();
   await loadPublicAppConfig();
   qrApplyLanguage(qrLanguage);
+  setupModernMenuSectionsB5316();
   if(await openSetPasswordFromUrl())return;
   $("controlCompetence").value=currentCompetence();
   setDefaultOccurrenceReportDates();
@@ -8017,6 +8243,7 @@ document.addEventListener("visibilitychange",()=>{
 // QRManut PNCQ 7.6.6.25 B5.2.13 - Scanner de QR Code integrado à Busca de Ativos.
 // QRManut PNCQ 7.6.6.25 B5.3.5 - Filtros do Relatório de OCs otimizados e cacheados no backend.
 // QRManut PNCQ 7.6.6.25 B5.3.3 - Bundles de primeira carga reduzem viagens à API em OCs Pendentes, Documentos e Relatório de OCs.
+// QRManut PNCQ 7.6.6.25 B5.3.16 - Modernização visual mobile do Menu Principal e Status das Preventivas.
 // QRManut PNCQ 7.6.6.25 B5.3.15 - Histórico de Manutenção e anexos com cache de servidor de 15 min e invalidação automática.
 // QRManut PNCQ 7.6.6.25 B5.3.14 - Cache curto do assetbundle no sessionStorage para reabrir a mesma ficha sem nova API.
 // QRManut PNCQ 7.6.6.25 B5.3.13 - Cards de resumo das OCs Pendentes atuam como filtros rápidos locais.
