@@ -1,4 +1,10 @@
-<!-- QRManut 7.6.6.25: B5.3.12 — Primeira abertura da ficha / índices com cache longo
+<!-- QRManut 7.6.6.25: B5.3.13 — Cards clicáveis em OCs Pendentes
+     - Cards Total, Abertas, Atendimento e Aguardando peça passam a atuar como atalhos de filtro.
+     - Quando a lista base já contém todos os status, o filtro é aplicado localmente, sem nova chamada API.
+     - O card ativo fica destacado e o seletor Status acompanha a seleção.
+     - Mantém integralmente as otimizações e caches da B5.3.12.
+
+     Histórico B5.3.12 — Primeira abertura da ficha / índices com cache longo
      - Cache de servidor de 15 min para documentos, vínculos e bases preventivas.
      - Invalidação imediata após alterações.
      - Mantém integralmente o retorno rápido B5.3.11.
@@ -78,7 +84,7 @@
 @media(max-width:700px){
   #companyArea .admin-grid{grid-template-columns:1fr}
   #companyArea .admin-grid .full,#companyArea .company-long-field{grid-column:auto}
-}.provider-admin-card{margin-top:10px;border:1px solid #dbeafe;border-left:5px solid #1d4ed8;border-radius:12px;padding:12px;background:#fff}.company-preview{margin-top:12px;padding:12px;border:1px solid #e5e7eb;border-radius:12px;background:#f9fafb}.company-logo-preview{max-width:180px;max-height:90px;display:block;margin-top:8px}.switch-row{display:flex;align-items:center;gap:8px;margin-top:10px}.switch-row input{width:auto}.audit-filters{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;align-items:end}.audit-filters label{min-width:0}.audit-filters input,.audit-filters select{width:100%;min-width:0;max-width:100%;box-sizing:border-box}.audit-search-field{grid-column:1 / -1}.audit-card{margin-top:10px;border:1px solid #e5e7eb;border-left:5px solid #374151;border-radius:12px;padding:12px;background:#fff}.audit-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.audit-meta{margin-top:7px;line-height:1.55;color:#4b5563;font-size:.86rem}.audit-detail{margin-top:8px;padding:8px;border-radius:8px;background:#f9fafb;font-size:.82rem;white-space:pre-wrap;word-break:break-word}.audit-result{padding:4px 8px;border-radius:999px;font-size:.74rem;font-weight:800}.audit-result.success{background:#dcfce7;color:#166534}.audit-result.fail{background:#fee2e2;color:#991b1b}.audit-result.blocked{background:#ffedd5;color:#9a3412}.search-help{background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:12px;margin-bottom:12px;color:#1e3a8a;line-height:1.5}.search-help strong{display:block;margin-bottom:4px}.search-help ul{margin:6px 0 0 20px;padding:0}.search-box{display:flex;gap:8px}.search-box input{flex:1}.search-box button{border:0;background:#1f4e78;color:#fff;border-radius:9px;padding:0 18px}.back-asset-wrap{margin-bottom:12px;text-align:left}.back-asset-btn{border:1px solid #1f4e78;background:#fff;color:#1f4e78;border-radius:10px;padding:10px 13px;font-weight:700;cursor:pointer}.pending-filters{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;align-items:end}.pending-filter-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.pending-access-note{margin-bottom:10px;padding:9px 11px;border-radius:10px;background:#f9fafb;border:1px solid #e5e7eb;font-size:.84rem;color:#4b5563}.document-filters{display:grid;grid-template-columns:2fr 1fr 1fr 1fr auto;gap:8px;align-items:end}.occ-report-filters{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;align-items:end}.occ-report-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.occ-report-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0}.occ-report-summary-card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:11px;text-align:center}.occ-report-summary-card strong{display:block;font-size:1.25rem}.occ-category-summary{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0 16px}.occ-category-chip{background:#ecfeff;border:1px solid #a5f3fc;color:#155e75;border-radius:999px;padding:6px 10px;font-size:.8rem;font-weight:700}.occ-report-card{margin-top:11px;padding:14px;border:1px solid #e5e7eb;border-left:5px solid #0f766e;border-radius:13px;background:#fff}.occ-report-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.occ-report-meta{margin-top:8px;line-height:1.55;color:#4b5563;font-size:.86rem}.occ-report-links{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}.occ-report-links a{font-weight:700}.occ-pdf-box{margin-top:18px;padding:14px;border:1px solid #99f6e4;background:#f0fdfa;border-radius:12px}.occ-pdf-link{display:inline-flex;margin-top:8px;padding:10px 14px;border-radius:9px;background:#0f766e;color:#fff;text-decoration:none;font-weight:700}.document-card{margin-top:11px;padding:14px;border:1px solid #e5e7eb;border-left:5px solid #7c3aed;border-radius:13px;background:#fff}.document-title{font-weight:800}.document-meta{margin-top:7px;line-height:1.55;color:#4b5563;font-size:.86rem}.document-open{display:inline-flex;align-items:center;justify-content:center;margin-top:10px;padding:10px 14px;border-radius:9px;background:#7c3aed;color:#fff;text-decoration:none;font-weight:700}.document-empty{margin-top:14px;padding:15px;border:1px dashed #d1d5db;border-radius:12px;text-align:center;color:#6b7280}.asset-document-list{display:grid;gap:10px}.asset-document-card{padding:12px;border:1px solid #ddd6fe;border-left:5px solid #7c3aed;border-radius:12px;background:#faf5ff}.asset-document-card .document-open{margin-top:8px}.search-result,.pending-card,.control-item,.history-card,.preventive-card{margin-top:11px;padding:14px;border:1px solid #e5e7eb;border-radius:13px;background:#fff}.search-result-id{font-size:.8rem;font-weight:800;color:#1f4e78}.search-result-name{font-weight:700}.search-result-data{margin-top:8px;line-height:1.55;color:#4b5563;font-size:.86rem}.open-button{display:block;margin-top:10px;padding:10px;border-radius:9px;background:#1f4e78;color:#fff;text-align:center;text-decoration:none;font-weight:700}.pending-summary,.control-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0}.pending-number,.control-summary-card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:11px;text-align:center}.pending-number strong,.control-summary-card strong{display:block;font-size:1.3rem}.preventive-login-info{margin-bottom:13px;padding:10px;background:#ecfdf5;border-radius:10px;color:#065f46;font-size:.85rem}.control-header{display:flex;flex-wrap:wrap;gap:10px;align-items:end}.control-field{flex:1;min-width:180px}.progress-box{margin-top:14px;padding:13px;border:1px solid #e5e7eb;border-radius:12px}.progress-head{display:flex;justify-content:space-between;font-weight:700}.progress-track{height:13px;background:#e5e7eb;border-radius:999px;overflow:hidden;margin-top:8px}.progress-fill{height:100%;width:0;background:#059669}.control-tabs{display:flex;flex-wrap:wrap;gap:8px;margin-top:15px}.control-tab{padding:8px 12px;border:1px solid #d1d5db;border-radius:999px;background:#fff;font-weight:700}.control-tab.active{background:#111827;color:#fff}.control-item.pending{border-left:5px solid #dc2626}.control-item.done{border-left:5px solid #059669}.control-head{display:flex;justify-content:space-between;gap:10px}.control-status{padding:5px 8px;border-radius:999px;font-size:.75rem;font-weight:800}.control-status.pending{background:#fee2e2;color:#991b1b}.control-status.done{background:#dcfce7;color:#166534}.provider-card{margin-top:8px;padding:10px;border:1px solid #e5e7eb;border-radius:10px}.report-action-box{margin-top:20px;padding:15px;border:1px solid #bfdbfe;background:#eff6ff;border-radius:13px;text-align:center}.report-action-box button{margin-top:8px}label{display:grid;gap:5px;margin-top:12px;font-weight:600}input,select,textarea{width:100%;padding:11px;border:1px solid #d1d5db;border-radius:9px;font:inherit}textarea{resize:vertical}button{font:inherit}.btn{border:0;border-radius:9px;padding:11px 15px;background:#111827;color:#fff;cursor:pointer}.btn-green{background:#047857}.btn-blue{background:#1f4e78}.btn-danger{background:#b91c1c}.btn-secondary{background:#e5e7eb;color:#111827}button:disabled{opacity:.55;cursor:not-allowed}.requirements-box{margin-top:13px;padding:11px;border-radius:11px;background:#f9fafb;border:1px solid #e5e7eb}.requirement{margin:5px 0;font-size:.85rem}.required-yes{color:#991b1b;font-weight:700}.required-no{color:#047857}.signature-box{margin-top:14px;padding:12px;border:1px solid #d1d5db;border-radius:12px;background:#f9fafb}.signature-title{font-weight:800}.signature-help{margin-top:3px;font-size:.8rem;color:#6b7280}.signature-canvas-wrap{margin-top:10px;border:2px dashed #9ca3af;background:#fff;border-radius:9px;overflow:hidden}#signatureCanvas{width:100%;height:180px;display:block;touch-action:none}.modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;padding:12px;background:rgba(0,0,0,.45);z-index:999}.modal-box{width:min(700px,96vw);max-height:92vh;overflow:auto;background:#fff;border-radius:15px;padding:17px}.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}.photo-preview{display:none;max-width:100%;max-height:280px;margin-top:10px}.message{display:none;margin-top:12px;padding:10px;border-radius:8px;line-height:1.5}.message.error{display:block;background:#fee2e2;color:#991b1b}.message.loading{display:block;background:#fef3c7;color:#92400e}.message.success{display:block;background:#d1fae5;color:#065f46}.preventive-info{padding:11px;border:1px solid #a7f3d0;border-radius:10px;background:#ecfdf5;line-height:1.6}.tag{display:inline-block;padding:4px 8px;margin:5px 4px 5px 0;background:#eef2ff;border-radius:999px;font-size:.75rem}.preventive-card{background:#f0fdf4}.preventive-id{color:#047857;font-weight:800}.footer{margin-top:20px;text-align:center;color:#9ca3af;font-size:.72rem}iframe{display:none}@media(max-width:700px){.menu-busca{grid-template-columns:1fr}.document-filters,.occ-report-filters,.pending-filters{grid-template-columns:1fr}.pending-summary,.control-summary,.occ-report-summary{grid-template-columns:1fr 1fr}.search-box{display:grid}.search-box button{padding:12px}.actions{flex-direction:column}.chip,.btn-preventive,.btn-search{width:min(100%,380px)}.modal-actions{flex-direction:column-reverse}.modal-actions button{width:100%}}
+}.provider-admin-card{margin-top:10px;border:1px solid #dbeafe;border-left:5px solid #1d4ed8;border-radius:12px;padding:12px;background:#fff}.company-preview{margin-top:12px;padding:12px;border:1px solid #e5e7eb;border-radius:12px;background:#f9fafb}.company-logo-preview{max-width:180px;max-height:90px;display:block;margin-top:8px}.switch-row{display:flex;align-items:center;gap:8px;margin-top:10px}.switch-row input{width:auto}.audit-filters{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;align-items:end}.audit-filters label{min-width:0}.audit-filters input,.audit-filters select{width:100%;min-width:0;max-width:100%;box-sizing:border-box}.audit-search-field{grid-column:1 / -1}.audit-card{margin-top:10px;border:1px solid #e5e7eb;border-left:5px solid #374151;border-radius:12px;padding:12px;background:#fff}.audit-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.audit-meta{margin-top:7px;line-height:1.55;color:#4b5563;font-size:.86rem}.audit-detail{margin-top:8px;padding:8px;border-radius:8px;background:#f9fafb;font-size:.82rem;white-space:pre-wrap;word-break:break-word}.audit-result{padding:4px 8px;border-radius:999px;font-size:.74rem;font-weight:800}.audit-result.success{background:#dcfce7;color:#166534}.audit-result.fail{background:#fee2e2;color:#991b1b}.audit-result.blocked{background:#ffedd5;color:#9a3412}.search-help{background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:12px;margin-bottom:12px;color:#1e3a8a;line-height:1.5}.search-help strong{display:block;margin-bottom:4px}.search-help ul{margin:6px 0 0 20px;padding:0}.search-box{display:flex;gap:8px}.search-box input{flex:1}.search-box button{border:0;background:#1f4e78;color:#fff;border-radius:9px;padding:0 18px}.back-asset-wrap{margin-bottom:12px;text-align:left}.back-asset-btn{border:1px solid #1f4e78;background:#fff;color:#1f4e78;border-radius:10px;padding:10px 13px;font-weight:700;cursor:pointer}.pending-filters{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;align-items:end}.pending-filter-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.pending-access-note{margin-bottom:10px;padding:9px 11px;border-radius:10px;background:#f9fafb;border:1px solid #e5e7eb;font-size:.84rem;color:#4b5563}.document-filters{display:grid;grid-template-columns:2fr 1fr 1fr 1fr auto;gap:8px;align-items:end}.occ-report-filters{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;align-items:end}.occ-report-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.occ-report-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0}.occ-report-summary-card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:11px;text-align:center}.occ-report-summary-card strong{display:block;font-size:1.25rem}.occ-category-summary{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0 16px}.occ-category-chip{background:#ecfeff;border:1px solid #a5f3fc;color:#155e75;border-radius:999px;padding:6px 10px;font-size:.8rem;font-weight:700}.occ-report-card{margin-top:11px;padding:14px;border:1px solid #e5e7eb;border-left:5px solid #0f766e;border-radius:13px;background:#fff}.occ-report-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.occ-report-meta{margin-top:8px;line-height:1.55;color:#4b5563;font-size:.86rem}.occ-report-links{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}.occ-report-links a{font-weight:700}.occ-pdf-box{margin-top:18px;padding:14px;border:1px solid #99f6e4;background:#f0fdfa;border-radius:12px}.occ-pdf-link{display:inline-flex;margin-top:8px;padding:10px 14px;border-radius:9px;background:#0f766e;color:#fff;text-decoration:none;font-weight:700}.document-card{margin-top:11px;padding:14px;border:1px solid #e5e7eb;border-left:5px solid #7c3aed;border-radius:13px;background:#fff}.document-title{font-weight:800}.document-meta{margin-top:7px;line-height:1.55;color:#4b5563;font-size:.86rem}.document-open{display:inline-flex;align-items:center;justify-content:center;margin-top:10px;padding:10px 14px;border-radius:9px;background:#7c3aed;color:#fff;text-decoration:none;font-weight:700}.document-empty{margin-top:14px;padding:15px;border:1px dashed #d1d5db;border-radius:12px;text-align:center;color:#6b7280}.asset-document-list{display:grid;gap:10px}.asset-document-card{padding:12px;border:1px solid #ddd6fe;border-left:5px solid #7c3aed;border-radius:12px;background:#faf5ff}.asset-document-card .document-open{margin-top:8px}.search-result,.pending-card,.control-item,.history-card,.preventive-card{margin-top:11px;padding:14px;border:1px solid #e5e7eb;border-radius:13px;background:#fff}.search-result-id{font-size:.8rem;font-weight:800;color:#1f4e78}.search-result-name{font-weight:700}.search-result-data{margin-top:8px;line-height:1.55;color:#4b5563;font-size:.86rem}.open-button{display:block;margin-top:10px;padding:10px;border-radius:9px;background:#1f4e78;color:#fff;text-align:center;text-decoration:none;font-weight:700}.pending-summary,.control-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0}.pending-number,.control-summary-card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:11px;text-align:center}.pending-number strong,.control-summary-card strong{display:block;font-size:1.3rem}.pending-number.pending-filter-card{width:100%;font:inherit;color:inherit;cursor:pointer;transition:border-color .15s,box-shadow .15s,background .15s,transform .15s}.pending-number.pending-filter-card:hover{border-color:#93c5fd;background:#f8fbff;transform:translateY(-1px)}.pending-number.pending-filter-card:focus-visible{outline:3px solid #bfdbfe;outline-offset:2px}.pending-number.pending-filter-card.active{border-color:#1f4e78;background:#eff6ff;box-shadow:0 0 0 2px #bfdbfe}.pending-number.pending-filter-card.active strong{color:#1f4e78}.preventive-login-info{margin-bottom:13px;padding:10px;background:#ecfdf5;border-radius:10px;color:#065f46;font-size:.85rem}.control-header{display:flex;flex-wrap:wrap;gap:10px;align-items:end}.control-field{flex:1;min-width:180px}.progress-box{margin-top:14px;padding:13px;border:1px solid #e5e7eb;border-radius:12px}.progress-head{display:flex;justify-content:space-between;font-weight:700}.progress-track{height:13px;background:#e5e7eb;border-radius:999px;overflow:hidden;margin-top:8px}.progress-fill{height:100%;width:0;background:#059669}.control-tabs{display:flex;flex-wrap:wrap;gap:8px;margin-top:15px}.control-tab{padding:8px 12px;border:1px solid #d1d5db;border-radius:999px;background:#fff;font-weight:700}.control-tab.active{background:#111827;color:#fff}.control-item.pending{border-left:5px solid #dc2626}.control-item.done{border-left:5px solid #059669}.control-head{display:flex;justify-content:space-between;gap:10px}.control-status{padding:5px 8px;border-radius:999px;font-size:.75rem;font-weight:800}.control-status.pending{background:#fee2e2;color:#991b1b}.control-status.done{background:#dcfce7;color:#166534}.provider-card{margin-top:8px;padding:10px;border:1px solid #e5e7eb;border-radius:10px}.report-action-box{margin-top:20px;padding:15px;border:1px solid #bfdbfe;background:#eff6ff;border-radius:13px;text-align:center}.report-action-box button{margin-top:8px}label{display:grid;gap:5px;margin-top:12px;font-weight:600}input,select,textarea{width:100%;padding:11px;border:1px solid #d1d5db;border-radius:9px;font:inherit}textarea{resize:vertical}button{font:inherit}.btn{border:0;border-radius:9px;padding:11px 15px;background:#111827;color:#fff;cursor:pointer}.btn-green{background:#047857}.btn-blue{background:#1f4e78}.btn-danger{background:#b91c1c}.btn-secondary{background:#e5e7eb;color:#111827}button:disabled{opacity:.55;cursor:not-allowed}.requirements-box{margin-top:13px;padding:11px;border-radius:11px;background:#f9fafb;border:1px solid #e5e7eb}.requirement{margin:5px 0;font-size:.85rem}.required-yes{color:#991b1b;font-weight:700}.required-no{color:#047857}.signature-box{margin-top:14px;padding:12px;border:1px solid #d1d5db;border-radius:12px;background:#f9fafb}.signature-title{font-weight:800}.signature-help{margin-top:3px;font-size:.8rem;color:#6b7280}.signature-canvas-wrap{margin-top:10px;border:2px dashed #9ca3af;background:#fff;border-radius:9px;overflow:hidden}#signatureCanvas{width:100%;height:180px;display:block;touch-action:none}.modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;padding:12px;background:rgba(0,0,0,.45);z-index:999}.modal-box{width:min(700px,96vw);max-height:92vh;overflow:auto;background:#fff;border-radius:15px;padding:17px}.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}.photo-preview{display:none;max-width:100%;max-height:280px;margin-top:10px}.message{display:none;margin-top:12px;padding:10px;border-radius:8px;line-height:1.5}.message.error{display:block;background:#fee2e2;color:#991b1b}.message.loading{display:block;background:#fef3c7;color:#92400e}.message.success{display:block;background:#d1fae5;color:#065f46}.preventive-info{padding:11px;border:1px solid #a7f3d0;border-radius:10px;background:#ecfdf5;line-height:1.6}.tag{display:inline-block;padding:4px 8px;margin:5px 4px 5px 0;background:#eef2ff;border-radius:999px;font-size:.75rem}.preventive-card{background:#f0fdf4}.preventive-id{color:#047857;font-weight:800}.footer{margin-top:20px;text-align:center;color:#9ca3af;font-size:.72rem}iframe{display:none}@media(max-width:700px){.menu-busca{grid-template-columns:1fr}.document-filters,.occ-report-filters,.pending-filters{grid-template-columns:1fr}.pending-summary,.control-summary,.occ-report-summary{grid-template-columns:1fr 1fr}.search-box{display:grid}.search-box button{padding:12px}.actions{flex-direction:column}.chip,.btn-preventive,.btn-search{width:min(100%,380px)}.modal-actions{flex-direction:column-reverse}.modal-actions button{width:100%}}
 .photo-source-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.photo-source-actions .btn{flex:1;min-width:145px}.photo-source-hidden{position:absolute!important;left:-9999px!important;width:1px!important;height:1px!important;opacity:0!important;pointer-events:none!important}.menu-button.upload-doc.active{background:#0369a1;border-color:#0369a1}.document-upload-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;align-items:end}.document-upload-grid .full{grid-column:1/-1}.upload-file-box{margin-top:12px;padding:14px;border:2px dashed #94a3b8;border-radius:12px;background:#f8fafc}.upload-file-name{margin-top:7px;font-size:.86rem;color:#475569}.upload-success-card{margin-top:12px;padding:12px;border:1px solid #86efac;border-radius:12px;background:#f0fdf4}@media(max-width:700px){.document-upload-grid{grid-template-columns:1fr}.document-upload-grid .full{grid-column:auto}}.qr-language-switcher{display:flex;justify-content:flex-end;gap:7px;margin:0 0 10px 0;flex-wrap:wrap}.qr-language-switcher button{border:1px solid #cbd5e1;background:#fff;color:#1f2937;border-radius:999px;padding:7px 11px;font-weight:700;cursor:pointer}.qr-language-switcher button.active{background:#0b315e;color:#fff;border-color:#0b315e}
 .qr-native-date-hidden{
   position:absolute!important;
@@ -2326,10 +2332,15 @@ const QR_PENDING_SNAPSHOT_KEY_B5311="QRMANUT_PENDING_SNAPSHOT_B5311";
 const QR_PENDING_SNAPSHOT_TTL_B5311=45000;
 let qrPendingLastFiltersB5311=null;
 let qrPendingLastDataB5311=null;
+// B5.3.13 — status usado na última consulta real e filtro rápido aplicado pelos cards.
+let qrPendingLoadedStatusB5313="";
+let qrPendingQuickStatusB5313="";
 
 function clearPendingFastSnapshotB5311_(){
   qrPendingLastFiltersB5311=null;
   qrPendingLastDataB5311=null;
+  qrPendingLoadedStatusB5313="";
+  qrPendingQuickStatusB5313="";
   try{sessionStorage.removeItem(QR_PENDING_SNAPSHOT_KEY_B5311)}catch(_e){}
 }
 
@@ -2358,6 +2369,7 @@ function savePendingFastSnapshotB5311_(assetId){
       filtersMeta:qrPendingLastFiltersB5311,
       data:qrPendingLastDataB5311,
       selected:pendingParams(),
+      loadedStatus:qrPendingLoadedStatusB5313,
       tabUsersText:$("tabUsers")?.textContent||"",
       tabSolicitationsText:$("tabSolicitations")?.textContent||""
     };
@@ -2385,7 +2397,9 @@ function restorePendingViewFastB5311_(){
   setPendingFilterValue7662510_("pendingCategory",f.categoria);
   setPendingFilterValue7662510_("pendingFloor",f.pavimento);
   setPendingFilterValue7662510_("pendingLocation",f.localizacao);
-  renderPendingB534(snap.data||{});
+  qrPendingLoadedStatusB5313=String(snap.loadedStatus==null?f.status||"":snap.loadedStatus||"");
+  qrPendingQuickStatusB5313=String(f.status||"");
+  renderPendingB534(snap.data||{},true);
   pendingFiltersLoaded=true;
   if(snap.tabUsersText&&$("tabUsers"))$("tabUsers").textContent=snap.tabUsersText;
   if(snap.tabSolicitationsText&&$("tabSolicitations"))$("tabSolicitations").textContent=snap.tabSolicitationsText;
@@ -3240,18 +3254,73 @@ async function loadPendingFilters(){
   try{const r=await menuApi({action:"pendingfilters"});if(!r.ok)throw new Error(r.detail||"Erro ao carregar filtros.");applyPendingFiltersB533(r.filters||{})}
   catch(e){$("pendingStatusText").textContent=e.message||"Erro ao carregar filtros."}
 }
-function renderPendingB534(d){
-  d=d||{};
-  try{qrPendingLastDataB5311={summary:JSON.parse(JSON.stringify(d.summary||{})),occurrences:JSON.parse(JSON.stringify(d.occurrences||[]))}}catch(_e){qrPendingLastDataB5311={summary:d.summary||{},occurrences:d.occurrences||[]}}
-  const s=d.summary||{},items=d.occurrences||[];
-  $("pendingSummary").innerHTML=`<div class="pending-number"><strong>${s.total||0}</strong>Total</div><div class="pending-number"><strong>🔴 ${s.abertas||0}</strong>Abertas</div><div class="pending-number"><strong>🟡 ${s.emAtendimento||0}</strong>Atendimento</div><div class="pending-number"><strong>🟠 ${s.aguardandoPeca||0}</strong>Aguardando peça</div>`;
-  $("pendingStatusText").textContent=items.length+" OC(s) encontrada(s) com os filtros aplicados.";
+function pendingStatusNormB5313_(v){
+  return String(v||"").trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+}
+
+function pendingItemsForQuickStatusB5313_(items,status){
+  const target=pendingStatusNormB5313_(status);
+  if(!target)return items.slice();
+  return items.filter(item=>pendingStatusNormB5313_(item.status)===target);
+}
+
+function pendingSummaryCardB5313_(status,count,label,icon){
+  const active=pendingStatusNormB5313_(qrPendingQuickStatusB5313)===pendingStatusNormB5313_(status);
+  const safeStatus=String(status||"").replace(/'/g,"\\'");
+  return `<button type="button" class="pending-number pending-filter-card${active?" active":""}" onclick="applyPendingCardFilterB5313_('${safeStatus}')" aria-pressed="${active?"true":"false"}" title="${esc(qrLanguage==="en-US"?`Filter by ${label}`:`Filtrar por ${label}`)}"><strong>${icon?icon+" ":""}${Number(count||0)}</strong>${esc(label)}</button>`;
+}
+
+function renderPendingViewB5313_(){
+  const d=qrPendingLastDataB5311||{};
+  const s=d.summary||{};
+  const allItems=Array.isArray(d.occurrences)?d.occurrences:[];
+  const items=pendingItemsForQuickStatusB5313_(allItems,qrPendingQuickStatusB5313);
+  const totalLabel=qrLanguage==="en-US"?"Total":"Total";
+  const openLabel=qrLanguage==="en-US"?"Open":"Abertas";
+  const progressLabel=qrLanguage==="en-US"?"In progress":"Atendimento";
+  const waitingLabel=qrLanguage==="en-US"?"Waiting for part":"Aguardando peça";
+  $("pendingSummary").innerHTML=
+    pendingSummaryCardB5313_("",s.total||0,totalLabel,"")+ 
+    pendingSummaryCardB5313_("Aberta",s.abertas||0,openLabel,"🔴")+
+    pendingSummaryCardB5313_("Em atendimento",s.emAtendimento||0,progressLabel,"🟡")+
+    pendingSummaryCardB5313_("Aguardando peça",s.aguardandoPeca||0,waitingLabel,"🟠");
+
+  const filterText=qrPendingQuickStatusB5313
+    ? (qrLanguage==="en-US"?` • quick filter: ${qrPendingQuickStatusB5313}`:` • filtro rápido: ${qrPendingQuickStatusB5313}`)
+    : "";
+  $("pendingStatusText").textContent=(qrLanguage==="en-US"?`${items.length} work order(s) displayed`:`${items.length} OC(s) exibida(s)`)+filterText+".";
   if(!items.length){
-    $("pendingResults").innerHTML='<div class="document-empty">Nenhuma OC pendente encontrada para os filtros informados.</div>';
+    $("pendingResults").innerHTML=`<div class="document-empty">${qrLanguage==="en-US"?"No pending work orders found for this filter.":"Nenhuma OC pendente encontrada para este filtro."}</div>`;
     return;
   }
   $("pendingResults").innerHTML=items.map(item=>`<div class="pending-card"><b>${esc(item.ocorrencia)}</b><div>${esc(item.id)} – ${esc(item.nome)}</div><div class="search-result-data"><b>Status:</b> ${esc(item.status)}${item.prestador?`<br><b>Prestador:</b> ${esc(item.prestador)}`:""}${item.categoriaOcorrencia?`<br><b>Categoria:</b> ${esc(item.categoriaOcorrencia)}`:""}${item.pavimento?`<br><b>Pavimento:</b> ${esc(item.pavimento)}`:""}${item.localizacao?`<br><b>Localização:</b> ${esc(item.localizacao)}`:""}<br><b>Descrição:</b> ${esc(item.descricao)}</div><a class="open-button" href="?id=${encodeURIComponent(normalizeId(item.id))}" onclick="savePendingReturnContext7662510_('${esc(normalizeId(item.id))}')">Abrir ficha</a></div>`).join("");
 }
+
+async function applyPendingCardFilterB5313_(status){
+  status=String(status||"");
+  const sel=$("pendingStatus");
+  if(sel)sel.value=status;
+  qrPendingQuickStatusB5313=status;
+
+  // Se a consulta-base veio sem filtro de status, ela já contém todos os cards.
+  // Nesse caso o atalho é 100% local e instantâneo.
+  if(!qrPendingLoadedStatusB5313||pendingStatusNormB5313_(qrPendingLoadedStatusB5313)===pendingStatusNormB5313_(status)){
+    renderPendingViewB5313_();
+    try{qrPerfRecordB530("LOCAL","pending",status?"card-status-"+pendingStatusNormB5313_(status):"card-total",0,null,"OK")}catch(_e){}
+    return;
+  }
+
+  // Se a base atual veio previamente limitada a outro status, busca a combinação correta.
+  await loadPending({context:"ocs-pendentes-card"});
+}
+
+function renderPendingB534(d,preserveQuick){
+  d=d||{};
+  try{qrPendingLastDataB5311={summary:JSON.parse(JSON.stringify(d.summary||{})),occurrences:JSON.parse(JSON.stringify(d.occurrences||[]))}}catch(_e){qrPendingLastDataB5311={summary:d.summary||{},occurrences:d.occurrences||[]}}
+  if(!preserveQuick)qrPendingQuickStatusB5313=String($("pendingStatus")?.value||"");
+  renderPendingViewB5313_();
+}
+
 async function loadPendingBundleB533(){
   const params=pendingParams();
   const btn=$("pendingApplyFilters");if(btn){btn.disabled=true;btn.textContent="Consultando..."}
@@ -3263,8 +3332,10 @@ async function loadPendingBundleB533(){
     const effectiveParams=pendingParams();
     const related={ok:true,summary:r.summary||{},occurrences:r.occurrences||[],performanceMs:r.performanceMs,performanceBreakdown:r.performanceBreakdown};
     qrSeedRelatedCacheB533("pending",effectiveParams,related);
+    qrPendingLoadedStatusB5313=String(effectiveParams.status||"");
+    qrPendingQuickStatusB5313=String(effectiveParams.status||"");
     // B5.3.4: o bundle já trouxe as OCs. Renderizar diretamente; não fazer um segundo POST pending.
-    renderPendingB534(related);
+    renderPendingB534(related,true);
   }catch(e){$("pendingSummary").innerHTML="";$("pendingResults").innerHTML="";$("pendingStatusText").textContent=e.message||"Erro ao carregar OCs pendentes."}
   finally{if(btn){btn.disabled=false;btn.textContent="Aplicar filtros"}}
 }
@@ -3274,9 +3345,12 @@ async function loadPending(options={}){
   if(btn){btn.disabled=true;btn.textContent="Consultando...";}
   $("pendingStatusText").textContent="Consultando OCs pendentes...";
   try{
-    const d=await menuApi({action:"pending",...pendingParams(),__qrForce:!!options.force,__qrContext:options.context||"ocs-pendentes"});
+    const params=pendingParams();
+    const d=await menuApi({action:"pending",...params,__qrForce:!!options.force,__qrContext:options.context||"ocs-pendentes"});
     if(!d.ok)throw new Error(d.detail||"Não foi possível consultar as OCs pendentes.");
-    renderPendingB534(d);
+    qrPendingLoadedStatusB5313=String(params.status||"");
+    qrPendingQuickStatusB5313=String(params.status||"");
+    renderPendingB534(d,true);
   }catch(e){
     $("pendingSummary").innerHTML="";
     $("pendingResults").innerHTML="";
@@ -7858,6 +7932,7 @@ document.addEventListener("visibilitychange",()=>{
 // QRManut PNCQ 7.6.6.25 B5.2.13 - Scanner de QR Code integrado à Busca de Ativos.
 // QRManut PNCQ 7.6.6.25 B5.3.5 - Filtros do Relatório de OCs otimizados e cacheados no backend.
 // QRManut PNCQ 7.6.6.25 B5.3.3 - Bundles de primeira carga reduzem viagens à API em OCs Pendentes, Documentos e Relatório de OCs.
+// QRManut PNCQ 7.6.6.25 B5.3.13 - Cards de resumo das OCs Pendentes atuam como filtros rápidos locais.
 // QRManut PNCQ 7.6.6.25 B5.3.12 - Índices da ficha com cache de servidor de 15 min e invalidação automática.
 // QRManut PNCQ 7.6.6.25 B5.3.11 - Retorno rápido para OCs Pendentes com snapshot curto na mesma aba.
 // QRManut PNCQ 7.6.6.25 B5.3.0 - Cache local controlado, deduplicação in-flight e Diagnóstico de Performance.
