@@ -1,21 +1,22 @@
-<!-- QRManut 7.6.6.25: B5.3.0 — Performance Frontend / Cache Local / Deduplicação / Diagnóstico
-     - Adiciona cache local controlado de 45 s para leituras autenticadas predominantemente consultivas.
-     - Chaves variam por sessão/escopo + ação + filtros/parâmetros, sem armazenar o token na chave.
-     - Adiciona deduplicação de requisições simultâneas (in-flight Promise reuse).
-     - Invalida o cache após qualquer POST mutável e no logout/troca de sessão.
-     - Mantém systemsession fora do cache para preservar revogação, expiração e alterações de acesso.
-     - Adiciona Diagnóstico de Performance (MASTER) com GET/POST/LOCAL, contexto, total, backend e OK/ERRO.
-     - Resumo da sessão: medições, média, P95, máximo, >2 s e atendimentos LOCAL.
-     - Botões de atualização/consulta explícita nas rotinas críticas podem forçar nova leitura do backend.
-     - Não altera regras de negócio, permissões, estrutura de dados ou GS.
-     Mantém integralmente as correções e funcionalidades da B5.2.15. -->
+<!-- QRManut 7.6.6.25: B5.3.1 — Performance Diagnóstico R2 / Preventivas
+     - Mantém cache local, deduplicação e diagnóstico da B5.3.0.
+     - Distingue LOCAL de IN-FLIGHT para não contar espera compartilhada como cache instantâneo.
+     - Resumo passa a separar medições totais de chamadas reais à API.
+     - Adiciona Overhead = Total - Backend e detalhes internos quando o backend os fornece.
+     - Remove chamadas systemsession redundantes ao abrir Preventivas, Pendências/Providências e Permissões;
+       a própria rota autenticada continua validando a sessão no backend.
+     - Corrige o pré-carregamento de prestadores das Preventivas usando a rota existente providers.
+     - Invalida também o cache auxiliar de prestadores de Preventivas após gravações.
+     - Trabalha em conjunto com GS B5.3.1, que instrumenta preventivecontrol e evita carregar documentos
+       de preventiva na tela de controle mensal (relatórios continuam completos).
+     Mantém integralmente as correções e funcionalidades da B5.3.0/B5.2.15. -->
 <!doctype html>
 <html lang="pt-br">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>QRManut</title>
-<meta name="qrmanut-build" content="2026-09-20-b5.3.0">
+<meta name="qrmanut-build" content="2026-09-20-b5.3.1">
 <meta name="theme-color" content="#0b315e">
 <meta name="application-name" content="QRManut">
 <meta name="mobile-web-app-capable" content="yes">
@@ -614,18 +615,18 @@ html,body{max-width:100%;overflow-x:hidden}
 
 
 /* ============================================================
- * QRManut PNCQ B5.3.0 — Diagnóstico de Performance
+ * QRManut PNCQ B5.3.1 — Diagnóstico de Performance R2
  * ============================================================ */
 .menu-button.performance.active{background:#111827;border-color:#111827;color:#fff}
 .perf-summary-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;margin:14px 0}
 .perf-summary-card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:11px;text-align:center}
 .perf-summary-card strong{display:block;font-size:1.22rem}
 .perf-table-wrap{overflow:auto;border:1px solid #e5e7eb;border-radius:12px;background:#fff}
-.perf-table{width:100%;border-collapse:collapse;font-size:.8rem;min-width:820px}
+.perf-table{width:100%;border-collapse:collapse;font-size:.8rem;min-width:1180px}
 .perf-table th,.perf-table td{padding:9px 10px;border-bottom:1px solid #f1f5f9;text-align:left;white-space:nowrap}
 .perf-table th{position:sticky;top:0;background:#f8fafc;z-index:1;font-size:.76rem;color:#475569}
 .perf-method{display:inline-flex;align-items:center;justify-content:center;min-width:54px;padding:3px 7px;border-radius:999px;font-weight:800;font-size:.72rem}
-.perf-method.get{background:#dbeafe;color:#1d4ed8}.perf-method.post{background:#ede9fe;color:#6d28d9}.perf-method.local{background:#dcfce7;color:#166534}
+.perf-method.get{background:#dbeafe;color:#1d4ed8}.perf-method.post{background:#ede9fe;color:#6d28d9}.perf-method.local{background:#dcfce7;color:#166534}.perf-method.in-flight{background:#fef3c7;color:#92400e}
 .perf-ok{color:#166534;font-weight:800}.perf-error{color:#991b1b;font-weight:800}
 .perf-slow{background:#fff7ed}.perf-actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
 .perf-note{padding:10px 12px;border-radius:10px;background:#f8fafc;border:1px solid #e5e7eb;line-height:1.45;font-size:.84rem}
@@ -940,7 +941,7 @@ html,body{max-width:100%;overflow-x:hidden}
     <div class="card">
       <div class="back-asset-wrap"><button id="performanceBackMenu" class="back-asset-btn" type="button">← Voltar ao Menu Principal</button></div>
       <h2 id="performanceTitle">⏱️ Diagnóstico de Performance</h2>
-      <div id="performanceHelp" class="perf-note">Mede o tempo navegador → API → navegador. Leituras atendidas pelo cache aparecem como <b>LOCAL</b>. O cache desta etapa é mantido somente durante a sessão da página e expira automaticamente.</div>
+      <div id="performanceHelp" class="perf-note">Mede navegador → API → navegador. <b>LOCAL</b> = cache instantâneo; <b>IN-FLIGHT</b> = uma segunda tela aguardou a mesma requisição já em andamento. Overhead = Total − Backend.</div>
       <div id="performanceSummary" class="perf-summary-grid"></div>
       <div class="perf-actions">
         <button id="performanceClearMeasurements" class="btn btn-secondary" type="button">Limpar medições</button>
@@ -948,7 +949,7 @@ html,body{max-width:100%;overflow-x:hidden}
       </div>
       <div id="performanceCacheStatus" class="muted" style="margin:8px 0 12px"></div>
       <div class="perf-table-wrap"><table class="perf-table">
-        <thead><tr><th>Horário</th><th>Método</th><th>Ação</th><th>Contexto</th><th>Total</th><th>Backend</th><th>Resultado</th></tr></thead>
+        <thead><tr><th>Horário</th><th>Método</th><th>Ação</th><th>Contexto</th><th>Total</th><th>Backend</th><th>Overhead</th><th>Detalhes</th><th>Resultado</th></tr></thead>
         <tbody id="performanceRows"></tbody>
       </table></div>
     </div>
@@ -1658,7 +1659,7 @@ let qrPerfRowsB530=[];
 
 const QR_CACHEABLE_ACTIONS_B530=new Set([
   "search","pendingfilters","pending","solicitations","solsummary","soltriagemmeta",
-  "occurrencereportfilters","occurrencereport","preventiveproviders","preventivecontrol",
+  "occurrencereportfilters","occurrencereport","preventivecontrol",
   "documents","documentfilters","users","providers","accessrequests","providersadmin",
   "companyconfig","profilepermissionsadmin","auditfilters","audit","occurrencecatalogadmin",
   "maintenancepending","documentuploadmeta","assetbundle","assetdocuments","history",
@@ -1674,7 +1675,7 @@ const QR_ACTION_CONTEXT_B530={
   search:"buscar-ativos",pending:"ocs-pendentes",pendingfilters:"ocs-pendentes-filtros",
   solicitations:"solicitacoes",solsummary:"solicitacoes-resumo",soltriagemmeta:"solicitacoes-meta",
   occurrencereport:"relatorio-oc",occurrencereportfilters:"relatorio-oc-filtros",
-  preventiveproviders:"preventivas-prestadores",preventivecontrol:"preventivas",
+  preventivecontrol:"preventivas",
   documents:"documentos",documentfilters:"documentos-filtros",users:"usuarios",
   providers:"prestadores-base",accessrequests:"solicitacoes-acesso",providersadmin:"prestadores",
   companyconfig:"empresa",profilepermissionsadmin:"permissoes",audit:"auditoria",
@@ -1686,11 +1687,29 @@ const QR_ACTION_CONTEXT_B530={
 function qrPerfClockB530(){return (window.performance&&performance.now)?performance.now():Date.now()}
 function qrPerfContextB530(action,explicit){return String(explicit||QR_ACTION_CONTEXT_B530[action]||"api")}
 function qrPerfBackendMsB530(data){const n=Number(data&&data.performanceMs);return Number.isFinite(n)&&n>=0?n:null}
-function qrPerfRecordB530(method,action,context,totalMs,backendMs,result){
+function qrPerfDetailsB531(data){
+  const b=data&&data.performanceBreakdown;
+  if(!b)return "";
+  const f=v=>Number.isFinite(Number(v))?Math.round(Number(v)):null;
+  const parts=[];
+  if(f(b.equipmentMs)!=null)parts.push(`ativos ${f(b.equipmentMs)} ms`);
+  const pm=b.preventiveMap||{};
+  if(f(pm.prepareMs)!=null)parts.push(`prep ${f(pm.prepareMs)} ms`);
+  if(f(pm.readMs)!=null)parts.push(`leitura-prev ${f(pm.readMs)} ms`);
+  if(f(pm.documentsMs)!=null)parts.push(`docs ${f(pm.documentsMs)} ms`);
+  if(f(pm.buildMs)!=null)parts.push(`mapa ${f(pm.buildMs)} ms`);
+  if(f(b.classifyMs)!=null)parts.push(`classif ${f(b.classifyMs)} ms`);
+  if(b.includeDocuments===false)parts.push("docs=off");
+  if(Number.isFinite(Number(b.assetsRead)))parts.push(`ativos=${Number(b.assetsRead)}`);
+  if(Number.isFinite(Number(pm.rows)))parts.push(`prev=${Number(pm.rows)}`);
+  return parts.join(" • ");
+}
+function qrPerfRecordB530(method,action,context,totalMs,backendMs,result,details){
   const row={
     time:new Date(),method:String(method||"-").toUpperCase(),action:String(action||"-"),
     context:String(context||"-"),totalMs:Math.max(0,Number(totalMs)||0),
-    backendMs:backendMs==null?null:Math.max(0,Number(backendMs)||0),result:String(result||"OK").toUpperCase()
+    backendMs:backendMs==null?null:Math.max(0,Number(backendMs)||0),result:String(result||"OK").toUpperCase(),
+    details:String(details||"")
   };
   qrPerfRowsB530.push(row);
   if(qrPerfRowsB530.length>QR_PERF_MAX_ROWS_B530)qrPerfRowsB530.splice(0,qrPerfRowsB530.length-QR_PERF_MAX_ROWS_B530);
@@ -1708,20 +1727,25 @@ function qrRenderPerformanceB530(){
   const summary=$("performanceSummary"),rows=$("performanceRows"),status=$("performanceCacheStatus");
   if(!summary||!rows)return;
   const t=(pt,en)=>qrLanguage==="en-US"?en:pt;
-  const vals=qrPerfRowsB530.map(x=>x.totalMs),count=vals.length;
-  const avg=count?vals.reduce((a,b)=>a+b,0)/count:0,p95=qrPerfPercentileB530(vals,95),max=count?Math.max(...vals):0;
-  const slow=qrPerfRowsB530.filter(x=>x.totalMs>2000).length,local=qrPerfRowsB530.filter(x=>x.method==="LOCAL").length;
+  const apiRows=qrPerfRowsB530.filter(x=>x.method==="GET"||x.method==="POST");
+  const vals=apiRows.map(x=>x.totalMs),count=qrPerfRowsB530.length,apiCount=vals.length;
+  const avg=apiCount?vals.reduce((a,b)=>a+b,0)/apiCount:0,p95=qrPerfPercentileB530(vals,95),max=apiCount?Math.max(...vals):0;
+  const slow=apiRows.filter(x=>x.totalMs>2000).length;
+  const local=qrPerfRowsB530.filter(x=>x.method==="LOCAL").length;
+  const inflight=qrPerfRowsB530.filter(x=>x.method==="IN-FLIGHT").length;
   summary.innerHTML=[
-    [t("Medições","Measurements"),count],[t("Média","Average"),qrFormatPerfMsB530(avg)],
-    ["P95",qrFormatPerfMsB530(p95)],[t("Máximo","Maximum"),qrFormatPerfMsB530(max)],
-    ["> 2 s",slow],[t("LOCAL","LOCAL"),local]
+    [t("Medições","Measurements"),count],[t("Chamadas API","API calls"),apiCount],
+    [t("Média API","API average"),qrFormatPerfMsB530(avg)],["P95 API",qrFormatPerfMsB530(p95)],
+    [t("Máximo API","API maximum"),qrFormatPerfMsB530(max)],["> 2 s API",slow],
+    ["LOCAL",local],["IN-FLIGHT",inflight]
   ].map(x=>`<div class="perf-summary-card"><strong>${esc(x[1])}</strong><span>${esc(x[0])}</span></div>`).join("");
   const recent=qrPerfRowsB530.slice().reverse().slice(0,150);
   rows.innerHTML=recent.length?recent.map(x=>{
     const tm=x.time.toLocaleTimeString(qrLanguage==="en-US"?"en-US":"pt-BR",{hour12:false});
-    const cls=x.totalMs>2000?" class=\"perf-slow\"":"";
-    return `<tr${cls}><td>${esc(tm)}</td><td><span class="perf-method ${esc(x.method.toLowerCase())}">${esc(x.method)}</span></td><td>${esc(x.action)}</td><td>${esc(x.context)}</td><td>${esc(qrFormatPerfMsB530(x.totalMs))}</td><td>${x.backendMs==null?"—":esc(qrFormatPerfMsB530(x.backendMs))}</td><td class="${x.result==="OK"?"perf-ok":"perf-error"}">${esc(x.result)}</td></tr>`;
-  }).join(""):`<tr><td colspan="7" style="text-align:center;color:#6b7280;padding:18px">${t("Nenhuma medição ainda.","No measurements yet.")}</td></tr>`;
+    const cls=(x.method==="GET"||x.method==="POST")&&x.totalMs>2000?" class=\"perf-slow\"":"";
+    const overhead=x.backendMs==null?null:Math.max(0,x.totalMs-x.backendMs);
+    return `<tr${cls}><td>${esc(tm)}</td><td><span class="perf-method ${esc(x.method.toLowerCase())}">${esc(x.method)}</span></td><td>${esc(x.action)}</td><td>${esc(x.context)}</td><td>${esc(qrFormatPerfMsB530(x.totalMs))}</td><td>${x.backendMs==null?"—":esc(qrFormatPerfMsB530(x.backendMs))}</td><td>${overhead==null?"—":esc(qrFormatPerfMsB530(overhead))}</td><td>${x.details?esc(x.details):"—"}</td><td class="${x.result==="OK"?"perf-ok":"perf-error"}">${esc(x.result)}</td></tr>`;
+  }).join(""):`<tr><td colspan="9" style="text-align:center;color:#6b7280;padding:18px">${t("Nenhuma medição ainda.","No measurements yet.")}</td></tr>`;
   if(status)status.textContent=t(
     `Cache local: ${qrLocalCacheB530.size} entrada(s) • TTL padrão: 45 s • geração ${qrCacheGenerationB530}`,
     `Local cache: ${qrLocalCacheB530.size} entr${qrLocalCacheB530.size===1?"y":"ies"} • default TTL: 45 s • generation ${qrCacheGenerationB530}`
@@ -1729,8 +1753,8 @@ function qrRenderPerformanceB530(){
   const title=$("performanceTitle"),help=$("performanceHelp"),b1=$("performanceClearMeasurements"),b2=$("performanceClearCache"),back=$("performanceBackMenu");
   if(title)title.textContent=t("⏱️ Diagnóstico de Performance","⏱️ Performance Diagnostics");
   if(help)help.innerHTML=t(
-    "Mede o tempo navegador → API → navegador. Leituras atendidas pelo cache aparecem como <b>LOCAL</b>. O cache desta etapa é mantido somente durante a sessão da página e expira automaticamente.",
-    "Measures browser → API → browser time. Reads served from cache appear as <b>LOCAL</b>. This cache lives only for the current page session and expires automatically."
+    "Mede navegador → API → navegador. <b>LOCAL</b> = cache instantâneo; <b>IN-FLIGHT</b> = uma segunda solicitação aguardou a mesma requisição já em andamento. <b>Overhead</b> = Total − Backend. As estatísticas de média/P95/máximo consideram apenas chamadas reais GET/POST.",
+    "Measures browser → API → browser. <b>LOCAL</b> = instant cache; <b>IN-FLIGHT</b> = a second request waited for the same request already in progress. <b>Overhead</b> = Total − Backend. Average/P95/maximum statistics include only real GET/POST calls."
   );
   if(b1)b1.textContent=t("Limpar medições","Clear measurements");
   if(b2)b2.textContent=t("Limpar cache local","Clear local cache");
@@ -1760,6 +1784,7 @@ function qrInvalidateLocalCacheB530(reason){
   qrInflightB530.clear();
   // Metadados carregados em memória também precisam voltar a consultar o backend após gravações.
   pendingFiltersLoaded=false;documentFiltersLoaded=false;auditFiltersLoaded=false;occurrenceReportFiltersLoaded=false;
+  try{sessionStorage.removeItem(QR_PREVENTIVE_PROVIDER_CACHE_KEY_766253)}catch(_e){}
   if(reason&&$("performanceCacheStatus")&&!$("performanceArea")?.classList.contains("hidden"))qrRenderPerformanceB530();
 }
 function qrIsMutationPostB530(action){return !!action&&!QR_NON_MUTATING_POST_ACTIONS_B530.has(action)}
@@ -1781,7 +1806,7 @@ async function api(params){
   const started=qrPerfClockB530();
   try{
     const data=await qrFetchJson766254_(API_URL+"?"+new URLSearchParams(payload));
-    qrPerfRecordB530("GET",action,context,qrPerfClockB530()-started,qrPerfBackendMsB530(data),data&&data.ok===false?"ERRO":"OK");
+    qrPerfRecordB530("GET",action,context,qrPerfClockB530()-started,qrPerfBackendMsB530(data),data&&data.ok===false?"ERRO":"OK",qrPerfDetailsB531(data));
     return data;
   }catch(e){qrPerfRecordB530("GET",action,context,qrPerfClockB530()-started,null,"ERRO");throw e}
 }
@@ -1794,7 +1819,7 @@ async function apiPost(params){
   const started=qrPerfClockB530();
   try{
     const data=await qrFetchJson766254_(API_URL,{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"},body:body.toString()});
-    qrPerfRecordB530("POST",action,context,qrPerfClockB530()-started,qrPerfBackendMsB530(data),data&&data.ok===false?"ERRO":"OK");
+    qrPerfRecordB530("POST",action,context,qrPerfClockB530()-started,qrPerfBackendMsB530(data),data&&data.ok===false?"ERRO":"OK",qrPerfDetailsB531(data));
     if(qrIsMutationPostB530(action))qrInvalidateLocalCacheB530("mutation:"+action);
     return data;
   }catch(e){qrPerfRecordB530("POST",action,context,qrPerfClockB530()-started,null,"ERRO");throw e}
@@ -1875,7 +1900,7 @@ function menuApi(params){
   }
   if(qrInflightB530.has(key)){
     const waitStart=qrPerfClockB530();
-    return qrInflightB530.get(key).then(v=>{qrPerfRecordB530("LOCAL",action,"in-flight",qrPerfClockB530()-waitStart,null,"OK");return v},e=>{qrPerfRecordB530("LOCAL",action,"in-flight",qrPerfClockB530()-waitStart,null,"ERRO");throw e});
+    return qrInflightB530.get(key).then(v=>{qrPerfRecordB530("IN-FLIGHT",action,"promise-compartilhada",qrPerfClockB530()-waitStart,null,"OK");return v},e=>{qrPerfRecordB530("IN-FLIGHT",action,"promise-compartilhada",qrPerfClockB530()-waitStart,null,"ERRO");throw e});
   }
   const generation=qrCacheGenerationB530;
   const p=apiPost({...payload,systemSessionToken:systemSession.systemSessionToken,__qrContext:context})
@@ -2270,21 +2295,22 @@ function showSearchTab(){if(!requireUiPermission("BUSCAR_ATIVOS","Seu perfil nã
 async function showPendingTab(){if(!requireUiPermission("OC_PENDENTES","Seu perfil não possui permissão para consultar OCs pendentes.","Your profile is not allowed to view pending work orders."))return;clearTabs();$("tabPending").classList.add("active");showOnly("pendingArea");await loadPendingFilters();await loadPending()}
 async function showOccurrenceReportTab(){if(!requireUiPermission("RELATORIO_OC","Seu perfil não possui permissão para acessar o Relatório de OCs.","Your profile is not allowed to access the work order report."))return;clearTabs();$("tabOccurrenceReport").classList.add("active");showOnly("occurrenceReportArea");setDefaultOccurrenceReportDates();await loadOccurrenceReportFilters();if(!occurrenceReportData)await loadOccurrenceReport()}
 function showPreventiveTab(){
-  // Feedback visual imediato; autenticação/permissão continuam obrigatórias.
   qrActivateMenuFeedback766257_("tabPreventive");
-
-  requireSystemLogin(()=>{
+  const abrir=()=>{
     if(!requireUiPermission("PREVENTIVA_CONSULTAR","Seu perfil não possui permissão para consultar preventivas.","Your profile is not allowed to view preventive maintenance.")){
       qrCancelMenuFeedback766257_("tabPreventive");
       return;
     }
     showOnly("preventiveControlArea");
-
-    // B5.2.3: o dropdown de prestadores é carregado por uma rota leve,
-    // sem esperar o cálculo completo do Status das Preventivas.
+    // B5.3.1: não chama systemsession antes de preventivecontrol.
+    // A própria rota preventivecontrol valida token, perfil e permissão no backend.
     loadPreventiveProvidersFast766253_();
-    loadPreventiveControl();
-  });
+    loadPreventiveControl().catch(e=>{
+      $("controlListStatus").textContent=e.message||"Erro ao carregar preventivas.";
+    });
+  };
+  if(systemSession?.systemSessionToken)abrir();
+  else requireSystemLogin(abrir);
 }
 async function showDocumentsTab(){if(!requireUiPermission("DOCUMENTOS_CONSULTAR","Seu perfil não possui permissão para consultar documentos técnicos.","Your profile is not allowed to view technical documents."))return;clearTabs();$("tabDocuments").classList.add("active");showOnly("documentsArea");await loadDocumentFilters();await searchDocuments()}
 async function showUsersTab(){if(!requireUiPermission("GESTAO_USUARIOS","Seu perfil não possui permissão para acessar a Gestão de Usuários.","Your profile is not allowed to manage users."))return;clearTabs();$("tabUsers").classList.add("active");showOnly("usersArea");await loadUsers()}
@@ -3077,10 +3103,11 @@ async function loadPreventiveProvidersFast766253_(){
 
   qrPreventiveProviderPromise766253=(async()=>{
     try{
-      const r=await menuApi({action:"preventiveproviders"});
+      const r=await menuApi({action:"providers",__qrContext:"preventivas-prestadores"});
       if(r?.ok&&Array.isArray(r.providers)){
-        fillPreventiveProviderDropdown766253_(r.providers);
-        writePreventiveProviderCache766253_(r.providers);
+        const nomes=r.providers.map(p=>String(p?.nomeFantasia||p?.nome||"").trim()).filter(Boolean);
+        fillPreventiveProviderDropdown766253_(nomes);
+        writePreventiveProviderCache766253_(nomes);
       }
     }catch(_e){
       // O cálculo completo das preventivas continua funcionando mesmo
@@ -4787,28 +4814,17 @@ async function saveCompanyConfig(){
   }
 }
 async function showProfilePermissionsTab(){
-  // A validação MASTER continua exatamente igual, mas o clique recebe
-  // confirmação visual antes da chamada remota de validação da sessão.
   qrActivateMenuFeedback766257_("tabPermissions");
-
-  /* 7.6.6.14: garante sessão atualizada antes de validar o perfil MASTER. */
   if(!systemSession?.systemSessionToken){
     return requireSystemLogin(showProfilePermissionsTab);
   }
-
-  const valid=await systemSessionIsValid();
-  if(!valid){
-    qrCancelMenuFeedback766257_("tabPermissions");
-    showMenuGate();
-    return;
-  }
-
   const profile=String(systemSession?.perfil||"").trim().toUpperCase();
   if(profile!=="MASTER"){
     qrCancelMenuFeedback766257_("tabPermissions");
     return permissionDeniedMessage("Somente MASTER pode gerenciar as permissões dos perfis.","Only MASTER can manage profile permissions.");
   }
-
+  // B5.3.1: evita systemsession + profilepermissionsadmin em sequência.
+  // profilepermissionsadmin valida a sessão novamente no backend.
   showOnly("permissionsArea");
   $("permissionsStatus").textContent=qrLanguage==="en-US"?"Loading permissions...":"Carregando permissões...";
   $("permissionsMatrix").innerHTML="";
@@ -5297,18 +5313,19 @@ function focusMaintenancePendingFilter766255_(){
 }
 
 async function showMaintenancePendingTab(){
-  // Acende o botão antes da validação remota da sessão.
   qrActivateMenuFeedback766257_("tabMaintenancePending");
-
-  requireSystemLogin(async ()=>{
+  const abrir=async()=>{
     if(!requireUiPermission("PENDENCIAS","Seu perfil não possui permissão para acessar Pendências / Providências.","Your profile is not allowed to access Pending Actions.")){
       qrCancelMenuFeedback766257_("tabMaintenancePending");
       return;
     }
     showOnly("maintenancePendingArea");
     focusMaintenancePendingFilter766255_();
+    // B5.3.1: maintenancepending já valida a sessão no backend.
     await loadMaintenancePending();
-  });
+  };
+  if(systemSession?.systemSessionToken)await abrir();
+  else requireSystemLogin(abrir);
 }
 
 async function loadMaintenancePending(options={}){
