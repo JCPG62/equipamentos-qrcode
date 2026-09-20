@@ -1,4 +1,11 @@
-<!-- QRManut 7.6.6.25: B5.3.16 — Modernização visual mobile do Menu Principal e Preventivas
+<!-- QRManut 7.6.6.25: B5.3.17 — Refinamento mobile compacto
+     - Mantém a identidade visual da B5.3.16 com cards menores e mais funcionais.
+     - Menu mobile em duas colunas para reduzir rolagem.
+     - Bloco de acesso mais compacto e estado ativo mais leve.
+     - Seletor de idioma visualmente reduzido.
+     - Não altera regras de negócio, integrações, permissões ou performance.
+
+     Histórico B5.3.16 — Modernização visual mobile do Menu Principal e Preventivas
      - Reorganiza o Menu Principal em seções Operação e Administração com layout em cards mais moderno.
      - Refina o cabeçalho, a faixa de acesso e a aparência dos cards/botões no celular e desktop.
      - Moderniza visualmente a tela Status das Preventivas, KPIs, filtros e barra de progresso.
@@ -75,7 +82,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>QRManut</title>
-<meta name="qrmanut-build" content="2026-09-20-b5.3.16">
+<meta name="qrmanut-build" content="2026-09-20-b5.3.17">
 <meta name="theme-color" content="#0b315e">
 <meta name="application-name" content="QRManut">
 <meta name="mobile-web-app-capable" content="yes">
@@ -868,6 +875,94 @@ body{
   .control-header{grid-template-columns:1fr}
   .control-tabs{grid-template-columns:1fr}
   .control-summary,.pending-summary,.occ-report-summary{grid-template-columns:1fr 1fr!important}
+}
+
+
+
+/* ============================================================
+ * QRManut 7.6.6.25 B5.3.17 - Refinamento mobile compacto
+ * ============================================================ */
+.qr-language-switcher{gap:6px;padding:6px 10px 2px}
+.qr-language-switcher button{
+  padding:5px 9px;
+  font-size:.78rem;
+  min-height:34px;
+  box-shadow:none;
+}
+.system-access-info{
+  padding:11px 13px;
+  margin:14px 0 16px;
+  border-radius:16px;
+  box-shadow:0 6px 18px rgba(15,23,42,.05);
+}
+#systemAccessText{font-size:.95rem;line-height:1.35}
+#systemLogoutButton{padding:9px 13px;min-height:40px;border-radius:12px}
+.menu-button.active{
+  background:#eef4ff!important;
+  color:#21356b!important;
+  border-color:#9db3df!important;
+  box-shadow:0 8px 20px rgba(33,53,107,.10)!important;
+}
+.menu-button.preventive.active{
+  background:#e9f8f1!important;
+  color:#0f7454!important;
+  border-color:#8fd2b7!important;
+}
+.menu-button.documents.active{
+  background:#f3efff!important;
+  color:#6d28d9!important;
+  border-color:#c4b5fd!important;
+}
+.menu-button.reports.active{
+  background:#eaf8f7!important;
+  color:#0f766e!important;
+  border-color:#99d5d0!important;
+}
+.menu-button.users.active{
+  background:#eef2ff!important;
+  color:#4338ca!important;
+  border-color:#a5b4fc!important;
+}
+.menu-button.permissions.active{
+  background:#f5f3ff!important;
+  color:#6d28d9!important;
+  border-color:#c4b5fd!important;
+}
+@media (max-width:700px){
+  .container{padding:12px 10px 24px}
+  .qr-home-screen .search-title{font-size:2rem;margin-top:2px}
+  #qrAppSubtitle{font-size:.96rem;margin-top:4px}
+  .system-access-row{display:grid;grid-template-columns:1fr auto;align-items:center;gap:8px}
+  #systemLogoutButton{width:auto;min-width:96px}
+  .menu-section{margin-top:15px}
+  .menu-section-title{font-size:.96rem;margin-bottom:9px;padding-left:2px}
+  .menu-section-title::before{width:8px;height:8px;box-shadow:0 0 0 5px rgba(33,53,107,.09)}
+  .menu-section-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}
+  .menu-button{
+    min-height:84px!important;
+    padding:12px 10px!important;
+    border-radius:17px!important;
+    font-size:.9rem!important;
+    line-height:1.2!important;
+    gap:6px!important;
+    justify-content:flex-start!important;
+    text-align:left!important;
+    box-shadow:0 6px 16px rgba(15,23,42,.04)!important;
+  }
+  .menu-button:hover{transform:none!important}
+  #preventiveControlArea .card{padding:15px}
+  .control-header{padding:13px;border-radius:17px;gap:10px}
+  .control-field input,.control-field select{min-height:48px;border-radius:13px}
+  #controlRefresh,#preventiveLogout{min-height:48px;border-radius:13px}
+  #controlTitle{font-size:1.2rem;margin:14px 0 10px}
+  .control-summary-card{padding:14px 10px;border-radius:16px}
+  .control-summary-card strong{font-size:1.55rem}
+  .progress-box{padding:14px;border-radius:16px}
+}
+@media (max-width:390px){
+  .menu-button{font-size:.84rem!important;min-height:82px!important;padding:11px 9px!important}
+  #systemAccessText{font-size:.88rem}
+  #systemLogoutButton{min-width:84px;padding:8px 10px;font-size:.88rem}
 }
 
 </style>
@@ -8243,6 +8338,7 @@ document.addEventListener("visibilitychange",()=>{
 // QRManut PNCQ 7.6.6.25 B5.2.13 - Scanner de QR Code integrado à Busca de Ativos.
 // QRManut PNCQ 7.6.6.25 B5.3.5 - Filtros do Relatório de OCs otimizados e cacheados no backend.
 // QRManut PNCQ 7.6.6.25 B5.3.3 - Bundles de primeira carga reduzem viagens à API em OCs Pendentes, Documentos e Relatório de OCs.
+// QRManut PNCQ 7.6.6.25 B5.3.17 - Refinamento mobile compacto com menu em duas colunas.
 // QRManut PNCQ 7.6.6.25 B5.3.16 - Modernização visual mobile do Menu Principal e Status das Preventivas.
 // QRManut PNCQ 7.6.6.25 B5.3.15 - Histórico de Manutenção e anexos com cache de servidor de 15 min e invalidação automática.
 // QRManut PNCQ 7.6.6.25 B5.3.14 - Cache curto do assetbundle no sessionStorage para reabrir a mesma ficha sem nova API.
