@@ -1,4 +1,10 @@
-<!-- QRManut 7.6.6.25: B5.3.14 — Cache local persistente da ficha do ativo
+<!-- QRManut 7.6.6.25: B5.3.15 — Histórico de Manutenção com cache de servidor
+     - Base do Histórico de Manutenção e anexos de OCs permanecem em cache de servidor por 15 min.
+     - Diagnóstico mostra hist-src/hist-ttl e anexos-src/anexos-ttl para confirmar a origem dos dados.
+     - Invalidação ocorre imediatamente após criar, alterar ou excluir OC/anexo.
+     - Mantém integralmente o cache local da ficha da B5.3.14.
+
+     Histórico B5.3.14 — Cache local persistente da ficha do ativo
      - Reabertura da mesma ficha em até 45 s reutiliza o assetbundle na mesma aba, sem nova chamada ao Apps Script.
      - O cache é associado ao mesmo usuário/perfil/escopo e ao ID exato do ativo.
      - Somente o último assetbundle é mantido no sessionStorage, com limite de tamanho e expiração curta.
@@ -1758,9 +1764,13 @@ function qrPerfDetailsB531(data){
   if(f(b.payloadMs)!=null)parts.push(`payload ${f(b.payloadMs)} ms`);
   if(f(b.historyMs)!=null)parts.push(`histórico ${f(b.historyMs)} ms`);
   const hm=b.history||{};
+  if(hm.dataSource)parts.push(`hist-src=${String(hm.dataSource)}`);
+  if(Number.isFinite(Number(hm.cacheTtlSeconds)))parts.push(`hist-ttl=${Number(hm.cacheTtlSeconds)}s`);
   if(f(hm.prepareMs)!=null)parts.push(`hist-prep ${f(hm.prepareMs)} ms`);
   if(f(hm.readMs)!=null)parts.push(`hist-leitura ${f(hm.readMs)} ms`);
   if(f(hm.filterMs)!=null)parts.push(`hist-filtro ${f(hm.filterMs)} ms`);
+  if(hm.attachmentsDataSource)parts.push(`anexos-src=${String(hm.attachmentsDataSource)}`);
+  if(Number.isFinite(Number(hm.attachmentCacheTtlSeconds)))parts.push(`anexos-ttl=${Number(hm.attachmentCacheTtlSeconds)}s`);
   if(f(hm.attachmentsPrepareMs)!=null)parts.push(`anexos-prep ${f(hm.attachmentsPrepareMs)} ms`);
   if(f(hm.attachmentsReadMs)!=null)parts.push(`anexos-leitura ${f(hm.attachmentsReadMs)} ms`);
   if(f(hm.attachmentsFilterMs)!=null)parts.push(`anexos-filtro ${f(hm.attachmentsFilterMs)} ms`);
@@ -8007,6 +8017,7 @@ document.addEventListener("visibilitychange",()=>{
 // QRManut PNCQ 7.6.6.25 B5.2.13 - Scanner de QR Code integrado à Busca de Ativos.
 // QRManut PNCQ 7.6.6.25 B5.3.5 - Filtros do Relatório de OCs otimizados e cacheados no backend.
 // QRManut PNCQ 7.6.6.25 B5.3.3 - Bundles de primeira carga reduzem viagens à API em OCs Pendentes, Documentos e Relatório de OCs.
+// QRManut PNCQ 7.6.6.25 B5.3.15 - Histórico de Manutenção e anexos com cache de servidor de 15 min e invalidação automática.
 // QRManut PNCQ 7.6.6.25 B5.3.14 - Cache curto do assetbundle no sessionStorage para reabrir a mesma ficha sem nova API.
 // QRManut PNCQ 7.6.6.25 B5.3.13 - Cards de resumo das OCs Pendentes atuam como filtros rápidos locais.
 // QRManut PNCQ 7.6.6.25 B5.3.12 - Índices da ficha com cache de servidor de 15 min e invalidação automática.
