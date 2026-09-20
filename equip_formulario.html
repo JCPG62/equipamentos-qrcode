@@ -1,4 +1,10 @@
-<!-- QRManut 7.6.6.25: B5.3.18 — Login limpo e busca vazia ao entrar
+<!-- QRManut 7.6.6.25: B5.3.19 — Menu recolhível Operação/Administração
+     - Operação aberta por padrão; Administração recolhida por padrão.
+     - Títulos das seções funcionam como botões acessíveis com seta de estado.
+     - Estado aberto/recolhido é lembrado durante a mesma aba/sessão via sessionStorage.
+     - Mantém integralmente o login limpo e o refinamento mobile anteriores.
+
+     Histórico B5.3.18 — Login limpo e busca vazia ao entrar
      - Ao entrar no Menu Principal, a busca de ativos começa sempre vazia.
      - Ao sair do Menu Principal, nenhum card de operação/administração permanece visível.
      - Mantém integralmente o refinamento visual mobile da B5.3.17.
@@ -87,7 +93,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>QRManut</title>
-<meta name="qrmanut-build" content="2026-09-20-b5.3.18">
+<meta name="qrmanut-build" content="2026-09-20-b5.3.19">
 <meta name="theme-color" content="#0b315e">
 <meta name="application-name" content="QRManut">
 <meta name="mobile-web-app-capable" content="yes">
@@ -978,6 +984,80 @@ body{
 #mainMenuButtons.hidden{display:none!important}
 #mainMenuButtons.hidden .menu-section{display:none!important}
 #menuLockedCard:not(.hidden)~#mainMenuButtons{display:none!important}
+
+
+
+/* ============================================================
+ * QRManut 7.6.6.25 B5.3.19 - Menu recolhível por seção
+ * ============================================================ */
+.menu-section-title{
+  margin:0 0 10px;
+}
+.menu-section-toggle{
+  width:100%;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:8px 4px;
+  border:0;
+  background:transparent;
+  color:var(--qr-primary,#21356b);
+  font:inherit;
+  font-size:1rem;
+  font-weight:800;
+  text-align:left;
+  cursor:pointer;
+  border-radius:12px;
+  -webkit-tap-highlight-color:transparent;
+}
+.menu-section-toggle:hover{background:rgba(33,53,107,.045)}
+.menu-section-toggle:focus-visible{outline:3px solid rgba(59,130,246,.28);outline-offset:2px}
+.menu-section-dot{
+  flex:0 0 auto;
+  width:10px;
+  height:10px;
+  border-radius:999px;
+  background:var(--qr-primary,#21356b);
+  box-shadow:0 0 0 6px rgba(33,53,107,.10);
+}
+.menu-section-label{flex:1;min-width:0}
+.menu-section-chevron{
+  flex:0 0 auto;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:30px;
+  height:30px;
+  border-radius:999px;
+  background:#eef3ff;
+  color:var(--qr-primary,#21356b);
+  font-size:.88rem;
+  line-height:1;
+  transition:transform .2s ease,background .2s ease;
+}
+.menu-section:not(.collapsed) .menu-section-chevron{transform:rotate(90deg)}
+.menu-section .menu-section-grid{
+  overflow:hidden;
+  max-height:2200px;
+  opacity:1;
+  transform:translateY(0);
+  transition:max-height .28s ease,opacity .18s ease,transform .22s ease,margin .22s ease;
+}
+.menu-section.collapsed .menu-section-grid{
+  max-height:0!important;
+  opacity:0;
+  transform:translateY(-5px);
+  margin-top:0!important;
+  pointer-events:none;
+}
+.menu-section.collapsed{margin-bottom:2px}
+/* O antigo ponto decorativo do título é substituído pelo ponto dentro do botão. */
+.menu-section-title::before{display:none!important}
+@media(max-width:700px){
+  .menu-section-toggle{font-size:.96rem;padding:7px 2px}
+  .menu-section-dot{width:8px;height:8px;box-shadow:0 0 0 5px rgba(33,53,107,.09)}
+  .menu-section-chevron{width:28px;height:28px;font-size:.82rem}
+}
 
 </style>
 </head>
@@ -8268,27 +8348,62 @@ qrTranslateAttributes(document.body);
 function setupModernMenuSectionsB5316(){
   const root=$("mainMenuButtons");
   if(!root||root.dataset.modernized5316==="1")return;
+  const storageKey="qrmanut_menu_sections_b5319";
+  let saved={};
+  try{saved=JSON.parse(sessionStorage.getItem(storageKey)||"{}")||{}}catch(e){saved={}}
   const groups=[
-    {title:"Operação", ids:["tabSearch","tabPending","tabSolicitations","tabOccurrenceReport","tabPreventive","tabDocuments","tabOccurrenceCatalog","tabMaintenancePending","tabAssetManagement","tabDocumentUpload"]},
-    {title:"Administração", ids:["tabUsers","tabPermissions","tabAudit","tabProvidersAdmin","tabCompany","tabPerformance"]}
+    {title:"Operação", key:"operation", defaultOpen:true, ids:["tabSearch","tabPending","tabSolicitations","tabOccurrenceReport","tabPreventive","tabDocuments","tabOccurrenceCatalog","tabMaintenancePending","tabAssetManagement","tabDocumentUpload"]},
+    {title:"Administração", key:"administration", defaultOpen:false, ids:["tabUsers","tabPermissions","tabAudit","tabProvidersAdmin","tabCompany","tabPerformance"]}
   ];
+  const persist=()=>{
+    const state={};
+    root.querySelectorAll('.menu-section[data-menu-key]').forEach(section=>{
+      state[section.dataset.menuKey]=!section.classList.contains('collapsed');
+    });
+    try{sessionStorage.setItem(storageKey,JSON.stringify(state))}catch(e){}
+  };
+  const setOpen=(section,open,save=true)=>{
+    const btn=section.querySelector('.menu-section-toggle');
+    const grid=section.querySelector('.menu-section-grid');
+    section.classList.toggle('collapsed',!open);
+    if(btn){
+      btn.setAttribute('aria-expanded',open?'true':'false');
+      const chev=btn.querySelector('.menu-section-chevron');
+      if(chev)chev.textContent='›';
+    }
+    if(grid)grid.setAttribute('aria-hidden',open?'false':'true');
+    if(save)persist();
+  };
   const frag=document.createDocumentFragment();
   groups.forEach(group=>{
     const section=document.createElement("section");
     section.className="menu-section";
     section.dataset.menuSection=group.title;
-    const title=document.createElement("h3");
-    title.className="menu-section-title";
-    title.textContent=group.title;
+    section.dataset.menuKey=group.key;
+
+    const heading=document.createElement("h3");
+    heading.className="menu-section-title";
+    const toggle=document.createElement("button");
+    toggle.type="button";
+    toggle.className="menu-section-toggle";
+    toggle.setAttribute('aria-controls',`menuSectionGrid_${group.key}`);
+    toggle.innerHTML=`<span class="menu-section-dot" aria-hidden="true"></span><span class="menu-section-label">${group.title}</span><span class="menu-section-chevron" aria-hidden="true">›</span>`;
+    heading.appendChild(toggle);
+
     const grid=document.createElement("div");
     grid.className="menu-section-grid";
+    grid.id=`menuSectionGrid_${group.key}`;
     group.ids.forEach(id=>{
       const btn=$(id);
       if(btn)grid.appendChild(btn);
     });
-    section.appendChild(title);
+    section.appendChild(heading);
     section.appendChild(grid);
     frag.appendChild(section);
+
+    const initialOpen=(typeof saved[group.key]==='boolean')?saved[group.key]:group.defaultOpen;
+    setOpen(section,initialOpen,false);
+    toggle.addEventListener('click',()=>setOpen(section,section.classList.contains('collapsed'),true));
   });
   root.innerHTML="";
   root.appendChild(frag);
@@ -8303,7 +8418,6 @@ function setupModernMenuSectionsB5316(){
   root.querySelectorAll('.menu-button').forEach(btn=>observer.observe(btn,{attributes:true,attributeFilter:['class']}));
   refresh();
 }
-
 
 qrInstallLocalizedDateControls();
 async function main(){
