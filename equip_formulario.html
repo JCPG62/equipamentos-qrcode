@@ -1,4 +1,9 @@
-<!-- QRManut 7.6.6.25: B5.3.1 — Performance Diagnóstico R2 / Preventivas
+<!-- QRManut 7.6.6.25: B5.3.2 — Performance Preventivas / Mapa Otimizado
+     - Trabalha em conjunto com GS B5.3.2 para otimizar a primeira carga do Controle Mensal de Preventivas.
+     - Diagnóstico passa a exibir modo do mapa, normalizações de competência, hits de memoização e linhas correspondentes.
+     - Mantém integralmente cache local, deduplicação, segurança e diagnóstico da B5.3.1.
+
+     Histórico B5.3.1 — Performance Diagnóstico R2 / Preventivas
      - Mantém cache local, deduplicação e diagnóstico da B5.3.0.
      - Distingue LOCAL de IN-FLIGHT para não contar espera compartilhada como cache instantâneo.
      - Resumo passa a separar medições totais de chamadas reais à API.
@@ -16,7 +21,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>QRManut</title>
-<meta name="qrmanut-build" content="2026-09-20-b5.3.1">
+<meta name="qrmanut-build" content="2026-09-20-b5.3.2">
 <meta name="theme-color" content="#0b315e">
 <meta name="application-name" content="QRManut">
 <meta name="mobile-web-app-capable" content="yes">
@@ -1698,7 +1703,14 @@ function qrPerfDetailsB531(data){
   if(f(pm.readMs)!=null)parts.push(`leitura-prev ${f(pm.readMs)} ms`);
   if(f(pm.documentsMs)!=null)parts.push(`docs ${f(pm.documentsMs)} ms`);
   if(f(pm.buildMs)!=null)parts.push(`mapa ${f(pm.buildMs)} ms`);
+  if(f(pm.normalizeMs)!=null)parts.push(`norm-comp ${f(pm.normalizeMs)} ms`);
   if(f(b.classifyMs)!=null)parts.push(`classif ${f(b.classifyMs)} ms`);
+  if(pm.optimizedMode)parts.push(pm.optimizedMode==="latest-realized"?"modo=última-realizada":"modo=mapa-completo");
+  if(Number.isFinite(Number(pm.uniqueCompetenceValues)))parts.push(`comp-únicas=${Number(pm.uniqueCompetenceValues)}`);
+  if(Number.isFinite(Number(pm.competenceCacheHits)))parts.push(`comp-hits=${Number(pm.competenceCacheHits)}`);
+  if(Number.isFinite(Number(pm.dateFormatCalls)))parts.push(`fmt-date=${Number(pm.dateFormatCalls)}`);
+  if(Number.isFinite(Number(pm.matchingRows)))parts.push(`match=${Number(pm.matchingRows)}`);
+  if(Number.isFinite(Number(pm.realizedRows)))parts.push(`realizadas-linhas=${Number(pm.realizedRows)}`);
   if(b.includeDocuments===false)parts.push("docs=off");
   if(Number.isFinite(Number(b.assetsRead)))parts.push(`ativos=${Number(b.assetsRead)}`);
   if(Number.isFinite(Number(pm.rows)))parts.push(`prev=${Number(pm.rows)}`);
