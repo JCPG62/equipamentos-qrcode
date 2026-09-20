@@ -1,9 +1,9 @@
-<!-- QRManut 7.6.6.25: B5.3.6 — Relatório de OCs / Cache de Filtros Unificado
+<!-- QRManut 7.6.6.25: B5.3.7 — Relatório de OCs / Cache de Filtros Unificado
      - Unifica o caminho otimizado dos filtros do Relatório de OCs no bundle e na rota occurrencereportfilters.
      - Limpar cache local passa a limpar também estados carregados em memória, inclusive occurrenceReportData.
      - Garante que a próxima abertura após limpeza manual refaça o bundle e possa aproveitar o cache do servidor.
      - Mantém diagnóstico detalhado de origem dos filtros: rebuild, execution-cache ou script-cache.
-     - Trabalha em conjunto com GS B5.3.6, que amplia o cache dos filtros para 15 minutos e instrumenta a rota de filtros.
+     - Trabalha em conjunto com GS B5.3.7, que amplia o cache dos filtros para 15 minutos e instrumenta a rota de filtros.
      - Não altera regras de negócio, permissões, resultados ou RELEASE 7.6.6.25.
 
      Histórico B5.3.5 — Performance / Filtros do Relatório de OCs
@@ -1738,6 +1738,24 @@ function qrPerfDetailsB531(data){
   if(Number.isFinite(Number(pm.matchingRows)))parts.push(`match=${Number(pm.matchingRows)}`);
   if(Number.isFinite(Number(pm.realizedRows)))parts.push(`realizadas-linhas=${Number(pm.realizedRows)}`);
   if(b.bundleType)parts.push(`pacote=${String(b.bundleType)}`);
+  if(f(b.payloadMs)!=null)parts.push(`payload ${f(b.payloadMs)} ms`);
+  if(f(b.historyMs)!=null)parts.push(`histórico ${f(b.historyMs)} ms`);
+  const hm=b.history||{};
+  if(f(hm.prepareMs)!=null)parts.push(`hist-prep ${f(hm.prepareMs)} ms`);
+  if(f(hm.readMs)!=null)parts.push(`hist-leitura ${f(hm.readMs)} ms`);
+  if(f(hm.filterMs)!=null)parts.push(`hist-filtro ${f(hm.filterMs)} ms`);
+  if(f(hm.attachmentsPrepareMs)!=null)parts.push(`anexos-prep ${f(hm.attachmentsPrepareMs)} ms`);
+  if(f(hm.attachmentsReadMs)!=null)parts.push(`anexos-leitura ${f(hm.attachmentsReadMs)} ms`);
+  if(f(hm.attachmentsFilterMs)!=null)parts.push(`anexos-filtro ${f(hm.attachmentsFilterMs)} ms`);
+  if(f(hm.attachMs)!=null)parts.push(`anexos-vínculo ${f(hm.attachMs)} ms`);
+  if(f(hm.sortMs)!=null)parts.push(`hist-ordena ${f(hm.sortMs)} ms`);
+  if(Number.isFinite(Number(hm.rowsTotal)))parts.push(`hist-linhas=${Number(hm.rowsTotal)}`);
+  if(Number.isFinite(Number(hm.rowsMatched)))parts.push(`hist-ativo=${Number(hm.rowsMatched)}`);
+  if(Number.isFinite(Number(hm.attachmentRows)))parts.push(`anexos-linhas=${Number(hm.attachmentRows)}`);
+  if(Number.isFinite(Number(hm.attachmentMatched)))parts.push(`anexos-ativo=${Number(hm.attachmentMatched)}`);
+  if(f(b.statusMs)!=null)parts.push(`status ${f(b.statusMs)} ms`);
+  if(f(b.documentsMs)!=null)parts.push(`docs-ativo ${f(b.documentsMs)} ms`);
+  if(Number(b.historyDuplicateReadsAvoided||0)>0)parts.push(`hist-duplicada-evitada=${Number(b.historyDuplicateReadsAvoided)}`);
   if(f(b.readMs)!=null)parts.push(`leitura ${f(b.readMs)} ms`);
   if(f(b.filtersMs)!=null)parts.push(`filtros ${f(b.filtersMs)} ms`);
   if(b.filterSource)parts.push(`filtros-src=${String(b.filterSource)}`);
@@ -1847,7 +1865,7 @@ function qrTtlForActionB530(action,requested){
   return QR_LOCAL_CACHE_TTL_B530;
 }
 function qrResetLoadedViewStateB536(){
-  // B5.3.6 — limpeza manual deve eliminar também os estados em memória
+  // B5.3.7 — limpeza manual deve eliminar também os estados em memória
   // que poderiam fazer a tela pular o bundle mesmo sem cache local.
   occurrenceReportData=null;
   occurrenceReportFiltersLoaded=false;
