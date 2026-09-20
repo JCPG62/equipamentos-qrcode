@@ -1,4 +1,13 @@
-<!-- QRManut 7.6.6.25: B5.3.13 — Cards clicáveis em OCs Pendentes
+<!-- QRManut 7.6.6.25: B5.3.14 — Cache local persistente da ficha do ativo
+     - Reabertura da mesma ficha em até 45 s reutiliza o assetbundle na mesma aba, sem nova chamada ao Apps Script.
+     - O cache é associado ao mesmo usuário/perfil/escopo e ao ID exato do ativo.
+     - Somente o último assetbundle é mantido no sessionStorage, com limite de tamanho e expiração curta.
+     - Qualquer gravação relevante, limpeza manual de cache, logout ou troca de sessão invalida imediatamente a ficha armazenada.
+     - Diagnóstico registra LOCAL assetbundle / ficha-cache-sessao quando a ficha é reaproveitada.
+     - Não persiste senha nem token dentro do cache da ficha.
+     - Mantém integralmente os cards clicáveis da B5.3.13 e os caches de servidor da B5.3.12.
+
+     Histórico B5.3.13 — Cards clicáveis em OCs Pendentes
      - Cards Total, Abertas, Atendimento e Aguardando peça passam a atuar como atalhos de filtro.
      - Quando a lista base já contém todos os status, o filtro é aplicado localmente, sem nova chamada API.
      - O card ativo fica destacado e o seletor Status acompanha a seleção.
@@ -54,7 +63,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>QRManut</title>
-<meta name="qrmanut-build" content="2026-09-20-b5.3.10">
+<meta name="qrmanut-build" content="2026-09-20-b5.3.14">
 <meta name="theme-color" content="#0b315e">
 <meta name="application-name" content="QRManut">
 <meta name="mobile-web-app-capable" content="yes">
@@ -1916,6 +1925,54 @@ function qrSessionScopeB530(){
   if(!systemSession)return "anon";
   return [systemSession.idUsuario||systemSession.usuario||"",systemSession.perfil||"",systemSession.idPrestador||"",systemSession.prestador||""].map(v=>String(v)).join("|");
 }
+
+/* ============================================================
+ * B5.3.14 — CACHE CURTO DA FICHA ENTRE RELOADS DA MESMA ABA
+ * Mantém somente o último assetbundle por até 45 s no sessionStorage.
+ * Não grava token ou senha dentro da entrada.
+ * ============================================================ */
+const QR_ASSET_BUNDLE_SESSION_KEY_B5314="qrmanut_assetbundle_last_b5314";
+const QR_ASSET_BUNDLE_SESSION_TTL_B5314=45000;
+const QR_ASSET_BUNDLE_SESSION_MAX_CHARS_B5314=1500000;
+function qrAssetBundleIdB5314_(id){return String(id||"").trim().toUpperCase()}
+function qrClearAssetBundleSessionB5314_(){
+  try{sessionStorage.removeItem(QR_ASSET_BUNDLE_SESSION_KEY_B5314)}catch(_e){}
+}
+function qrReadAssetBundleSessionB5314_(id){
+  try{
+    const raw=sessionStorage.getItem(QR_ASSET_BUNDLE_SESSION_KEY_B5314);
+    if(!raw)return null;
+    const entry=JSON.parse(raw);
+    const expectedId=qrAssetBundleIdB5314_(id);
+    if(!entry||Number(entry.v)!==1||entry.scope!==qrSessionScopeB530()||qrAssetBundleIdB5314_(entry.id)!==expectedId||Number(entry.expiresAt||0)<=Date.now()||!entry.data||entry.data.ok===false){
+      qrClearAssetBundleSessionB5314_();
+      return null;
+    }
+    return {value:entry.data,expiresAt:Number(entry.expiresAt)};
+  }catch(_e){
+    qrClearAssetBundleSessionB5314_();
+    return null;
+  }
+}
+function qrWriteAssetBundleSessionB5314_(id,data,ttlMs){
+  if(!data||data.ok===false)return false;
+  const assetId=qrAssetBundleIdB5314_(id);
+  if(!assetId)return false;
+  try{
+    const ttl=Math.max(1000,Math.min(QR_ASSET_BUNDLE_SESSION_TTL_B5314,Number(ttlMs)||QR_ASSET_BUNDLE_SESSION_TTL_B5314));
+    const entry={v:1,scope:qrSessionScopeB530(),id:assetId,savedAt:Date.now(),expiresAt:Date.now()+ttl,data};
+    const raw=JSON.stringify(entry);
+    if(raw.length>QR_ASSET_BUNDLE_SESSION_MAX_CHARS_B5314){
+      qrClearAssetBundleSessionB5314_();
+      return false;
+    }
+    sessionStorage.setItem(QR_ASSET_BUNDLE_SESSION_KEY_B5314,raw);
+    return true;
+  }catch(_e){
+    qrClearAssetBundleSessionB5314_();
+    return false;
+  }
+}
 function qrStableParamsB530(obj){
   // B5.3.4: action já faz parte do prefixo da chave; não duplicar action nos parâmetros.
   return Object.keys(obj||{}).filter(k=>k!=="action"&&k!=="systemSessionToken"&&!k.startsWith("__qr")).sort().map(k=>`${k}=${String(obj[k]??"")}`).join("&");
@@ -1934,6 +1991,7 @@ function qrInvalidateLocalCacheB530(reason){
   qrCacheGenerationB530++;
   qrLocalCacheB530.clear();
   qrInflightB530.clear();
+  if(typeof qrClearAssetBundleSessionB5314_==="function")qrClearAssetBundleSessionB5314_();
   if(typeof clearPendingFastSnapshotB5311_==="function")clearPendingFastSnapshotB5311_();
   // Metadados carregados em memória também precisam voltar a consultar o backend após gravações.
   pendingFiltersLoaded=false;documentFiltersLoaded=false;auditFiltersLoaded=false;occurrenceReportFiltersLoaded=false;
@@ -2076,6 +2134,17 @@ function menuApi(params){
   if(!force){
     const cached=qrReadLocalCacheB530(key);
     if(cached){qrPerfRecordB530("LOCAL",action,"cache-local",qrPerfClockB530()-started,null,"OK");return Promise.resolve(cached.value)}
+
+    // B5.3.14 — assetbundle pode sobreviver ao reload/navegação na mesma aba por 45 s.
+    if(action==="assetbundle"){
+      const persisted=qrReadAssetBundleSessionB5314_(payload.id);
+      if(persisted){
+        const remaining=Math.max(1000,persisted.expiresAt-Date.now());
+        qrWriteLocalCacheB530(key,action,persisted.value,remaining,qrCacheGenerationB530);
+        qrPerfRecordB530("LOCAL",action,"ficha-cache-sessao",qrPerfClockB530()-started,null,"OK");
+        return Promise.resolve(persisted.value);
+      }
+    }
   }
   if(qrInflightB530.has(key)){
     const waitStart=qrPerfClockB530();
@@ -2083,7 +2152,13 @@ function menuApi(params){
   }
   const generation=qrCacheGenerationB530;
   const p=apiPost({...payload,systemSessionToken:systemSession.systemSessionToken,__qrContext:context})
-    .then(data=>{if(data&&data.ok!==false)qrWriteLocalCacheB530(key,action,data,ttl,generation);return data})
+    .then(data=>{
+      if(data&&data.ok!==false){
+        qrWriteLocalCacheB530(key,action,data,ttl,generation);
+        if(action==="assetbundle")qrWriteAssetBundleSessionB5314_(payload.id,data,ttl);
+      }
+      return data;
+    })
     .finally(()=>{if(qrInflightB530.get(key)===p)qrInflightB530.delete(key)});
   qrInflightB530.set(key,p);
   return p;
@@ -7932,6 +8007,7 @@ document.addEventListener("visibilitychange",()=>{
 // QRManut PNCQ 7.6.6.25 B5.2.13 - Scanner de QR Code integrado à Busca de Ativos.
 // QRManut PNCQ 7.6.6.25 B5.3.5 - Filtros do Relatório de OCs otimizados e cacheados no backend.
 // QRManut PNCQ 7.6.6.25 B5.3.3 - Bundles de primeira carga reduzem viagens à API em OCs Pendentes, Documentos e Relatório de OCs.
+// QRManut PNCQ 7.6.6.25 B5.3.14 - Cache curto do assetbundle no sessionStorage para reabrir a mesma ficha sem nova API.
 // QRManut PNCQ 7.6.6.25 B5.3.13 - Cards de resumo das OCs Pendentes atuam como filtros rápidos locais.
 // QRManut PNCQ 7.6.6.25 B5.3.12 - Índices da ficha com cache de servidor de 15 min e invalidação automática.
 // QRManut PNCQ 7.6.6.25 B5.3.11 - Retorno rápido para OCs Pendentes com snapshot curto na mesma aba.
