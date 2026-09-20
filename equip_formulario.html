@@ -1,4 +1,9 @@
-<!-- QRManut 7.6.6.25: B5.3.8 — Diagnóstico Persistente entre Navegações
+<!-- QRManut 7.6.6.25: B5.3.9 — Performance da Ficha / Documentos + Preventivas
+     - Otimiza Documentos Técnicos vinculados ao ativo e Histórico de Preventivas.
+     - Instrumenta tempos internos dessas duas rotinas no Diagnóstico.
+     - Mantém o diagnóstico persistente da B5.3.8 e todas as regras de negócio.
+
+     Histórico B5.3.8 — Diagnóstico Persistente entre Navegações
      - Persiste somente as medições técnicas do Diagnóstico de Performance em sessionStorage.
      - As medições sobrevivem a navegações ?id=ATIVO, retorno ao menu e recarregamentos na mesma aba.
      - Fechar a aba encerra naturalmente essa persistência; Limpar medições remove também o armazenamento da sessão.
@@ -24,7 +29,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>QRManut</title>
-<meta name="qrmanut-build" content="2026-09-20-b5.3.8">
+<meta name="qrmanut-build" content="2026-09-20-b5.3.9">
 <meta name="theme-color" content="#0b315e">
 <meta name="application-name" content="QRManut">
 <meta name="mobile-web-app-capable" content="yes">
@@ -1733,6 +1738,33 @@ function qrPerfDetailsB531(data){
   if(Number.isFinite(Number(hm.attachmentMatched)))parts.push(`anexos-ativo=${Number(hm.attachmentMatched)}`);
   if(f(b.statusMs)!=null)parts.push(`status ${f(b.statusMs)} ms`);
   if(f(b.documentsMs)!=null)parts.push(`docs-ativo ${f(b.documentsMs)} ms`);
+  const dm=b.documents||{};
+  if(dm.documentSource)parts.push(`docs-src=${String(dm.documentSource)}`);
+  if(f(dm.documentsPrepareMs)!=null)parts.push(`docs-prep ${f(dm.documentsPrepareMs)} ms`);
+  if(f(dm.documentsSheetReadMs)!=null)parts.push(`docs-leitura ${f(dm.documentsSheetReadMs)} ms`);
+  if(f(dm.documentsParseMs)!=null)parts.push(`docs-parse ${f(dm.documentsParseMs)} ms`);
+  if(f(dm.linksMs)!=null)parts.push(`docs-vinculos ${f(dm.linksMs)} ms`);
+  if(dm.linkSource)parts.push(`vinculos-src=${String(dm.linkSource)}`);
+  if(f(dm.linksPrepareMs)!=null)parts.push(`vinculos-prep ${f(dm.linksPrepareMs)} ms`);
+  if(f(dm.linksReadMs)!=null)parts.push(`vinculos-leitura ${f(dm.linksReadMs)} ms`);
+  if(f(dm.linkBuildMs)!=null)parts.push(`vinculos-mapa ${f(dm.linkBuildMs)} ms`);
+  if(f(dm.filterMs)!=null)parts.push(`docs-filtro ${f(dm.filterMs)} ms`);
+  if(f(dm.sortMs)!=null)parts.push(`docs-ordena ${f(dm.sortMs)} ms`);
+  if(Number.isFinite(Number(dm.documentRows)))parts.push(`docs-linhas=${Number(dm.documentRows)}`);
+  if(Number.isFinite(Number(dm.matched)))parts.push(`docs-ativo-n=${Number(dm.matched)}`);
+  const ph=b.preventiveHistory||{};
+  if(f(ph.authorizeMs)!=null)parts.push(`prev-auth ${f(ph.authorizeMs)} ms`);
+  if(f(ph.prepareMs)!=null)parts.push(`prev-prep ${f(ph.prepareMs)} ms`);
+  if(f(ph.readMs)!=null)parts.push(`prev-leitura ${f(ph.readMs)} ms`);
+  if(f(ph.filterMs)!=null)parts.push(`prev-filtro ${f(ph.filterMs)} ms`);
+  if(f(ph.sortMs)!=null)parts.push(`prev-ordena ${f(ph.sortMs)} ms`);
+  if(f(ph.documentsPrepareMs)!=null)parts.push(`prevdocs-prep ${f(ph.documentsPrepareMs)} ms`);
+  if(f(ph.documentsReadMs)!=null)parts.push(`prevdocs-leitura ${f(ph.documentsReadMs)} ms`);
+  if(f(ph.documentsFilterMs)!=null)parts.push(`prevdocs-filtro ${f(ph.documentsFilterMs)} ms`);
+  if(Number.isFinite(Number(ph.rowsTotal)))parts.push(`prev-linhas=${Number(ph.rowsTotal)}`);
+  if(Number.isFinite(Number(ph.rowsMatched)))parts.push(`prev-ativo=${Number(ph.rowsMatched)}`);
+  if(Number.isFinite(Number(ph.documentRows)))parts.push(`prevdocs-linhas=${Number(ph.documentRows)}`);
+  if(Number.isFinite(Number(ph.documentMatched)))parts.push(`prevdocs-ativo=${Number(ph.documentMatched)}`);
   if(Number(b.historyDuplicateReadsAvoided||0)>0)parts.push(`hist-duplicada-evitada=${Number(b.historyDuplicateReadsAvoided)}`);
   if(f(b.readMs)!=null)parts.push(`leitura ${f(b.readMs)} ms`);
   if(f(b.filtersMs)!=null)parts.push(`filtros ${f(b.filtersMs)} ms`);
