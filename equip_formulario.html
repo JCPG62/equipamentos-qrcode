@@ -1,53 +1,30 @@
-<!-- QRManut 7.6.6.25: B5.3.7 — Relatório de OCs / Cache de Filtros Unificado
-     - Unifica o caminho otimizado dos filtros do Relatório de OCs no bundle e na rota occurrencereportfilters.
-     - Limpar cache local passa a limpar também estados carregados em memória, inclusive occurrenceReportData.
-     - Garante que a próxima abertura após limpeza manual refaça o bundle e possa aproveitar o cache do servidor.
-     - Mantém diagnóstico detalhado de origem dos filtros: rebuild, execution-cache ou script-cache.
-     - Trabalha em conjunto com GS B5.3.7, que amplia o cache dos filtros para 15 minutos e instrumenta a rota de filtros.
+<!-- QRManut 7.6.6.25: B5.3.8 — Diagnóstico Persistente entre Navegações
+     - Persiste somente as medições técnicas do Diagnóstico de Performance em sessionStorage.
+     - As medições sobrevivem a navegações ?id=ATIVO, retorno ao menu e recarregamentos na mesma aba.
+     - Fechar a aba encerra naturalmente essa persistência; Limpar medições remove também o armazenamento da sessão.
+     - Não persiste token, senha, conteúdo de OC, dados de ativos ou respostas da API: apenas ação, contexto e tempos técnicos.
+     - Mantém cache local de dados somente em memória; o cache operacional NÃO passa a sobreviver a reloads.
+     - Permite medir corretamente assetbundle/Histórico de Manutenção ao entrar e sair da ficha do ativo.
+     - Mantém integralmente as otimizações B5.3.7 e o GS B5.3.7 sem alteração.
      - Não altera regras de negócio, permissões, resultados ou RELEASE 7.6.6.25.
 
-     Histórico B5.3.5 — Performance / Filtros do Relatório de OCs
-     - Otimiza a primeira carga dos filtros do Relatório de OCs.
-     - Evita regravar cabeçalhos e validações de Categorias/Componentes em toda leitura.
-     - Adiciona cache de servidor para filtros globais do relatório e detalhamento de performance.
+     Histórico B5.3.7 — Histórico de Manutenção / Ficha do Ativo
+     - Evita leitura duplicada do histórico na mesma ficha.
+     - Calcula o status usando o histórico já carregado.
+     - Instrumenta assetbundle com tempos de histórico, anexos e documentos técnicos.
 
-     Histórico B5.3.4 — Bundle Único / Remoção de Chamadas Duplicadas
-     - Corrige a primeira abertura de OCs Pendentes para usar pendingbundle como fonte única de filtros + dados.
-     - Corrige a primeira abertura de Documentos Técnicos para usar documentsbundle como fonte única de filtros + dados.
-     - Remove a chamada POST redundante a pending/documents imediatamente após o respectivo bundle.
-     - Mantém cache relacionado para que reaberturas dentro do TTL sejam LOCAL 0 ms.
-     - Corrige a chave do cache relacionado para não duplicar o campo action nos parâmetros.
-     - Não altera GS, regras de negócio, permissões, filtros ou resultados.
-
-     Histórico B5.3.3 — Performance / Menos Viagens à API
-     - Consolida filtros + dados em uma única chamada inicial para OCs Pendentes, Documentos e Relatório de OCs.
-     - Reduz round-trips ao Google Apps Script sem alterar regras de negócio, permissões ou resultados.
-     - Mantém integralmente a otimização de Preventivas da B5.3.2 e o diagnóstico da B5.3.1.
-
-     Histórico B5.3.2 — Performance Preventivas / Mapa Otimizado
-     - Trabalha em conjunto com GS B5.3.2 para otimizar a primeira carga do Controle Mensal de Preventivas.
-     - Diagnóstico passa a exibir modo do mapa, normalizações de competência, hits de memoização e linhas correspondentes.
-     - Mantém integralmente cache local, deduplicação, segurança e diagnóstico da B5.3.1.
-
-     Histórico B5.3.1 — Performance Diagnóstico R2 / Preventivas
-     - Mantém cache local, deduplicação e diagnóstico da B5.3.0.
-     - Distingue LOCAL de IN-FLIGHT para não contar espera compartilhada como cache instantâneo.
-     - Resumo passa a separar medições totais de chamadas reais à API.
-     - Adiciona Overhead = Total - Backend e detalhes internos quando o backend os fornece.
-     - Remove chamadas systemsession redundantes ao abrir Preventivas, Pendências/Providências e Permissões;
-       a própria rota autenticada continua validando a sessão no backend.
-     - Corrige o pré-carregamento de prestadores das Preventivas usando a rota existente providers.
-     - Invalida também o cache auxiliar de prestadores de Preventivas após gravações.
-     - Trabalha em conjunto com GS B5.3.1, que instrumenta preventivecontrol e evita carregar documentos
-       de preventiva na tela de controle mensal (relatórios continuam completos).
-     Mantém integralmente as correções e funcionalidades da B5.3.0/B5.2.15. -->
+     Histórico B5.3.6 — Relatório de OCs / Cache de Filtros Unificado
+     - Unifica o caminho otimizado dos filtros do Relatório de OCs no bundle e na rota occurrencereportfilters.
+     - Limpar cache local limpa também estados carregados em memória, inclusive occurrenceReportData.
+     - Mantém diagnóstico detalhado de origem dos filtros: rebuild, execution-cache ou script-cache.
+-->
 <!doctype html>
 <html lang="pt-br">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>QRManut</title>
-<meta name="qrmanut-build" content="2026-09-20-b5.3.6">
+<meta name="qrmanut-build" content="2026-09-20-b5.3.8">
 <meta name="theme-color" content="#0b315e">
 <meta name="application-name" content="QRManut">
 <meta name="mobile-web-app-capable" content="yes">
@@ -1683,6 +1660,7 @@ async function qrFetchJson766254_(url,options){
 const QR_LOCAL_CACHE_TTL_B530=45000;
 const QR_AUDIT_CACHE_TTL_B530=15000;
 const QR_PERF_MAX_ROWS_B530=400;
+const QR_PERF_SESSION_KEY_B538="qrmanut_perf_measurements_b538";
 const qrLocalCacheB530=new Map();
 const qrInflightB530=new Map();
 let qrCacheGenerationB530=0;
@@ -1774,6 +1752,39 @@ function qrPerfDetailsB531(data){
   if(Number.isFinite(Number(pm.rows)))parts.push(`prev=${Number(pm.rows)}`);
   return parts.join(" • ");
 }
+function qrPersistPerformanceB538(){
+  try{
+    const payload=qrPerfRowsB530.slice(-QR_PERF_MAX_ROWS_B530).map(x=>({
+      time:x.time instanceof Date?x.time.toISOString():String(x.time||""),
+      method:String(x.method||"-").toUpperCase(),action:String(x.action||"-"),context:String(x.context||"-"),
+      totalMs:Math.max(0,Number(x.totalMs)||0),backendMs:x.backendMs==null?null:Math.max(0,Number(x.backendMs)||0),
+      result:String(x.result||"OK").toUpperCase(),details:String(x.details||"")
+    }));
+    sessionStorage.setItem(QR_PERF_SESSION_KEY_B538,JSON.stringify(payload));
+  }catch(_e){}
+}
+function qrRestorePerformanceB538(){
+  try{
+    const raw=sessionStorage.getItem(QR_PERF_SESSION_KEY_B538);
+    if(!raw)return;
+    const parsed=JSON.parse(raw);
+    if(!Array.isArray(parsed))throw new Error("invalid performance session");
+    qrPerfRowsB530=parsed.slice(-QR_PERF_MAX_ROWS_B530).map(x=>({
+      time:new Date(x.time||Date.now()),method:String(x.method||"-").toUpperCase(),action:String(x.action||"-"),
+      context:String(x.context||"-"),totalMs:Math.max(0,Number(x.totalMs)||0),
+      backendMs:x.backendMs==null?null:Math.max(0,Number(x.backendMs)||0),
+      result:String(x.result||"OK").toUpperCase(),details:String(x.details||"")
+    })).filter(x=>!Number.isNaN(x.time.getTime()));
+  }catch(_e){
+    qrPerfRowsB530=[];
+    try{sessionStorage.removeItem(QR_PERF_SESSION_KEY_B538)}catch(__e){}
+  }
+}
+function qrClearPerformanceSessionB538(){
+  qrPerfRowsB530=[];
+  try{sessionStorage.removeItem(QR_PERF_SESSION_KEY_B538)}catch(_e){}
+}
+
 function qrPerfRecordB530(method,action,context,totalMs,backendMs,result,details){
   const row={
     time:new Date(),method:String(method||"-").toUpperCase(),action:String(action||"-"),
@@ -1783,6 +1794,7 @@ function qrPerfRecordB530(method,action,context,totalMs,backendMs,result,details
   };
   qrPerfRowsB530.push(row);
   if(qrPerfRowsB530.length>QR_PERF_MAX_ROWS_B530)qrPerfRowsB530.splice(0,qrPerfRowsB530.length-QR_PERF_MAX_ROWS_B530);
+  qrPersistPerformanceB538();
   const area=$("performanceArea");
   if(area&&!area.classList.contains("hidden"))qrRenderPerformanceB530();
   return row;
@@ -1823,14 +1835,16 @@ function qrRenderPerformanceB530(){
   const title=$("performanceTitle"),help=$("performanceHelp"),b1=$("performanceClearMeasurements"),b2=$("performanceClearCache"),back=$("performanceBackMenu");
   if(title)title.textContent=t("⏱️ Diagnóstico de Performance","⏱️ Performance Diagnostics");
   if(help)help.innerHTML=t(
-    "Mede navegador → API → navegador. <b>LOCAL</b> = cache instantâneo; <b>IN-FLIGHT</b> = uma segunda solicitação aguardou a mesma requisição já em andamento. <b>Overhead</b> = Total − Backend. As estatísticas de média/P95/máximo consideram apenas chamadas reais GET/POST.",
-    "Measures browser → API → browser. <b>LOCAL</b> = instant cache; <b>IN-FLIGHT</b> = a second request waited for the same request already in progress. <b>Overhead</b> = Total − Backend. Average/P95/maximum statistics include only real GET/POST calls."
+    "Mede navegador → API → navegador. <b>LOCAL</b> = cache instantâneo; <b>IN-FLIGHT</b> = uma segunda solicitação aguardou a mesma requisição já em andamento. <b>Overhead</b> = Total − Backend. As medições técnicas persistem nesta aba mesmo ao abrir uma ficha/recarregar a página. As estatísticas de média/P95/máximo consideram apenas chamadas reais GET/POST.",
+    "Measures browser → API → browser. <b>LOCAL</b> = instant cache; <b>IN-FLIGHT</b> = a second request waited for the same request already in progress. <b>Overhead</b> = Total − Backend. Technical measurements persist in this tab even when opening an asset/reloading the page. Average/P95/maximum statistics include only real GET/POST calls."
   );
   if(b1)b1.textContent=t("Limpar medições","Clear measurements");
   if(b2)b2.textContent=t("Limpar cache local","Clear local cache");
   if(back)back.textContent=t("← Voltar ao Menu Principal","← Back to Main Menu");
 }
-function qrClearPerformanceMeasurementsB530(){qrPerfRowsB530=[];qrRenderPerformanceB530()}
+function qrClearPerformanceMeasurementsB530(){qrClearPerformanceSessionB538();qrRenderPerformanceB530()}
+// B5.3.8 — restaura as medições antes das primeiras chamadas da nova página.
+qrRestorePerformanceB538();
 function qrSessionScopeB530(){
   if(!systemSession)return "anon";
   return [systemSession.idUsuario||systemSession.usuario||"",systemSession.perfil||"",systemSession.idPrestador||"",systemSession.prestador||""].map(v=>String(v)).join("|");
@@ -1965,7 +1979,7 @@ function getSavedResponsible(){try{return localStorage.getItem(RESPONSIBLE_KEY)|
 function savePreventiveSession(d){preventiveSession=d;sessionStorage.setItem(PREVENTIVE_SESSION_KEY,JSON.stringify(d))}function readPreventiveSession(){try{const raw=sessionStorage.getItem(PREVENTIVE_SESSION_KEY);preventiveSession=raw?JSON.parse(raw):null}catch(e){preventiveSession=null}}function clearPreventiveSession(){preventiveSession=null;sessionStorage.removeItem(PREVENTIVE_SESSION_KEY)}function saveSystemSession(d){systemSession=d;preventiveSession=d;try{sessionStorage.setItem(SYSTEM_SESSION_KEY,JSON.stringify(d));localStorage.removeItem(SYSTEM_SESSION_KEY)}catch(e){}}
 function readSystemSession(){try{localStorage.removeItem(SYSTEM_SESSION_KEY);const raw=sessionStorage.getItem(SYSTEM_SESSION_KEY);systemSession=raw?JSON.parse(raw):null}catch(e){systemSession=null}}
 function revokeSecureFileUrls76624(){try{secureFileUrlCache76624.forEach(v=>URL.revokeObjectURL(v));secureFileUrlCache76624.clear()}catch(e){}}
-function clearSystemSession(){systemSession=null;preventiveSession=null;revokeSecureFileUrls76624();if(typeof qrInvalidateLocalCacheB530==="function")qrInvalidateLocalCacheB530("clear-session");try{sessionStorage.removeItem(SYSTEM_SESSION_KEY);localStorage.removeItem(SYSTEM_SESSION_KEY)}catch(e){}}
+function clearSystemSession(){systemSession=null;preventiveSession=null;revokeSecureFileUrls76624();if(typeof qrInvalidateLocalCacheB530==="function")qrInvalidateLocalCacheB530("clear-session");if(typeof qrClearPerformanceSessionB538==="function")qrClearPerformanceSessionB538();try{sessionStorage.removeItem(SYSTEM_SESSION_KEY);localStorage.removeItem(SYSTEM_SESSION_KEY)}catch(e){}}
 async function systemSessionIsValid(){
   if(!systemSession?.systemSessionToken)return false;
   try{
