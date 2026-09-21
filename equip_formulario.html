@@ -1,4 +1,10 @@
-<!-- QRManut 7.6.6.25: B5.3.19 — Menu recolhível Operação/Administração
+<!-- QRManut 7.6.6.25: B5.3.20 — Experiência Rápida + Central de Alertas
+     - Carregamento progressivo com skeletons nas rotinas operacionais sem alterar as regras de negócio.
+     - Central de Alertas com uma única chamada resumida ao backend e navegação direta para a rotina correspondente.
+     - Alertas respeitam perfil/permissões e o escopo do prestador.
+     - Mantém integralmente o menu recolhível B5.3.19, login limpo B5.3.18 e otimizações B5.3.x.
+
+     Histórico B5.3.19 — Menu recolhível Operação/Administração
      - Operação aberta por padrão; Administração recolhida por padrão.
      - Títulos das seções funcionam como botões acessíveis com seta de estado.
      - Estado aberto/recolhido é lembrado durante a mesma aba/sessão via sessionStorage.
@@ -93,7 +99,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>QRManut</title>
-<meta name="qrmanut-build" content="2026-09-20-b5.3.19">
+<meta name="qrmanut-build" content="2026-09-21-b5.3.20">
 <meta name="theme-color" content="#0b315e">
 <meta name="application-name" content="QRManut">
 <meta name="mobile-web-app-capable" content="yes">
@@ -1059,6 +1065,49 @@ body{
   .menu-section-chevron{width:28px;height:28px;font-size:.82rem}
 }
 
+
+
+/* ============================================================
+ * QRManut 7.6.6.25 B5.3.20 - Experiência Rápida + Central de Alertas
+ * ============================================================ */
+.qr-main-heading-b5320{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}
+.qr-alerts-button-b5320{
+  position:relative;display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  min-height:44px;padding:9px 12px;border:1px solid #cbd7e7;border-radius:14px;
+  background:#fff;color:#21356b;font-weight:800;cursor:pointer;
+  box-shadow:0 7px 20px rgba(15,23,42,.06);transition:.16s ease;
+}
+.qr-alerts-button-b5320:hover{transform:translateY(-1px);box-shadow:0 10px 24px rgba(15,23,42,.10)}
+.qr-alerts-button-b5320[aria-expanded="true"]{background:#eef3ff;border-color:#9db2df}
+.qr-alerts-bell-b5320{font-size:1.05rem}.qr-alerts-label-b5320{font-size:.92rem}
+.qr-alerts-badge-b5320{display:inline-flex;align-items:center;justify-content:center;min-width:23px;height:23px;padding:0 6px;border-radius:999px;background:#dc2626;color:#fff;font-size:.74rem;font-weight:900}
+.qr-alerts-panel-b5320{margin:0 0 18px;padding:14px;border:1px solid #d8e2ef;border-radius:20px;background:#fff;box-shadow:0 12px 32px rgba(15,23,42,.08)}
+.qr-alerts-panel-head-b5320{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+#qrAlertsTitleB5320{font-size:1rem;color:#172554}.qr-alerts-panel-head-b5320 .muted{font-size:.75rem;margin-top:2px}
+.qr-alerts-refresh-b5320{border:1px solid #cbd7e7;background:#f8fafc;color:#334155;border-radius:11px;padding:8px 11px;font-weight:800;cursor:pointer}
+.qr-alerts-list-b5320{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:10px}
+.qr-alert-item-b5320{width:100%;display:flex;align-items:center;gap:11px;text-align:left;border:1px solid #e2e8f0;background:#fbfdff;border-radius:15px;padding:12px;cursor:pointer;color:#0f172a;transition:.15s ease}
+.qr-alert-item-b5320:hover{border-color:#a9bad5;background:#f7faff;transform:translateY(-1px)}
+.qr-alert-item-b5320 .icon{flex:0 0 36px;width:36px;height:36px;display:grid;place-items:center;border-radius:11px;background:#eef3ff;font-size:1.05rem}
+.qr-alert-item-b5320 .body{min-width:0;flex:1}.qr-alert-item-b5320 .title{display:flex;align-items:baseline;justify-content:space-between;gap:8px;font-weight:800}.qr-alert-item-b5320 .count{font-size:1.16rem;color:#172554}.qr-alert-item-b5320 .detail{margin-top:3px;color:#64748b;font-size:.77rem;line-height:1.3}
+.qr-alert-item-b5320.critical{border-color:#fecaca;background:#fffafa}.qr-alert-item-b5320.critical .icon{background:#fee2e2}.qr-alert-item-b5320.warning .icon{background:#ffedd5}.qr-alert-item-b5320.ok .icon{background:#dcfce7}
+.qr-alerts-empty-b5320{grid-column:1/-1;padding:16px;border:1px dashed #cbd5e1;border-radius:14px;text-align:center;color:#64748b;background:#f8fafc}
+
+.qr-skeleton-b5320{position:relative;overflow:hidden;background:#e9eef5;border-radius:10px;min-height:14px}
+.qr-skeleton-b5320::after{content:"";position:absolute;inset:0;transform:translateX(-100%);background:linear-gradient(90deg,transparent,rgba(255,255,255,.78),transparent);animation:qrSkeletonSweepB5320 1.25s infinite}
+@keyframes qrSkeletonSweepB5320{100%{transform:translateX(100%)}}
+.qr-skeleton-card-b5320{margin-top:10px;padding:14px;border:1px solid #e1e8f0;border-radius:16px;background:#fff}
+.qr-skeleton-line-b5320{height:12px;margin-top:9px}.qr-skeleton-line-b5320:first-child{margin-top:0;height:17px;width:42%}.qr-skeleton-line-b5320.w70{width:70%}.qr-skeleton-line-b5320.w88{width:88%}.qr-skeleton-line-b5320.w55{width:55%}
+.qr-skeleton-summary-b5320{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:14px 0}
+.qr-skeleton-summary-b5320>div{height:72px;border:1px solid #e1e8f0;border-radius:15px;background:#fff;padding:12px}.qr-skeleton-summary-b5320 .qr-skeleton-b5320{height:100%}
+.asset-skeleton-section-b5320{padding:12px 0}.asset-skeleton-section-b5320 .qr-skeleton-b5320{height:12px;margin-top:9px}.asset-skeleton-section-b5320 .qr-skeleton-b5320:first-child{height:16px;width:46%}
+
+@media(max-width:700px){
+  .qr-main-heading-b5320{align-items:center}.qr-alerts-label-b5320{display:none}.qr-alerts-button-b5320{min-width:46px;padding:8px 10px}
+  .qr-alerts-list-b5320{grid-template-columns:1fr}.qr-alerts-panel-b5320{padding:12px;border-radius:17px}
+  .qr-skeleton-summary-b5320{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+
 </style>
 </head>
 <body>
@@ -1070,11 +1119,28 @@ body{
 <div id="qrNetworkStatus" class="qr-network-status hidden" role="status" aria-live="polite"></div>
 
 <div id="searchScreen" class="hidden qr-home-screen">
-  <div class="search-title">QRManut</div>
-  <div id="qrAppSubtitle" class="muted">Gestão rápida de manutenção</div>
+  <div class="qr-main-heading-b5320">
+    <div>
+      <div class="search-title">QRManut</div>
+      <div id="qrAppSubtitle" class="muted">Gestão rápida de manutenção</div>
+    </div>
+    <button id="qrAlertsButtonB5320" class="qr-alerts-button-b5320 hidden" type="button" aria-expanded="false" aria-controls="qrAlertsPanelB5320" title="Central de Alertas">
+      <span class="qr-alerts-bell-b5320" aria-hidden="true">🔔</span>
+      <span class="qr-alerts-label-b5320">Alertas</span>
+      <span id="qrAlertsBadgeB5320" class="qr-alerts-badge-b5320 hidden">0</span>
+    </button>
+  </div>
   <button id="installAppButton" type="button" class="install-app-button hidden">📲 Instalar QRManut no celular</button>
   <div id="iosInstallHint" class="install-hint hidden"><b>Instalar no iPhone:</b> toque em Compartilhar e escolha <b>Adicionar à Tela de Início</b>.</div>
   <div id="systemAccessInfo" class="system-access-info hidden"><div class="system-access-row"><div id="systemAccessText"></div><button id="systemLogoutButton" class="btn btn-secondary" type="button">Sair do Menu</button></div></div>
+  <section id="qrAlertsPanelB5320" class="qr-alerts-panel-b5320 hidden" aria-live="polite">
+    <div class="qr-alerts-panel-head-b5320">
+      <div><strong id="qrAlertsTitleB5320">🔔 Central de Alertas</strong><div id="qrAlertsUpdatedB5320" class="muted"></div></div>
+      <button id="qrAlertsRefreshB5320" class="qr-alerts-refresh-b5320" type="button">Atualizar</button>
+    </div>
+    <div id="qrAlertsStatusB5320" class="muted"></div>
+    <div id="qrAlertsListB5320" class="qr-alerts-list-b5320"></div>
+  </section>
   <div id="menuLockedCard" class="card menu-locked-card hidden"><h2>🔐 Menu Principal protegido</h2><div class="muted">A ficha do equipamento e o registro de ocorrências continuam disponíveis pelo QR Code. Para acessar a Gestão Rápida, identifique-se.</div><button id="openSystemLoginButton" class="btn btn-blue" type="button">Entrar no Menu Principal</button></div>
   <div id="mainMenuButtons" class="menu-busca">
     <button id="tabSearch" class="menu-button active">🔎 Buscar ativos</button>
@@ -2086,7 +2152,7 @@ let qrCacheGenerationB530=0;
 let qrPerfRowsB530=[];
 
 const QR_CACHEABLE_ACTIONS_B530=new Set([
-  "search","pendingfilters","pending","pendingbundle","solicitations","solsummary","soltriagemmeta",
+  "search","pendingfilters","pending","pendingbundle","solicitations","solsummary","alertssummary","soltriagemmeta",
   "occurrencereportfilters","occurrencereport","occurrencereportbundle","preventivecontrol",
   "documents","documentfilters","documentsbundle","users","providers","accessrequests","providersadmin",
   "companyconfig","profilepermissionsadmin","auditfilters","audit","occurrencecatalogadmin",
@@ -2101,7 +2167,7 @@ const QR_NON_MUTATING_POST_ACTIONS_B530=new Set([
 
 const QR_ACTION_CONTEXT_B530={
   search:"buscar-ativos",pending:"ocs-pendentes",pendingfilters:"ocs-pendentes-filtros",pendingbundle:"ocs-pendentes-pacote",
-  solicitations:"solicitacoes",solsummary:"solicitacoes-resumo",soltriagemmeta:"solicitacoes-meta",
+  solicitations:"solicitacoes",solsummary:"solicitacoes-resumo",alertssummary:"alertas-menu",soltriagemmeta:"solicitacoes-meta",
   occurrencereport:"relatorio-oc",occurrencereportfilters:"relatorio-oc-filtros",occurrencereportbundle:"relatorio-oc-pacote",
   preventivecontrol:"preventivas",
   documents:"documentos",documentfilters:"documentos-filtros",documentsbundle:"documentos-pacote",users:"usuarios",
@@ -2135,6 +2201,11 @@ function qrPerfDetailsB531(data){
   if(Number.isFinite(Number(pm.matchingRows)))parts.push(`match=${Number(pm.matchingRows)}`);
   if(Number.isFinite(Number(pm.realizedRows)))parts.push(`realizadas-linhas=${Number(pm.realizedRows)}`);
   if(b.bundleType)parts.push(`pacote=${String(b.bundleType)}`);
+  if(f(b.pendingMs)!=null)parts.push(`alerta-ocs ${f(b.pendingMs)} ms`);
+  if(f(b.solicitationsMs)!=null)parts.push(`alerta-sols ${f(b.solicitationsMs)} ms`);
+  if(f(b.preventiveMs)!=null)parts.push(`alerta-prev ${f(b.preventiveMs)} ms`);
+  if(f(b.maintenancePendingMs)!=null)parts.push(`alerta-pend ${f(b.maintenancePendingMs)} ms`);
+  if(f(b.totalMs)!=null&&String(b.bundleType)==="alerts")parts.push(`alerta-total ${f(b.totalMs)} ms`);
   if(f(b.payloadMs)!=null)parts.push(`payload ${f(b.payloadMs)} ms`);
   if(f(b.historyMs)!=null)parts.push(`histórico ${f(b.historyMs)} ms`);
   const hm=b.history||{};
@@ -2375,6 +2446,8 @@ function qrInvalidateLocalCacheB530(reason){
   qrCacheGenerationB530++;
   qrLocalCacheB530.clear();
   qrInflightB530.clear();
+  if(typeof qrAlertsDataB5320!=="undefined")qrAlertsDataB5320=null;
+  const qrAlertBadgeB5320=$("qrAlertsBadgeB5320");if(qrAlertBadgeB5320)qrAlertBadgeB5320.classList.add("hidden");
   if(typeof qrClearAssetBundleSessionB5314_==="function")qrClearAssetBundleSessionB5314_();
   if(typeof clearPendingFastSnapshotB5311_==="function")clearPendingFastSnapshotB5311_();
   // Metadados carregados em memória também precisam voltar a consultar o backend após gravações.
@@ -2749,6 +2822,8 @@ function showMenuGate(){
   document.querySelectorAll("#mainMenuButtons .menu-section").forEach(el=>el.classList.add("hidden"));
   ["searchArea","pendingArea","solicitationsArea","occurrenceReportArea","preventiveControlArea","documentsArea","usersArea","permissionsArea","auditArea","companyArea","providersAdminArea","documentUploadArea","occurrenceCatalogArea","maintenancePendingArea","assetManagementPanel","performanceArea"].forEach(hide);
   hide("systemAccessInfo");
+  hide("qrAlertsButtonB5320");
+  hide("qrAlertsPanelB5320");
   clearSearchOnMenuEntryB5318();
   show("menuLockedCard");
 }
@@ -2775,6 +2850,7 @@ function openMainMenu(){
   clearSearchOnMenuEntryB5318();
   hide("menuLockedCard");
   show("mainMenuButtons");
+  show("qrAlertsButtonB5320");
   renderSystemAccess();
   updateRoleUi();
   document.querySelectorAll("#mainMenuButtons .menu-section").forEach(section=>{
@@ -2787,8 +2863,8 @@ function openMainMenu(){
   openDefaultAllowedTab();
   setTimeout(()=>{
     refreshAccessRequestMenuBadge76616();
-    refreshSolMenuBadge7662412();
-  },500);
+    loadAlertsSummaryB5320_().catch(()=>{});
+  },650);
 
   if(systemSession?.perfil==="PRESTADOR")$("occReportProvider").disabled=true;
   else $("occReportProvider").disabled=false;
@@ -2796,7 +2872,7 @@ function openMainMenu(){
 async function refreshAccessRequestMenuBadge76616(){const el=$("tabUsers");if(!el)return;const base=qrLanguage==="en-US"?"👥 User Management":"👥 Gestão de Usuários";if(systemSession?.perfil!=="MASTER"){el.textContent=base;return}try{const r=await menuApi({action:"accessrequests"});const n=(r.requests||[]).filter(x=>x.status==="Pendente").length;el.textContent=base+(n?` 🔴 ${n}`:"")}catch(e){el.textContent=base}}
 async function requireSystemLogin(nextAction){if(await systemSessionIsValid()){nextAction();return}systemLoginNextAction=nextAction;$("systemUsername").value="";$("systemPassword").value="";$("systemLoginMessage").className="message";$("systemLoginModal").style.display="flex";setTimeout(()=>$("systemUsername").focus(),80)}
 async function doSystemLogin(){const user=$("systemUsername").value.trim(),password=$("systemPassword").value;if(!user||!password){$("systemLoginMessage").className="message error";$("systemLoginMessage").textContent="Informe usuário e senha.";return}$("sendSystemLogin").disabled=true;$("sendSystemLogin").textContent="Entrando...";try{const r=await apiPost({action:"systemLogin",systemUsername:user,systemPassword:password});if(!r.ok)throw new Error(r.detail||"Usuário ou senha inválidos.");saveSystemSession(r);$("systemLoginModal").style.display="none";clearSearchOnMenuEntryB5318();occurrenceReportFiltersLoaded=false;documentFiltersLoaded=false;pendingFiltersLoaded=false;if(systemLoginNextAction){const fn=systemLoginNextAction;systemLoginNextAction=null;fn()}else openMainMenu()}catch(e){$("systemLoginMessage").className="message error";$("systemLoginMessage").textContent=e.message}finally{$("sendSystemLogin").disabled=false;$("sendSystemLogin").textContent="Entrar"}}
-async function logoutSystemMenu(){try{if(systemSession?.systemSessionToken)await apiPost({action:"systemLogout",systemSessionToken:systemSession.systemSessionToken})}catch(e){}clearSystemSession();clearPreventiveSession();preventiveControlData=null;occurrenceReportData=null;occurrenceReportFiltersLoaded=false;documentFiltersLoaded=false;pendingFiltersLoaded=false;showMenuGate()}
+async function logoutSystemMenu(){try{if(systemSession?.systemSessionToken)await apiPost({action:"systemLogout",systemSessionToken:systemSession.systemSessionToken})}catch(e){}qrAlertsDataB5320=null;clearSystemSession();clearPreventiveSession();preventiveControlData=null;occurrenceReportData=null;occurrenceReportFiltersLoaded=false;documentFiltersLoaded=false;pendingFiltersLoaded=false;showMenuGate()}
 
 async function sessionIsValid(){return systemSessionIsValid()}
 function getOriginAsset(){try{return sessionStorage.getItem(ORIGIN_ASSET_KEY)||""}catch(e){return""}}function setOriginAsset(id){try{sessionStorage.setItem(ORIGIN_ASSET_KEY,normalizeId(id))}catch(e){}}function clearOriginAsset(){try{sessionStorage.removeItem(ORIGIN_ASSET_KEY)}catch(e){}}
@@ -3041,7 +3117,7 @@ function showOnly(a){
 }
 function clearTabs(){["tabSearch","tabPending","tabSolicitations","tabOccurrenceReport","tabPreventive","tabDocuments","tabUsers","tabPermissions","tabAudit","tabProvidersAdmin","tabCompany","tabDocumentUpload","tabOccurrenceCatalog","tabMaintenancePending","tabAssetManagement","tabPerformance"].forEach(id=>$(id).classList.remove("active"))}
 function showSearchTab(){if(!requireUiPermission("BUSCAR_ATIVOS","Seu perfil não possui permissão para buscar ativos.","Your profile is not allowed to search assets."))return;clearTabs();$("tabSearch").classList.add("active");showOnly("searchArea");updateBackAssetButton();focusSearchInput()}
-async function showPendingTab(){if(!requireUiPermission("OC_PENDENTES","Seu perfil não possui permissão para consultar OCs pendentes.","Your profile is not allowed to view pending work orders."))return;clearTabs();$("tabPending").classList.add("active");showOnly("pendingArea");if(!pendingFiltersLoaded)await loadPendingBundleB533();else await loadPending()}
+async function showPendingTab(){if(!requireUiPermission("OC_PENDENTES","Seu perfil não possui permissão para consultar OCs pendentes.","Your profile is not allowed to view pending work orders."))return;clearTabs();$("tabPending").classList.add("active");showOnly("pendingArea");qrShowPendingSkeletonB5320_();if(!pendingFiltersLoaded)await loadPendingBundleB533();else await loadPending()}
 async function showOccurrenceReportTab(){if(!requireUiPermission("RELATORIO_OC","Seu perfil não possui permissão para acessar o Relatório de OCs.","Your profile is not allowed to access the work order report."))return;clearTabs();$("tabOccurrenceReport").classList.add("active");showOnly("occurrenceReportArea");setDefaultOccurrenceReportDates();if(!occurrenceReportFiltersLoaded&&!occurrenceReportData)await loadOccurrenceReportBundleB533();else{await loadOccurrenceReportFilters();if(!occurrenceReportData)await loadOccurrenceReport()}}
 function showPreventiveTab(){
   qrActivateMenuFeedback766257_("tabPreventive");
@@ -3051,6 +3127,7 @@ function showPreventiveTab(){
       return;
     }
     showOnly("preventiveControlArea");
+    if(!preventiveControlData)qrShowPreventiveSkeletonB5320_();
     // B5.3.1: não chama systemsession antes de preventivecontrol.
     // A própria rota preventivecontrol valida token, perfil e permissão no backend.
     loadPreventiveProvidersFast766253_();
@@ -3061,7 +3138,7 @@ function showPreventiveTab(){
   if(systemSession?.systemSessionToken)abrir();
   else requireSystemLogin(abrir);
 }
-async function showDocumentsTab(){if(!requireUiPermission("DOCUMENTOS_CONSULTAR","Seu perfil não possui permissão para consultar documentos técnicos.","Your profile is not allowed to view technical documents."))return;clearTabs();$("tabDocuments").classList.add("active");showOnly("documentsArea");if(!documentFiltersLoaded)await loadDocumentsBundleB533();else await searchDocuments()}
+async function showDocumentsTab(){if(!requireUiPermission("DOCUMENTOS_CONSULTAR","Seu perfil não possui permissão para consultar documentos técnicos.","Your profile is not allowed to view technical documents."))return;clearTabs();$("tabDocuments").classList.add("active");showOnly("documentsArea");qrShowDocumentsSkeletonB5320_();if(!documentFiltersLoaded)await loadDocumentsBundleB533();else await searchDocuments()}
 async function showUsersTab(){if(!requireUiPermission("GESTAO_USUARIOS","Seu perfil não possui permissão para acessar a Gestão de Usuários.","Your profile is not allowed to manage users."))return;clearTabs();$("tabUsers").classList.add("active");showOnly("usersArea");await loadUsers()}
 async function showAuditTab(){if(!requireUiPermission("AUDITORIA","Seu perfil não possui permissão para consultar a auditoria.","Your profile is not allowed to view the audit trail."))return;clearTabs();$("tabAudit").classList.add("active");showOnly("auditArea");setDefaultAuditDates();await loadAuditFilters();await loadAudit()}
 
@@ -3363,7 +3440,7 @@ function renderDocumentsB534(items){
 async function loadDocumentsBundleB533(){
   const params={q:$("documentSearchInput").value.trim(),tipo:$("documentTypeFilter").value,disciplina:$("documentDisciplineFilter").value,pavimento:$("documentFloorFilter").value};
   $("documentStatus").textContent=qrLanguage==="en-US"?"Loading documents and filters...":"Carregando documentos e filtros...";
-  $("documentResults").innerHTML="";
+  qrShowDocumentsSkeletonB5320_();
   try{
     const r=await menuApi({action:"documentsbundle",...params,__qrContext:"documentos-pacote"});
     if(!r.ok)throw new Error(r.detail||(qrLanguage==="en-US"?"Error loading documents.":"Erro ao carregar documentos."));
@@ -3380,7 +3457,7 @@ async function loadDocumentsBundleB533(){
 async function searchDocuments(options={}){
   const t=(pt,en)=>qrLanguage==="en-US"?en:pt;
   $("documentStatus").textContent=t("Buscando documentos...","Searching documents...");
-  $("documentResults").innerHTML="";
+  qrShowDocumentsSkeletonB5320_();
   try{
     const r=await menuApi({
       action:"documents",
@@ -3805,6 +3882,7 @@ async function loadPendingBundleB533(){
   const params=pendingParams();
   const btn=$("pendingApplyFilters");if(btn){btn.disabled=true;btn.textContent="Consultando..."}
   $("pendingStatusText").textContent="Consultando OCs pendentes e filtros...";
+  qrShowPendingSkeletonB5320_();
   try{
     const r=await menuApi({action:"pendingbundle",...params,__qrContext:"ocs-pendentes-pacote"});
     if(!r.ok)throw new Error(r.detail||"Não foi possível consultar as OCs pendentes.");
@@ -3824,6 +3902,7 @@ async function loadPending(options={}){
   const btn=$("pendingApplyFilters");
   if(btn){btn.disabled=true;btn.textContent="Consultando...";}
   $("pendingStatusText").textContent="Consultando OCs pendentes...";
+  qrShowPendingSkeletonB5320_();
   try{
     const params=pendingParams();
     const d=await menuApi({action:"pending",...params,__qrForce:!!options.force,__qrContext:options.context||"ocs-pendentes"});
@@ -3937,7 +4016,7 @@ async function loadPreventiveProvidersFast766253_(){
   return qrPreventiveProviderPromise766253;
 }
 
-async function loadPreventiveControl(options={}){if(!$("controlCompetence").value)$("controlCompetence").value=currentCompetence();qrRefreshLocalizedDateControls();const provider=["MASTER","GESTOR"].includes(systemSession?.perfil)?$("controlProvider").value:"";const r=await menuApi({action:"preventivecontrol",competencia:$("controlCompetence").value,prestador:provider,__qrForce:!!options.force,__qrContext:options.context||"preventivas"});if(!r.ok){clearSystemSession();showMenuGate();return}preventiveControlData=r.data;renderPreventiveControl()}
+async function loadPreventiveControl(options={}){if(!$("controlCompetence").value)$("controlCompetence").value=currentCompetence();qrRefreshLocalizedDateControls();if(!preventiveControlData)qrShowPreventiveSkeletonB5320_();const provider=["MASTER","GESTOR"].includes(systemSession?.perfil)?$("controlProvider").value:"";const r=await menuApi({action:"preventivecontrol",competencia:$("controlCompetence").value,prestador:provider,__qrForce:!!options.force,__qrContext:options.context||"preventivas"});if(!r.ok){clearSystemSession();showMenuGate();return}preventiveControlData=r.data;renderPreventiveControl()}
 function aguardarPinturaTela(){return new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))}
 async function refreshPreventiveControl(){const btn=$("controlRefresh");if(!btn||btn.dataset.loading==="1")return;const inicio=Date.now();btn.dataset.loading="1";btn.disabled=true;btn.textContent="Atualizando...";await aguardarPinturaTela();try{await loadPreventiveControl({force:true,context:"buscar-manual"})}catch(e){$("controlListStatus").textContent="Erro ao atualizar as preventivas."}finally{const decorrido=Date.now()-inicio;if(decorrido<700)await new Promise(resolve=>setTimeout(resolve,700-decorrido));btn.textContent="Atualizar";btn.disabled=false;delete btn.dataset.loading}}
 function qrT7612(pt,en){return qrLanguage==="en-US"?en:pt;}
@@ -4031,6 +4110,7 @@ async function loadAsset(id){
   $("assetDocuments").innerHTML="";
   $("preventiveHistoryStatus").textContent=qrLanguage==="en-US"?"Sign in to view.":"Login necessário para visualizar.";
   $("preventiveHistory").innerHTML="";
+  qrShowAssetSkeletonB5320_();
 
   show("assetProgressNote");
   $("assetProgressNote").textContent=qrLanguage==="en-US"
@@ -5258,6 +5338,7 @@ async function showSolicitationsTab7662412(){
 async function loadSolicitations7662412(){
   const b=$("solRefresh");b.disabled=true;b.textContent=solT7662412("Atualizando...","Refreshing...");
   $("solStatusText").textContent=solT7662412("Carregando solicitações...","Loading requests...");
+  qrShowSolicitationsSkeletonB5320_();
   try{
     const r=await menuApi({action:"solicitations",status:$("solStatusFilter").value,floor:$("solFloorFilter").value,q:$("solSearch").value.trim()});
     if(!r.ok)throw new Error(r.detail||solT7662412("Não foi possível carregar as solicitações.","Unable to load requests."));
@@ -6132,6 +6213,7 @@ async function loadMaintenancePending(options={}){
   btn.textContent=qrLanguage==="en-US"?"Updating...":"Atualizando...";
 
   $("maintenancePendingStatusText").textContent=qrLanguage==="en-US"?"Loading pending actions...":"Carregando pendências...";
+  qrShowMaintenancePendingSkeletonB5320_();
 
   try{
     const r=await menuApi({
@@ -8268,6 +8350,7 @@ document.getElementById("qrLangPt").addEventListener("click",function(){
   qrTranslateRoutineScreens();
   qrTranslateElementTree(document.body);
   qrTranslateAttributes(document.body);
+["qrLangPt","qrLangEn"].forEach(id=>{const el=$(id);if(el)el.addEventListener("click",()=>setTimeout(()=>{if(qrAlertsDataB5320)qrRenderAlertsB5320_()},0))});
 });
 document.getElementById("qrLangEn").addEventListener("click",function(){
   qrApplyLanguage("en-US");
@@ -8299,7 +8382,9 @@ $("cancelSolClose").onclick=()=>{if(!solActionPosting)$("solCloseModal").style.d
 $("confirmSolClose").onclick=confirmSolClose7662412;
 $("openSystemLoginButton").onclick=()=>requireSystemLogin(openMainMenu);$("forgotPasswordButton").onclick=openForgotPassword;$("cancelRecovery").onclick=()=>{$("forgotPasswordModal").style.display="none";$("systemLoginModal").style.display="flex"};$("sendRecovery").onclick=sendRecovery;$("openAccessRequestButton").onclick=openAccessRequestForm76616;$("cancelAccessRequestButton").onclick=()=>{hide("accessRequestForm");show("recoveryNotRegisteredBox")};$("sendAccessRequestButton").onclick=sendAccessRequest76616;$("accessRequestBackToLoginButton").onclick=backToLoginAfterAccessRequest76617;$("resendPendingInviteButton").onclick=resendPendingInvite76616;$("saveNewPassword").onclick=savePasswordFromToken;$("tabUsers").onclick=showUsersTab;$("newUserButton").onclick=openNewUser;$("tabPermissions").onclick=showProfilePermissionsTab;$("permissionsBackMenu").onclick=openDefaultAllowedTab;$("saveProfilePermissions").onclick=saveProfilePermissions76613;$("resetProfilePermissions").onclick=resetProfilePermissions76613;$("tabAudit").onclick=showAuditTab;$("tabProvidersAdmin").onclick=showProvidersAdminTab;$("tabCompany").onclick=showCompanyTab;$("companyBackMenu").onclick=openDefaultAllowedTab;$("providersBackMenu").onclick=openDefaultAllowedTab;$("newProviderButton").onclick=()=>openProviderModal(null);$("cancelProvider").onclick=()=>{$("providerModal").style.display="none"};$("closeProviderConsult").onclick=()=>{$("providerConsultModal").style.display="none"};$("saveProvider").onclick=saveProviderAdmin;$("saveCompanyConfig").onclick=saveCompanyConfig;["companyName","companyTradeName","companySystemName","companyLogo"].forEach(id=>$(id).oninput=updateCompanyPreview);
 $("companyPrimaryColor").addEventListener("input",updateCompanyPreview);
-$("companyPrimaryColor").addEventListener("change",updateCompanyPreview);$("auditRefresh").onclick=()=>loadAudit({force:true,context:"buscar-manual"});$("auditClear").onclick=clearAuditFilters;$("auditSearch").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();loadAudit()}};$("cancelUser").onclick=()=>{$("userModal").style.display="none"};$("saveUser").onclick=saveUser;$("userEmail").oninput=updateUserPrimaryAction76617;$("cancelAdminUserPassword").onclick=()=>{$("adminUserPasswordModal").style.display="none"};$("saveAdminUserPassword").onclick=saveAdminUserPassword76617;$("sendSystemLogin").onclick=doSystemLogin;$("systemPassword").onkeydown=e=>{if(e.key==="Enter")doSystemLogin()};$("cancelSystemLogin").onclick=()=>{systemLoginNextAction=null;$("systemLoginModal").style.display="none";if(!systemSession)showMenuGate()};$("systemLogoutButton").onclick=logoutSystemMenu;$("installAppButton").onclick=installQRManut;$("tabSearch").onclick=showSearchTab;$("tabPending").onclick=showPendingTab;$("pendingApplyFilters").onclick=()=>loadPending({force:true,context:"buscar-manual"});$("pendingClearFilters").onclick=clearPendingFilters;$("tabOccurrenceReport").onclick=showOccurrenceReportTab;$("tabPreventive").onclick=showPreventiveTab;$("tabDocuments").onclick=showDocumentsTab;$("tabMaintenancePending").onclick=showMaintenancePendingTab;$("maintenancePendingBackMenu").onclick=openDefaultAllowedTab;$("maintenancePendingRefresh").onclick=()=>loadMaintenancePending({force:true,context:"buscar-manual"});$("maintenancePendingClear").onclick=clearMaintenancePendingFilters;$("maintenancePendingSearch").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();loadMaintenancePending()}};$("maintenancePendingStatusFilter").onchange=loadMaintenancePending;$("maintenancePendingPriorityFilter").onchange=loadMaintenancePending;$("preventiveNeedsAction").onchange=togglePreventiveActionFields;$("tabOccurrenceCatalog").onclick=showOccurrenceCatalogTab;$("occurrenceCatalogBackMenu").onclick=openDefaultAllowedTab;$("saveCatalogCategory").onclick=saveCatalogCategory;$("clearCatalogCategory").onclick=clearCatalogCategoryForm;$("saveCatalogComponent").onclick=saveCatalogComponent;$("clearCatalogComponent").onclick=clearCatalogComponentForm;$("category").onchange=()=>populateOccurrenceComponentSelect();$("manageCategory").onchange=()=>populateManageCatalog($("manageCategory").value,"");$("tabDocumentUpload").onclick=showDocumentUploadTab;$("documentUploadBackMenu").onclick=cancelDocumentUpload;$("uploadDocumentChooseFileButton").onclick=()=>$("uploadDocumentFile").click();$("uploadDocumentFile").onchange=prepareDocumentUploadFile;$("sendDocumentUpload").onclick=sendDocumentUpload;$("clearDocumentUpload").onclick=clearDocumentUploadForm;$("searchButton").onclick=searchAssets;$("qrScanButton").onclick=openQrScanner7662513;$("qrScannerCancel").onclick=closeQrScanner7662513;$("qrScannerSwitch").onclick=switchQrScannerCamera7662513;$("searchInput").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();searchAssets()}};$("documentSearchButton").onclick=()=>searchDocuments({force:true,context:"buscar-manual"});$("documentSearchInput").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();searchDocuments()}};$("documentTypeFilter").onchange=searchDocuments;$("documentDisciplineFilter").onchange=searchDocuments;$("documentFloorFilter").onchange=searchDocuments;$("reportButton").onclick=openReport;$("preventiveButton").onclick=requestPreventive;
+$("companyPrimaryColor").addEventListener("change",updateCompanyPreview);
+$("qrAlertsButtonB5320").onclick=()=>qrToggleAlertsPanelB5320_();
+$("qrAlertsRefreshB5320").onclick=()=>loadAlertsSummaryB5320_({force:true});$("auditRefresh").onclick=()=>loadAudit({force:true,context:"buscar-manual"});$("auditClear").onclick=clearAuditFilters;$("auditSearch").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();loadAudit()}};$("cancelUser").onclick=()=>{$("userModal").style.display="none"};$("saveUser").onclick=saveUser;$("userEmail").oninput=updateUserPrimaryAction76617;$("cancelAdminUserPassword").onclick=()=>{$("adminUserPasswordModal").style.display="none"};$("saveAdminUserPassword").onclick=saveAdminUserPassword76617;$("sendSystemLogin").onclick=doSystemLogin;$("systemPassword").onkeydown=e=>{if(e.key==="Enter")doSystemLogin()};$("cancelSystemLogin").onclick=()=>{systemLoginNextAction=null;$("systemLoginModal").style.display="none";if(!systemSession)showMenuGate()};$("systemLogoutButton").onclick=logoutSystemMenu;$("installAppButton").onclick=installQRManut;$("tabSearch").onclick=showSearchTab;$("tabPending").onclick=showPendingTab;$("pendingApplyFilters").onclick=()=>loadPending({force:true,context:"buscar-manual"});$("pendingClearFilters").onclick=clearPendingFilters;$("tabOccurrenceReport").onclick=showOccurrenceReportTab;$("tabPreventive").onclick=showPreventiveTab;$("tabDocuments").onclick=showDocumentsTab;$("tabMaintenancePending").onclick=showMaintenancePendingTab;$("maintenancePendingBackMenu").onclick=openDefaultAllowedTab;$("maintenancePendingRefresh").onclick=()=>loadMaintenancePending({force:true,context:"buscar-manual"});$("maintenancePendingClear").onclick=clearMaintenancePendingFilters;$("maintenancePendingSearch").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();loadMaintenancePending()}};$("maintenancePendingStatusFilter").onchange=loadMaintenancePending;$("maintenancePendingPriorityFilter").onchange=loadMaintenancePending;$("preventiveNeedsAction").onchange=togglePreventiveActionFields;$("tabOccurrenceCatalog").onclick=showOccurrenceCatalogTab;$("occurrenceCatalogBackMenu").onclick=openDefaultAllowedTab;$("saveCatalogCategory").onclick=saveCatalogCategory;$("clearCatalogCategory").onclick=clearCatalogCategoryForm;$("saveCatalogComponent").onclick=saveCatalogComponent;$("clearCatalogComponent").onclick=clearCatalogComponentForm;$("category").onchange=()=>populateOccurrenceComponentSelect();$("manageCategory").onchange=()=>populateManageCatalog($("manageCategory").value,"");$("tabDocumentUpload").onclick=showDocumentUploadTab;$("documentUploadBackMenu").onclick=cancelDocumentUpload;$("uploadDocumentChooseFileButton").onclick=()=>$("uploadDocumentFile").click();$("uploadDocumentFile").onchange=prepareDocumentUploadFile;$("sendDocumentUpload").onclick=sendDocumentUpload;$("clearDocumentUpload").onclick=clearDocumentUploadForm;$("searchButton").onclick=searchAssets;$("qrScanButton").onclick=openQrScanner7662513;$("qrScannerCancel").onclick=closeQrScanner7662513;$("qrScannerSwitch").onclick=switchQrScannerCamera7662513;$("searchInput").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();searchAssets()}};$("documentSearchButton").onclick=()=>searchDocuments({force:true,context:"buscar-manual"});$("documentSearchInput").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();searchDocuments()}};$("documentTypeFilter").onchange=searchDocuments;$("documentDisciplineFilter").onchange=searchDocuments;$("documentFloorFilter").onchange=searchDocuments;$("reportButton").onclick=openReport;$("preventiveButton").onclick=requestPreventive;
 $("searchAssetsButton").onclick=function(){
   if(pendingReturnMatchesAsset7662510_()){
     if(restorePendingViewFastB5311_())return;
@@ -8343,6 +8428,109 @@ qrTranslateAttributes(document.body);
     setTimeout(qrTranslateRoutineScreens,250);
   });
 });
+
+
+/* ============================================================
+ * QRManut 7.6.6.25 / B5.3.20 — CARREGAMENTO PROGRESSIVO + ALERTAS
+ * ============================================================ */
+let qrAlertsDataB5320=null;
+let qrAlertsLoadingB5320=false;
+
+function qrSkeletonCardsB5320_(count=3){
+  return Array.from({length:count},()=>`<div class="qr-skeleton-card-b5320"><div class="qr-skeleton-b5320 qr-skeleton-line-b5320"></div><div class="qr-skeleton-b5320 qr-skeleton-line-b5320 w88"></div><div class="qr-skeleton-b5320 qr-skeleton-line-b5320 w70"></div><div class="qr-skeleton-b5320 qr-skeleton-line-b5320 w55"></div></div>`).join("");
+}
+function qrSkeletonSummaryB5320_(count=4){
+  return `<div class="qr-skeleton-summary-b5320">${Array.from({length:count},()=>`<div><div class="qr-skeleton-b5320"></div></div>`).join("")}</div>`;
+}
+function qrAssetSkeletonB5320_(){
+  return `<div class="asset-skeleton-section-b5320"><div class="qr-skeleton-b5320"></div><div class="qr-skeleton-b5320" style="width:92%"></div><div class="qr-skeleton-b5320" style="width:74%"></div></div>`;
+}
+function qrShowPendingSkeletonB5320_(){
+  if($("pendingSummary"))$("pendingSummary").innerHTML=qrSkeletonSummaryB5320_(4);
+  if($("pendingResults"))$("pendingResults").innerHTML=qrSkeletonCardsB5320_(3);
+}
+function qrShowDocumentsSkeletonB5320_(){if($("documentResults"))$("documentResults").innerHTML=qrSkeletonCardsB5320_(3)}
+function qrShowSolicitationsSkeletonB5320_(){
+  if($("solSummary"))$("solSummary").innerHTML=qrSkeletonSummaryB5320_(4);
+  if($("solResults"))$("solResults").innerHTML=qrSkeletonCardsB5320_(3);
+}
+function qrShowPreventiveSkeletonB5320_(){
+  if($("controlSummary"))$("controlSummary").innerHTML=qrSkeletonSummaryB5320_(4);
+  if($("providerSummary"))$("providerSummary").innerHTML=qrSkeletonCardsB5320_(1);
+  if($("controlResults"))$("controlResults").innerHTML=qrSkeletonCardsB5320_(3);
+  if($("progressText"))$("progressText").textContent="…";
+  if($("progressFill"))$("progressFill").style.width="0%";
+}
+function qrShowMaintenancePendingSkeletonB5320_(){
+  if($("maintenancePendingSummary"))$("maintenancePendingSummary").innerHTML=qrSkeletonSummaryB5320_(4);
+  if($("maintenancePendingResults"))$("maintenancePendingResults").innerHTML=qrSkeletonCardsB5320_(3);
+}
+function qrShowAssetSkeletonB5320_(){
+  if($("historyDetail"))$("historyDetail").innerHTML=qrAssetSkeletonB5320_();
+  if($("assetDocuments"))$("assetDocuments").innerHTML=qrAssetSkeletonB5320_();
+  if($("preventiveHistory"))$("preventiveHistory").innerHTML=qrAssetSkeletonB5320_();
+}
+
+function qrAlertsTextB5320_(pt,en){return qrLanguage==="en-US"?en:pt}
+function qrToggleAlertsPanelB5320_(force){
+  const panel=$("qrAlertsPanelB5320"),btn=$("qrAlertsButtonB5320");if(!panel||!btn)return;
+  const open=typeof force==="boolean"?force:panel.classList.contains("hidden");
+  panel.classList.toggle("hidden",!open);btn.setAttribute("aria-expanded",open?"true":"false");
+  if(open&&!qrAlertsDataB5320&&!qrAlertsLoadingB5320)loadAlertsSummaryB5320_().catch(()=>{});
+}
+function qrRenderAlertsB5320_(){
+  const d=qrAlertsDataB5320;if(!d)return;
+  const badge=$("qrAlertsBadgeB5320"),list=$("qrAlertsListB5320"),status=$("qrAlertsStatusB5320");
+  const total=Number(d.totalAlerts||0);
+  if(badge){badge.textContent=total>99?"99+":String(total);badge.classList.toggle("hidden",total<=0)}
+  if($("qrAlertsTitleB5320"))$("qrAlertsTitleB5320").textContent=qrAlertsTextB5320_("🔔 Central de Alertas","🔔 Alert Center");
+  if($("qrAlertsRefreshB5320"))$("qrAlertsRefreshB5320").textContent=qrAlertsTextB5320_("Atualizar","Refresh");
+  if($("qrAlertsUpdatedB5320"))$("qrAlertsUpdatedB5320").textContent=d.generatedAt?qrAlertsTextB5320_("Atualizado agora","Updated now"):"";
+  const items=[];
+  if(d.permissions?.pending){
+    const p=d.pending||{};
+    items.push({kind:"pending",icon:"⚠️",count:Number(p.total||0),title:qrAlertsTextB5320_("OCs pendentes","Pending work orders"),detail:qrAlertsTextB5320_(`Abertas ${Number(p.abertas||0)} • Atendimento ${Number(p.emAtendimento||0)} • Aguardando peça ${Number(p.aguardandoPeca||0)}`,`Open ${Number(p.abertas||0)} • In progress ${Number(p.emAtendimento||0)} • Waiting for part ${Number(p.aguardandoPeca||0)}`),cls:Number(p.aguardandoPeca||0)>0?"warning":""});
+  }
+  if(d.permissions?.solicitations){
+    const s=d.solicitations||{};
+    items.push({kind:"solicitations",icon:"📥",count:Number(s.abertas||0),title:qrAlertsTextB5320_("Solicitações abertas","Open requests"),detail:qrAlertsTextB5320_(`Novas ${Number(s.nova||0)} • Em análise ${Number(s.emAnalise||0)}`,`New ${Number(s.nova||0)} • Under review ${Number(s.emAnalise||0)}`)});
+  }
+  if(d.permissions?.preventive){
+    const p=d.preventive||{};
+    items.push({kind:"preventive",icon:"🛠️",count:Number(p.pendentes||0),title:qrAlertsTextB5320_("Preventivas pendentes","Pending preventive maintenance"),detail:qrAlertsTextB5320_(`${Number(p.realizadas||0)} de ${Number(p.previstas||0)} realizadas • ${Number(p.percentual||0)}%`,` ${Number(p.realizadas||0)} of ${Number(p.previstas||0)} completed • ${Number(p.percentual||0)}%`),cls:Number(p.pendentes||0)>0?"warning":"ok"});
+  }
+  if(d.permissions?.maintenancePending){
+    const m=d.maintenancePending||{};
+    items.push({kind:"maintenancePending",icon:Number(m.criticas||0)>0?"🚨":"📌",count:Number(m.abertas||0),title:qrAlertsTextB5320_("Pendências / Providências","Pending actions"),detail:qrAlertsTextB5320_(`Críticas ${Number(m.criticas||0)} • Em andamento ${Number(m.emAndamento||0)}`,`Critical ${Number(m.criticas||0)} • In progress ${Number(m.emAndamento||0)}`),cls:Number(m.criticas||0)>0?"critical":""});
+  }
+  if(status)status.textContent=total?qrAlertsTextB5320_(`${total} item(ns) requerem acompanhamento.`,`${total} item(s) require attention.`):qrAlertsTextB5320_("Nenhum alerta operacional no momento.","No operational alerts right now.");
+  if(!list)return;
+  list.innerHTML=items.length?items.map(x=>`<button type="button" class="qr-alert-item-b5320 ${x.cls||""}" data-alert-kind="${x.kind}"><span class="icon">${x.icon}</span><span class="body"><span class="title"><span>${esc(x.title)}</span><span class="count">${x.count}</span></span><span class="detail">${esc(x.detail)}</span></span></button>`).join(""):`<div class="qr-alerts-empty-b5320">${qrAlertsTextB5320_("Seu perfil não possui rotinas de alerta habilitadas.","Your profile has no alert-enabled routines.")}</div>`;
+  list.querySelectorAll("[data-alert-kind]").forEach(btn=>btn.addEventListener("click",()=>qrOpenAlertTargetB5320_(btn.dataset.alertKind)));
+  const solTab=$("tabSolicitations");
+  if(solTab&&d.permissions?.solicitations){const base=qrAlertsTextB5320_("📥 Solicitações de Manutenção","📥 Maintenance Requests"),n=Number(d.solicitations?.abertas||0);solTab.textContent=base+(n?` 🔴 ${n}`:"")}
+}
+async function loadAlertsSummaryB5320_(options={}){
+  if(!systemSession?.systemSessionToken)return;
+  if(qrAlertsLoadingB5320)return;
+  qrAlertsLoadingB5320=true;
+  const status=$("qrAlertsStatusB5320"),refresh=$("qrAlertsRefreshB5320");
+  if(status)status.textContent=qrAlertsTextB5320_("Atualizando alertas...","Refreshing alerts...");
+  if(refresh){refresh.disabled=true;refresh.textContent=qrAlertsTextB5320_("Atualizando...","Refreshing...")}
+  try{
+    const r=await menuApi({action:"alertssummary",competencia:currentCompetence(),__qrForce:!!options.force,__qrContext:"alertas-menu"});
+    if(!r.ok)throw new Error(r.detail||"Erro ao carregar alertas.");
+    qrAlertsDataB5320=r.data||{};qrRenderAlertsB5320_();
+  }catch(e){if(status)status.textContent=e.message||qrAlertsTextB5320_("Não foi possível carregar os alertas.","Unable to load alerts.")}
+  finally{qrAlertsLoadingB5320=false;if(refresh){refresh.disabled=false;refresh.textContent=qrAlertsTextB5320_("Atualizar","Refresh")}}
+}
+async function qrOpenAlertTargetB5320_(kind){
+  qrToggleAlertsPanelB5320_(false);
+  if(kind==="pending")return showPendingTab();
+  if(kind==="solicitations")return showSolicitationsTab7662412();
+  if(kind==="preventive")return showPreventiveTab();
+  if(kind==="maintenancePending")return showMaintenancePendingTab();
+}
 
 
 function setupModernMenuSectionsB5316(){
@@ -8490,6 +8678,7 @@ document.addEventListener("visibilitychange",()=>{
 // QRManut PNCQ 7.6.6.25 B5.3.18 - Login limpo após logout e busca de ativos vazia ao entrar.
 // QRManut PNCQ 7.6.6.25 B5.3.17 - Refinamento mobile compacto com menu em duas colunas.
 // QRManut PNCQ 7.6.6.25 B5.3.16 - Modernização visual mobile do Menu Principal e Status das Preventivas.
+// QRManut PNCQ 7.6.6.25 B5.3.20 - Carregamento progressivo + Central de Alertas em chamada única resumida.
 // QRManut PNCQ 7.6.6.25 B5.3.15 - Histórico de Manutenção e anexos com cache de servidor de 15 min e invalidação automática.
 // QRManut PNCQ 7.6.6.25 B5.3.14 - Cache curto do assetbundle no sessionStorage para reabrir a mesma ficha sem nova API.
 // QRManut PNCQ 7.6.6.25 B5.3.13 - Cards de resumo das OCs Pendentes atuam como filtros rápidos locais.
