@@ -1,3 +1,8 @@
+<!-- QRManut 7.6.6.30 B1 — Centralização dos cards do Menu Principal
+     - Centraliza ícone/texto dos botões de Operação e Administração em desktop e mobile.
+     - Preserva integralmente a versão estável 7.6.6.30 e toda a lógica B5.3.20.
+     - Alteração somente visual no HTML/CSS; GS permanece 7.6.6.30.
+-->
 <!-- QRManut 7.6.6.30 — VERSÃO ESTÁVEL DE PRODUÇÃO
      - Promoção oficial da base validada 7.6.6.25 B5.3.20 para o release 7.6.6.30.
      - Consolida Experiência Rápida, Central de Alertas, menu recolhível, login limpo e refinamentos mobile.
@@ -1111,6 +1116,22 @@ body{
   .qr-main-heading-b5320{align-items:center}.qr-alerts-label-b5320{display:none}.qr-alerts-button-b5320{min-width:46px;padding:8px 10px}
   .qr-alerts-list-b5320{grid-template-columns:1fr}.qr-alerts-panel-b5320{padding:12px;border-radius:17px}
   .qr-skeleton-summary-b5320{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+
+
+
+/* ============================================================
+ * QRManut 7.6.6.30 B1 - Cards do menu centralizados
+ * ============================================================ */
+#mainMenuButtons .menu-button{
+  justify-content:center!important;
+  text-align:center!important;
+}
+@media(max-width:700px){
+  #mainMenuButtons .menu-button{
+    justify-content:center!important;
+    text-align:center!important;
+  }
 }
 
 </style>
