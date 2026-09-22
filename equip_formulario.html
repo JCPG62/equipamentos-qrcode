@@ -1,3 +1,10 @@
+<!-- QRManut 7.6.6.31 A1.3 — Programação anual em lote
+     - Agenda ganha seleção anual por calendário de 12 meses.
+     - Clique simples seleciona/desmarca datas; Ctrl não é necessário.
+     - Um único conjunto de dados (ativo, prestador, serviço etc.) é aplicado às datas escolhidas.
+     - Salvamento é sequencial e mostra progresso; em falha parcial, apenas as datas com erro permanecem selecionadas.
+     - GS permanece 7.6.6.31 A1 nesta etapa de teste.
+-->
 <!-- QRManut 7.6.6.31 A1.2 — Busca de ativo no novo agendamento
      - Campo Ativo / Equipamento passa a ser pesquisável por ID, nome, pavimento e localização.
      - Seleção do ativo é explícita antes de salvar o agendamento.
@@ -1182,6 +1189,33 @@ body{
 @media(max-width:850px){.agenda-filters{grid-template-columns:repeat(2,minmax(0,1fr))}.agenda-summary{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:560px){.agenda-filters,.agenda-modal-grid{grid-template-columns:1fr}.agenda-modal-grid .full{grid-column:auto}.agenda-card-head{display:block}.agenda-badges{justify-content:flex-start;margin-top:8px}.agenda-actions .btn{width:100%}}
 
+/* ============================================================
+ * QRManut 7.6.6.31 A1.3 — Programação anual em lote
+ * ============================================================ */
+.agenda-head-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.agenda-annual-modal-box{width:min(1120px,97vw);max-height:94vh}
+.agenda-annual-setup{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0 12px}
+.agenda-annual-setup .full{grid-column:1/-1}
+.agenda-annual-toolbar{display:flex;gap:10px;align-items:end;justify-content:space-between;flex-wrap:wrap;margin:14px 0 10px;padding:12px;border:1px solid #dbe4f0;background:#f8fafc;border-radius:14px}
+.agenda-annual-toolbar label{margin:0;min-width:145px}
+.agenda-annual-count{font-weight:900;color:var(--qr-primary,#21356b);font-size:1.02rem}
+.agenda-annual-calendar{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:12px}
+.agenda-year-month{border:1px solid #dbe4f0;border-radius:16px;background:#fff;padding:11px;box-shadow:0 7px 18px rgba(15,23,42,.04)}
+.agenda-year-month-title{text-align:center;font-weight:900;color:#172554;margin-bottom:8px;text-transform:capitalize}
+.agenda-year-week,.agenda-year-days{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.agenda-year-week span{text-align:center;font-size:.68rem;font-weight:850;color:#64748b;padding:3px 0}
+.agenda-year-day{aspect-ratio:1;border:1px solid transparent;background:#fff;border-radius:8px;cursor:pointer;font:inherit;font-size:.78rem;color:#334155;min-width:0;padding:0}
+.agenda-year-day:hover{background:#eff6ff;border-color:#bfdbfe}
+.agenda-year-day.selected{background:var(--qr-primary,#21356b);border-color:var(--qr-primary,#21356b);color:#fff;font-weight:900}
+.agenda-year-day.today{box-shadow:inset 0 0 0 2px #16a34a}
+.agenda-year-blank{aspect-ratio:1}
+.agenda-annual-hint{margin:8px 0 0;padding:9px 11px;border-radius:10px;background:#eff6ff;color:#1e3a8a;font-size:.83rem;line-height:1.45}
+.agenda-annual-progress{margin-top:10px;padding:10px 12px;border:1px solid #dbe4f0;border-radius:12px;background:#f8fafc}
+.agenda-annual-progress-track{height:10px;background:#e2e8f0;border-radius:999px;overflow:hidden;margin-top:7px}
+.agenda-annual-progress-fill{height:100%;width:0;background:#0f8a61;transition:width .18s ease}
+@media(max-width:900px){.agenda-annual-calendar{grid-template-columns:repeat(2,minmax(0,1fr))}.agenda-annual-setup{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:620px){.agenda-head-actions{width:100%;display:grid;grid-template-columns:1fr 1fr}.agenda-head-actions .btn{width:100%;padding:10px 8px}.agenda-annual-calendar,.agenda-annual-setup{grid-template-columns:1fr}.agenda-annual-setup .full{grid-column:auto}.agenda-year-day{font-size:.88rem}.agenda-annual-toolbar{display:grid;grid-template-columns:1fr}.agenda-annual-toolbar label{width:100%}}
+
 </style>
 </head>
 <body>
@@ -1529,7 +1563,7 @@ body{
       <div class="back-asset-wrap"><button id="maintenanceAgendaBackMenu" class="back-asset-btn" type="button">← Voltar ao Menu Principal</button></div>
       <div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap">
         <div><h2 id="maintenanceAgendaTitle" style="margin-bottom:5px">📅 Agenda de Manutenções</h2><div id="maintenanceAgendaHelp" class="muted">Planeje preventivas, preditivas e corretivas por período ou data confirmada.</div></div>
-        <button id="maintenanceAgendaNew" class="btn btn-blue hidden" type="button">+ Novo agendamento</button>
+        <div class="agenda-head-actions"><button id="maintenanceAgendaAnnual" class="btn btn-secondary hidden" type="button">🗓️ Programação anual</button><button id="maintenanceAgendaNew" class="btn btn-blue hidden" type="button">+ Novo agendamento</button></div>
       </div>
       <div class="agenda-filters">
         <label style="margin-top:0"><span id="maintenanceAgendaViewLabel">Período</span><select id="maintenanceAgendaView"><option value="today">Hoje</option><option value="next7">Próximos 7 dias</option><option value="month" selected>Mês atual</option><option value="late">Atrasadas</option><option value="all">Todas</option></select></label>
@@ -1814,6 +1848,32 @@ body{
   <div class="modal-actions"><button id="maintenanceAgendaCancel" class="btn btn-secondary" type="button">Cancelar</button><button id="maintenanceAgendaSave" class="btn btn-blue" type="button">Salvar agendamento</button></div>
 </div></div>
 
+<div id="maintenanceAgendaAnnualModal" class="modal"><div class="modal-box agenda-annual-modal-box">
+  <h2 id="maintenanceAgendaAnnualTitle">🗓️ Programação anual em lote</h2>
+  <div id="maintenanceAgendaAnnualHelp" class="muted">Preencha uma vez e clique nas datas do ano em que o serviço deverá ser executado. Não é necessário usar Ctrl.</div>
+  <div class="agenda-annual-setup">
+    <label class="full"><span>Ativo / Equipamento *</span><input id="agendaAnnualAssetSearch" type="search" autocomplete="off" placeholder="Digite ID, equipamento, pavimento ou localização"><input id="agendaAnnualAsset" type="hidden"><div id="agendaAnnualAssetSelected" class="agenda-asset-selected hidden"></div><div id="agendaAnnualAssetSearchResults" class="agenda-asset-search-results hidden"></div></label>
+    <label><span>Tipo de manutenção *</span><select id="agendaAnnualType"></select></label>
+    <label><span>Execução *</span><select id="agendaAnnualExecution"></select></label>
+    <label id="agendaAnnualProviderWrap"><span>Prestador *</span><select id="agendaAnnualProvider"></select></label>
+    <label class="full"><span>Serviço previsto *</span><textarea id="agendaAnnualService" rows="2" placeholder="Descreva o serviço que deverá ser executado"></textarea></label>
+    <label><span>Responsável / contato</span><input id="agendaAnnualResponsible"></label>
+    <label><span>Prioridade *</span><select id="agendaAnnualPriority"></select></label>
+    <label><span>Horário confirmado</span><input id="agendaAnnualTime" type="time"></label>
+    <label class="full"><span>Observações</span><textarea id="agendaAnnualNotes" rows="2"></textarea></label>
+  </div>
+  <div class="agenda-annual-toolbar">
+    <label>Ano<input id="agendaAnnualYear" type="number" min="2020" max="2100" inputmode="numeric"></label>
+    <div><div id="agendaAnnualSelectedCount" class="agenda-annual-count">0 datas selecionadas</div><div class="muted" style="font-size:.8rem;margin-top:3px">Clique em uma data para marcar; clique novamente para desmarcar.</div></div>
+    <button id="agendaAnnualClearDates" class="btn btn-secondary" type="button">Limpar datas</button>
+  </div>
+  <div class="agenda-annual-hint">💡 Você pode percorrer os 12 meses nesta mesma tela. As datas já escolhidas continuam marcadas enquanto você preenche a programação.</div>
+  <div id="agendaAnnualCalendar" class="agenda-annual-calendar"></div>
+  <div id="agendaAnnualProgress" class="agenda-annual-progress hidden"><div id="agendaAnnualProgressText">Preparando...</div><div class="agenda-annual-progress-track"><div id="agendaAnnualProgressFill" class="agenda-annual-progress-fill"></div></div></div>
+  <div id="maintenanceAgendaAnnualMessage" class="message"></div>
+  <div class="modal-actions"><button id="maintenanceAgendaAnnualCancel" class="btn btn-secondary" type="button">Cancelar</button><button id="maintenanceAgendaAnnualSave" class="btn btn-blue" type="button">Criar agendamentos</button></div>
+</div></div>
+
 <div id="preventiveModal" class="modal"><div class="modal-box"><h2>🛠️ Registrar Manutenção Preventiva</h2><div class="preventive-info"><div><b>Ativo:</b> <span id="preventiveAsset"></span></div><div><b>Periodicidade:</b> <span id="preventivePeriodicity"></span></div><div><b>Prestador:</b> <span id="preventiveProvider"></span></div><div><b>Competência:</b> <span id="preventiveCompetence"></span></div></div><div id="preventiveRequirements" class="requirements-box"></div><label>Responsável pela preventiva *<input id="preventiveResponsible"></label><label>Observação<textarea id="preventiveObservation" rows="5"></textarea></label>
 <label class="switch-row" style="margin-top:12px">
   <input id="preventiveNeedsAction" type="checkbox">
@@ -1941,6 +2001,7 @@ const API_URL="https://script.google.com/macros/s/AKfycbx4tpC42Q6WdkNhTUTAGoZWvG
 const TOKEN="";const SYSTEM_SESSION_KEY="qrmanut_system_session";const RESPONSIBLE_KEY="qrmanut_responsavel";const PREVENTIVE_SESSION_KEY="qrmanut_preventive_session";const ORIGIN_ASSET_KEY="qrmanut_origin_asset";const MAX_DIM=1280;const QUALITY=.72;
 let systemSession=null,systemLoginNextAction=null,currentAsset=null,currentAssetStatus=null,history=[],selectedOccurrence=null,preventiveControlData=null,preventiveControlMode="all",preventiveSession=null,preventiveRequirements=null,loginNextAction=null,photoData=null,reportAttachmentData=null,preventivePhotoData=null,preventiveDocumentFiles=[],correctionPhotoData=null,manageAttachmentData=null,conclusionPhotoData=null,reportPosting=false,reportCompleted=false,preventivePosting=false,managePosting=false,signatureDirty=false,signatureDrawing=false,signatureCtx=null,occurrenceReportData=null,occurrenceReportFiltersLoaded=false,pendingFiltersLoaded=false,auditFiltersLoaded=false,companyConfigLoaded=false,providersAdminData=[],usersAdminData=[],profilePermissionsAdminData=null,solPublicMeta=null,solPhotoData=null,solTriageData=null,solTriageMeta=null,solSelected=null,solSelectedAssetId="",solPublicPosting=false,solActionPosting=false,solLastCreatedOccurrence7662412=null;
 let maintenanceAgendaData76631=[],maintenanceAgendaMeta76631=null,maintenanceAgendaMetaLoaded76631=false,maintenanceAgendaEditing76631=null,maintenanceAgendaSaving76631=false;
+let agendaAnnualSelectedDates766313=new Set(),agendaAnnualSelectedAssetId766313="",agendaAnnualSaving766313=false;
 const SOL_TARGET_OC_KEY="qrmanut_sol_target_oc";
 const $=id=>document.getElementById(id);
 
@@ -7407,7 +7468,7 @@ function qrAgendaApplyMeta76631_(meta){
   qrAgendaFillSelect76631_("agendaExecution",meta.executions||[],x=>x,x=>qrAgendaExecutionText76631_(x));
   qrAgendaFillSelect76631_("agendaStatus",meta.statuses||[],x=>x,x=>qrAgendaStatusText76631_(x));
   qrAgendaFillSelect76631_("agendaProvider",meta.providers||[],x=>x.idPrestador,x=>x.nome,qrAgendaText76631_("Selecione...","Select..."));
-  if(meta.canEdit)show("maintenanceAgendaNew");else hide("maintenanceAgendaNew");
+  if(meta.canEdit){show("maintenanceAgendaNew");show("maintenanceAgendaAnnual")}else{hide("maintenanceAgendaNew");hide("maintenanceAgendaAnnual");}
 }
 function qrAgendaParams76631_(){return {action:"maintenanceagenda",agendaView:$('maintenanceAgendaView').value,agendaType:$('maintenanceAgendaType').value,agendaStatus:$('maintenanceAgendaStatus').value,agendaProvider:$('maintenanceAgendaProvider').value,q:$('maintenanceAgendaSearch').value.trim(),agendaIncludeMeta:maintenanceAgendaMetaLoaded76631?"":"1"}}
 function qrAgendaRender76631_(d){
@@ -7460,12 +7521,97 @@ async function saveMaintenanceAgenda76631_(){
   }catch(e){msg.className='message error';msg.textContent=e.message}
   finally{maintenanceAgendaSaving76631=false;btn.disabled=false;btn.textContent=qrAgendaText76631_('Salvar agendamento','Save schedule entry')}
 }
+/* ============================================================
+ * QRManut 7.6.6.31 A1.3 — Programação anual em lote
+ * ============================================================ */
+function qrAgendaAnnualPad766313_(n){return String(n).padStart(2,'0')}
+function qrAgendaAnnualIso766313_(y,m,d){return `${y}-${qrAgendaAnnualPad766313_(m+1)}-${qrAgendaAnnualPad766313_(d)}`}
+function qrAgendaAnnualClearAsset766313_(){agendaAnnualSelectedAssetId766313_='';$('agendaAnnualAsset').value='';hide('agendaAnnualAssetSelected')}
+function qrAgendaAnnualAssetText766313_(a){return normalizarBusca_([a.id,a.nome,a.pavimento,a.localizacao,a.prestador].join(' '))}
+function qrAgendaAnnualSelectAsset766313_(id){
+  const a=(maintenanceAgendaMeta76631?.assets||[]).find(x=>String(x.id)===String(id));if(!a)return;
+  agendaAnnualSelectedAssetId766313_=String(a.id);$('agendaAnnualAsset').value=String(a.id);$('agendaAnnualAssetSearch').value=`${a.id} — ${a.nome||''}`;
+  $('agendaAnnualAssetSelected').innerHTML=`<b>${esc(a.id)}</b> — ${esc(a.nome||'')}<br><span class="muted">${esc([a.pavimento,a.localizacao,a.prestador].filter(Boolean).join(' • '))}</span>`;show('agendaAnnualAssetSelected');hide('agendaAnnualAssetSearchResults');
+}
+function qrAgendaAnnualRefreshAssetSearch766313_(){
+  const box=$('agendaAnnualAssetSearchResults'),q=normalizarBusca_($('agendaAnnualAssetSearch').value||'');
+  const base=maintenanceAgendaMeta76631?.assets||[];const items=(q?base.filter(a=>qrAgendaAnnualAssetText766313_(a).includes(q)):base).slice(0,40);
+  if(!items.length){box.innerHTML='<div class="agenda-asset-empty">Nenhum ativo encontrado.</div>';show('agendaAnnualAssetSearchResults');return}
+  box.innerHTML=items.map(a=>`<button type="button" class="agenda-asset-option" data-annual-asset="${esc(a.id)}"><b>${esc(a.id)}</b> — ${esc(a.nome||'')}<small>${esc([a.pavimento,a.localizacao,a.prestador].filter(Boolean).join(' • '))}</small></button>`).join('');show('agendaAnnualAssetSearchResults');
+  box.querySelectorAll('[data-annual-asset]').forEach(btn=>btn.onclick=()=>qrAgendaAnnualSelectAsset766313_(btn.dataset.annualAsset));
+}
+function qrAgendaAnnualToggleProvider766313_(){
+  const external=$('agendaAnnualExecution').value==='Prestador externo';$('agendaAnnualProviderWrap').classList.toggle('hidden',!external);if(!external)$('agendaAnnualProvider').value='';
+}
+function qrAgendaAnnualCount766313_(){
+  const n=agendaAnnualSelectedDates766313.size;$('agendaAnnualSelectedCount').textContent=n+(n===1?' data selecionada':' datas selecionadas');
+}
+function qrAgendaAnnualRenderCalendar766313_(){
+  let year=Number($('agendaAnnualYear').value)||new Date().getFullYear();if(year<2020)year=2020;if(year>2100)year=2100;$('agendaAnnualYear').value=year;
+  // Mantém apenas datas do ano selecionado.
+  agendaAnnualSelectedDates766313=new Set([...agendaAnnualSelectedDates766313].filter(x=>String(x).startsWith(year+'-')));
+  const monthNames=qrLanguage==='en-US'?['January','February','March','April','May','June','July','August','September','October','November','December']:['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+  const week=qrLanguage==='en-US'?['S','M','T','W','T','F','S']:['D','S','T','Q','Q','S','S'];
+  const today=new Date(),todayIso=qrAgendaAnnualIso766313_(today.getFullYear(),today.getMonth(),today.getDate());
+  let html='';
+  for(let m=0;m<12;m++){
+    const first=new Date(year,m,1),days=new Date(year,m+1,0).getDate();
+    html+=`<section class="agenda-year-month"><div class="agenda-year-month-title">${monthNames[m]} ${year}</div><div class="agenda-year-week">${week.map(w=>`<span>${w}</span>`).join('')}</div><div class="agenda-year-days">`;
+    for(let b=0;b<first.getDay();b++)html+='<span class="agenda-year-blank"></span>';
+    for(let d=1;d<=days;d++){
+      const iso=qrAgendaAnnualIso766313_(year,m,d),sel=agendaAnnualSelectedDates766313.has(iso),isToday=iso===todayIso;
+      html+=`<button type="button" class="agenda-year-day${sel?' selected':''}${isToday?' today':''}" data-annual-date="${iso}" aria-pressed="${sel?'true':'false'}">${d}</button>`;
+    }
+    html+='</div></section>';
+  }
+  $('agendaAnnualCalendar').innerHTML=html;
+  $('agendaAnnualCalendar').querySelectorAll('[data-annual-date]').forEach(btn=>btn.onclick=()=>{
+    const iso=btn.dataset.annualDate;if(agendaAnnualSelectedDates766313.has(iso))agendaAnnualSelectedDates766313.delete(iso);else agendaAnnualSelectedDates766313.add(iso);
+    btn.classList.toggle('selected',agendaAnnualSelectedDates766313.has(iso));btn.setAttribute('aria-pressed',agendaAnnualSelectedDates766313.has(iso)?'true':'false');qrAgendaAnnualCount766313_();
+  });
+  qrAgendaAnnualCount766313_();
+}
+function qrAgendaAnnualFillSelects766313_(){
+  const meta=maintenanceAgendaMeta76631||{};
+  qrAgendaFillSelect76631_('agendaAnnualType',meta.types||[],x=>x,x=>qrAgendaTypeText76631_(x),'');
+  qrAgendaFillSelect76631_('agendaAnnualExecution',meta.executions||[],x=>x,x=>qrAgendaExecutionText76631_(x),'');
+  qrAgendaFillSelect76631_('agendaAnnualPriority',meta.priorities||[],x=>x,x=>qrAgendaPriorityText76631_(x),'');
+  qrAgendaFillSelect76631_('agendaAnnualProvider',meta.providers||[],x=>x.idPrestador,x=>x.nome,qrAgendaText76631_('Selecione...','Select...'));
+  $('agendaAnnualType').value='Preventiva';$('agendaAnnualExecution').value='Prestador externo';$('agendaAnnualPriority').value='Normal';qrAgendaAnnualToggleProvider766313_();
+}
+function openMaintenanceAgendaAnnual766313_(){
+  if(!hasProfilePermission('AGENDA_EDITAR'))return permissionDeniedMessage('Seu perfil não possui permissão para editar a Agenda de Manutenções.','Your profile is not allowed to edit the Maintenance Schedule.');
+  if(!maintenanceAgendaMeta76631?.canEdit)return alert(qrAgendaText76631_('Carregue novamente a Agenda antes de programar o ano.','Reload the Schedule before planning the year.'));
+  agendaAnnualSelectedDates766313=new Set();qrAgendaAnnualClearAsset766313_();$('agendaAnnualAssetSearch').value='';$('agendaAnnualService').value='';$('agendaAnnualResponsible').value='';$('agendaAnnualTime').value='';$('agendaAnnualNotes').value='';$('agendaAnnualYear').value=new Date().getFullYear();
+  $('maintenanceAgendaAnnualMessage').className='message';$('maintenanceAgendaAnnualMessage').textContent='';hide('agendaAnnualProgress');qrAgendaAnnualFillSelects766313_();qrAgendaAnnualRenderCalendar766313_();$('maintenanceAgendaAnnualModal').style.display='flex';
+}
+async function saveMaintenanceAgendaAnnual766313_(){
+  if(agendaAnnualSaving766313)return;
+  const assetId=$('agendaAnnualAsset').value,service=$('agendaAnnualService').value.trim(),execution=$('agendaAnnualExecution').value,external=execution==='Prestador externo',providerId=$('agendaAnnualProvider').value,dates=[...agendaAnnualSelectedDates766313].sort();
+  if(!assetId||!service||!$('agendaAnnualType').value||!execution||!$('agendaAnnualPriority').value)return alert(qrAgendaText76631_('Preencha os campos obrigatórios.','Complete the required fields.'));
+  if(external&&!providerId)return alert(qrAgendaText76631_('Selecione o prestador externo.','Select the external service provider.'));
+  if(!dates.length)return alert(qrAgendaText76631_('Selecione pelo menos uma data no calendário.','Select at least one date on the calendar.'));
+  const ok=await qrConfirm(qrAgendaText76631_(`Criar ${dates.length} agendamento(s) para o ativo ${assetId}?`,`Create ${dates.length} schedule entr${dates.length===1?'y':'ies'} for asset ${assetId}?`),'QRManut',qrAgendaText76631_('Criar','Create'),qrAgendaText76631_('Cancelar','Cancel'),false);if(!ok)return;
+  agendaAnnualSaving766313=true;const btn=$('maintenanceAgendaAnnualSave'),msg=$('maintenanceAgendaAnnualMessage'),progress=$('agendaAnnualProgress'),fill=$('agendaAnnualProgressFill'),txt=$('agendaAnnualProgressText');btn.disabled=true;$('maintenanceAgendaAnnualCancel').disabled=true;show('agendaAnnualProgress');msg.className='message';msg.textContent='';
+  const provider=(maintenanceAgendaMeta76631?.providers||[]).find(p=>p.idPrestador===providerId);let success=0;const failed=[];
+  try{
+    for(let i=0;i<dates.length;i++){
+      const date=dates[i];txt.textContent=qrAgendaText76631_(`Gravando ${i+1} de ${dates.length}: ${date}`,`Saving ${i+1} of ${dates.length}: ${date}`);fill.style.width=Math.round((i/dates.length)*100)+'%';
+      const payload={action:'savemaintenanceagenda',agendaId:'',agendaAssetId:assetId,agendaType:$('agendaAnnualType').value,agendaService:service,agendaExecution:execution,agendaProviderId:external?providerId:'',agendaProviderName:external?(provider?.nome||''):'',agendaResponsible:$('agendaAnnualResponsible').value.trim(),agendaPlannedStart:date,agendaPlannedEnd:date,agendaConfirmedDate:date,agendaConfirmedTime:$('agendaAnnualTime').value,agendaPriority:$('agendaAnnualPriority').value,agendaStatus:'Agendada',agendaLinkedOc:'',agendaNotes:$('agendaAnnualNotes').value.trim(),agendaReprogramReason:'',__qrContext:'agenda-anual'};
+      try{const r=await menuApiPost(payload);if(!r.ok)throw new Error(r.detail||'Erro ao salvar');success++;}catch(e){failed.push({date,error:e.message||String(e)})}
+    }
+    fill.style.width='100%';txt.textContent=qrAgendaText76631_(`Concluído: ${success} gravado(s), ${failed.length} falha(s).`,`Done: ${success} saved, ${failed.length} failed.`);
+    if(failed.length){agendaAnnualSelectedDates766313=new Set(failed.map(x=>x.date));qrAgendaAnnualRenderCalendar766313_();msg.className='message error';msg.textContent=qrAgendaText76631_(`${success} agendamento(s) criado(s). ${failed.length} data(s) falharam e permaneceram selecionadas para nova tentativa: ${failed.map(x=>x.date).join(', ')}`,`${success} schedule entries created. ${failed.length} date(s) failed and remain selected for retry: ${failed.map(x=>x.date).join(', ')}`)}
+    else{msg.className='message success';msg.textContent=qrAgendaText76631_(`${success} agendamento(s) criados com sucesso.`,`Successfully created ${success} schedule entr${success===1?'y':'ies'}.`);setTimeout(async()=>{$('maintenanceAgendaAnnualModal').style.display='none';maintenanceAgendaMetaLoaded76631=false;maintenanceAgendaMeta76631=null;await loadMaintenanceAgenda76631_({force:true})},700)}
+  }finally{agendaAnnualSaving766313=false;btn.disabled=false;$('maintenanceAgendaAnnualCancel').disabled=false}
+}
+
 function qrApplyMaintenanceAgendaLanguage76631_(){
   const t=(id,pt,en)=>{const el=$(id);if(el)el.textContent=qrAgendaText76631_(pt,en)};
-  t('maintenanceAgendaTitle','📅 Agenda de Manutenções','📅 Maintenance Schedule');t('maintenanceAgendaHelp','Planeje preventivas, preditivas e corretivas por período ou data confirmada.','Plan preventive, predictive and corrective maintenance by date range or confirmed date.');t('maintenanceAgendaNew','+ Novo agendamento','+ New schedule entry');t('maintenanceAgendaBackMenu','← Voltar ao Menu Principal','← Back to Main Menu');t('maintenanceAgendaViewLabel','Período','Period');t('maintenanceAgendaTypeLabel','Tipo','Type');t('maintenanceAgendaStatusLabel','Status','Status');t('maintenanceAgendaProviderLabel','Prestador','Service provider');t('maintenanceAgendaSearchLabel','Busca','Search');t('maintenanceAgendaRefresh','Atualizar','Refresh');t('maintenanceAgendaClear','Limpar filtros','Clear filters');t('agendaAssetLabel','Ativo / Equipamento *','Asset / Equipment *');t('agendaTypeLabel','Tipo de manutenção *','Maintenance type *');t('agendaPriorityLabel','Prioridade *','Priority *');t('agendaServiceLabel','Serviço previsto *','Planned service *');t('agendaExecutionLabel','Execução *','Execution *');t('agendaProviderLabel','Prestador *','Service provider *');t('agendaResponsibleLabel','Responsável / contato','Responsible / contact');t('agendaStatusLabel','Status *','Status *');t('agendaPlannedStartLabel','Início previsto *','Planned start *');t('agendaPlannedEndLabel','Fim previsto','Planned end');t('agendaConfirmedDateLabel','Data confirmada','Confirmed date');t('agendaConfirmedTimeLabel','Horário confirmado','Confirmed time');t('agendaLinkedOcLabel','OC vinculada','Linked work order');t('agendaNotesLabel','Observações','Notes');t('agendaReprogramTitle','🔁 Motivo da reprogramação *','🔁 Rescheduling reason *');t('agendaReprogramHelp','Obrigatório quando uma data ou horário já salvo for alterado.','Required when a previously saved date or time is changed.');t('maintenanceAgendaCancel','Cancelar','Cancel');t('maintenanceAgendaSave','Salvar agendamento','Save schedule entry');
+  t('maintenanceAgendaTitle','📅 Agenda de Manutenções','📅 Maintenance Schedule');t('maintenanceAgendaHelp','Planeje preventivas, preditivas e corretivas por período ou data confirmada.','Plan preventive, predictive and corrective maintenance by date range or confirmed date.');t('maintenanceAgendaNew','+ Novo agendamento','+ New schedule entry');t('maintenanceAgendaAnnual','🗓️ Programação anual','🗓️ Annual planning');t('maintenanceAgendaAnnualTitle','🗓️ Programação anual em lote','🗓️ Annual batch planning');t('maintenanceAgendaAnnualHelp','Preencha uma vez e clique nas datas do ano em que o serviço deverá ser executado. Não é necessário usar Ctrl.','Fill in once and click the dates in the year when the service should be performed. Ctrl is not required.');t('maintenanceAgendaBackMenu','← Voltar ao Menu Principal','← Back to Main Menu');t('maintenanceAgendaViewLabel','Período','Period');t('maintenanceAgendaTypeLabel','Tipo','Type');t('maintenanceAgendaStatusLabel','Status','Status');t('maintenanceAgendaProviderLabel','Prestador','Service provider');t('maintenanceAgendaSearchLabel','Busca','Search');t('maintenanceAgendaRefresh','Atualizar','Refresh');t('maintenanceAgendaClear','Limpar filtros','Clear filters');t('agendaAssetLabel','Ativo / Equipamento *','Asset / Equipment *');t('agendaTypeLabel','Tipo de manutenção *','Maintenance type *');t('agendaPriorityLabel','Prioridade *','Priority *');t('agendaServiceLabel','Serviço previsto *','Planned service *');t('agendaExecutionLabel','Execução *','Execution *');t('agendaProviderLabel','Prestador *','Service provider *');t('agendaResponsibleLabel','Responsável / contato','Responsible / contact');t('agendaStatusLabel','Status *','Status *');t('agendaPlannedStartLabel','Início previsto *','Planned start *');t('agendaPlannedEndLabel','Fim previsto','Planned end');t('agendaConfirmedDateLabel','Data confirmada','Confirmed date');t('agendaConfirmedTimeLabel','Horário confirmado','Confirmed time');t('agendaLinkedOcLabel','OC vinculada','Linked work order');t('agendaNotesLabel','Observações','Notes');t('agendaReprogramTitle','🔁 Motivo da reprogramação *','🔁 Rescheduling reason *');t('agendaReprogramHelp','Obrigatório quando uma data ou horário já salvo for alterado.','Required when a previously saved date or time is changed.');t('maintenanceAgendaCancel','Cancelar','Cancel');t('maintenanceAgendaSave','Salvar agendamento','Save schedule entry');
   if($('maintenanceAgendaSearch'))$('maintenanceAgendaSearch').placeholder=qrAgendaText76631_('Ativo, serviço, responsável, OC...','Asset, service, responsible, work order...');if($('agendaService'))$('agendaService').placeholder=qrAgendaText76631_('Descreva o serviço que deverá ser executado','Describe the service to be performed');if($('agendaAssetSearch'))$('agendaAssetSearch').placeholder=qrAgendaText76631_('Digite ID, equipamento, pavimento ou localização','Type ID, equipment, floor or location');
   const view=$('maintenanceAgendaView');if(view){const vals=[['today','Hoje','Today'],['next7','Próximos 7 dias','Next 7 days'],['month','Mês atual','Current month'],['late','Atrasadas','Overdue'],['all','Todas','All']];const cur=view.value;view.innerHTML=vals.map(v=>`<option value="${v[0]}">${qrAgendaText76631_(v[1],v[2])}</option>`).join('');view.value=cur||'month'}
-  if(maintenanceAgendaMeta76631)qrAgendaApplyMeta76631_(maintenanceAgendaMeta76631);if(maintenanceAgendaData76631.length)qrAgendaRender76631_({items:maintenanceAgendaData76631,summary:{total:maintenanceAgendaData76631.length,programadas:maintenanceAgendaData76631.filter(x=>!['Concluída','Cancelada','Em execução'].includes(x.status)).length,emExecucao:maintenanceAgendaData76631.filter(x=>x.status==='Em execução').length,concluidas:maintenanceAgendaData76631.filter(x=>x.status==='Concluída').length,atrasadas:maintenanceAgendaData76631.filter(x=>x.atrasada).length},canEdit:!!maintenanceAgendaMeta76631?.canEdit});
+  if(maintenanceAgendaMeta76631)qrAgendaApplyMeta76631_(maintenanceAgendaMeta76631);if($('maintenanceAgendaAnnualModal')&&$('maintenanceAgendaAnnualModal').style.display==='flex')qrAgendaAnnualRenderCalendar766313_();if(maintenanceAgendaData76631.length)qrAgendaRender76631_({items:maintenanceAgendaData76631,summary:{total:maintenanceAgendaData76631.length,programadas:maintenanceAgendaData76631.filter(x=>!['Concluída','Cancelada','Em execução'].includes(x.status)).length,emExecucao:maintenanceAgendaData76631.filter(x=>x.status==='Em execução').length,concluidas:maintenanceAgendaData76631.filter(x=>x.status==='Concluída').length,atrasadas:maintenanceAgendaData76631.filter(x=>x.atrasada).length},canEdit:!!maintenanceAgendaMeta76631?.canEdit});
 }
 
 const QR_LANG_KEY="qrmanut_language";
@@ -8713,7 +8859,7 @@ $("openSystemLoginButton").onclick=()=>requireSystemLogin(openMainMenu);$("forgo
 $("companyPrimaryColor").addEventListener("input",updateCompanyPreview);
 $("companyPrimaryColor").addEventListener("change",updateCompanyPreview);
 $("qrAlertsButtonB5320").onclick=()=>qrToggleAlertsPanelB5320_();
-$("qrAlertsRefreshB5320").onclick=()=>loadAlertsSummaryB5320_({force:true});$("auditRefresh").onclick=()=>loadAudit({force:true,context:"buscar-manual"});$("auditClear").onclick=clearAuditFilters;$("auditSearch").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();loadAudit()}};$("cancelUser").onclick=()=>{$("userModal").style.display="none"};$("saveUser").onclick=saveUser;$("userEmail").oninput=updateUserPrimaryAction76617;$("cancelAdminUserPassword").onclick=()=>{$("adminUserPasswordModal").style.display="none"};$("saveAdminUserPassword").onclick=saveAdminUserPassword76617;$("sendSystemLogin").onclick=doSystemLogin;$("systemPassword").onkeydown=e=>{if(e.key==="Enter")doSystemLogin()};$("cancelSystemLogin").onclick=()=>{systemLoginNextAction=null;$("systemLoginModal").style.display="none";if(!systemSession)showMenuGate()};$("systemLogoutButton").onclick=logoutSystemMenu;$("installAppButton").onclick=installQRManut;$("tabSearch").onclick=showSearchTab;$("tabPending").onclick=showPendingTab;$("pendingApplyFilters").onclick=()=>loadPending({force:true,context:"buscar-manual"});$("pendingClearFilters").onclick=clearPendingFilters;$("tabOccurrenceReport").onclick=showOccurrenceReportTab;$("tabPreventive").onclick=showPreventiveTab;$("tabMaintenanceAgenda").onclick=showMaintenanceAgendaTab76631;$("maintenanceAgendaBackMenu").onclick=openDefaultAllowedTab;$("maintenanceAgendaRefresh").onclick=()=>loadMaintenanceAgenda76631_({force:true});$("maintenanceAgendaClear").onclick=clearMaintenanceAgendaFilters76631_;$("maintenanceAgendaNew").onclick=()=>openMaintenanceAgendaModal76631_();$("maintenanceAgendaCancel").onclick=()=>{if(!maintenanceAgendaSaving76631)$("maintenanceAgendaModal").style.display="none"};$("maintenanceAgendaSave").onclick=saveMaintenanceAgenda76631_;$("agendaAssetSearch").addEventListener("input",()=>{qrAgendaClearAssetSelection76631_();qrAgendaRefreshAssetSearch76631_()});$("agendaAssetSearch").addEventListener("focus",qrAgendaRefreshAssetSearch76631_);$("agendaExecution").onchange=qrAgendaToggleProvider76631_;["agendaPlannedStart","agendaPlannedEnd","agendaConfirmedDate","agendaConfirmedTime"].forEach(id=>$(id).addEventListener("change",qrAgendaToggleReprogram76631_));["maintenanceAgendaView","maintenanceAgendaType","maintenanceAgendaStatus","maintenanceAgendaProvider"].forEach(id=>$(id).addEventListener("change",()=>loadMaintenanceAgenda76631_()));$("maintenanceAgendaSearch").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();loadMaintenanceAgenda76631_()}};$("tabDocuments").onclick=showDocumentsTab;$("tabMaintenancePending").onclick=showMaintenancePendingTab;$("maintenancePendingBackMenu").onclick=openDefaultAllowedTab;$("maintenancePendingRefresh").onclick=()=>loadMaintenancePending({force:true,context:"buscar-manual"});$("maintenancePendingClear").onclick=clearMaintenancePendingFilters;$("maintenancePendingSearch").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();loadMaintenancePending()}};$("maintenancePendingStatusFilter").onchange=loadMaintenancePending;$("maintenancePendingPriorityFilter").onchange=loadMaintenancePending;$("preventiveNeedsAction").onchange=togglePreventiveActionFields;$("tabOccurrenceCatalog").onclick=showOccurrenceCatalogTab;$("occurrenceCatalogBackMenu").onclick=openDefaultAllowedTab;$("saveCatalogCategory").onclick=saveCatalogCategory;$("clearCatalogCategory").onclick=clearCatalogCategoryForm;$("saveCatalogComponent").onclick=saveCatalogComponent;$("clearCatalogComponent").onclick=clearCatalogComponentForm;$("category").onchange=()=>populateOccurrenceComponentSelect();$("manageCategory").onchange=()=>populateManageCatalog($("manageCategory").value,"");$("tabDocumentUpload").onclick=showDocumentUploadTab;$("documentUploadBackMenu").onclick=cancelDocumentUpload;$("uploadDocumentChooseFileButton").onclick=()=>$("uploadDocumentFile").click();$("uploadDocumentFile").onchange=prepareDocumentUploadFile;$("sendDocumentUpload").onclick=sendDocumentUpload;$("clearDocumentUpload").onclick=clearDocumentUploadForm;$("searchButton").onclick=searchAssets;$("qrScanButton").onclick=openQrScanner7662513;$("qrScannerCancel").onclick=closeQrScanner7662513;$("qrScannerSwitch").onclick=switchQrScannerCamera7662513;$("searchInput").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();searchAssets()}};$("documentSearchButton").onclick=()=>searchDocuments({force:true,context:"buscar-manual"});$("documentSearchInput").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();searchDocuments()}};$("documentTypeFilter").onchange=searchDocuments;$("documentDisciplineFilter").onchange=searchDocuments;$("documentFloorFilter").onchange=searchDocuments;$("reportButton").onclick=openReport;$("preventiveButton").onclick=requestPreventive;
+$("qrAlertsRefreshB5320").onclick=()=>loadAlertsSummaryB5320_({force:true});$("auditRefresh").onclick=()=>loadAudit({force:true,context:"buscar-manual"});$("auditClear").onclick=clearAuditFilters;$("auditSearch").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();loadAudit()}};$("cancelUser").onclick=()=>{$("userModal").style.display="none"};$("saveUser").onclick=saveUser;$("userEmail").oninput=updateUserPrimaryAction76617;$("cancelAdminUserPassword").onclick=()=>{$("adminUserPasswordModal").style.display="none"};$("saveAdminUserPassword").onclick=saveAdminUserPassword76617;$("sendSystemLogin").onclick=doSystemLogin;$("systemPassword").onkeydown=e=>{if(e.key==="Enter")doSystemLogin()};$("cancelSystemLogin").onclick=()=>{systemLoginNextAction=null;$("systemLoginModal").style.display="none";if(!systemSession)showMenuGate()};$("systemLogoutButton").onclick=logoutSystemMenu;$("installAppButton").onclick=installQRManut;$("tabSearch").onclick=showSearchTab;$("tabPending").onclick=showPendingTab;$("pendingApplyFilters").onclick=()=>loadPending({force:true,context:"buscar-manual"});$("pendingClearFilters").onclick=clearPendingFilters;$("tabOccurrenceReport").onclick=showOccurrenceReportTab;$("tabPreventive").onclick=showPreventiveTab;$("tabMaintenanceAgenda").onclick=showMaintenanceAgendaTab76631;$("maintenanceAgendaBackMenu").onclick=openDefaultAllowedTab;$("maintenanceAgendaRefresh").onclick=()=>loadMaintenanceAgenda76631_({force:true});$("maintenanceAgendaClear").onclick=clearMaintenanceAgendaFilters76631_;$("maintenanceAgendaNew").onclick=()=>openMaintenanceAgendaModal76631_();$("maintenanceAgendaAnnual").onclick=openMaintenanceAgendaAnnual766313_;$("maintenanceAgendaAnnualCancel").onclick=()=>{if(!agendaAnnualSaving766313)$("maintenanceAgendaAnnualModal").style.display="none"};$("maintenanceAgendaAnnualSave").onclick=saveMaintenanceAgendaAnnual766313_;$("agendaAnnualAssetSearch").addEventListener("input",()=>{qrAgendaAnnualClearAsset766313_();qrAgendaAnnualRefreshAssetSearch766313_()});$("agendaAnnualAssetSearch").addEventListener("focus",qrAgendaAnnualRefreshAssetSearch766313_);$("agendaAnnualExecution").onchange=qrAgendaAnnualToggleProvider766313_;$("agendaAnnualYear").addEventListener("change",qrAgendaAnnualRenderCalendar766313_);$("agendaAnnualClearDates").onclick=()=>{agendaAnnualSelectedDates766313.clear();qrAgendaAnnualRenderCalendar766313_()};$("maintenanceAgendaCancel").onclick=()=>{if(!maintenanceAgendaSaving76631)$("maintenanceAgendaModal").style.display="none"};$("maintenanceAgendaSave").onclick=saveMaintenanceAgenda76631_;$("agendaAssetSearch").addEventListener("input",()=>{qrAgendaClearAssetSelection76631_();qrAgendaRefreshAssetSearch76631_()});$("agendaAssetSearch").addEventListener("focus",qrAgendaRefreshAssetSearch76631_);$("agendaExecution").onchange=qrAgendaToggleProvider76631_;["agendaPlannedStart","agendaPlannedEnd","agendaConfirmedDate","agendaConfirmedTime"].forEach(id=>$(id).addEventListener("change",qrAgendaToggleReprogram76631_));["maintenanceAgendaView","maintenanceAgendaType","maintenanceAgendaStatus","maintenanceAgendaProvider"].forEach(id=>$(id).addEventListener("change",()=>loadMaintenanceAgenda76631_()));$("maintenanceAgendaSearch").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();loadMaintenanceAgenda76631_()}};$("tabDocuments").onclick=showDocumentsTab;$("tabMaintenancePending").onclick=showMaintenancePendingTab;$("maintenancePendingBackMenu").onclick=openDefaultAllowedTab;$("maintenancePendingRefresh").onclick=()=>loadMaintenancePending({force:true,context:"buscar-manual"});$("maintenancePendingClear").onclick=clearMaintenancePendingFilters;$("maintenancePendingSearch").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();loadMaintenancePending()}};$("maintenancePendingStatusFilter").onchange=loadMaintenancePending;$("maintenancePendingPriorityFilter").onchange=loadMaintenancePending;$("preventiveNeedsAction").onchange=togglePreventiveActionFields;$("tabOccurrenceCatalog").onclick=showOccurrenceCatalogTab;$("occurrenceCatalogBackMenu").onclick=openDefaultAllowedTab;$("saveCatalogCategory").onclick=saveCatalogCategory;$("clearCatalogCategory").onclick=clearCatalogCategoryForm;$("saveCatalogComponent").onclick=saveCatalogComponent;$("clearCatalogComponent").onclick=clearCatalogComponentForm;$("category").onchange=()=>populateOccurrenceComponentSelect();$("manageCategory").onchange=()=>populateManageCatalog($("manageCategory").value,"");$("tabDocumentUpload").onclick=showDocumentUploadTab;$("documentUploadBackMenu").onclick=cancelDocumentUpload;$("uploadDocumentChooseFileButton").onclick=()=>$("uploadDocumentFile").click();$("uploadDocumentFile").onchange=prepareDocumentUploadFile;$("sendDocumentUpload").onclick=sendDocumentUpload;$("clearDocumentUpload").onclick=clearDocumentUploadForm;$("searchButton").onclick=searchAssets;$("qrScanButton").onclick=openQrScanner7662513;$("qrScannerCancel").onclick=closeQrScanner7662513;$("qrScannerSwitch").onclick=switchQrScannerCamera7662513;$("searchInput").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();searchAssets()}};$("documentSearchButton").onclick=()=>searchDocuments({force:true,context:"buscar-manual"});$("documentSearchInput").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();searchDocuments()}};$("documentTypeFilter").onchange=searchDocuments;$("documentDisciplineFilter").onchange=searchDocuments;$("documentFloorFilter").onchange=searchDocuments;$("reportButton").onclick=openReport;$("preventiveButton").onclick=requestPreventive;
 $("searchAssetsButton").onclick=function(){
   if(pendingReturnMatchesAsset7662510_()){
     if(restorePendingViewFastB5311_())return;
