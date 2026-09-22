@@ -1,3 +1,9 @@
+<!-- QRManut 7.6.6.31 A1 — Agenda de Manutenções / Segmento 1
+     - Agenda para Preventiva, Preditiva e Corretiva.
+     - Período previsto, data confirmada, execução própria/prestador, prioridade e status.
+     - Reprogramação exige motivo e mantém rastreabilidade no backend.
+     - Checklist e relatório de parâmetros permanecem para os próximos segmentos.
+-->
 <!-- QRManut 7.6.6.30 B2 — Suporte transparente a imagens HEIC/HEIF
      - Detecta automaticamente arquivos .HEIC/.HEIF selecionados nas rotinas de foto.
      - Converte HEIC/HEIF localmente no navegador para JPEG antes do fluxo atual de redimensionamento/compressão.
@@ -116,7 +122,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>QRManut</title>
-<meta name="qrmanut-build" content="2026-09-21-7.6.6.30-b2">
+<meta name="qrmanut-build" content="2026-09-22-7.6.6.31-a1">
 <meta name="theme-color" content="#0b315e">
 <meta name="application-name" content="QRManut">
 <meta name="mobile-web-app-capable" content="yes">
@@ -812,7 +818,7 @@ body{
 .menu-button.reports.active{background:linear-gradient(180deg,#0f766e 0%,#0d5f59 100%)!important;border-color:#0d5f59!important}
 .menu-button.users.active{background:linear-gradient(180deg,#4338ca 0%,#3730a3 100%)!important;border-color:#3730a3!important}
 .menu-button.permissions.active{background:linear-gradient(180deg,#6d28d9 0%,#5b21b6 100%)!important;border-color:#5b21b6!important}
-#searchArea>.card,#pendingArea>.card,#solicitationsArea>.card,#occurrenceReportArea>.card,#documentsArea>.card,#preventiveControlArea>.card,#maintenancePendingArea>.card,#auditArea>.card,#usersArea>.card,#permissionsArea>.card,#providersAdminArea>.card,#companyArea>.card,#documentUploadArea>.card,#occurrenceCatalogArea>.card,#performanceArea>.card{
+#searchArea>.card,#pendingArea>.card,#solicitationsArea>.card,#occurrenceReportArea>.card,#documentsArea>.card,#preventiveControlArea>.card,#maintenanceAgendaArea>.card,#maintenancePendingArea>.card,#auditArea>.card,#usersArea>.card,#permissionsArea>.card,#providersAdminArea>.card,#companyArea>.card,#documentUploadArea>.card,#occurrenceCatalogArea>.card,#performanceArea>.card{
   border-radius:24px;
   border:1px solid rgba(219,228,240,.95);
   box-shadow:var(--qr-shadow);
@@ -1141,6 +1147,27 @@ body{
   }
 }
 
+
+/* ============================================================
+ * QRManut 7.6.6.31 A1 — Agenda de Manutenções
+ * ============================================================ */
+.menu-button.maintenance-agenda.active{background:#eef7ff!important;color:#075985!important;border-color:#7dd3fc!important}
+.agenda-filters{display:grid;grid-template-columns:1.25fr 1fr 1fr 1fr 1.5fr;gap:10px;align-items:end;margin-top:14px}
+.agenda-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.agenda-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin:14px 0}
+.agenda-summary-card{background:#fff;border:1px solid #dbe4f0;border-radius:16px;padding:13px;text-align:center;box-shadow:0 7px 18px rgba(15,23,42,.04)}
+.agenda-summary-card strong{display:block;font-size:1.45rem;color:#0f172a}.agenda-summary-card.late strong{color:#b91c1c}
+.agenda-card{margin-top:10px;padding:14px;border:1px solid #e2e8f0;border-left:5px solid #0284c7;border-radius:15px;background:#fff}
+.agenda-card.late{border-left-color:#dc2626;background:#fffafa}.agenda-card.done{border-left-color:#16a34a}.agenda-card.cancelled{border-left-color:#94a3b8;opacity:.82}
+.agenda-card-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.agenda-card-title{font-weight:850;color:#0f172a}.agenda-card-id{font-size:.76rem;color:#64748b;font-weight:800}
+.agenda-badges{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}.agenda-badge{display:inline-flex;padding:4px 8px;border-radius:999px;font-size:.72rem;font-weight:800;background:#eff6ff;color:#1e40af}
+.agenda-badge.priority-high{background:#fff7ed;color:#9a3412}.agenda-badge.priority-urgent{background:#fee2e2;color:#991b1b}.agenda-badge.late{background:#fee2e2;color:#991b1b}
+.agenda-meta{margin-top:9px;color:#475569;font-size:.86rem;line-height:1.55}.agenda-service{margin-top:9px;padding:9px 10px;border-radius:10px;background:#f8fafc;white-space:pre-wrap}
+.agenda-card-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:11px}.agenda-empty{padding:18px;border:1px dashed #cbd5e1;border-radius:14px;text-align:center;color:#64748b;background:#f8fafc}
+.agenda-modal-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 12px}.agenda-modal-grid .full{grid-column:1/-1}.agenda-reprogram-box{margin-top:12px;padding:12px;border:1px solid #fdba74;background:#fff7ed;border-radius:12px}
+@media(max-width:850px){.agenda-filters{grid-template-columns:repeat(2,minmax(0,1fr))}.agenda-summary{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.agenda-filters,.agenda-modal-grid{grid-template-columns:1fr}.agenda-modal-grid .full{grid-column:auto}.agenda-card-head{display:block}.agenda-badges{justify-content:flex-start;margin-top:8px}.agenda-actions .btn{width:100%}}
+
 </style>
 </head>
 <body>
@@ -1181,6 +1208,7 @@ body{
     <button id="tabSolicitations" class="menu-button solicitations hidden">📥 Solicitações de Manutenção</button>
     <button id="tabOccurrenceReport" class="menu-button reports">📊 Relatório de OCs</button>
     <button id="tabPreventive" class="menu-button preventive">🛠️ Status das Preventivas</button>
+    <button id="tabMaintenanceAgenda" class="menu-button maintenance-agenda hidden" type="button">📅 Agenda de Manutenções</button>
     <button id="tabDocuments" class="menu-button documents">📄 Documentos Técnicos</button>
     <button id="tabOccurrenceCatalog" class="menu-button hidden">🧩 Categorias e Componentes</button>
     <button id="tabMaintenancePending" class="menu-button hidden">📌 Pendências / Providências</button>
@@ -1481,6 +1509,28 @@ body{
     </div>
   </div>
 
+
+  <div id="maintenanceAgendaArea" class="hidden">
+    <div class="card">
+      <div class="back-asset-wrap"><button id="maintenanceAgendaBackMenu" class="back-asset-btn" type="button">← Voltar ao Menu Principal</button></div>
+      <div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap">
+        <div><h2 id="maintenanceAgendaTitle" style="margin-bottom:5px">📅 Agenda de Manutenções</h2><div id="maintenanceAgendaHelp" class="muted">Planeje preventivas, preditivas e corretivas por período ou data confirmada.</div></div>
+        <button id="maintenanceAgendaNew" class="btn btn-blue hidden" type="button">+ Novo agendamento</button>
+      </div>
+      <div class="agenda-filters">
+        <label id="maintenanceAgendaViewLabel" style="margin-top:0">Período<select id="maintenanceAgendaView"><option value="today">Hoje</option><option value="next7">Próximos 7 dias</option><option value="month" selected>Mês atual</option><option value="late">Atrasadas</option><option value="all">Todas</option></select></label>
+        <label id="maintenanceAgendaTypeLabel" style="margin-top:0">Tipo<select id="maintenanceAgendaType"><option value="">Todos</option></select></label>
+        <label id="maintenanceAgendaStatusLabel" style="margin-top:0">Status<select id="maintenanceAgendaStatus"><option value="">Todos</option></select></label>
+        <label id="maintenanceAgendaProviderLabel" style="margin-top:0">Prestador<select id="maintenanceAgendaProvider"><option value="">Todos</option></select></label>
+        <label id="maintenanceAgendaSearchLabel" style="margin-top:0">Busca<input id="maintenanceAgendaSearch" placeholder="Ativo, serviço, responsável, OC..."></label>
+      </div>
+      <div class="agenda-actions"><button id="maintenanceAgendaRefresh" class="btn btn-blue" type="button">Atualizar</button><button id="maintenanceAgendaClear" class="btn btn-secondary" type="button">Limpar filtros</button></div>
+      <div id="maintenanceAgendaStatusText" class="muted" style="margin-top:12px"></div>
+      <div id="maintenanceAgendaSummary" class="agenda-summary"></div>
+      <div id="maintenanceAgendaResults"></div>
+    </div>
+  </div>
+
   <div id="preventiveControlArea" class="hidden">
     <div class="card">
       <div id="preventiveLoggedInfo" class="preventive-login-info"></div>
@@ -1725,6 +1775,31 @@ body{
 
 <div id="preventiveLoginModal" class="modal hidden"><div class="modal-box"><h2>🔐 Acesso às Preventivas</h2><div id="loginProviderInfo" class="preventive-info hidden"></div><label>Usuário<input id="preventiveUsername" autocomplete="username"></label><label>Senha<div class="password-wrap"><input id="preventivePassword" type="password" autocomplete="current-password"><button type="button" class="password-toggle" data-password-target="preventivePassword" aria-label="Mostrar senha" title="Mostrar senha"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path><circle cx="12" cy="12" r="2.8"></circle></svg></button></div></label><div id="loginMessage" class="message"></div><div class="modal-actions"><button id="cancelLogin" class="btn btn-secondary">Cancelar</button><button id="sendLogin" class="btn btn-green">Entrar</button></div></div></div>
 
+
+<div id="maintenanceAgendaModal" class="modal"><div class="modal-box" style="max-width:820px">
+  <h2 id="maintenanceAgendaModalTitle">📅 Novo agendamento</h2>
+  <input id="maintenanceAgendaEditId" type="hidden">
+  <div class="agenda-modal-grid">
+    <label class="full"><span id="agendaAssetLabel">Ativo / Equipamento *</span><select id="agendaAsset"><option value="">Selecione...</option></select></label>
+    <label><span id="agendaTypeLabel">Tipo de manutenção *</span><select id="agendaType"></select></label>
+    <label><span id="agendaPriorityLabel">Prioridade *</span><select id="agendaPriority"></select></label>
+    <label class="full"><span id="agendaServiceLabel">Serviço previsto *</span><textarea id="agendaService" rows="3" placeholder="Descreva o serviço que deverá ser executado"></textarea></label>
+    <label><span id="agendaExecutionLabel">Execução *</span><select id="agendaExecution"></select></label>
+    <label id="agendaProviderWrap"><span id="agendaProviderLabel">Prestador *</span><select id="agendaProvider"></select></label>
+    <label><span id="agendaResponsibleLabel">Responsável / contato</span><input id="agendaResponsible"></label>
+    <label><span id="agendaStatusLabel">Status *</span><select id="agendaStatus"></select></label>
+    <label><span id="agendaPlannedStartLabel">Início previsto *</span><input id="agendaPlannedStart" type="date"></label>
+    <label><span id="agendaPlannedEndLabel">Fim previsto</span><input id="agendaPlannedEnd" type="date"></label>
+    <label><span id="agendaConfirmedDateLabel">Data confirmada</span><input id="agendaConfirmedDate" type="date"></label>
+    <label><span id="agendaConfirmedTimeLabel">Horário confirmado</span><input id="agendaConfirmedTime" type="time"></label>
+    <label><span id="agendaLinkedOcLabel">OC vinculada</span><input id="agendaLinkedOc" placeholder="Ex.: OC-000123"></label>
+    <label class="full"><span id="agendaNotesLabel">Observações</span><textarea id="agendaNotes" rows="3"></textarea></label>
+  </div>
+  <div id="agendaReprogramBox" class="agenda-reprogram-box hidden"><b id="agendaReprogramTitle">🔁 Motivo da reprogramação *</b><div id="agendaReprogramHelp" class="muted" style="margin-top:4px">Obrigatório quando uma data ou horário já salvo for alterado.</div><textarea id="agendaReprogramReason" rows="3" style="margin-top:8px"></textarea></div>
+  <div id="maintenanceAgendaMessage" class="message"></div>
+  <div class="modal-actions"><button id="maintenanceAgendaCancel" class="btn btn-secondary" type="button">Cancelar</button><button id="maintenanceAgendaSave" class="btn btn-blue" type="button">Salvar agendamento</button></div>
+</div></div>
+
 <div id="preventiveModal" class="modal"><div class="modal-box"><h2>🛠️ Registrar Manutenção Preventiva</h2><div class="preventive-info"><div><b>Ativo:</b> <span id="preventiveAsset"></span></div><div><b>Periodicidade:</b> <span id="preventivePeriodicity"></span></div><div><b>Prestador:</b> <span id="preventiveProvider"></span></div><div><b>Competência:</b> <span id="preventiveCompetence"></span></div></div><div id="preventiveRequirements" class="requirements-box"></div><label>Responsável pela preventiva *<input id="preventiveResponsible"></label><label>Observação<textarea id="preventiveObservation" rows="5"></textarea></label>
 <label class="switch-row" style="margin-top:12px">
   <input id="preventiveNeedsAction" type="checkbox">
@@ -1845,12 +1920,13 @@ body{
 </div>
 <label>Adicionar nova foto da ocorrência / correção</label><div class="photo-source-actions"><button type="button" id="manageOccurrenceCameraButton" class="btn btn-blue">📷 Tirar foto</button><button type="button" id="manageOccurrenceAttachButton" class="btn btn-secondary">🖼️ Anexar imagem</button></div><input id="manageOccurrenceCameraInput" class="photo-source-hidden" type="file" accept="image/*,.heic,.heif" capture="environment"><input id="manageOccurrencePhotoInput" class="photo-source-hidden" type="file" accept="image/*,.heic,.heif"><div id="manageOccurrencePhotoStatus" class="muted" style="margin-top:5px"></div><img id="manageOccurrencePhotoPreview" class="photo-preview"><div class="upload-file-box" style="margin-top:12px"><div style="font-weight:800">📎 Adicionar arquivo à ocorrência</div><div class="muted" style="margin-top:4px">PDF, Word, Excel ou outro arquivo de evidência, até 8 MB.</div><button id="manageAttachmentButton" type="button" class="btn btn-secondary" style="margin-top:8px">📎 Escolher arquivo</button><input id="manageAttachmentInput" class="photo-source-hidden" type="file"><div id="manageAttachmentName" class="upload-file-name">Nenhum arquivo selecionado.</div><div id="manageExistingAttachments" style="margin-top:8px"></div></div><div id="conclusionPhotoArea" class="hidden"><label>Foto da conclusão</label><div class="photo-source-actions"><button type="button" id="conclusionCameraButton" class="btn btn-blue">📷 Tirar foto</button><button type="button" id="conclusionAttachButton" class="btn btn-secondary">🖼️ Anexar imagem</button></div><input id="conclusionCameraInput" class="photo-source-hidden" type="file" accept="image/*,.heic,.heif" capture="environment"><input id="conclusionPhotoInput" class="photo-source-hidden" type="file" accept="image/*,.heic,.heif"><div id="conclusionPhotoStatus" class="muted" style="margin-top:5px"></div><img id="conclusionPhotoPreview" class="photo-preview"></div><div id="manageMessage" class="message"></div><div class="modal-actions" style="justify-content:space-between;flex-wrap:wrap"><button id="deleteOccurrence" class="btn btn-danger hidden" type="button">🗑️ Excluir ocorrência</button><div style="display:flex;gap:8px;flex-wrap:wrap"><button id="cancelManage" class="btn btn-secondary">Cancelar</button><button id="saveManage" class="btn">Salvar alterações</button></div></div></div></div>
 
-<div class="footer">QRManut • Versão 7.6.6.30</div>
+<div class="footer">QRManut • Versão 7.6.6.31</div>
 </div>
 <script>
 const API_URL="https://script.google.com/macros/s/AKfycbx4tpC42Q6WdkNhTUTAGoZWvG5M24zwlNscnwbDP5B3Q5pWo8B32-Lf0rQ2Xtua1AFMAQ/exec";
 const TOKEN="";const SYSTEM_SESSION_KEY="qrmanut_system_session";const RESPONSIBLE_KEY="qrmanut_responsavel";const PREVENTIVE_SESSION_KEY="qrmanut_preventive_session";const ORIGIN_ASSET_KEY="qrmanut_origin_asset";const MAX_DIM=1280;const QUALITY=.72;
 let systemSession=null,systemLoginNextAction=null,currentAsset=null,currentAssetStatus=null,history=[],selectedOccurrence=null,preventiveControlData=null,preventiveControlMode="all",preventiveSession=null,preventiveRequirements=null,loginNextAction=null,photoData=null,reportAttachmentData=null,preventivePhotoData=null,preventiveDocumentFiles=[],correctionPhotoData=null,manageAttachmentData=null,conclusionPhotoData=null,reportPosting=false,reportCompleted=false,preventivePosting=false,managePosting=false,signatureDirty=false,signatureDrawing=false,signatureCtx=null,occurrenceReportData=null,occurrenceReportFiltersLoaded=false,pendingFiltersLoaded=false,auditFiltersLoaded=false,companyConfigLoaded=false,providersAdminData=[],usersAdminData=[],profilePermissionsAdminData=null,solPublicMeta=null,solPhotoData=null,solTriageData=null,solTriageMeta=null,solSelected=null,solSelectedAssetId="",solPublicPosting=false,solActionPosting=false,solLastCreatedOccurrence7662412=null;
+let maintenanceAgendaData76631=[],maintenanceAgendaMeta76631=null,maintenanceAgendaMetaLoaded76631=false,maintenanceAgendaEditing76631=null,maintenanceAgendaSaving76631=false;
 const SOL_TARGET_OC_KEY="qrmanut_sol_target_oc";
 const $=id=>document.getElementById(id);
 
@@ -2189,7 +2265,7 @@ const QR_CACHEABLE_ACTIONS_B530=new Set([
   "occurrencereportfilters","occurrencereport","occurrencereportbundle","preventivecontrol",
   "documents","documentfilters","documentsbundle","users","providers","accessrequests","providersadmin",
   "companyconfig","profilepermissionsadmin","auditfilters","audit","occurrencecatalogadmin",
-  "maintenancepending","documentuploadmeta","assetbundle","assetdocuments","history",
+  "maintenancepending","maintenanceagenda","documentuploadmeta","assetbundle","assetdocuments","history",
   "preventivehistory","preventiverequirements"
 ]);
 
@@ -2206,7 +2282,7 @@ const QR_ACTION_CONTEXT_B530={
   documents:"documentos",documentfilters:"documentos-filtros",documentsbundle:"documentos-pacote",users:"usuarios",
   providers:"prestadores-base",accessrequests:"solicitacoes-acesso",providersadmin:"prestadores",
   companyconfig:"empresa",profilepermissionsadmin:"permissoes",audit:"auditoria",
-  auditfilters:"auditoria-filtros",occurrencecatalogadmin:"catalogo",maintenancepending:"pendencias",
+  auditfilters:"auditoria-filtros",occurrencecatalogadmin:"catalogo",maintenancepending:"pendencias",maintenanceagenda:"agenda-manutencao",
   documentuploadmeta:"upload-documentos-meta",assetbundle:"ficha-ativo",assetdocuments:"documentos-ativo",
   history:"historico-ativo",preventivehistory:"preventivas-ativo",preventiverequirements:"requisitos-preventiva"
 };
@@ -2484,7 +2560,7 @@ function qrInvalidateLocalCacheB530(reason){
   if(typeof qrClearAssetBundleSessionB5314_==="function")qrClearAssetBundleSessionB5314_();
   if(typeof clearPendingFastSnapshotB5311_==="function")clearPendingFastSnapshotB5311_();
   // Metadados carregados em memória também precisam voltar a consultar o backend após gravações.
-  pendingFiltersLoaded=false;documentFiltersLoaded=false;auditFiltersLoaded=false;occurrenceReportFiltersLoaded=false;
+  pendingFiltersLoaded=false;documentFiltersLoaded=false;auditFiltersLoaded=false;occurrenceReportFiltersLoaded=false;maintenanceAgendaMetaLoaded76631=false;maintenanceAgendaMeta76631=null;maintenanceAgendaData76631=[];
   try{sessionStorage.removeItem(QR_PREVENTIVE_PROVIDER_CACHE_KEY_766253)}catch(_e){}
   if(reason&&$("performanceCacheStatus")&&!$("performanceArea")?.classList.contains("hidden"))qrRenderPerformanceB530();
 }
@@ -2509,6 +2585,7 @@ function qrResetLoadedViewStateB536(){
   profilePermissionsAdminData=null;
   providersAdminData=[];
   usersAdminData=[];
+  maintenanceAgendaData76631=[];maintenanceAgendaMeta76631=null;maintenanceAgendaMetaLoaded76631=false;maintenanceAgendaEditing76631=null;
 }
 function qrClearCacheFromDiagnosticsB530(){
   qrInvalidateLocalCacheB530("manual");
@@ -2833,6 +2910,7 @@ function updateRoleUi(){
   toggle("tabSolicitations","SOLICITACOES_TRIAGEM");
   toggle("tabOccurrenceReport","RELATORIO_OC");
   toggle("tabPreventive","PREVENTIVA_CONSULTAR");
+  toggle("tabMaintenanceAgenda","AGENDA_CONSULTAR");
   toggle("tabDocuments","DOCUMENTOS_CONSULTAR");
   toggle("tabUsers","GESTAO_USUARIOS");
   isMaster?show("tabPermissions"):hide("tabPermissions");
@@ -2853,7 +2931,7 @@ function showMenuGate(){
   show("searchScreen");
   hide("mainMenuButtons");
   document.querySelectorAll("#mainMenuButtons .menu-section").forEach(el=>el.classList.add("hidden"));
-  ["searchArea","pendingArea","solicitationsArea","occurrenceReportArea","preventiveControlArea","documentsArea","usersArea","permissionsArea","auditArea","companyArea","providersAdminArea","documentUploadArea","occurrenceCatalogArea","maintenancePendingArea","assetManagementPanel","performanceArea"].forEach(hide);
+  ["searchArea","pendingArea","solicitationsArea","occurrenceReportArea","preventiveControlArea","maintenanceAgendaArea","documentsArea","usersArea","permissionsArea","auditArea","companyArea","providersAdminArea","documentUploadArea","occurrenceCatalogArea","maintenancePendingArea","assetManagementPanel","performanceArea"].forEach(hide);
   hide("systemAccessInfo");
   hide("qrAlertsButtonB5320");
   hide("qrAlertsPanelB5320");
@@ -2866,6 +2944,7 @@ function openDefaultAllowedTab(){
   if(hasProfilePermission("SOLICITACOES_TRIAGEM"))return showSolicitationsTab7662412();
   if(hasProfilePermission("RELATORIO_OC"))return showOccurrenceReportTab();
   if(hasProfilePermission("PREVENTIVA_CONSULTAR"))return showPreventiveTab();
+  if(hasProfilePermission("AGENDA_CONSULTAR"))return showMaintenanceAgendaTab76631();
   if(hasProfilePermission("DOCUMENTOS_CONSULTAR"))return showDocumentsTab();
   if(hasProfilePermission("PENDENCIAS"))return showMaintenancePendingTab();
   if(hasProfilePermission("PRESTADORES_CONSULTAR"))return showProvidersAdminTab();
@@ -3223,7 +3302,7 @@ function qrScrollToRoutineArea766256_(areaId){
 function showOnly(a){
   [
     "searchArea","pendingArea","solicitationsArea","occurrenceReportArea",
-    "preventiveControlArea","documentsArea","usersArea","permissionsArea",
+    "preventiveControlArea","maintenanceAgendaArea","documentsArea","usersArea","permissionsArea",
     "auditArea","companyArea","providersAdminArea","documentUploadArea",
     "occurrenceCatalogArea","maintenancePendingArea","assetManagementPanel","performanceArea"
   ].forEach(hide);
@@ -3234,7 +3313,7 @@ function showOnly(a){
   // sempre que uma rotina é aberta, a tela acompanha a área exibida.
   qrScrollToRoutineArea766256_(a);
 }
-function clearTabs(){["tabSearch","tabPending","tabSolicitations","tabOccurrenceReport","tabPreventive","tabDocuments","tabUsers","tabPermissions","tabAudit","tabProvidersAdmin","tabCompany","tabDocumentUpload","tabOccurrenceCatalog","tabMaintenancePending","tabAssetManagement","tabPerformance"].forEach(id=>$(id).classList.remove("active"))}
+function clearTabs(){["tabSearch","tabPending","tabSolicitations","tabOccurrenceReport","tabPreventive","tabMaintenanceAgenda","tabDocuments","tabUsers","tabPermissions","tabAudit","tabProvidersAdmin","tabCompany","tabDocumentUpload","tabOccurrenceCatalog","tabMaintenancePending","tabAssetManagement","tabPerformance"].forEach(id=>$(id)?.classList.remove("active"))}
 function showSearchTab(){if(!requireUiPermission("BUSCAR_ATIVOS","Seu perfil não possui permissão para buscar ativos.","Your profile is not allowed to search assets."))return;clearTabs();$("tabSearch").classList.add("active");showOnly("searchArea");updateBackAssetButton();focusSearchInput()}
 async function showPendingTab(){if(!requireUiPermission("OC_PENDENTES","Seu perfil não possui permissão para consultar OCs pendentes.","Your profile is not allowed to view pending work orders."))return;clearTabs();$("tabPending").classList.add("active");showOnly("pendingArea");qrShowPendingSkeletonB5320_();if(!pendingFiltersLoaded)await loadPendingBundleB533();else await loadPending()}
 async function showOccurrenceReportTab(){if(!requireUiPermission("RELATORIO_OC","Seu perfil não possui permissão para acessar o Relatório de OCs.","Your profile is not allowed to access the work order report."))return;clearTabs();$("tabOccurrenceReport").classList.add("active");showOnly("occurrenceReportArea");setDefaultOccurrenceReportDates();if(!occurrenceReportFiltersLoaded&&!occurrenceReportData)await loadOccurrenceReportBundleB533();else{await loadOccurrenceReportFilters();if(!occurrenceReportData)await loadOccurrenceReport()}}
@@ -7261,6 +7340,102 @@ async function saveAdminUserPassword76617(){
 async function setUserStatus(id,status){const lbl=qrStatus7612(status);if(!confirm(qrLanguage==="en-US"?`Change the user status to ${lbl}?`:`Alterar o status do usuário para ${lbl}?`))return;try{const r=await menuApiPost({action:"updateUserStatus",userId:id,userStatus:status});if(!r.ok)throw new Error(r.detail||(qrLanguage==="en-US"?"Error updating user.":"Erro ao alterar usuário."));await loadUsers()}catch(e){alert(e.message)}}
 async function resendInviteUser(id){if(!hasProfilePermission("GESTAO_USUARIOS"))return alert(qrLanguage==="en-US"?"Your profile is not allowed to resend invitations.":"Seu perfil não possui permissão para reenviar convites.");const target=usersAdminData.find(u=>String(u.idUsuario)===String(id));if(target?.perfil==="MASTER"&&systemSession?.perfil!=="MASTER")return alert(qrLanguage==="en-US"?"Only MASTER can resend an invitation to another MASTER account.":"Somente MASTER pode reenviar convite para outro usuário MASTER.");try{const r=await menuApiPost({action:"resendInvite",userId:id});if(!r.ok)throw new Error(r.detail||(qrLanguage==="en-US"?"Error sending invite.":"Erro ao enviar convite."));alert(qrLanguage==="en-US"?"Invite sent.":"Convite enviado.")}catch(e){alert(e.message)}}
 
+
+/* ============================================================
+ * QRManut 7.6.6.31 A1 — Agenda de Manutenções / Frontend
+ * ============================================================ */
+function qrAgendaText76631_(pt,en){return qrLanguage==="en-US"?en:pt}
+function qrAgendaDisplayDate76631_(iso){
+  if(!iso)return "—";const p=String(iso).split("-");if(p.length!==3)return iso;
+  return qrLanguage==="en-US"?`${p[1]}/${p[2]}/${p[0]}`:`${p[2]}/${p[1]}/${p[0]}`;
+}
+function qrAgendaRangeText76631_(x){
+  if(x.dataConfirmada)return qrAgendaDisplayDate76631_(x.dataConfirmada)+(x.horaConfirmada?` • ${x.horaConfirmada}`:"");
+  const a=qrAgendaDisplayDate76631_(x.dataInicialPrevista),b=qrAgendaDisplayDate76631_(x.dataFinalPrevista);
+  return a===b?a:`${a} → ${b}`;
+}
+function qrAgendaStatusText76631_(v){const m={"Planejada":["Planejada","Planned"],"Agendada":["Agendada","Scheduled"],"Em execução":["Em execução","In progress"],"Concluída":["Concluída","Completed"],"Reprogramada":["Reprogramada","Rescheduled"],"Cancelada":["Cancelada","Cancelled"]};return m[v]?qrAgendaText76631_(m[v][0],m[v][1]):v}
+function qrAgendaTypeText76631_(v){const m={"Preventiva":"Preventive","Preditiva":"Predictive","Corretiva":"Corrective"};return qrLanguage==="en-US"?(m[v]||v):v}
+function qrAgendaExecutionText76631_(v){return qrLanguage==="en-US"?(v==="Manutenção própria"?"In-house maintenance":v==="Prestador externo"?"External service provider":v):v}
+function qrAgendaPriorityText76631_(v){const m={"Normal":"Normal","Alta":"High","Urgente":"Urgent"};return qrLanguage==="en-US"?(m[v]||v):v}
+function qrAgendaOriginalSchedule76631_(x){return [x?.dataInicialPrevista||"",x?.dataFinalPrevista||"",x?.dataConfirmada||"",x?.horaConfirmada||""]}
+function qrAgendaCurrentSchedule76631_(){return [$('agendaPlannedStart').value,$('agendaPlannedEnd').value,$('agendaConfirmedDate').value,$('agendaConfirmedTime').value]}
+function qrAgendaScheduleChanged76631_(){return !!maintenanceAgendaEditing76631&&qrAgendaOriginalSchedule76631_(maintenanceAgendaEditing76631).some((v,i)=>String(v||"")!==String(qrAgendaCurrentSchedule76631_()[i]||""))}
+function qrAgendaToggleReprogram76631_(){const changed=qrAgendaScheduleChanged76631_();$('agendaReprogramBox').classList.toggle('hidden',!changed);if(!changed)$('agendaReprogramReason').value=""}
+function qrAgendaToggleProvider76631_(){const external=$('agendaExecution').value==="Prestador externo";$('agendaProviderWrap').classList.toggle('hidden',!external);$('agendaProvider').required=external}
+function qrAgendaFillSelect76631_(id,items,valueFn,labelFn,first){const el=$(id),current=el.value;el.innerHTML=(first!==undefined?`<option value="">${esc(first)}</option>`:"")+(items||[]).map(x=>`<option value="${esc(valueFn(x))}">${esc(labelFn(x))}</option>`).join("");if([...el.options].some(o=>o.value===current))el.value=current}
+function qrAgendaApplyMeta76631_(meta){
+  maintenanceAgendaMeta76631=meta||{};maintenanceAgendaMetaLoaded76631=true;
+  qrAgendaFillSelect76631_("maintenanceAgendaType",meta.types||[],x=>x,x=>qrAgendaTypeText76631_(x),qrAgendaText76631_("Todos","All"));
+  qrAgendaFillSelect76631_("maintenanceAgendaStatus",meta.statuses||[],x=>x,x=>qrAgendaStatusText76631_(x),qrAgendaText76631_("Todos","All"));
+  qrAgendaFillSelect76631_("maintenanceAgendaProvider",meta.providers||[],x=>x.nome,x=>x.nome,qrAgendaText76631_("Todos","All"));
+  qrAgendaFillSelect76631_("agendaAsset",meta.assets||[],x=>x.id,x=>`${x.id} — ${x.nome}${x.localizacao?` • ${x.localizacao}`:""}`,qrAgendaText76631_("Selecione...","Select..."));
+  qrAgendaFillSelect76631_("agendaType",meta.types||[],x=>x,x=>qrAgendaTypeText76631_(x));
+  qrAgendaFillSelect76631_("agendaPriority",meta.priorities||[],x=>x,x=>qrAgendaPriorityText76631_(x));
+  qrAgendaFillSelect76631_("agendaExecution",meta.executions||[],x=>x,x=>qrAgendaExecutionText76631_(x));
+  qrAgendaFillSelect76631_("agendaStatus",meta.statuses||[],x=>x,x=>qrAgendaStatusText76631_(x));
+  qrAgendaFillSelect76631_("agendaProvider",meta.providers||[],x=>x.idPrestador,x=>x.nome,qrAgendaText76631_("Selecione...","Select..."));
+  if(meta.canEdit)show("maintenanceAgendaNew");else hide("maintenanceAgendaNew");
+}
+function qrAgendaParams76631_(){return {action:"maintenanceagenda",agendaView:$('maintenanceAgendaView').value,agendaType:$('maintenanceAgendaType').value,agendaStatus:$('maintenanceAgendaStatus').value,agendaProvider:$('maintenanceAgendaProvider').value,q:$('maintenanceAgendaSearch').value.trim(),agendaIncludeMeta:maintenanceAgendaMetaLoaded76631?"":"1"}}
+function qrAgendaRender76631_(d){
+  maintenanceAgendaData76631=d.items||[];if(d.meta)qrAgendaApplyMeta76631_(d.meta);
+  const s=d.summary||{};$('maintenanceAgendaSummary').innerHTML=`<div class="agenda-summary-card"><strong>${Number(s.total||0)}</strong>${qrAgendaText76631_("No filtro","In view")}</div><div class="agenda-summary-card"><strong>${Number(s.programadas||0)}</strong>${qrAgendaText76631_("Programadas","Planned/Scheduled")}</div><div class="agenda-summary-card"><strong>${Number(s.emExecucao||0)}</strong>${qrAgendaText76631_("Em execução","In progress")}</div><div class="agenda-summary-card late"><strong>${Number(s.atrasadas||0)}</strong>${qrAgendaText76631_("Atrasadas","Overdue")}</div>`;
+  const out=$('maintenanceAgendaResults');if(!maintenanceAgendaData76631.length){out.innerHTML=`<div class="agenda-empty">${qrAgendaText76631_("Nenhum agendamento encontrado para os filtros selecionados.","No schedule entries found for the selected filters.")}</div>`;return}
+  out.innerHTML=maintenanceAgendaData76631.map(x=>{
+    const cls=x.status==="Concluída"?"done":x.status==="Cancelada"?"cancelled":x.atrasada?"late":"";
+    const pc=x.prioridade==="Urgente"?"priority-urgent":x.prioridade==="Alta"?"priority-high":"";
+    return `<article class="agenda-card ${cls}"><div class="agenda-card-head"><div><div class="agenda-card-id">${esc(x.idAgenda)}</div><div class="agenda-card-title">${esc(x.idAtivo)} — ${esc(x.equipamento||x.idAtivo)}</div></div><div class="agenda-badges"><span class="agenda-badge">${esc(qrAgendaTypeText76631_(x.tipo))}</span><span class="agenda-badge ${pc}">${esc(qrAgendaPriorityText76631_(x.prioridade))}</span><span class="agenda-badge">${esc(qrAgendaStatusText76631_(x.status))}</span>${x.atrasada?`<span class="agenda-badge late">${qrAgendaText76631_("Atrasada","Overdue")}</span>`:""}</div></div><div class="agenda-service">${esc(x.servico)}</div><div class="agenda-meta"><b>${qrAgendaText76631_("Quando","When")}:</b> ${esc(qrAgendaRangeText76631_(x))}<br><b>${qrAgendaText76631_("Execução","Execution")}:</b> ${esc(qrAgendaExecutionText76631_(x.execucao))}${x.prestador?` • ${esc(x.prestador)}`:""}${x.responsavel?`<br><b>${qrAgendaText76631_("Responsável","Responsible")}:</b> ${esc(x.responsavel)}`:""}${x.ocVinculada?`<br><b>OC:</b> ${esc(x.ocVinculada)}`:""}${x.observacoes?`<br><b>${qrAgendaText76631_("Observações","Notes")}:</b> ${esc(x.observacoes)}`:""}</div>${d.canEdit?`<div class="agenda-card-actions"><button type="button" class="btn btn-secondary" data-agenda-edit="${esc(x.idAgenda)}">✏️ ${qrAgendaText76631_("Editar","Edit")}</button></div>`:""}</article>`;
+  }).join("");
+  out.querySelectorAll('[data-agenda-edit]').forEach(btn=>btn.onclick=()=>openMaintenanceAgendaModal76631_(btn.dataset.agendaEdit));
+}
+async function loadMaintenanceAgenda76631_(options={}){
+  const btn=$('maintenanceAgendaRefresh'),status=$('maintenanceAgendaStatusText');if(btn){btn.disabled=true;btn.textContent=qrAgendaText76631_("Atualizando...","Refreshing...")}status.textContent=qrAgendaText76631_("Carregando agenda...","Loading schedule...");
+  try{const r=await menuApi({...qrAgendaParams76631_(),__qrForce:!!options.force,__qrContext:"agenda-manutencao"});if(!r.ok)throw new Error(r.detail||qrAgendaText76631_("Não foi possível carregar a agenda.","Unable to load the schedule."));qrAgendaRender76631_(r.data||{});status.textContent=qrAgendaText76631_(`${Number(r.data?.summary?.total||0)} agendamento(s) encontrado(s).`,`${Number(r.data?.summary?.total||0)} schedule entr${Number(r.data?.summary?.total||0)===1?"y":"ies"} found.`)}
+  catch(e){status.textContent=e.message||qrAgendaText76631_("Erro ao carregar a agenda.","Error loading schedule.")}
+  finally{if(btn){btn.disabled=false;btn.textContent=qrAgendaText76631_("Atualizar","Refresh")}}
+}
+async function showMaintenanceAgendaTab76631(){
+  if(!requireUiPermission("AGENDA_CONSULTAR","Seu perfil não possui permissão para consultar a Agenda de Manutenções.","Your profile is not allowed to view the Maintenance Schedule."))return;
+  clearTabs();$('tabMaintenanceAgenda').classList.add('active');showOnly('maintenanceAgendaArea');
+  await loadMaintenanceAgenda76631_();
+}
+function clearMaintenanceAgendaFilters76631_(){$('maintenanceAgendaView').value='month';$('maintenanceAgendaType').value='';$('maintenanceAgendaStatus').value='';$('maintenanceAgendaProvider').value='';$('maintenanceAgendaSearch').value='';loadMaintenanceAgenda76631_({force:true})}
+function qrAgendaPopulateModal76631_(x){
+  maintenanceAgendaEditing76631=x||null;$('maintenanceAgendaEditId').value=x?.idAgenda||"";$('agendaAsset').value=x?.idAtivo||"";$('agendaType').value=x?.tipo||'Preventiva';$('agendaService').value=x?.servico||"";$('agendaExecution').value=x?.execucao||'Manutenção própria';$('agendaProvider').value=x?.idPrestador||"";$('agendaResponsible').value=x?.responsavel||"";$('agendaPlannedStart').value=x?.dataInicialPrevista||"";$('agendaPlannedEnd').value=x?.dataFinalPrevista||"";$('agendaConfirmedDate').value=x?.dataConfirmada||"";$('agendaConfirmedTime').value=x?.horaConfirmada||"";$('agendaPriority').value=x?.prioridade||'Normal';$('agendaStatus').value=x?.status||'Planejada';$('agendaLinkedOc').value=x?.ocVinculada||"";$('agendaNotes').value=x?.observacoes||"";$('agendaReprogramReason').value="";$('maintenanceAgendaMessage').className='message';$('maintenanceAgendaMessage').textContent="";qrAgendaToggleProvider76631_();qrAgendaToggleReprogram76631_();qrRefreshLocalizedDateControls();
+  $('maintenanceAgendaModalTitle').textContent=x?qrAgendaText76631_('📅 Editar agendamento','📅 Edit schedule entry'):qrAgendaText76631_('📅 Novo agendamento','📅 New schedule entry');
+}
+function openMaintenanceAgendaModal76631_(id=""){
+  if(!hasProfilePermission('AGENDA_EDITAR'))return permissionDeniedMessage('Seu perfil não possui permissão para editar a Agenda de Manutenções.','Your profile is not allowed to edit the Maintenance Schedule.');
+  if(!maintenanceAgendaMeta76631?.canEdit)return alert(qrAgendaText76631_('Carregue novamente a Agenda antes de editar.','Reload the Schedule before editing.'));
+  const x=id?maintenanceAgendaData76631.find(i=>i.idAgenda===id):null;if(id&&!x)return alert(qrAgendaText76631_('Agendamento não encontrado na lista atual.','Schedule entry not found in the current list.'));
+  qrAgendaPopulateModal76631_(x);$('maintenanceAgendaModal').style.display='flex';
+}
+async function saveMaintenanceAgenda76631_(){
+  if(maintenanceAgendaSaving76631)return;
+  const external=$('agendaExecution').value==='Prestador externo';
+  if(!$('agendaAsset').value||!$('agendaType').value||!$('agendaService').value.trim()||!$('agendaExecution').value||!$('agendaPriority').value||!$('agendaStatus').value)return alert(qrAgendaText76631_('Preencha os campos obrigatórios.','Complete the required fields.'));
+  if(external&&!$('agendaProvider').value)return alert(qrAgendaText76631_('Selecione o prestador externo.','Select the external service provider.'));
+  if(!$('agendaPlannedStart').value&&!$('agendaConfirmedDate').value)return alert(qrAgendaText76631_('Informe pelo menos o início previsto ou a data confirmada.','Enter at least the planned start date or confirmed date.'));
+  if(qrAgendaScheduleChanged76631_()&&!$('agendaReprogramReason').value.trim())return alert(qrAgendaText76631_('Informe o motivo da reprogramação.','Enter the rescheduling reason.'));
+  maintenanceAgendaSaving76631=true;const btn=$('maintenanceAgendaSave'),msg=$('maintenanceAgendaMessage');btn.disabled=true;btn.textContent=qrAgendaText76631_('Salvando...','Saving...');msg.className='message loading';msg.textContent=qrAgendaText76631_('Gravando agendamento...','Saving schedule entry...');
+  try{
+    const provider=(maintenanceAgendaMeta76631?.providers||[]).find(p=>p.idPrestador===$('agendaProvider').value);
+    const payload={action:'savemaintenanceagenda',agendaId:$('maintenanceAgendaEditId').value,agendaAssetId:$('agendaAsset').value,agendaType:$('agendaType').value,agendaService:$('agendaService').value.trim(),agendaExecution:$('agendaExecution').value,agendaProviderId:external?$('agendaProvider').value:'',agendaProviderName:external?(provider?.nome||''):'',agendaResponsible:$('agendaResponsible').value.trim(),agendaPlannedStart:$('agendaPlannedStart').value,agendaPlannedEnd:$('agendaPlannedEnd').value,agendaConfirmedDate:$('agendaConfirmedDate').value,agendaConfirmedTime:$('agendaConfirmedTime').value,agendaPriority:$('agendaPriority').value,agendaStatus:$('agendaStatus').value,agendaLinkedOc:$('agendaLinkedOc').value.trim(),agendaNotes:$('agendaNotes').value.trim(),agendaReprogramReason:$('agendaReprogramReason').value.trim()};
+    const r=await menuApiPost(payload);if(!r.ok)throw new Error(r.detail||qrAgendaText76631_('Erro ao salvar agendamento.','Error saving schedule entry.'));
+    msg.className='message success';msg.textContent=r.reprogrammed?qrAgendaText76631_('Agendamento reprogramado com rastreabilidade registrada.','Schedule rescheduled and traceability recorded.'):qrAgendaText76631_('Agendamento salvo com sucesso.','Schedule entry saved successfully.');
+    setTimeout(async()=>{$('maintenanceAgendaModal').style.display='none';maintenanceAgendaMetaLoaded76631=false;maintenanceAgendaMeta76631=null;await loadMaintenanceAgenda76631_({force:true})},450);
+  }catch(e){msg.className='message error';msg.textContent=e.message}
+  finally{maintenanceAgendaSaving76631=false;btn.disabled=false;btn.textContent=qrAgendaText76631_('Salvar agendamento','Save schedule entry')}
+}
+function qrApplyMaintenanceAgendaLanguage76631_(){
+  const t=(id,pt,en)=>{const el=$(id);if(el)el.textContent=qrAgendaText76631_(pt,en)};
+  t('maintenanceAgendaTitle','📅 Agenda de Manutenções','📅 Maintenance Schedule');t('maintenanceAgendaHelp','Planeje preventivas, preditivas e corretivas por período ou data confirmada.','Plan preventive, predictive and corrective maintenance by date range or confirmed date.');t('maintenanceAgendaNew','+ Novo agendamento','+ New schedule entry');t('maintenanceAgendaBackMenu','← Voltar ao Menu Principal','← Back to Main Menu');t('maintenanceAgendaViewLabel','Período','Period');t('maintenanceAgendaTypeLabel','Tipo','Type');t('maintenanceAgendaStatusLabel','Status','Status');t('maintenanceAgendaProviderLabel','Prestador','Service provider');t('maintenanceAgendaSearchLabel','Busca','Search');t('maintenanceAgendaRefresh','Atualizar','Refresh');t('maintenanceAgendaClear','Limpar filtros','Clear filters');t('agendaAssetLabel','Ativo / Equipamento *','Asset / Equipment *');t('agendaTypeLabel','Tipo de manutenção *','Maintenance type *');t('agendaPriorityLabel','Prioridade *','Priority *');t('agendaServiceLabel','Serviço previsto *','Planned service *');t('agendaExecutionLabel','Execução *','Execution *');t('agendaProviderLabel','Prestador *','Service provider *');t('agendaResponsibleLabel','Responsável / contato','Responsible / contact');t('agendaStatusLabel','Status *','Status *');t('agendaPlannedStartLabel','Início previsto *','Planned start *');t('agendaPlannedEndLabel','Fim previsto','Planned end');t('agendaConfirmedDateLabel','Data confirmada','Confirmed date');t('agendaConfirmedTimeLabel','Horário confirmado','Confirmed time');t('agendaLinkedOcLabel','OC vinculada','Linked work order');t('agendaNotesLabel','Observações','Notes');t('agendaReprogramTitle','🔁 Motivo da reprogramação *','🔁 Rescheduling reason *');t('agendaReprogramHelp','Obrigatório quando uma data ou horário já salvo for alterado.','Required when a previously saved date or time is changed.');t('maintenanceAgendaCancel','Cancelar','Cancel');t('maintenanceAgendaSave','Salvar agendamento','Save schedule entry');
+  if($('maintenanceAgendaSearch'))$('maintenanceAgendaSearch').placeholder=qrAgendaText76631_('Ativo, serviço, responsável, OC...','Asset, service, responsible, work order...');if($('agendaService'))$('agendaService').placeholder=qrAgendaText76631_('Descreva o serviço que deverá ser executado','Describe the service to be performed');
+  const view=$('maintenanceAgendaView');if(view){const vals=[['today','Hoje','Today'],['next7','Próximos 7 dias','Next 7 days'],['month','Mês atual','Current month'],['late','Atrasadas','Overdue'],['all','Todas','All']];const cur=view.value;view.innerHTML=vals.map(v=>`<option value="${v[0]}">${qrAgendaText76631_(v[1],v[2])}</option>`).join('');view.value=cur||'month'}
+  if(maintenanceAgendaMeta76631)qrAgendaApplyMeta76631_(maintenanceAgendaMeta76631);if(maintenanceAgendaData76631.length)qrAgendaRender76631_({items:maintenanceAgendaData76631,summary:{total:maintenanceAgendaData76631.length,programadas:maintenanceAgendaData76631.filter(x=>!['Concluída','Cancelada','Em execução'].includes(x.status)).length,emExecucao:maintenanceAgendaData76631.filter(x=>x.status==='Em execução').length,concluidas:maintenanceAgendaData76631.filter(x=>x.status==='Concluída').length,atrasadas:maintenanceAgendaData76631.filter(x=>x.atrasada).length},canEdit:!!maintenanceAgendaMeta76631?.canEdit});
+}
+
 const QR_LANG_KEY="qrmanut_language";
 let qrLanguage="pt-BR";
 
@@ -7271,6 +7446,7 @@ const QR_TEXT={
     tabSolicitations:"📥 Solicitações de Manutenção",
     tabOccurrenceReport:"📊 Relatório de OCs",
     tabPreventive:"🛠️ Status das Preventivas",
+    tabMaintenanceAgenda:"📅 Agenda de Manutenções",
     tabDocuments:"📄 Documentos Técnicos",
     tabOccurrenceCatalog:"🧩 Categorias e Componentes",
     tabMaintenancePending:"📌 Pendências / Providências",
@@ -7319,6 +7495,7 @@ const QR_TEXT={
     tabSolicitations:"📥 Maintenance Requests",
     tabOccurrenceReport:"📊 Work Order Report",
     tabPreventive:"🛠️ Preventive Maintenance Status",
+    tabMaintenanceAgenda:"📅 Maintenance Schedule",
     tabDocuments:"📄 Technical Documents",
     tabOccurrenceCatalog:"🧩 Categories & Components",
     tabMaintenancePending:"📌 Pending Actions",
@@ -8024,9 +8201,9 @@ function qrTranslateRoutineScreens(){
   [
     "searchArea","pendingArea","occurrenceReportArea","documentsArea",
     "documentUploadArea","companyArea","providersAdminArea","auditArea",
-    "usersArea","preventiveControlArea","assetScreen","systemLoginModal",
+    "usersArea","preventiveControlArea","maintenanceAgendaArea","assetScreen","systemLoginModal",
     "forgotPasswordModal","setPasswordModal","userModal","providerModal","providerConsultModal",
-    "preventiveModal","reportModal","manageModal",
+    "preventiveModal","maintenanceAgendaModal","reportModal","manageModal",
     "assetManagementPanel","assetEditModal",
     "occurrenceCatalogArea","maintenancePendingArea"
   ].forEach(id=>{
@@ -8369,6 +8546,7 @@ function qrApplyLanguage(lang){
   updateNetworkStatus766254_(false);
 
   qrTranslateRoutineScreens();
+  qrApplyMaintenanceAgendaLanguage76631_();
   qrRefreshLocalizedDateControls();
   if(systemSession?.perfil==="MASTER"&&(!getId()||getId()==="EQBUSCA"))refreshAccessRequestMenuBadge76616();
 
@@ -8503,7 +8681,7 @@ $("openSystemLoginButton").onclick=()=>requireSystemLogin(openMainMenu);$("forgo
 $("companyPrimaryColor").addEventListener("input",updateCompanyPreview);
 $("companyPrimaryColor").addEventListener("change",updateCompanyPreview);
 $("qrAlertsButtonB5320").onclick=()=>qrToggleAlertsPanelB5320_();
-$("qrAlertsRefreshB5320").onclick=()=>loadAlertsSummaryB5320_({force:true});$("auditRefresh").onclick=()=>loadAudit({force:true,context:"buscar-manual"});$("auditClear").onclick=clearAuditFilters;$("auditSearch").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();loadAudit()}};$("cancelUser").onclick=()=>{$("userModal").style.display="none"};$("saveUser").onclick=saveUser;$("userEmail").oninput=updateUserPrimaryAction76617;$("cancelAdminUserPassword").onclick=()=>{$("adminUserPasswordModal").style.display="none"};$("saveAdminUserPassword").onclick=saveAdminUserPassword76617;$("sendSystemLogin").onclick=doSystemLogin;$("systemPassword").onkeydown=e=>{if(e.key==="Enter")doSystemLogin()};$("cancelSystemLogin").onclick=()=>{systemLoginNextAction=null;$("systemLoginModal").style.display="none";if(!systemSession)showMenuGate()};$("systemLogoutButton").onclick=logoutSystemMenu;$("installAppButton").onclick=installQRManut;$("tabSearch").onclick=showSearchTab;$("tabPending").onclick=showPendingTab;$("pendingApplyFilters").onclick=()=>loadPending({force:true,context:"buscar-manual"});$("pendingClearFilters").onclick=clearPendingFilters;$("tabOccurrenceReport").onclick=showOccurrenceReportTab;$("tabPreventive").onclick=showPreventiveTab;$("tabDocuments").onclick=showDocumentsTab;$("tabMaintenancePending").onclick=showMaintenancePendingTab;$("maintenancePendingBackMenu").onclick=openDefaultAllowedTab;$("maintenancePendingRefresh").onclick=()=>loadMaintenancePending({force:true,context:"buscar-manual"});$("maintenancePendingClear").onclick=clearMaintenancePendingFilters;$("maintenancePendingSearch").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();loadMaintenancePending()}};$("maintenancePendingStatusFilter").onchange=loadMaintenancePending;$("maintenancePendingPriorityFilter").onchange=loadMaintenancePending;$("preventiveNeedsAction").onchange=togglePreventiveActionFields;$("tabOccurrenceCatalog").onclick=showOccurrenceCatalogTab;$("occurrenceCatalogBackMenu").onclick=openDefaultAllowedTab;$("saveCatalogCategory").onclick=saveCatalogCategory;$("clearCatalogCategory").onclick=clearCatalogCategoryForm;$("saveCatalogComponent").onclick=saveCatalogComponent;$("clearCatalogComponent").onclick=clearCatalogComponentForm;$("category").onchange=()=>populateOccurrenceComponentSelect();$("manageCategory").onchange=()=>populateManageCatalog($("manageCategory").value,"");$("tabDocumentUpload").onclick=showDocumentUploadTab;$("documentUploadBackMenu").onclick=cancelDocumentUpload;$("uploadDocumentChooseFileButton").onclick=()=>$("uploadDocumentFile").click();$("uploadDocumentFile").onchange=prepareDocumentUploadFile;$("sendDocumentUpload").onclick=sendDocumentUpload;$("clearDocumentUpload").onclick=clearDocumentUploadForm;$("searchButton").onclick=searchAssets;$("qrScanButton").onclick=openQrScanner7662513;$("qrScannerCancel").onclick=closeQrScanner7662513;$("qrScannerSwitch").onclick=switchQrScannerCamera7662513;$("searchInput").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();searchAssets()}};$("documentSearchButton").onclick=()=>searchDocuments({force:true,context:"buscar-manual"});$("documentSearchInput").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();searchDocuments()}};$("documentTypeFilter").onchange=searchDocuments;$("documentDisciplineFilter").onchange=searchDocuments;$("documentFloorFilter").onchange=searchDocuments;$("reportButton").onclick=openReport;$("preventiveButton").onclick=requestPreventive;
+$("qrAlertsRefreshB5320").onclick=()=>loadAlertsSummaryB5320_({force:true});$("auditRefresh").onclick=()=>loadAudit({force:true,context:"buscar-manual"});$("auditClear").onclick=clearAuditFilters;$("auditSearch").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();loadAudit()}};$("cancelUser").onclick=()=>{$("userModal").style.display="none"};$("saveUser").onclick=saveUser;$("userEmail").oninput=updateUserPrimaryAction76617;$("cancelAdminUserPassword").onclick=()=>{$("adminUserPasswordModal").style.display="none"};$("saveAdminUserPassword").onclick=saveAdminUserPassword76617;$("sendSystemLogin").onclick=doSystemLogin;$("systemPassword").onkeydown=e=>{if(e.key==="Enter")doSystemLogin()};$("cancelSystemLogin").onclick=()=>{systemLoginNextAction=null;$("systemLoginModal").style.display="none";if(!systemSession)showMenuGate()};$("systemLogoutButton").onclick=logoutSystemMenu;$("installAppButton").onclick=installQRManut;$("tabSearch").onclick=showSearchTab;$("tabPending").onclick=showPendingTab;$("pendingApplyFilters").onclick=()=>loadPending({force:true,context:"buscar-manual"});$("pendingClearFilters").onclick=clearPendingFilters;$("tabOccurrenceReport").onclick=showOccurrenceReportTab;$("tabPreventive").onclick=showPreventiveTab;$("tabMaintenanceAgenda").onclick=showMaintenanceAgendaTab76631;$("maintenanceAgendaBackMenu").onclick=openDefaultAllowedTab;$("maintenanceAgendaRefresh").onclick=()=>loadMaintenanceAgenda76631_({force:true});$("maintenanceAgendaClear").onclick=clearMaintenanceAgendaFilters76631_;$("maintenanceAgendaNew").onclick=()=>openMaintenanceAgendaModal76631_();$("maintenanceAgendaCancel").onclick=()=>{if(!maintenanceAgendaSaving76631)$("maintenanceAgendaModal").style.display="none"};$("maintenanceAgendaSave").onclick=saveMaintenanceAgenda76631_;$("agendaExecution").onchange=qrAgendaToggleProvider76631_;["agendaPlannedStart","agendaPlannedEnd","agendaConfirmedDate","agendaConfirmedTime"].forEach(id=>$(id).addEventListener("change",qrAgendaToggleReprogram76631_));["maintenanceAgendaView","maintenanceAgendaType","maintenanceAgendaStatus","maintenanceAgendaProvider"].forEach(id=>$(id).addEventListener("change",()=>loadMaintenanceAgenda76631_()));$("maintenanceAgendaSearch").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();loadMaintenanceAgenda76631_()}};$("tabDocuments").onclick=showDocumentsTab;$("tabMaintenancePending").onclick=showMaintenancePendingTab;$("maintenancePendingBackMenu").onclick=openDefaultAllowedTab;$("maintenancePendingRefresh").onclick=()=>loadMaintenancePending({force:true,context:"buscar-manual"});$("maintenancePendingClear").onclick=clearMaintenancePendingFilters;$("maintenancePendingSearch").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();loadMaintenancePending()}};$("maintenancePendingStatusFilter").onchange=loadMaintenancePending;$("maintenancePendingPriorityFilter").onchange=loadMaintenancePending;$("preventiveNeedsAction").onchange=togglePreventiveActionFields;$("tabOccurrenceCatalog").onclick=showOccurrenceCatalogTab;$("occurrenceCatalogBackMenu").onclick=openDefaultAllowedTab;$("saveCatalogCategory").onclick=saveCatalogCategory;$("clearCatalogCategory").onclick=clearCatalogCategoryForm;$("saveCatalogComponent").onclick=saveCatalogComponent;$("clearCatalogComponent").onclick=clearCatalogComponentForm;$("category").onchange=()=>populateOccurrenceComponentSelect();$("manageCategory").onchange=()=>populateManageCatalog($("manageCategory").value,"");$("tabDocumentUpload").onclick=showDocumentUploadTab;$("documentUploadBackMenu").onclick=cancelDocumentUpload;$("uploadDocumentChooseFileButton").onclick=()=>$("uploadDocumentFile").click();$("uploadDocumentFile").onchange=prepareDocumentUploadFile;$("sendDocumentUpload").onclick=sendDocumentUpload;$("clearDocumentUpload").onclick=clearDocumentUploadForm;$("searchButton").onclick=searchAssets;$("qrScanButton").onclick=openQrScanner7662513;$("qrScannerCancel").onclick=closeQrScanner7662513;$("qrScannerSwitch").onclick=switchQrScannerCamera7662513;$("searchInput").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();searchAssets()}};$("documentSearchButton").onclick=()=>searchDocuments({force:true,context:"buscar-manual"});$("documentSearchInput").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();searchDocuments()}};$("documentTypeFilter").onchange=searchDocuments;$("documentDisciplineFilter").onchange=searchDocuments;$("documentFloorFilter").onchange=searchDocuments;$("reportButton").onclick=openReport;$("preventiveButton").onclick=requestPreventive;
 $("searchAssetsButton").onclick=function(){
   if(pendingReturnMatchesAsset7662510_()){
     if(restorePendingViewFastB5311_())return;
@@ -8537,7 +8715,7 @@ qrTranslateElementTree(document.body);
 qrTranslateAttributes(document.body);
 
 [
-  "tabSearch","tabPending","tabSolicitations","tabOccurrenceReport","tabPreventive",
+  "tabSearch","tabPending","tabSolicitations","tabOccurrenceReport","tabPreventive","tabMaintenanceAgenda",
   "tabDocuments","tabDocumentUpload","tabUsers","tabPermissions","tabAudit",
   "tabProvidersAdmin","tabCompany","tabPerformance","reportButton","otherProblemButton","preventiveButton"
 ].forEach(id=>{
@@ -8659,7 +8837,7 @@ function setupModernMenuSectionsB5316(){
   let saved={};
   try{saved=JSON.parse(sessionStorage.getItem(storageKey)||"{}")||{}}catch(e){saved={}}
   const groups=[
-    {title:"Operação", key:"operation", defaultOpen:true, ids:["tabSearch","tabPending","tabSolicitations","tabOccurrenceReport","tabPreventive","tabDocuments","tabOccurrenceCatalog","tabMaintenancePending","tabAssetManagement","tabDocumentUpload"]},
+    {title:"Operação", key:"operation", defaultOpen:true, ids:["tabSearch","tabPending","tabSolicitations","tabOccurrenceReport","tabPreventive","tabMaintenanceAgenda","tabDocuments","tabOccurrenceCatalog","tabMaintenancePending","tabAssetManagement","tabDocumentUpload"]},
     {title:"Administração", key:"administration", defaultOpen:false, ids:["tabUsers","tabPermissions","tabAudit","tabProvidersAdmin","tabCompany","tabPerformance"]}
   ];
   const persist=()=>{
