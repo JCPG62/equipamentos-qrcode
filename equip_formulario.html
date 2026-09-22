@@ -1,3 +1,8 @@
+<!-- QRManut 7.6.6.31 A1.1 — HOTFIX Agenda de Manutenções
+     - Corrige erro "Cannot read properties of null (reading 'value')" ao abrir a Agenda.
+     - A tradução dos rótulos dos filtros não remove mais os controles select/input filhos.
+     - Backend/GS permanece exatamente o mesmo da 7.6.6.31 A1.
+-->
 <!-- QRManut 7.6.6.31 A1 — Agenda de Manutenções / Segmento 1
      - Agenda para Preventiva, Preditiva e Corretiva.
      - Período previsto, data confirmada, execução própria/prestador, prioridade e status.
@@ -122,7 +127,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>QRManut</title>
-<meta name="qrmanut-build" content="2026-09-22-7.6.6.31-a1">
+<meta name="qrmanut-build" content="2026-09-22-7.6.6.31-a1-1">
 <meta name="theme-color" content="#0b315e">
 <meta name="application-name" content="QRManut">
 <meta name="mobile-web-app-capable" content="yes">
@@ -1518,11 +1523,11 @@ body{
         <button id="maintenanceAgendaNew" class="btn btn-blue hidden" type="button">+ Novo agendamento</button>
       </div>
       <div class="agenda-filters">
-        <label id="maintenanceAgendaViewLabel" style="margin-top:0">Período<select id="maintenanceAgendaView"><option value="today">Hoje</option><option value="next7">Próximos 7 dias</option><option value="month" selected>Mês atual</option><option value="late">Atrasadas</option><option value="all">Todas</option></select></label>
-        <label id="maintenanceAgendaTypeLabel" style="margin-top:0">Tipo<select id="maintenanceAgendaType"><option value="">Todos</option></select></label>
-        <label id="maintenanceAgendaStatusLabel" style="margin-top:0">Status<select id="maintenanceAgendaStatus"><option value="">Todos</option></select></label>
-        <label id="maintenanceAgendaProviderLabel" style="margin-top:0">Prestador<select id="maintenanceAgendaProvider"><option value="">Todos</option></select></label>
-        <label id="maintenanceAgendaSearchLabel" style="margin-top:0">Busca<input id="maintenanceAgendaSearch" placeholder="Ativo, serviço, responsável, OC..."></label>
+        <label style="margin-top:0"><span id="maintenanceAgendaViewLabel">Período</span><select id="maintenanceAgendaView"><option value="today">Hoje</option><option value="next7">Próximos 7 dias</option><option value="month" selected>Mês atual</option><option value="late">Atrasadas</option><option value="all">Todas</option></select></label>
+        <label style="margin-top:0"><span id="maintenanceAgendaTypeLabel">Tipo</span><select id="maintenanceAgendaType"><option value="">Todos</option></select></label>
+        <label style="margin-top:0"><span id="maintenanceAgendaStatusLabel">Status</span><select id="maintenanceAgendaStatus"><option value="">Todos</option></select></label>
+        <label style="margin-top:0"><span id="maintenanceAgendaProviderLabel">Prestador</span><select id="maintenanceAgendaProvider"><option value="">Todos</option></select></label>
+        <label style="margin-top:0"><span id="maintenanceAgendaSearchLabel">Busca</span><input id="maintenanceAgendaSearch" placeholder="Ativo, serviço, responsável, OC..."></label>
       </div>
       <div class="agenda-actions"><button id="maintenanceAgendaRefresh" class="btn btn-blue" type="button">Atualizar</button><button id="maintenanceAgendaClear" class="btn btn-secondary" type="button">Limpar filtros</button></div>
       <div id="maintenanceAgendaStatusText" class="muted" style="margin-top:12px"></div>
