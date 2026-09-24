@@ -7591,8 +7591,11 @@ async function saveAsset760(){
       amperagemPartida:$("assetStartingCurrent").value,
       amperagemMedida:$("assetMeasuredCurrent").value,
       voltagem:$("assetVoltage").value,
+      // A2.8.2 — envia nomes canônicos e alternativos para garantir gravação no backend.
       quadroDisjuntores:$("assetBreakerPanel").value,
       disjuntorEquipamento:$("assetBreakerCircuit").value,
+      assetBreakerPanel:$("assetBreakerPanel").value,
+      assetBreakerCircuit:$("assetBreakerCircuit").value,
       peso:$("assetWeight").value,
       anoAquisicao:$("assetAcquisitionYear").value,
       vidaUtil:$("assetUsefulLife").value,
