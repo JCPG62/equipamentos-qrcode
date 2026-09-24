@@ -1296,7 +1296,7 @@ body{
 @media@media(max-width:720px){.preventive-checklist-head{gap:8px}.preventive-checklist-tools{width:100%}.preventive-checklist-tools select,.preventive-checklist-tools button{width:100%}.preventive-checklist-group>summary{padding:9px 10px}.preventive-checklist-group-body{padding:7px}.preventive-checklist-item{padding:8px}.preventive-checklist-item-head{gap:6px}.preventive-checklist-input-grid{grid-template-columns:1fr}.preventive-checklist-subgrid{grid-template-columns:repeat(3,minmax(96px,1fr));overflow-x:auto;padding-bottom:2px}.preventive-checklist-subrow{min-width:96px}.preventive-checklist-state{font-size:.78rem;padding:7px 6px}.preventive-checklist-value-wrap{gap:4px}.preventive-checklist-unit{font-size:.78rem;min-width:18px}}
 
 
-/* QRManut A2.6.4 — ajuste responsivo do checklist no celular */
+/* QRManut A2.8 — ajuste responsivo do checklist no celular */
 @media(max-width:720px){
   .preventive-checklist-subgrid{grid-template-columns:1fr!important;overflow:visible!important}
   .preventive-checklist-subrow{min-width:0!important;width:100%}
@@ -1904,6 +1904,8 @@ body{
         <label>Amperagem Nominal (FLA)<input id="assetRatedCurrent"></label><label>Amperagem de Partida (FLR)<input id="assetStartingCurrent"></label>
         <label>Amperagem Medida<input id="assetMeasuredCurrent"></label>
         <label>Voltagem<input id="assetVoltage"></label>
+        <label>Quadro de Disjuntores<input id="assetBreakerPanel" placeholder="Ex.: QD-AC 19º Pav."></label>
+        <label>Disjuntor / Circuito<input id="assetBreakerCircuit" placeholder="Ex.: DJ-17 / C-12 / 2P 20A"></label>
         <label>Peso<input id="assetWeight"></label>
         <label>Ano de Aquisição<input id="assetAcquisitionYear"></label>
         <label>Vida Útil Estimada<input id="assetUsefulLife"></label>
@@ -4792,6 +4794,8 @@ function renderAsset(a){
     [t("Amperagem de Partida","Starting Current"),val(a.amperagem_de_partida_flr)],
     [t("Amperagem Medida","Measured Current"),val(a.amperagem_medida)],
     [t("Voltagem","Voltage"),val(a.voltagem)],
+    [t("Quadro de Disjuntores","Breaker Panel"),val(a.quadro_de_disjuntores||a.quadroDisjuntores)],
+    [t("Disjuntor / Circuito","Breaker / Circuit"),val(a.disjuntor_do_equipamento||a.disjuntorEquipamento)],
     [t("Peso","Weight"),val(a.peso)],
     [t("Ano de Aquisição","Acquisition Year"),val(a.ano_de_aquisicao)],
     [t("Vida Útil Estimada","Estimated Useful Life"),val(a.vida_util_estimada)]
@@ -7388,7 +7392,8 @@ function renderAssets760(){
   const items=qrAssets760.filter(a=>[
     a.id,a.nome,a.fabricante,a.modelo,a.numeroSerie,a.categoria,a.tipoDeAtivo,
     a.subcategoria,a.area,a.ambiente,a.componenteElemento,a.pavimento,
-    a.localizacao,a.localDetalhado,a.prestador,a.periodicidade,a.status
+    a.localizacao,a.localDetalhado,a.quadroDisjuntores,a.disjuntorEquipamento,
+    a.prestador,a.periodicidade,a.status
   ].join(" ").toLowerCase().includes(q));
 
   $("assetList").innerHTML=items.length?items.map(a=>{
@@ -7466,6 +7471,8 @@ function openAssetModal760(a){
   $("assetStartingCurrent").value=a?.amperagemPartida||"";
   $("assetMeasuredCurrent").value=a?.amperagemMedida||"";
   $("assetVoltage").value=a?.voltagem||"";
+  $("assetBreakerPanel").value=a?.quadroDisjuntores||a?.quadro_de_disjuntores||"";
+  $("assetBreakerCircuit").value=a?.disjuntorEquipamento||a?.disjuntor_do_equipamento||"";
   $("assetWeight").value=a?.peso||"";
   $("assetAcquisitionYear").value=a?.anoAquisicao||"";
   $("assetUsefulLife").value=a?.vidaUtil||"";
@@ -7576,6 +7583,8 @@ async function saveAsset760(){
       amperagemPartida:$("assetStartingCurrent").value,
       amperagemMedida:$("assetMeasuredCurrent").value,
       voltagem:$("assetVoltage").value,
+      quadroDisjuntores:$("assetBreakerPanel").value,
+      disjuntorEquipamento:$("assetBreakerCircuit").value,
       peso:$("assetWeight").value,
       anoAquisicao:$("assetAcquisitionYear").value,
       vidaUtil:$("assetUsefulLife").value,
@@ -8624,6 +8633,8 @@ const QR_ROUTINE_PT_EN={
   "Amperagem de Partida (FLR)":"Starting Current (FLR)",
   "Amperagem Medida":"Measured Current",
   "Voltagem":"Voltage",
+  "Quadro de Disjuntores":"Breaker Panel",
+  "Disjuntor / Circuito":"Breaker / Circuit",
   "Peso":"Weight",
   "Ano de Aquisição":"Acquisition Year",
   "Vida Útil Estimada":"Estimated Useful Life",
@@ -8700,6 +8711,8 @@ const QR_ROUTINE_PT_EN={
   "Amperagem de Partida":"Starting Current",
   "Amperagem Medida":"Measured Current",
   "Voltagem":"Voltage",
+  "Quadro de Disjuntores":"Breaker Panel",
+  "Disjuntor / Circuito":"Breaker / Circuit",
   "Peso":"Weight",
   "Ano de Aquisição":"Acquisition Year",
   "Vida Útil Estimada":"Estimated Useful Life",
