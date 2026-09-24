@@ -1314,16 +1314,95 @@ body{
   .preventive-checklist-meta span{padding:2px 6px}
 }
 
-/* QRManut A2.9.7 — ações de documento técnico */
+/* QRManut A2.9.8 — ações de documento técnico */
 .document-actions-a292{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
 .document-danger-a292{background:#fee2e2!important;color:#991b1b!important;border:1px solid #fecaca!important}
 .document-secondary-a292{background:#f8fafc!important;color:#334155!important;border:1px solid #cbd5e1!important}
 .asset-document-actions-a292{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
 
 
-/* QRManut A2.9.7 — edição dos metadados de documentos técnicos */
+/* QRManut A2.9.8 — edição dos metadados de documentos técnicos */
 .document-edit-a294{background:#eef2ff!important;color:#3730a3!important;border:1px solid #c7d2fe!important}
 #documentEditModal .modal-box{max-width:760px}
+
+
+/* QRManut A2.9.8 — tela de sessão off por inatividade */
+.qr-session-offline-a298{
+  position:fixed;
+  inset:0;
+  z-index:999999;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  background:
+    radial-gradient(circle at top left,rgba(124,58,237,.18),transparent 34%),
+    linear-gradient(135deg,rgba(15,23,42,.88),rgba(30,41,59,.94));
+  backdrop-filter:blur(6px);
+}
+.qr-session-offline-a298.hidden{display:none!important}
+.qr-session-offline-card-a298{
+  width:min(520px,100%);
+  background:#fff;
+  border-radius:24px;
+  box-shadow:0 30px 80px rgba(15,23,42,.45);
+  border:1px solid rgba(226,232,240,.95);
+  padding:26px;
+  color:#172033;
+}
+.qr-session-offline-icon-a298{
+  width:52px;
+  height:52px;
+  border-radius:18px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:1.7rem;
+  background:#fee2e2;
+  color:#991b1b;
+  margin-bottom:14px;
+}
+.qr-session-offline-card-a298 h2{
+  margin:0 0 8px;
+  color:#0f172a;
+  font-size:1.35rem;
+}
+.qr-session-offline-card-a298 p{
+  margin:8px 0;
+  line-height:1.45;
+  color:#475569;
+}
+.qr-session-offline-note-a298{
+  margin-top:14px;
+  padding:12px;
+  border-radius:14px;
+  background:#f8fafc;
+  border:1px solid #e2e8f0;
+  color:#334155;
+  font-size:.94rem;
+}
+.qr-session-offline-actions-a298{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+  margin-top:18px;
+}
+.qr-session-offline-actions-a298 button{
+  border:0;
+  border-radius:12px;
+  padding:11px 16px;
+  font-weight:800;
+  cursor:pointer;
+}
+.qr-session-offline-primary-a298{
+  background:#0b315e;
+  color:#fff;
+}
+.qr-session-offline-secondary-a298{
+  background:#e2e8f0;
+  color:#0f172a;
+}
 
 </style>
 </head>
@@ -1812,6 +1891,21 @@ body{
   </div>
 </div>
 
+<div id="qrSessionOfflineModalA298" class="qr-session-offline-a298 hidden" role="dialog" aria-modal="true" aria-labelledby="qrSessionOfflineTitleA298">
+  <div class="qr-session-offline-card-a298">
+    <div class="qr-session-offline-icon-a298">🔒</div>
+    <h2 id="qrSessionOfflineTitleA298">Sistema off / sessão encerrada</h2>
+    <p id="qrSessionOfflineMessageA298">Por segurança, sua sessão foi encerrada por inatividade. O QRManut está off para novas consultas e gravações até você entrar novamente.</p>
+    <div class="qr-session-offline-note-a298">
+      Nenhum dado foi apagado. Para continuar, faça login novamente no Menu Principal.
+    </div>
+    <div class="qr-session-offline-actions-a298">
+      <button id="qrSessionOfflineHomeA298" class="qr-session-offline-secondary-a298" type="button">Voltar ao início</button>
+      <button id="qrSessionOfflineLoginA298" class="qr-session-offline-primary-a298" type="button">Entrar novamente</button>
+    </div>
+  </div>
+</div>
+
 
 <section id="assetManagementPanel" class="hidden" style="margin-top:16px">
   <div class="card">
@@ -2236,6 +2330,90 @@ let qrAgendaAssetSearchResults766315_=[],qrAgendaAnnualAssetSearchResults766315_
 let qrAgendaAssetSearchTimer766316_=null,qrAgendaAnnualAssetSearchTimer766316_=null;
 const SOL_TARGET_OC_KEY="qrmanut_sol_target_oc";
 const $=id=>document.getElementById(id);
+
+let qrSessionOfflineVisibleA298=false;
+let qrSessionOfflineLastCheckA298=0;
+let qrSessionOfflineCheckingA298=false;
+
+function qrSessionTextA298(pt,en){
+  return qrLanguage==="en-US"?en:pt;
+}
+
+function qrIsSessionExpiredResponseA298(dataOrMessage){
+  const msg=typeof dataOrMessage==="string"
+    ?dataOrMessage
+    :String((dataOrMessage&&(
+      dataOrMessage.detail||
+      dataOrMessage.error||
+      dataOrMessage.message
+    ))||"");
+  const n=msg.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
+  return n.includes("sessao invalida")||
+         n.includes("sessao expirada")||
+         n.includes("sessao invalida, expirada")||
+         n.includes("session invalid")||
+         n.includes("session expired");
+}
+
+function qrShowSessionOfflineA298(reason){
+  if(qrSessionOfflineVisibleA298)return;
+  qrSessionOfflineVisibleA298=true;
+
+  clearSystemSession();
+  clearPreventiveSession();
+
+  const modal=$("qrSessionOfflineModalA298");
+  const title=$("qrSessionOfflineTitleA298");
+  const msg=$("qrSessionOfflineMessageA298");
+
+  if(title)title.textContent=qrSessionTextA298(
+    "Sistema off / sessão encerrada",
+    "System off / session ended"
+  );
+
+  if(msg)msg.textContent=qrSessionTextA298(
+    reason==="network"
+      ?"Não foi possível confirmar sua sessão. Verifique a conexão e entre novamente para continuar."
+      :"Por segurança, sua sessão foi encerrada por inatividade. O QRManut está off para novas consultas e gravações até você entrar novamente.",
+    reason==="network"
+      ?"Your session could not be verified. Check your connection and sign in again to continue."
+      :"For security, your session ended due to inactivity. QRManut is off for new queries and records until you sign in again."
+  );
+
+  if(modal)modal.classList.remove("hidden");
+}
+
+function qrHideSessionOfflineA298(){
+  qrSessionOfflineVisibleA298=false;
+  const modal=$("qrSessionOfflineModalA298");
+  if(modal)modal.classList.add("hidden");
+}
+
+function qrSessionOfflineGoHomeA298(){
+  qrHideSessionOfflineA298();
+  showMenuGate();
+}
+
+async function qrSessionOfflineReenterA298(){
+  qrHideSessionOfflineA298();
+  await requireSystemLogin(()=>openMainMenu());
+}
+
+async function qrCheckSessionOnReturnA298(force=false){
+  if(qrSessionOfflineVisibleA298)return;
+  if(!systemSession?.systemSessionToken)return;
+  const now=Date.now();
+  if(!force&&now-qrSessionOfflineLastCheckA298<60000)return;
+  if(qrSessionOfflineCheckingA298)return;
+  qrSessionOfflineLastCheckA298=now;
+  qrSessionOfflineCheckingA298=true;
+  try{
+    await systemSessionIsValid();
+  }finally{
+    qrSessionOfflineCheckingA298=false;
+  }
+}
+
 
 const qrNativeAlert=window.alert.bind(window);
 function qrShowAlert(message,title){
@@ -2990,6 +3168,9 @@ async function apiPost(params){
   try{
     const data=await qrFetchJson766254_(API_URL,{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"},body:body.toString()});
     qrPerfRecordB530("POST",action,context,qrPerfClockB530()-started,qrPerfBackendMsB530(data),data&&data.ok===false?"ERRO":"OK",qrPerfDetailsB531(data));
+    if(data&&data.ok===false&&action!=="systemLogin"&&qrIsSessionExpiredResponseA298(data)){
+      qrShowSessionOfflineA298("expired");
+    }
     if(qrIsMutationPostB530(action))qrInvalidateLocalCacheB530("mutation:"+action);
     return data;
   }catch(e){qrPerfRecordB530("POST",action,context,qrPerfClockB530()-started,null,"ERRO");throw e}
@@ -3035,7 +3216,7 @@ function updateNetworkStatus766254_(restored){
 window.addEventListener("offline",()=>updateNetworkStatus766254_(false));
 window.addEventListener("online",()=>updateNetworkStatus766254_(true));
 function getSavedResponsible(){try{return localStorage.getItem(RESPONSIBLE_KEY)||""}catch(e){return""}}function saveResponsible(n){if(!n)return;try{localStorage.setItem(RESPONSIBLE_KEY,n)}catch(e){}}
-function savePreventiveSession(d){preventiveSession=d;sessionStorage.setItem(PREVENTIVE_SESSION_KEY,JSON.stringify(d))}function readPreventiveSession(){try{const raw=sessionStorage.getItem(PREVENTIVE_SESSION_KEY);preventiveSession=raw?JSON.parse(raw):null}catch(e){preventiveSession=null}}function clearPreventiveSession(){preventiveSession=null;sessionStorage.removeItem(PREVENTIVE_SESSION_KEY)}function saveSystemSession(d){systemSession=d;preventiveSession=d;try{sessionStorage.setItem(SYSTEM_SESSION_KEY,JSON.stringify(d));localStorage.removeItem(SYSTEM_SESSION_KEY)}catch(e){}}
+function savePreventiveSession(d){preventiveSession=d;sessionStorage.setItem(PREVENTIVE_SESSION_KEY,JSON.stringify(d))}function readPreventiveSession(){try{const raw=sessionStorage.getItem(PREVENTIVE_SESSION_KEY);preventiveSession=raw?JSON.parse(raw):null}catch(e){preventiveSession=null}}function clearPreventiveSession(){preventiveSession=null;sessionStorage.removeItem(PREVENTIVE_SESSION_KEY)}function saveSystemSession(d){systemSession=d;preventiveSession=d;qrHideSessionOfflineA298();try{sessionStorage.setItem(SYSTEM_SESSION_KEY,JSON.stringify(d));localStorage.removeItem(SYSTEM_SESSION_KEY)}catch(e){}}
 function readSystemSession(){try{localStorage.removeItem(SYSTEM_SESSION_KEY);const raw=sessionStorage.getItem(SYSTEM_SESSION_KEY);systemSession=raw?JSON.parse(raw):null}catch(e){systemSession=null}}
 function revokeSecureFileUrls76624(){try{secureFileUrlCache76624.forEach(v=>URL.revokeObjectURL(v));secureFileUrlCache76624.clear()}catch(e){}}
 function clearSystemSession(){systemSession=null;preventiveSession=null;revokeSecureFileUrls76624();if(typeof qrInvalidateLocalCacheB530==="function")qrInvalidateLocalCacheB530("clear-session");if(typeof qrClearPerformanceSessionB538==="function")qrClearPerformanceSessionB538();try{sessionStorage.removeItem(SYSTEM_SESSION_KEY);localStorage.removeItem(SYSTEM_SESSION_KEY)}catch(e){}}
@@ -3043,14 +3224,17 @@ async function systemSessionIsValid(){
   if(!systemSession?.systemSessionToken)return false;
   try{
     const r=await apiPost({action:"systemsession",systemSessionToken:systemSession.systemSessionToken});
-    if(!r.ok){clearSystemSession();return false}
+    if(!r.ok){
+      qrShowSessionOfflineA298("expired");
+      return false;
+    }
     if(r.session){systemSession={...systemSession,...r.session};saveSystemSession(systemSession)}
     return true;
   }catch(e){
     // Falta de internet não invalida uma sessão que pode voltar a ser válida
     // assim que a conexão for restabelecida.
     if(qrIsNetworkFailure766254_(e))return false;
-    clearSystemSession();
+    qrShowSessionOfflineA298("expired");
     return false;
   }
 }
@@ -3350,7 +3534,7 @@ function openMainMenu(){
   else $("occReportProvider").disabled=false;
 }
 async function refreshAccessRequestMenuBadge76616(){const el=$("tabUsers");if(!el)return;const base=qrLanguage==="en-US"?"👥 User Management":"👥 Gestão de Usuários";if(systemSession?.perfil!=="MASTER"){el.textContent=base;return}try{const r=await menuApi({action:"accessrequests"});const n=(r.requests||[]).filter(x=>x.status==="Pendente").length;el.textContent=base+(n?` 🔴 ${n}`:"")}catch(e){el.textContent=base}}
-async function requireSystemLogin(nextAction){if(await systemSessionIsValid()){nextAction();return}systemLoginNextAction=nextAction;$("systemUsername").value="";$("systemPassword").value="";$("systemLoginMessage").className="message";$("systemLoginModal").style.display="flex";setTimeout(()=>$("systemUsername").focus(),80)}
+async function requireSystemLogin(nextAction){if(await systemSessionIsValid()){nextAction();return}if(qrSessionOfflineVisibleA298)return;systemLoginNextAction=nextAction;$("systemUsername").value="";$("systemPassword").value="";$("systemLoginMessage").className="message";$("systemLoginModal").style.display="flex";setTimeout(()=>$("systemUsername").focus(),80)}
 async function doSystemLogin(){const user=$("systemUsername").value.trim(),password=$("systemPassword").value;if(!user||!password){$("systemLoginMessage").className="message error";$("systemLoginMessage").textContent="Informe usuário e senha.";return}$("sendSystemLogin").disabled=true;$("sendSystemLogin").textContent="Entrando...";try{const r=await apiPost({action:"systemLogin",systemUsername:user,systemPassword:password});if(!r.ok)throw new Error(r.detail||"Usuário ou senha inválidos.");saveSystemSession(r);$("systemLoginModal").style.display="none";clearSearchOnMenuEntryB5318();occurrenceReportFiltersLoaded=false;documentFiltersLoaded=false;pendingFiltersLoaded=false;if(systemLoginNextAction){const fn=systemLoginNextAction;systemLoginNextAction=null;fn()}else openMainMenu()}catch(e){$("systemLoginMessage").className="message error";$("systemLoginMessage").textContent=e.message}finally{$("sendSystemLogin").disabled=false;$("sendSystemLogin").textContent="Entrar"}}
 async function logoutSystemMenu(){try{if(systemSession?.systemSessionToken)await apiPost({action:"systemLogout",systemSessionToken:systemSession.systemSessionToken})}catch(e){}qrAlertsDataB5320=null;clearSystemSession();clearPreventiveSession();preventiveControlData=null;occurrenceReportData=null;occurrenceReportFiltersLoaded=false;documentFiltersLoaded=false;pendingFiltersLoaded=false;showMenuGate()}
 
@@ -4266,7 +4450,7 @@ async function saveTechnicalDocumentEditA294(){
     documentFiltersLoaded=false;
     qrInvalidateLocalCacheB530("documento-editado");
 
-    // A2.9.7 — atualiza a memória local imediatamente com o retorno confirmado pelo backend.
+    // A2.9.8 — atualiza a memória local imediatamente com o retorno confirmado pelo backend.
     const updatedKey=String(r.idDocumento||id).trim().toUpperCase();
     qrDocumentMapA294[updatedKey]={
       ...(qrDocumentMapA294[updatedKey]||{}),
@@ -4845,7 +5029,7 @@ async function loadPreventiveProvidersFast766253_(){
   return qrPreventiveProviderPromise766253;
 }
 
-async function loadPreventiveControl(options={}){if(!$("controlCompetence").value)$("controlCompetence").value=currentCompetence();qrRefreshLocalizedDateControls();if(!preventiveControlData)qrShowPreventiveSkeletonB5320_();const provider=["MASTER","GESTOR"].includes(systemSession?.perfil)?$("controlProvider").value:"";const r=await menuApi({action:"preventivecontrol",competencia:$("controlCompetence").value,prestador:provider,__qrForce:!!options.force,__qrContext:options.context||"preventivas"});if(!r.ok){clearSystemSession();showMenuGate();return}preventiveControlData=r.data;renderPreventiveControl()}
+async function loadPreventiveControl(options={}){if(!$("controlCompetence").value)$("controlCompetence").value=currentCompetence();qrRefreshLocalizedDateControls();if(!preventiveControlData)qrShowPreventiveSkeletonB5320_();const provider=["MASTER","GESTOR"].includes(systemSession?.perfil)?$("controlProvider").value:"";const r=await menuApi({action:"preventivecontrol",competencia:$("controlCompetence").value,prestador:provider,__qrForce:!!options.force,__qrContext:options.context||"preventivas"});if(!r.ok){qrShowSessionOfflineA298("expired");return}preventiveControlData=r.data;renderPreventiveControl()}
 function aguardarPinturaTela(){return new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))}
 async function refreshPreventiveControl(){const btn=$("controlRefresh");if(!btn||btn.dataset.loading==="1")return;const inicio=Date.now();btn.dataset.loading="1";btn.disabled=true;btn.textContent="Atualizando...";await aguardarPinturaTela();try{await loadPreventiveControl({force:true,context:"buscar-manual"})}catch(e){$("controlListStatus").textContent="Erro ao atualizar as preventivas."}finally{const decorrido=Date.now()-inicio;if(decorrido<700)await new Promise(resolve=>setTimeout(resolve,700-decorrido));btn.textContent="Atualizar";btn.disabled=false;delete btn.dataset.loading}}
 function qrT7612(pt,en){return qrLanguage==="en-US"?en:pt;}
@@ -7929,7 +8113,7 @@ async function saveAsset760(){
       amperagemPartida:$("assetStartingCurrent").value,
       amperagemMedida:$("assetMeasuredCurrent").value,
       voltagem:$("assetVoltage").value,
-      // A2.9.7 — envia nomes canônicos e alternativos para garantir gravação no backend.
+      // A2.9.8 — envia nomes canônicos e alternativos para garantir gravação no backend.
       quadroDisjuntores:$("assetBreakerPanel").value,
       disjuntorEquipamento:$("assetBreakerCircuit").value,
       assetBreakerPanel:$("assetBreakerPanel").value,
@@ -7944,7 +8128,7 @@ async function saveAsset760(){
     });
     if(!r.ok)throw new Error(r.detail||r.error||"Erro ao salvar ativo.");
 
-    // A2.9.7 — gravação direta e redundante dos dados do disjuntor.
+    // A2.9.8 — gravação direta e redundante dos dados do disjuntor.
     // Mantém os campos mesmo se o salvamento geral do ativo não atualizar essas colunas.
     const breakerSave=await assetApi760("saveassetbreakerdata",{
       row:r.row||row,
@@ -10345,6 +10529,14 @@ function setupModernMenuSectionsB5316(){
 }
 
 qrInstallLocalizedDateControls();
+
+const qrSessionLoginBtnA298=$("qrSessionOfflineLoginA298");
+if(qrSessionLoginBtnA298)qrSessionLoginBtnA298.onclick=qrSessionOfflineReenterA298;
+const qrSessionHomeBtnA298=$("qrSessionOfflineHomeA298");
+if(qrSessionHomeBtnA298)qrSessionHomeBtnA298.onclick=qrSessionOfflineGoHomeA298;
+window.addEventListener("focus",()=>qrCheckSessionOnReturnA298(false));
+document.addEventListener("visibilitychange",()=>{if(!document.hidden)qrCheckSessionOnReturnA298(false);});
+
 async function main(){
   buildManageDropdowns();
   setupPasswordToggles();
@@ -10366,7 +10558,7 @@ async function main(){
       openMainMenu();
       if(await restorePendingView7662510_())return;
     }else{
-      showMenuGate();
+      if(!qrSessionOfflineVisibleA298)showMenuGate();
     }
     return;
   }
