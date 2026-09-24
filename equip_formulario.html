@@ -1314,14 +1314,14 @@ body{
   .preventive-checklist-meta span{padding:2px 6px}
 }
 
-/* QRManut A2.9.5 — ações de documento técnico */
+/* QRManut A2.9.6 — ações de documento técnico */
 .document-actions-a292{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
 .document-danger-a292{background:#fee2e2!important;color:#991b1b!important;border:1px solid #fecaca!important}
 .document-secondary-a292{background:#f8fafc!important;color:#334155!important;border:1px solid #cbd5e1!important}
 .asset-document-actions-a292{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
 
 
-/* QRManut A2.9.5 — edição dos metadados de documentos técnicos */
+/* QRManut A2.9.6 — edição dos metadados de documentos técnicos */
 .document-edit-a294{background:#eef2ff!important;color:#3730a3!important;border:1px solid #c7d2fe!important}
 #documentEditModal .modal-box{max-width:760px}
 
@@ -4230,6 +4230,7 @@ async function saveTechnicalDocumentEditA294(){
   try{
     const r=await menuApiPost({
       action:"updateDocumentMetadata",
+      __qrContext:"documento-edicao-direta-a296",
       documentId:id,
       documentTitle:$("editDocumentTitle").value.trim(),
       documentType:$("editDocumentType").value,
@@ -4261,19 +4262,19 @@ async function saveTechnicalDocumentEditA294(){
     };
 
     $("documentEditMessage").className="message success";
-    $("documentEditMessage").textContent=`✅ Documento atualizado. Linha ${r.row||""}`.trim();
+    $("documentEditMessage").textContent=`✅ Documento atualizado. Linha ${r.row||""} • Revisão gravada: ${r.revisao||"(vazio)"}`.trim();
     documentFiltersLoaded=false;
     qrInvalidateLocalCacheB530("documento-editado");
 
     setTimeout(async()=>{
       $("documentEditModal").style.display="none";
       if(!$("documentsArea")?.classList.contains("hidden")){
-        await searchDocuments({force:true,context:"documento-editado"});
+        await searchDocuments({force:true,context:"documento-editado-a296"});
       }
       if(currentAsset?.id && !$("assetScreen")?.classList.contains("hidden")){
         await refreshCurrentAssetAfterOccurrence7662515_();
       }
-    },450);
+    },1100);
   }catch(e){
     $("documentEditMessage").className="message error";
     $("documentEditMessage").textContent=e.message||"Erro ao salvar documento.";
@@ -7910,7 +7911,7 @@ async function saveAsset760(){
       amperagemPartida:$("assetStartingCurrent").value,
       amperagemMedida:$("assetMeasuredCurrent").value,
       voltagem:$("assetVoltage").value,
-      // A2.9.5 — envia nomes canônicos e alternativos para garantir gravação no backend.
+      // A2.9.6 — envia nomes canônicos e alternativos para garantir gravação no backend.
       quadroDisjuntores:$("assetBreakerPanel").value,
       disjuntorEquipamento:$("assetBreakerCircuit").value,
       assetBreakerPanel:$("assetBreakerPanel").value,
@@ -7925,7 +7926,7 @@ async function saveAsset760(){
     });
     if(!r.ok)throw new Error(r.detail||r.error||"Erro ao salvar ativo.");
 
-    // A2.9.5 — gravação direta e redundante dos dados do disjuntor.
+    // A2.9.6 — gravação direta e redundante dos dados do disjuntor.
     // Mantém os campos mesmo se o salvamento geral do ativo não atualizar essas colunas.
     const breakerSave=await assetApi760("saveassetbreakerdata",{
       row:r.row||row,
