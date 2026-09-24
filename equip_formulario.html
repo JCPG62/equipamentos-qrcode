@@ -1,4 +1,4 @@
-<!-- QRManut PNCQ 7.6.6.31 A2.2 — Checklist / Medição múltipla
+<!-- QRManut PNCQ 7.6.6.31 A2.7 — Reaproveitamento de Checklists / Duplicar e Importar Itens
      - Adiciona Grupo/Seção, Critério/Referência e exigência de observação em desvio.
      - Novo tipo “Medição múltipla”, com submedições numéricas configuráveis.
      - Permite criar Tensão entre fases como um único item com RS, RT e ST.
@@ -1273,7 +1273,7 @@ body{
 .checklist-model-card.inactive{opacity:.72;border-left-color:#94a3b8}.checklist-model-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
 .checklist-model-title{font-weight:850;color:#0f172a}.checklist-model-meta{margin-top:7px;color:#475569;font-size:.86rem;line-height:1.5}.checklist-model-badges{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
 .checklist-badge{display:inline-flex;padding:4px 8px;border-radius:999px;background:#ecfdf5;color:#166534;font-size:.72rem;font-weight:800}.checklist-badge.scope{background:#eff6ff;color:#1d4ed8}.checklist-badge.inactive{background:#f1f5f9;color:#475569}
-.checklist-items-summary{margin-top:9px;padding:9px 10px;background:#f8fafc;border-radius:10px;color:#475569;font-size:.84rem}.checklist-model-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.checklist-items-summary{margin-top:9px;padding:9px 10px;background:#f8fafc;border-radius:10px;color:#475569;font-size:.84rem}.checklist-model-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.checklist-item-toolbar{display:flex;gap:8px;flex-wrap:wrap}.checklist-import-filter{display:grid;grid-template-columns:1.4fr .8fr;gap:10px;align-items:end}.checklist-import-list{margin-top:12px;display:grid;gap:10px;max-height:420px;overflow:auto;padding-right:4px}.checklist-import-group{border:1px solid #dbe4f0;border-radius:12px;background:#fff;padding:10px}.checklist-import-group-title{font-weight:850;color:#1e293b;margin-bottom:7px}.checklist-import-item{display:flex;gap:8px;align-items:flex-start;padding:8px;border-radius:9px;border:1px solid #e2e8f0;background:#f8fafc;margin-top:6px}.checklist-import-item small{display:block;color:#64748b;margin-top:3px}.checklist-import-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.checklist-import-hint{font-size:.82rem;color:#64748b;margin-top:8px}
 .checklist-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 12px}.checklist-form-grid .full{grid-column:1/-1}.checklist-scope-box{margin-top:10px;padding:12px;border:1px solid #dbe4f0;border-radius:12px;background:#f8fafc}
 .checklist-asset-results{margin-top:7px;max-height:230px;overflow:auto;border:1px solid #dbe4f0;border-radius:12px;background:#fff;padding:6px}.checklist-asset-option{display:block;width:100%;text-align:left;border:0;border-bottom:1px solid #eef2f7;background:#fff;padding:10px;cursor:pointer;border-radius:8px}.checklist-asset-option:last-child{border-bottom:0}.checklist-asset-option:hover{background:#f1f5f9}.checklist-selected-asset{margin-top:8px;padding:9px 10px;background:#ecfdf5;border:1px solid #86efac;color:#166534;border-radius:10px}
 .checklist-items-editor{display:grid;gap:10px;margin-top:12px}.checklist-item-editor{padding:12px;border:1px solid #dbe4f0;border-radius:13px;background:#fff}.checklist-item-head{display:flex;justify-content:space-between;gap:8px;align-items:center}.checklist-item-order{font-weight:850;color:#334155}.checklist-item-controls{display:flex;gap:6px}.checklist-item-controls button{padding:7px 10px}.checklist-item-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;gap:8px;align-items:end;margin-top:8px}.checklist-item-checks{display:flex;gap:14px;flex-wrap:wrap;margin-top:9px}.checklist-item-checks label{display:flex;align-items:center;gap:7px;margin:0;font-weight:700}.checklist-item-checks input{width:auto}.checklist-empty{padding:18px;border:1px dashed #cbd5e1;border-radius:14px;text-align:center;color:#64748b;background:#f8fafc}
@@ -1281,7 +1281,7 @@ body{
 
 @media(max-width:900px){.checklist-sub-row{grid-template-columns:1fr 1fr 1fr}.checklist-sub-remove{grid-column:3;justify-self:end}.checklist-item-main-grid{grid-template-columns:1fr 1.5fr}.checklist-item-main-grid label:last-child{grid-column:1/-1}}
 @media(max-width:800px){.checklist-item-grid{grid-template-columns:1fr 1fr}.checklist-item-grid .desc{grid-column:1/-1}.checklist-numeric-grid{grid-template-columns:1fr 1fr 1fr}}
-@media(max-width:620px){.checklist-form-grid,.checklist-item-grid,.checklist-item-main-grid,.checklist-numeric-grid,.checklist-sub-row{grid-template-columns:1fr}.checklist-form-grid .full,.checklist-item-grid .desc,.checklist-item-main-grid .criterion,.checklist-item-main-grid label:last-child{grid-column:auto}.checklist-sub-remove{grid-column:auto;justify-self:stretch;width:100%}.checklist-model-head{display:block}.checklist-model-badges{justify-content:flex-start;margin-top:7px}.checklist-item-head{align-items:flex-start}.checklist-item-controls{flex-wrap:wrap;justify-content:flex-end}}
+@media(max-width:620px){.checklist-form-grid,.checklist-item-grid,.checklist-item-main-grid,.checklist-numeric-grid,.checklist-sub-row,.checklist-import-filter{grid-template-columns:1fr}.checklist-form-grid .full,.checklist-item-grid .desc,.checklist-item-main-grid .criterion,.checklist-item-main-grid label:last-child{grid-column:auto}.checklist-sub-remove{grid-column:auto;justify-self:stretch;width:100%}.checklist-model-head{display:block}.checklist-model-badges{justify-content:flex-start;margin-top:7px}.checklist-item-head{align-items:flex-start}.checklist-item-controls{flex-wrap:wrap;justify-content:flex-end}}
 
 </style>
 </head>
@@ -1938,9 +1938,23 @@ body{
     <label class="switch-row"><input id="checklistActive" type="checkbox" checked> Modelo ativo</label>
     <label class="full">Observações<textarea id="checklistNotes" rows="3"></textarea></label>
   </div>
-  <div class="section"><div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap"><div><h3 style="margin:0">Itens do checklist</h3><div class="muted">Organize por grupo/seção. Para medições simples, informe unidade e limites. Para RS/RT/ST ou outras leituras relacionadas, escolha <b>Medição múltipla</b>.</div></div><button id="checklistAddItem" class="btn btn-secondary" type="button">+ Adicionar item</button></div><div id="checklistItemsEditor" class="checklist-items-editor"></div></div>
+  <div class="section"><div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap"><div><h3 style="margin:0">Itens do checklist</h3><div class="muted">Organize por grupo/seção. Para medições simples, informe unidade e limites. Para RS/RT/ST ou outras leituras relacionadas, escolha <b>Medição múltipla</b>.</div></div><div class="checklist-item-toolbar"><button id="checklistImportItems" class="btn btn-secondary" type="button">📥 Importar itens</button><button id="checklistAddItem" class="btn btn-secondary" type="button">+ Adicionar item</button></div></div><div id="checklistItemsEditor" class="checklist-items-editor"></div></div>
   <div id="checklistModelMessage" class="message"></div>
   <div class="modal-actions"><button id="checklistModelCancel" class="btn btn-secondary" type="button">Cancelar</button><button id="checklistModelSave" class="btn btn-blue" type="button">Salvar modelo</button></div>
+</div></div>
+
+<div id="checklistImportModal" class="modal"><div class="modal-box" style="max-width:860px">
+  <h2>📥 Importar itens de outro checklist</h2>
+  <div class="muted">Escolha um modelo origem e marque somente os itens que deseja aproveitar no checklist atual.</div>
+  <div class="checklist-import-filter">
+    <label>Modelo origem<select id="checklistImportSource"></select></label>
+    <label>Modo<select id="checklistImportMode"><option value="append">Adicionar aos itens atuais</option><option value="replace">Substituir todos os itens atuais</option></select></label>
+  </div>
+  <div id="checklistImportStatus" class="message"></div>
+  <div id="checklistImportList" class="checklist-import-list"></div>
+  <div class="checklist-import-actions"><button id="checklistImportSelectAll" class="btn btn-secondary" type="button">Selecionar todos</button><button id="checklistImportClear" class="btn btn-secondary" type="button">Limpar seleção</button></div>
+  <div class="checklist-import-hint">Os itens importados podem ser editados antes de salvar o modelo. O modelo origem não será alterado.</div>
+  <div class="modal-actions"><button id="checklistImportCancel" class="btn btn-secondary" type="button">Cancelar</button><button id="checklistImportApply" class="btn btn-blue" type="button">Importar selecionados</button></div>
 </div></div>
 
 <div id="maintenanceAgendaModal" class="modal"><div class="modal-box" style="max-width:820px">
@@ -9366,8 +9380,9 @@ function qrChecklistIsNumericA21(type){return ["Inteiro","Decimal 1 casa","Decim
 function qrChecklistRenderListA21(){
   const host=$("checklistModelsList"),data=checklistModelsDataA21||{items:[]};if(!host)return;
   const items=data.items||[];$("checklistModelsStatus").textContent=items.length?qrChecklistTextA21(`${items.length} modelo(s) cadastrado(s).`,`${items.length} model(s) saved.`):qrChecklistTextA21("Nenhum modelo cadastrado.","No models saved.");
-  host.innerHTML=items.length?items.map(m=>`<div class="checklist-model-card ${m.ativo?"":"inactive"}"><div class="checklist-model-head"><div><div class="checklist-model-title">${esc(m.nome)}</div><div class="checklist-model-meta"><b>${esc(m.id)}</b>${m.idAtivo?` • ${esc(m.idAtivo)}`:""}${m.valorEscopo?` • ${esc(m.valorEscopo)}`:""}</div></div><div class="checklist-model-badges"><span class="checklist-badge scope">${esc(m.escopo)}</span>${m.padrao?`<span class="checklist-badge">${qrChecklistTextA21("Padrão","Default")}</span>`:""}${!m.ativo?`<span class="checklist-badge inactive">${qrChecklistTextA21("Inativo","Inactive")}</span>`:""}</div></div><div class="checklist-items-summary">${(m.itens||[]).length} ${qrChecklistTextA21("item(ns)","item(s)")}${m.observacoes?` • ${esc(m.observacoes)}`:""}</div>${data.canEdit?`<div class="checklist-model-actions"><button class="btn btn-secondary" type="button" data-checklist-edit="${esc(m.id)}">✏️ ${qrChecklistTextA21("Editar","Edit")}</button></div>`:""}</div>`).join(""):`<div class="checklist-empty">${qrChecklistTextA21("Crie o primeiro modelo para começar a padronizar as preventivas.","Create the first model to standardize preventive maintenance.")}</div>`;
+  host.innerHTML=items.length?items.map(m=>`<div class="checklist-model-card ${m.ativo?"":"inactive"}"><div class="checklist-model-head"><div><div class="checklist-model-title">${esc(m.nome)}</div><div class="checklist-model-meta"><b>${esc(m.id)}</b>${m.idAtivo?` • ${esc(m.idAtivo)}`:""}${m.valorEscopo?` • ${esc(m.valorEscopo)}`:""}</div></div><div class="checklist-model-badges"><span class="checklist-badge scope">${esc(m.escopo)}</span>${m.padrao?`<span class="checklist-badge">${qrChecklistTextA21("Padrão","Default")}</span>`:""}${!m.ativo?`<span class="checklist-badge inactive">${qrChecklistTextA21("Inativo","Inactive")}</span>`:""}</div></div><div class="checklist-items-summary">${(m.itens||[]).length} ${qrChecklistTextA21("item(ns)","item(s)")}${m.observacoes?` • ${esc(m.observacoes)}`:""}</div>${data.canEdit?`<div class="checklist-model-actions"><button class="btn btn-secondary" type="button" data-checklist-edit="${esc(m.id)}">✏️ ${qrChecklistTextA21("Editar","Edit")}</button><button class="btn btn-secondary" type="button" data-checklist-duplicate="${esc(m.id)}">📄 ${qrChecklistTextA21("Duplicar","Duplicate")}</button></div>`:""}</div>`).join(""):`<div class="checklist-empty">${qrChecklistTextA21("Crie o primeiro modelo para começar a padronizar as preventivas.","Create the first model to standardize preventive maintenance.")}</div>`;
   host.querySelectorAll('[data-checklist-edit]').forEach(btn=>btn.addEventListener('click',()=>openChecklistModelA21(btn.dataset.checklistEdit)));
+  host.querySelectorAll('[data-checklist-duplicate]').forEach(btn=>btn.addEventListener('click',()=>qrChecklistDuplicateModelA27_(btn.dataset.checklistDuplicate)));
 }
 async function loadChecklistModelsA21(force=false){
   $("checklistModelsStatus").textContent=qrChecklistTextA21("Carregando modelos...","Loading models...");
@@ -9519,6 +9534,94 @@ function qrChecklistRenderItemsA21(){
 function qrChecklistAddItemA21(scrollToNew=true){checklistModelsItemsA21.push({grupo:"",descricao:"",tipoResposta:"OK/NOK/N.A.",unidade:"",minimo:"",maximo:"",criterio:"",obrigatorio:true,permiteNA:true,exigirObservacaoDesvio:false,submedicoes:[]});const idx=checklistModelsItemsA21.length-1;qrChecklistRenderItemsA21();qrChecklistQueueDraftA24();if(scrollToNew)qrChecklistScrollToItemA24(idx)}
 function qrChecklistSetSelectedAssetA21(a,saveDraft=true){$("checklistAssetId").value=a?.id||"";$("checklistAssetSearch").value=a?.nome||a?.id||"";$("checklistSelectedAsset").innerHTML=`<b>${esc(a?.id||"")}</b> — ${esc(a?.nome||"")}${a?.pavimento?` • ${esc(a.pavimento)}`:""}${a?.localizacao?` • ${esc(a.localizacao)}`:""}`;show("checklistSelectedAsset");hide("checklistAssetSearchResults");if(saveDraft)qrChecklistQueueDraftA24()}
 async function qrChecklistSearchAssetA21(){const q=$("checklistAssetSearch").value.trim(),host=$("checklistAssetSearchResults");$("checklistAssetId").value="";hide("checklistSelectedAsset");if(q.length<2){host.innerHTML='<div class="agenda-asset-empty">Digite pelo menos 2 caracteres.</div>';show("checklistAssetSearchResults");return}host.innerHTML='<div class="agenda-asset-empty">Buscando...</div>';show("checklistAssetSearchResults");try{const r=await menuApi({action:"search",q,__qrForce:true});if(!r.ok)throw new Error(r.detail||"Erro na busca.");checklistAssetSearchResultsA21=r.results||[];host.innerHTML=checklistAssetSearchResultsA21.length?checklistAssetSearchResultsA21.map((a,i)=>`<button type="button" class="checklist-asset-option" data-asset-index="${i}"><b>${esc(a.id)}</b> — ${esc(a.nome||"")}<small>${esc([a.pavimento,a.localizacao,a.ambiente].filter(Boolean).join(" • "))}</small></button>`).join(""):'<div class="agenda-asset-empty">Nenhum ativo operacional encontrado.</div>';host.querySelectorAll('[data-asset-index]').forEach(b=>b.onclick=()=>qrChecklistSetSelectedAssetA21(checklistAssetSearchResultsA21[Number(b.dataset.assetIndex)]));}catch(e){host.innerHTML=`<div class="agenda-asset-empty">${esc(e.message||String(e))}</div>`}}
+function qrChecklistCloneItemForReuseA27_(it){
+  const x=JSON.parse(JSON.stringify(it||{}));
+  delete x.id;
+  x.submedicoes=Array.isArray(x.submedicoes)?x.submedicoes.map(sm=>({...sm})):[];
+  return x;
+}
+function qrChecklistDuplicateModelA27_(id){
+  const m=(checklistModelsDataA21?.items||[]).find(x=>String(x.id)===String(id));
+  if(!m)return;
+  qrChecklistClearDraftA24();
+  checklistModelEditingA21=null;
+  $("checklistModelModalTitle").textContent="📋 Novo modelo de checklist";
+  $("checklistModelId").value="";
+  $("checklistModelName").value=qrChecklistTextA21("Cópia de ","Copy of ")+(m.nome||"");
+  $("checklistScope").value=m.escopo||"Geral";
+  qrChecklistFillTypesA21();
+  $("checklistEquipmentType").value=m.escopo==="Tipo de equipamento"?(m.valorEscopo||""):"";
+  $("checklistDefault").checked=false;
+  $("checklistActive").checked=m.ativo!==false;
+  $("checklistNotes").value=m.observacoes?qrChecklistTextA21("Criado por duplicação de: ","Created as duplicate of: ")+(m.nome||"")+"\n\n"+(m.observacoes||""):qrChecklistTextA21("Criado por duplicação de: ","Created as duplicate of: ")+(m.nome||"");
+  $("checklistAssetSearch").value="";
+  $("checklistAssetId").value="";
+  hide("checklistSelectedAsset");
+  hide("checklistAssetSearchResults");
+  if(m.escopo==="Ativo específico"&&m.idAtivo)qrChecklistSetSelectedAssetA21({id:m.idAtivo,nome:m.valorEscopo||m.idAtivo},false);
+  checklistModelsItemsA21=(m.itens||[]).map(qrChecklistCloneItemForReuseA27_);
+  if(!checklistModelsItemsA21.length)qrChecklistAddItemA21(false);else qrChecklistRenderItemsA21();
+  qrChecklistScopeChangedA21();
+  $("checklistModelMessage").className="message success";
+  $("checklistModelMessage").textContent=qrChecklistTextA21("Cópia criada. Revise o nome, escopo e itens antes de salvar.","Copy created. Review name, scope and items before saving.");
+  $("checklistModelModal").style.display="flex";
+  qrChecklistQueueDraftA24();
+}
+function qrChecklistImportModelsA27_(){
+  return (checklistModelsDataA21?.items||[]).filter(m=>m&&m.id&&Array.isArray(m.itens)&&m.itens.length);
+}
+function qrChecklistOpenImportA27_(){
+  const modal=$("checklistImportModal"),sel=$("checklistImportSource"),status=$("checklistImportStatus");
+  const models=qrChecklistImportModelsA27_();
+  if(!models.length){
+    $("checklistModelMessage").className="message error";
+    $("checklistModelMessage").textContent=qrChecklistTextA21("Não há outros modelos com itens para importar.","There are no models with items to import.");
+    return;
+  }
+  const currentId=String($("checklistModelId")?.value||"");
+  sel.innerHTML=models.map(m=>`<option value="${esc(m.id)}">${esc(m.nome||m.id)} — ${(m.itens||[]).length} ${qrChecklistTextA21("item(ns)","item(s)")}</option>`).join("");
+  const first=models.find(m=>String(m.id)!==currentId)||models[0];
+  sel.value=first.id;
+  $("checklistImportMode").value="append";
+  status.className="message";
+  status.textContent="";
+  qrChecklistRenderImportItemsA27_();
+  modal.style.display="flex";
+}
+function qrChecklistRenderImportItemsA27_(){
+  const host=$("checklistImportList"),id=$("checklistImportSource").value;
+  const m=qrChecklistImportModelsA27_().find(x=>String(x.id)===String(id));
+  if(!m){host.innerHTML=`<div class="checklist-empty">${qrChecklistTextA21("Selecione um modelo origem.","Select a source model.")}</div>`;return;}
+  const groups={};
+  (m.itens||[]).forEach((it,idx)=>{
+    const g=String(it.grupo||qrChecklistTextA21("Sem grupo","No group")).trim()||qrChecklistTextA21("Sem grupo","No group");
+    if(!groups[g])groups[g]=[];
+    groups[g].push({it,idx});
+  });
+  host.innerHTML=Object.keys(groups).map(g=>`<div class="checklist-import-group"><div class="checklist-import-group-title">${esc(g)}</div>${groups[g].map(({it,idx})=>`<label class="checklist-import-item"><input type="checkbox" data-import-index="${idx}"><span><b>${esc(it.descricao||qrChecklistTextA21("Item sem descrição","Item without description"))}</b><small>${esc([it.tipoResposta,it.unidade,it.criterio].filter(Boolean).join(" • "))}${Array.isArray(it.submedicoes)&&it.submedicoes.length?` • ${it.submedicoes.length} ${qrChecklistTextA21("submedição(ões)","submeasurement(s)")}`:""}</small></span></label>`).join("")}</div>`).join("");
+}
+function qrChecklistImportSetAllA27_(checked){
+  $("checklistImportList")?.querySelectorAll('[data-import-index]').forEach(cb=>cb.checked=!!checked);
+}
+function qrChecklistApplyImportA27_(){
+  const id=$("checklistImportSource").value;
+  const m=qrChecklistImportModelsA27_().find(x=>String(x.id)===String(id));
+  const msg=$("checklistImportStatus");
+  if(!m){msg.className="message error";msg.textContent=qrChecklistTextA21("Selecione um modelo origem.","Select a source model.");return;}
+  const indexes=[...$("checklistImportList").querySelectorAll('[data-import-index]:checked')].map(cb=>Number(cb.dataset.importIndex)).filter(n=>!isNaN(n));
+  if(!indexes.length){msg.className="message error";msg.textContent=qrChecklistTextA21("Selecione pelo menos um item para importar.","Select at least one item to import.");return;}
+  const imported=indexes.map(i=>qrChecklistCloneItemForReuseA27_(m.itens[i])).filter(Boolean);
+  if($("checklistImportMode").value==="replace")checklistModelsItemsA21=imported;
+  else checklistModelsItemsA21=(checklistModelsItemsA21||[]).concat(imported);
+  qrChecklistRenderItemsA21();
+  qrChecklistQueueDraftA24();
+  $("checklistImportModal").style.display="none";
+  $("checklistModelMessage").className="message success";
+  $("checklistModelMessage").textContent=qrChecklistTextA21(`${imported.length} item(ns) importado(s) de ${m.nome}.`,`${imported.length} item(s) imported from ${m.nome}.`);
+  const start=Math.max(0,checklistModelsItemsA21.length-imported.length);
+  qrChecklistScrollToItemA24(start);
+}
+
 function openChecklistModelA21(id=""){
   const m=id?(checklistModelsDataA21?.items||[]).find(x=>x.id===id):null;
   checklistModelEditingA21=m||null;
@@ -9586,6 +9689,13 @@ if(qrChecklistModalA24&&!qrChecklistModalA24.dataset.draftListenerA24){
     if(e.target&&e.target.closest&&e.target.closest("#checklistModelModal"))qrChecklistQueueDraftA24();
   }));
 }
+
+if($("checklistImportItems"))$("checklistImportItems").onclick=qrChecklistOpenImportA27_;
+if($("checklistImportSource"))$("checklistImportSource").onchange=qrChecklistRenderImportItemsA27_;
+if($("checklistImportSelectAll"))$("checklistImportSelectAll").onclick=()=>qrChecklistImportSetAllA27_(true);
+if($("checklistImportClear"))$("checklistImportClear").onclick=()=>qrChecklistImportSetAllA27_(false);
+if($("checklistImportCancel"))$("checklistImportCancel").onclick=()=>{$("checklistImportModal").style.display="none"};
+if($("checklistImportApply"))$("checklistImportApply").onclick=qrChecklistApplyImportA27_;
 
 $("tabChecklistModels").onclick=showChecklistModelsTabA21;$("checklistModelsBackMenu").onclick=openDefaultAllowedTab;$("checklistModelNew").onclick=()=>openChecklistModelA21();$("checklistModelCancel").onclick=()=>{$("checklistModelModal").style.display="none"};$("checklistModelSave").onclick=saveChecklistModelA21;$("checklistScope").onchange=qrChecklistScopeChangedA21;$("checklistAddItem").onclick=qrChecklistAddItemA21;$("checklistAssetSearchButton").onclick=qrChecklistSearchAssetA21;$("checklistAssetSearch").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();qrChecklistSearchAssetA21()}};$("qrAlertsRefreshB5320").onclick=()=>loadAlertsSummaryB5320_({force:true});$("auditRefresh").onclick=()=>loadAudit({force:true,context:"buscar-manual"});$("auditClear").onclick=clearAuditFilters;$("auditSearch").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();loadAudit()}};$("cancelUser").onclick=()=>{$("userModal").style.display="none"};$("saveUser").onclick=saveUser;$("userEmail").oninput=updateUserPrimaryAction76617;$("cancelAdminUserPassword").onclick=()=>{$("adminUserPasswordModal").style.display="none"};$("saveAdminUserPassword").onclick=saveAdminUserPassword76617;$("sendSystemLogin").onclick=doSystemLogin;$("systemPassword").onkeydown=e=>{if(e.key==="Enter")doSystemLogin()};$("cancelSystemLogin").onclick=()=>{systemLoginNextAction=null;$("systemLoginModal").style.display="none";if(!systemSession)showMenuGate()};$("systemLogoutButton").onclick=logoutSystemMenu;$("installAppButton").onclick=installQRManut;$("tabSearch").onclick=showSearchTab;$("tabPending").onclick=showPendingTab;$("pendingApplyFilters").onclick=()=>loadPending({force:true,context:"buscar-manual"});$("pendingClearFilters").onclick=clearPendingFilters;$("tabOccurrenceReport").onclick=showOccurrenceReportTab;$("tabPreventive").onclick=showPreventiveTab;$("tabMaintenanceAgenda").onclick=showMaintenanceAgendaTab76631;$("maintenanceAgendaBackMenu").onclick=openDefaultAllowedTab;$("maintenanceAgendaRefresh").onclick=()=>loadMaintenanceAgenda76631_({force:true});$("maintenanceAgendaSearchButton").onclick=()=>loadMaintenanceAgenda76631_({force:true});$("maintenanceAgendaClear").onclick=clearMaintenanceAgendaFilters76631_;$("maintenanceAgendaNew").onclick=()=>openMaintenanceAgendaModal76631_();$("maintenanceAgendaAnnual").onclick=openMaintenanceAgendaAnnual766313_;$("maintenanceAgendaAnnualCancel").onclick=()=>{if(!agendaAnnualSaving766313)$("maintenanceAgendaAnnualModal").style.display="none"};$("maintenanceAgendaAnnualSave").onclick=saveMaintenanceAgendaAnnual766313_;$("agendaAnnualAssetSearchButton").onclick=qrAgendaAnnualRefreshAssetSearch766313_;$("agendaAnnualAssetSearch").addEventListener("input",()=>{qrAgendaAnnualClearAsset766313_();qrAgendaAnnualAssetSearchResults766315_=[];hide("agendaAnnualAssetSearchResults");qrAgendaQueueAssetSearch766316_(true)});$("agendaAnnualAssetSearch").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();qrAgendaAnnualRefreshAssetSearch766313_()}});$("agendaAnnualExecution").onchange=qrAgendaAnnualToggleProvider766313_;$("agendaAnnualYear").addEventListener("change",qrAgendaAnnualRenderCalendar766313_);$("agendaAnnualClearDates").onclick=()=>{agendaAnnualSelectedDates766313.clear();qrAgendaAnnualRenderCalendar766313_()};$("maintenanceAgendaCancel").onclick=()=>{if(!maintenanceAgendaSaving76631)$("maintenanceAgendaModal").style.display="none"};$("maintenanceAgendaSave").onclick=saveMaintenanceAgenda76631_;$("agendaAssetSearchButton").onclick=qrAgendaRefreshAssetSearch76631_;$("agendaAssetSearch").addEventListener("input",()=>{qrAgendaClearAssetSelection76631_();qrAgendaAssetSearchResults766315_=[];hide("agendaAssetSearchResults");qrAgendaQueueAssetSearch766316_(false)});$("agendaAssetSearch").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();qrAgendaRefreshAssetSearch76631_()}});$("agendaExecution").onchange=qrAgendaToggleProvider76631_;["agendaPlannedStart","agendaPlannedEnd","agendaConfirmedDate","agendaConfirmedTime"].forEach(id=>$(id).addEventListener("change",qrAgendaToggleReprogram76631_));["maintenanceAgendaView","maintenanceAgendaType","maintenanceAgendaStatus","maintenanceAgendaProvider"].forEach(id=>$(id).addEventListener("change",()=>loadMaintenanceAgenda76631_()));$("maintenanceAgendaSearch").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();loadMaintenanceAgenda76631_()}};$("tabDocuments").onclick=showDocumentsTab;$("tabMaintenancePending").onclick=showMaintenancePendingTab;$("maintenancePendingBackMenu").onclick=openDefaultAllowedTab;$("maintenancePendingRefresh").onclick=()=>loadMaintenancePending({force:true,context:"buscar-manual"});$("maintenancePendingClear").onclick=clearMaintenancePendingFilters;$("maintenancePendingSearch").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();loadMaintenancePending()}};$("maintenancePendingStatusFilter").onchange=loadMaintenancePending;$("maintenancePendingPriorityFilter").onchange=loadMaintenancePending;$("preventiveChecklistLoadModel").onclick=()=>qrPreventiveChecklistUseModelA261_($("preventiveChecklistModelSelect").value);$("preventiveChecklistNoModel").onclick=qrPreventiveChecklistDisableA261_;$("preventiveNeedsAction").onchange=togglePreventiveActionFields;$("tabOccurrenceCatalog").onclick=showOccurrenceCatalogTab;$("occurrenceCatalogBackMenu").onclick=openDefaultAllowedTab;$("saveCatalogCategory").onclick=saveCatalogCategory;$("clearCatalogCategory").onclick=clearCatalogCategoryForm;$("saveCatalogComponent").onclick=saveCatalogComponent;$("clearCatalogComponent").onclick=clearCatalogComponentForm;$("category").onchange=()=>populateOccurrenceComponentSelect();$("manageCategory").onchange=()=>populateManageCatalog($("manageCategory").value,"");$("tabDocumentUpload").onclick=showDocumentUploadTab;$("documentUploadBackMenu").onclick=cancelDocumentUpload;$("uploadDocumentChooseFileButton").onclick=()=>$("uploadDocumentFile").click();$("uploadDocumentFile").onchange=prepareDocumentUploadFile;$("sendDocumentUpload").onclick=sendDocumentUpload;$("clearDocumentUpload").onclick=clearDocumentUploadForm;$("searchButton").onclick=searchAssets;$("qrScanButton").onclick=openQrScanner7662513;$("qrScannerCancel").onclick=closeQrScanner7662513;$("qrScannerSwitch").onclick=switchQrScannerCamera7662513;$("searchInput").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();searchAssets()}};$("documentSearchButton").onclick=()=>searchDocuments({force:true,context:"buscar-manual"});$("documentSearchInput").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();searchDocuments()}};$("documentTypeFilter").onchange=searchDocuments;$("documentDisciplineFilter").onchange=searchDocuments;$("documentFloorFilter").onchange=searchDocuments;$("reportButton").onclick=openReport;$("preventiveButton").onclick=requestPreventive;
 $("searchAssetsButton").onclick=function(){
