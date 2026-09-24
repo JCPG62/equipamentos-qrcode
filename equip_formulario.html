@@ -1314,11 +1314,16 @@ body{
   .preventive-checklist-meta span{padding:2px 6px}
 }
 
-/* QRManut A2.9.3 — ações de documento técnico */
+/* QRManut A2.9.4 — ações de documento técnico */
 .document-actions-a292{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
 .document-danger-a292{background:#fee2e2!important;color:#991b1b!important;border:1px solid #fecaca!important}
 .document-secondary-a292{background:#f8fafc!important;color:#334155!important;border:1px solid #cbd5e1!important}
 .asset-document-actions-a292{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+
+
+/* QRManut A2.9.4 — edição dos metadados de documentos técnicos */
+.document-edit-a294{background:#eef2ff!important;color:#3730a3!important;border:1px solid #c7d2fe!important}
+#documentEditModal .modal-box{max-width:760px}
 
 </style>
 </head>
@@ -1589,6 +1594,31 @@ body{
       </div>
     </div>
   </div>
+
+<div id="documentEditModal" class="modal">
+  <div class="modal-box">
+    <h2>✏️ Editar dados do documento</h2>
+    <input id="editDocumentId" type="hidden">
+    <div class="document-upload-grid">
+      <label>Título *<input id="editDocumentTitle"></label>
+      <label>Tipo *<select id="editDocumentType"><option value="">Selecione</option></select></label>
+      <label>Disciplina<select id="editDocumentDiscipline"><option value="">Selecione</option></select></label>
+      <label>Pavimento<select id="editDocumentFloor"><option value="">Selecione</option></select></label>
+      <label>Ambiente<input id="editDocumentEnvironment"></label>
+      <label>Prestador<select id="editDocumentProvider"><option value="">Sem prestador específico</option></select></label>
+      <label>Assunto<input id="editDocumentSubject"></label>
+      <label>Revisão<input id="editDocumentRevision" placeholder="Ex.: Rev. 00, R1, 2026-09"></label>
+      <label class="full">ID do Ativo<input id="editDocumentAsset" placeholder="Ex.: AC102_SP3P"></label>
+      <label class="full">Motivo da edição<input id="editDocumentReason" placeholder="Ex.: Correção de revisão / ativo / título"></label>
+      <label class="full">Observações<textarea id="editDocumentNotes" rows="3"></textarea></label>
+    </div>
+    <div id="documentEditMessage" class="message"></div>
+    <div class="modal-actions">
+      <button id="cancelDocumentEdit" class="btn btn-secondary" type="button" onclick="document.getElementById('documentEditModal').style.display='none'">Cancelar</button>
+      <button id="saveDocumentEdit" class="btn btn-blue" type="button" onclick="saveTechnicalDocumentEditA294()">Salvar alterações</button>
+    </div>
+  </div>
+</div>
 
 <div id="companyArea" class="hidden"><div class="card"><div class="back-asset-wrap"><button id="companyBackMenu" class="back-asset-btn">← Voltar ao Menu Principal</button></div><h2>⚙️ Configuração da Empresa</h2><div class="muted">Dados institucionais desta implantação dedicada.</div><div class="admin-grid"><label>ID Empresa<input id="companyId"></label><label>Nome da Empresa *<input id="companyName"></label><label>Nome Fantasia<input id="companyTradeName"></label><label>CNPJ<input id="companyCnpj"></label><label class="company-long-field">E-mail de Manutenção<input id="companyMaintenanceEmail" type="email" autocomplete="email"></label><label class="company-long-field">E-mail Administrativo<input id="companyAdminEmail" type="email" autocomplete="email"></label><label>Nome do Sistema *<input id="companySystemName"></label><label>Cor Principal<input id="companyPrimaryColor" type="color" value="#0b315e"></label><label>Fuso Horário<input id="companyTimezone" placeholder="America/New_York"><small class="muted">Ex.: America/New_York (Eastern Time, com ajuste automático de horário de verão)</small></label><label class="company-long-field">URL Principal<input id="companyMainUrl" type="url" inputmode="url"></label><label class="company-long-field">E-mail de Relatórios<input id="companyReportsEmail"></label><label class="company-long-field">E-mail principal das OCs *<input id="companyOccurrenceEmailTo" placeholder="manutencao@empresa.com"></label><label class="company-long-field">E-mail CC das OCs<input id="companyOccurrenceEmailCc" placeholder="gestor@empresa.com; outro@empresa.com"><small class="muted">Opcional. Separe vários e-mails por vírgula ou ponto e vírgula.</small></label><label class="company-long-field">E-mail de Triagem de Solicitações<input id="companySolTriageEmailTo" placeholder="manutencao@empresa.com"><small class="muted">Opcional. Se vazio, o QRManut usa o e-mail principal das OCs/manutenção.</small></label><label class="company-long-field">E-mail CC da Triagem de Solicitações<input id="companySolTriageEmailCc" placeholder="gestor@empresa.com"><small class="muted">Opcional. Separe vários e-mails por vírgula ou ponto e vírgula.</small></label><label class="company-long-field">Logo (URL)<input id="companyLogo" type="url" inputmode="url"></label><label class="full">Observações<textarea id="companyNotes" rows="5"></textarea></label></div><label class="switch-row"><input id="companyActive" type="checkbox"> Empresa ativa</label><div class="company-preview"><b>Pré-visualização</b><div id="companyPreviewName" style="margin-top:6px;font-size:1.1rem;font-weight:800"></div><div id="companyColorPreview" class="company-color-preview"><span class="company-color-preview-swatch" id="companyColorPreviewSwatch"></span><div class="company-color-preview-label"><b id="companyColorPreviewHex">#0b315e</b><br><span>Cor aplicada aos principais botões e destaques do QRManut.</span></div></div><img id="companyLogoPreview" class="company-logo-preview hidden"></div><div id="companyMessage" class="message"></div><div class="occ-report-actions"><button id="saveCompanyConfig" class="btn btn-blue">Salvar configuração</button></div></div></div>
   <div id="providersAdminArea" class="hidden"><div class="card"><div class="back-asset-wrap"><button id="providersBackMenu" class="back-asset-btn">← Voltar ao Menu Principal</button></div><div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap"><div><h2>🏢 Prestadores</h2><div class="muted">Consulte responsáveis e canais de contato dos prestadores. Cadastro e edição obedecem às Permissões de Perfis definidas pelo MASTER.</div></div><button id="newProviderButton" class="btn btn-blue hidden">+ Novo prestador</button></div><div id="providersAdminStatus" class="muted" style="margin-top:12px"></div><div id="providersAdminList"></div></div></div>
@@ -3935,6 +3965,14 @@ async function loadOccurrenceReport(options={}){setDefaultOccurrenceReportDates(
 async function generateOccurrenceReportPdf(){if(!occurrenceReportData)return;const p=occurrenceReportParams(),btn=$("occReportPdf");btn.disabled=true;btn.textContent="Gerando PDF...";show("occPdfBox");$("occPdfMessage").textContent="Gerando o arquivo PDF...";$("occPdfLinkWrap").innerHTML="";try{const r=await menuApiPost({action:"generateOccurrenceReportPdf",dataInicial:p.dataInicial,dataFinal:p.dataFinal,occProvider:p.prestador,occCategory:p.categoria,occComponent:p.componente,occFloor:p.pavimento,occLocation:p.localizacao});if(!r.ok)throw new Error(r.detail||"Não foi possível gerar o PDF.");$("occPdfMessage").textContent=`PDF gerado com ${r.summary.total} OC(s) concluída(s).`;$("occPdfLinkWrap").innerHTML=`<a class="occ-pdf-link" href="${esc(r.url)}" target="_blank" rel="noopener">📄 Abrir PDF</a>`}catch(e){$("occPdfMessage").textContent=e.message}finally{btn.disabled=false;btn.textContent="📄 Gerar PDF"}}
 
 let documentFiltersLoaded=false;
+let qrDocumentMapA294={};
+
+function qrRememberDocumentsA294(items){
+  (items||[]).forEach(d=>{
+    if(d&&d.idDocumento)qrDocumentMapA294[String(d.idDocumento).trim().toUpperCase()]=d;
+  });
+}
+
 function applyDocumentFiltersB533(f){
   f=f||{};
   qrFillTranslatedSelect7613("documentTypeFilter",f.tipos||[],qrLanguage==="en-US"?"All":"Todos");
@@ -3954,6 +3992,7 @@ function renderDocumentsB534(items){
   const t=(pt,en)=>qrLanguage==="en-US"?en:pt;
   const canManage=qrCanManageDocumentsA292_();
   items=items||[];
+  qrRememberDocumentsA294(items);
   $("documentStatus").textContent=qrLanguage==="en-US"?`${items.length} document(s) found`:`${items.length} documento(s) encontrado(s)`;
   if(!items.length){
     $("documentResults").innerHTML=`<div class="document-empty">${t("Nenhum documento encontrado para os filtros informados.","No documents were found for the selected filters.")}</div>`;
@@ -3976,6 +4015,7 @@ function renderDocumentsB534(items){
       `</div>`+
       `<div class="document-actions-a292">`+
         `${d.linkPdf?`<button type="button" class="document-open" onclick="openSecureFile76624('technicalDocument','${esc(d.idDocumento)}')">👁️ ${t("Abrir PDF","Open PDF")}</button>`:""}`+
+        `${canManage?`<button type="button" class="document-open document-edit-a294" onclick="openEditTechnicalDocumentA294('${esc(d.idDocumento)}')">✏️ ${t("Editar dados","Edit data")}</button>`:""}`+
         `${canManage?`<button type="button" class="document-open document-danger-a292" onclick="deleteTechnicalDocumentA292('${esc(d.idDocumento)}')">🗑️ ${t("Excluir documento","Delete document")}</button>`:""}`+
       `</div>`+
     `</div>`
@@ -4107,6 +4147,120 @@ async function unlinkTechnicalDocumentAssetA292(idDocumento,idAtivo){
     await refreshCurrentAssetAfterOccurrence7662515_();
   }catch(e){
     alert(e.message||"Erro ao desvincular documento.");
+  }
+}
+
+
+
+async function loadDocumentEditMetaA294_(doc){
+  const r=await menuApi({action:"documentuploadmeta",__qrForce:true,__qrContext:"editar-documento-meta"});
+  if(!r.ok)throw new Error(r.detail||"Erro ao carregar opções.");
+  const d=r.data||{};
+  fillSelect("editDocumentType",d.tipos||[],"Selecione");
+  fillSelect("editDocumentDiscipline",d.disciplinas||[],"Selecione");
+  fillSelect("editDocumentFloor",d.pavimentos||[],"Selecione");
+  $("editDocumentProvider").innerHTML=`<option value="">Sem prestador específico</option>`+(d.prestadores||[]).map(p=>`<option value="${esc(p.nome)}">${esc(p.nome)}</option>`).join("");
+
+  function setSelect(id,value){
+    const sel=$(id);
+    const v=String(value||"").trim();
+    if(!v){sel.value="";return;}
+    if(![...sel.options].some(o=>o.value===v)){
+      const op=document.createElement("option");
+      op.value=v;op.textContent=v;sel.appendChild(op);
+    }
+    sel.value=v;
+  }
+
+  $("editDocumentId").value=doc.idDocumento||"";
+  $("editDocumentTitle").value=doc.titulo||"";
+  setSelect("editDocumentType",doc.tipoDocumento||"");
+  setSelect("editDocumentDiscipline",doc.disciplina||"");
+  setSelect("editDocumentFloor",doc.pavimento||"");
+  $("editDocumentEnvironment").value=doc.ambiente||"";
+  setSelect("editDocumentProvider",doc.prestador||"");
+  $("editDocumentSubject").value=doc.assunto||"";
+  $("editDocumentRevision").value=doc.revisao||"";
+  $("editDocumentAsset").value=(doc.idAtivo||((doc.ativosVinculados||[])[0])||"");
+  $("editDocumentNotes").value=doc.observacoes||"";
+  $("editDocumentReason").value="";
+}
+
+async function openEditTechnicalDocumentA294(idDocumento){
+  if(!qrCanManageDocumentsA292_()){
+    return permissionDeniedMessage("Seu perfil não possui permissão para editar documentos.","Your profile is not allowed to edit documents.");
+  }
+
+  const key=String(idDocumento||"").trim().toUpperCase();
+  const doc=qrDocumentMapA294[key];
+  if(!doc)return alert("Documento não carregado na tela. Atualize a lista e tente novamente.");
+
+  $("documentEditMessage").className="message";
+  $("documentEditMessage").textContent="Carregando dados do documento...";
+  $("documentEditModal").style.display="flex";
+
+  try{
+    await loadDocumentEditMetaA294_(doc);
+    $("documentEditMessage").textContent="";
+    setTimeout(()=>$("editDocumentTitle").focus(),80);
+  }catch(e){
+    $("documentEditMessage").className="message error";
+    $("documentEditMessage").textContent=e.message||"Erro ao abrir edição do documento.";
+  }
+}
+
+async function saveTechnicalDocumentEditA294(){
+  const btn=$("saveDocumentEdit");
+  if(btn.dataset.loading==="1")return;
+  const id=$("editDocumentId").value;
+  if(!id)return alert("Documento não identificado.");
+  if(!$("editDocumentTitle").value.trim())return alert("Informe o título do documento.");
+  if(!$("editDocumentType").value)return alert("Informe o tipo do documento.");
+
+  btn.dataset.loading="1";
+  btn.disabled=true;
+  btn.textContent="Salvando...";
+  $("documentEditMessage").className="message loading";
+  $("documentEditMessage").textContent="Salvando dados do documento...";
+
+  try{
+    const r=await menuApiPost({
+      action:"updateDocumentMetadata",
+      documentId:id,
+      documentTitle:$("editDocumentTitle").value.trim(),
+      documentType:$("editDocumentType").value,
+      documentDiscipline:$("editDocumentDiscipline").value,
+      documentFloor:$("editDocumentFloor").value,
+      documentEnvironment:$("editDocumentEnvironment").value.trim(),
+      documentProvider:$("editDocumentProvider").value,
+      documentSubject:$("editDocumentSubject").value.trim(),
+      documentRevision:$("editDocumentRevision").value.trim(),
+      documentAssetId:$("editDocumentAsset").value.trim(),
+      documentNotes:$("editDocumentNotes").value.trim(),
+      documentEditReason:$("editDocumentReason").value.trim()
+    });
+    if(!r.ok)throw new Error(r.detail||r.error||"Erro ao salvar documento.");
+
+    $("documentEditMessage").className="message success";
+    $("documentEditMessage").textContent="✅ Documento atualizado.";
+    documentFiltersLoaded=false;
+
+    setTimeout(async()=>{
+      $("documentEditModal").style.display="none";
+      if(!$("documentsArea")?.classList.contains("hidden")){
+        await searchDocuments({force:true,context:"documento-editado"});
+      }
+      if(currentAsset?.id && !$("assetScreen")?.classList.contains("hidden")){
+        await refreshCurrentAssetAfterOccurrence7662515_();
+      }
+    },450);
+  }catch(e){
+    $("documentEditMessage").className="message error";
+    $("documentEditMessage").textContent=e.message||"Erro ao salvar documento.";
+  }finally{
+    btn.disabled=false;
+    btn.textContent="Salvar alterações";
+    delete btn.dataset.loading;
   }
 }
 
@@ -4864,6 +5018,7 @@ function renderAssetDocuments(items){
 
   const canManage=qrCanManageDocumentsA292_();
   const assetId=currentAsset?.id||"";
+  qrRememberDocumentsA294(items);
 
   show("assetDocumentsSection");
   $("assetDocumentsStatus").textContent=items.length+" documento(s) relacionado(s) a este ativo";
@@ -4880,6 +5035,7 @@ function renderAssetDocuments(items){
       `</div>`+
       `<div class="asset-document-actions-a292">`+
         `${d.linkPdf?`<button type="button" class="document-open" onclick="openSecureFile76624('technicalDocument','${esc(d.idDocumento)}')">👁️ Abrir PDF</button>`:""}`+
+        `${canManage?`<button type="button" class="document-open document-edit-a294" onclick="openEditTechnicalDocumentA294('${esc(d.idDocumento)}')">✏️ Editar dados</button>`:""}`+
         `${canManage?`<button type="button" class="document-open document-secondary-a292" onclick="unlinkTechnicalDocumentAssetA292('${esc(d.idDocumento)}','${esc(assetId)}')">🔗 Desvincular do ativo</button>`:""}`+
         `${canManage?`<button type="button" class="document-open document-danger-a292" onclick="deleteTechnicalDocumentA292('${esc(d.idDocumento)}')">🗑️ Excluir documento</button>`:""}`+
       `</div>`+
@@ -6915,7 +7071,7 @@ async function sendDocumentUpload(){
     const r=await menuApiPost({action:"uploadDocument",documentTitle:$("uploadDocumentTitle").value.trim(),documentType:$("uploadDocumentType").value,documentDiscipline:$("uploadDocumentDiscipline").value,documentFloor:$("uploadDocumentFloor").value,documentEnvironment:$("uploadDocumentEnvironment").value.trim(),documentProvider:$("uploadDocumentProvider").value,documentSubject:$("uploadDocumentSubject").value.trim(),documentRevision:$("uploadDocumentRevision").value.trim(),documentAssetId:$("uploadDocumentAsset").value.trim(),documentNotes:$("uploadDocumentNotes").value.trim(),documentFileName:documentUploadFileData.name,documentMime:documentUploadFileData.mime,documentBase64:documentUploadFileData.base64});
     if(!r.ok)throw new Error(r.detail||"Não foi possível enviar o documento.");
     $("documentUploadMessage").className="message success";$("documentUploadMessage").textContent="✅ Documento enviado com sucesso.";
-    $("documentUploadResult").innerHTML=`<div class="upload-success-card"><b>${esc(r.idDocumento)} — ${esc(r.titulo)}</b>${r.idAtivo?`<div style="margin-top:5px">Vinculado ao ativo: <b>${esc(r.idAtivo)}</b></div>`:""}<div class="document-actions-a292"><button type="button" class="open-button" style="border:0" onclick="openSecureFile76624('technicalDocument','${esc(r.idDocumento)}')">Abrir PDF</button><button type="button" class="document-open document-danger-a292" onclick="deleteTechnicalDocumentA292('${esc(r.idDocumento)}')">🗑️ Excluir se estiver errado</button></div></div>`;
+    $("documentUploadResult").innerHTML=`<div class="upload-success-card"><b>${esc(r.idDocumento)} — ${esc(r.titulo)}</b>${r.idAtivo?`<div style="margin-top:5px">Vinculado ao ativo: <b>${esc(r.idAtivo)}</b></div>`:""}<div class="document-actions-a292"><button type="button" class="open-button" style="border:0" onclick="openSecureFile76624('technicalDocument','${esc(r.idDocumento)}')">Abrir PDF</button><button type="button" class="document-open document-edit-a294" onclick="qrDocumentMapA294[String(r.idDocumento).trim().toUpperCase()]={idDocumento:r.idDocumento,titulo:r.titulo,idAtivo:r.idAtivo||'',tipoDocumento:$('uploadDocumentType').value,disciplina:$('uploadDocumentDiscipline').value,pavimento:$('uploadDocumentFloor').value,ambiente:$('uploadDocumentEnvironment').value,prestador:$('uploadDocumentProvider').value,assunto:$('uploadDocumentSubject').value,revisao:$('uploadDocumentRevision').value,observacoes:$('uploadDocumentNotes').value};openEditTechnicalDocumentA294('${esc(r.idDocumento)}')">✏️ Corrigir dados</button><button type="button" class="document-open document-danger-a292" onclick="deleteTechnicalDocumentA292('${esc(r.idDocumento)}')">🗑️ Excluir se estiver errado</button></div></div>`;
     documentFiltersLoaded=false;
   }catch(e){$("documentUploadMessage").className="message error";$("documentUploadMessage").textContent=e.message}
   finally{btn.disabled=false;btn.textContent="Enviar documento";delete btn.dataset.loading}
@@ -7733,7 +7889,7 @@ async function saveAsset760(){
       amperagemPartida:$("assetStartingCurrent").value,
       amperagemMedida:$("assetMeasuredCurrent").value,
       voltagem:$("assetVoltage").value,
-      // A2.9.3 — envia nomes canônicos e alternativos para garantir gravação no backend.
+      // A2.9.4 — envia nomes canônicos e alternativos para garantir gravação no backend.
       quadroDisjuntores:$("assetBreakerPanel").value,
       disjuntorEquipamento:$("assetBreakerCircuit").value,
       assetBreakerPanel:$("assetBreakerPanel").value,
@@ -7748,7 +7904,7 @@ async function saveAsset760(){
     });
     if(!r.ok)throw new Error(r.detail||r.error||"Erro ao salvar ativo.");
 
-    // A2.9.3 — gravação direta e redundante dos dados do disjuntor.
+    // A2.9.4 — gravação direta e redundante dos dados do disjuntor.
     // Mantém os campos mesmo se o salvamento geral do ativo não atualizar essas colunas.
     const breakerSave=await assetApi760("saveassetbreakerdata",{
       row:r.row||row,
