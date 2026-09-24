@@ -1313,6 +1313,13 @@ body{
   .preventive-checklist-meta{gap:5px}
   .preventive-checklist-meta span{padding:2px 6px}
 }
+
+/* QRManut A2.9.2 — ações de documento técnico */
+.document-actions-a292{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.document-danger-a292{background:#fee2e2!important;color:#991b1b!important;border:1px solid #fecaca!important}
+.document-secondary-a292{background:#f8fafc!important;color:#334155!important;border:1px solid #cbd5e1!important}
+.asset-document-actions-a292{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+
 </style>
 </head>
 <body>
@@ -3939,8 +3946,13 @@ async function loadDocumentFilters(){
   if(documentFiltersLoaded)return;
   try{const r=await menuApi({action:"documentfilters"});if(!r.ok)return;applyDocumentFiltersB533(r.filters||{})}catch(e){}
 }
+function qrCanManageDocumentsA292_(){
+  return !!(systemSession?.systemSessionToken && hasProfilePermission("UPLOAD_DOCUMENTOS"));
+}
+
 function renderDocumentsB534(items){
   const t=(pt,en)=>qrLanguage==="en-US"?en:pt;
+  const canManage=qrCanManageDocumentsA292_();
   items=items||[];
   $("documentStatus").textContent=qrLanguage==="en-US"?`${items.length} document(s) found`:`${items.length} documento(s) encontrado(s)`;
   if(!items.length){
@@ -3962,7 +3974,10 @@ function renderDocumentsB534(items){
         `${d.revisao?`<b>${t("Revisão","Revision")}:</b> ${esc(d.revisao)}<br>`:""}`+
         `${d.observacoes?`<b>${t("Observações","Notes")}:</b> ${esc(qrDocumentNotes7613(d.observacoes))}`:""}`+
       `</div>`+
-      `${d.linkPdf?`<button type="button" class="document-open" onclick="openSecureFile76624('technicalDocument','${esc(d.idDocumento)}')">👁️ ${t("Abrir PDF","Open PDF")}</button>`:""}`+
+      `<div class="document-actions-a292">`+
+        `${d.linkPdf?`<button type="button" class="document-open" onclick="openSecureFile76624('technicalDocument','${esc(d.idDocumento)}')">👁️ ${t("Abrir PDF","Open PDF")}</button>`:""}`+
+        `${canManage?`<button type="button" class="document-open document-danger-a292" onclick="deleteTechnicalDocumentA292('${esc(d.idDocumento)}')">🗑️ ${t("Excluir documento","Delete document")}</button>`:""}`+
+      `</div>`+
     `</div>`
   ).join("");
 }
@@ -4004,6 +4019,98 @@ async function searchDocuments(options={}){
     $("documentResults").innerHTML=`<div class="message error" style="display:block">${esc(e.message||t("Erro ao buscar documentos.","Error searching documents."))}</div>`;
   }
 }
+
+async function deleteTechnicalDocumentA292(idDocumento){
+  if(!qrCanManageDocumentsA292_()){
+    return permissionDeniedMessage("Seu perfil não possui permissão para excluir documentos.","Your profile is not allowed to delete documents.");
+  }
+
+  const reason=await qrPrompt(
+    "Informe o motivo da exclusão lógica do documento "+idDocumento+".",
+    "Excluir documento",
+    "",
+    "Excluir",
+    "Cancelar"
+  );
+  if(reason===null)return;
+  if(!String(reason).trim()){
+    return alert("Informe o motivo da exclusão.");
+  }
+
+  const ok=await qrConfirm(
+    "Confirma excluir este documento do QRManut? Ele deixará de aparecer nas fichas dos ativos, mas o registro será preservado para auditoria.",
+    "Excluir documento",
+    "Excluir",
+    "Cancelar",
+    true
+  );
+  if(!ok)return;
+
+  try{
+    const r=await menuApiPost({
+      action:"deleteDocument",
+      documentId:idDocumento,
+      documentDeleteReason:String(reason).trim()
+    });
+    if(!r.ok)throw new Error(r.detail||r.error||"Não foi possível excluir o documento.");
+    alert("Documento excluído logicamente.");
+    documentFiltersLoaded=false;
+    if(!$("documentsArea")?.classList.contains("hidden")){
+      await searchDocuments({force:true,context:"documento-excluido"});
+    }
+    if(currentAsset?.id && !$("assetScreen")?.classList.contains("hidden")){
+      await refreshCurrentAssetAfterOccurrence7662515_();
+    }
+  }catch(e){
+    alert(e.message||"Erro ao excluir documento.");
+  }
+}
+
+async function unlinkTechnicalDocumentAssetA292(idDocumento,idAtivo){
+  if(!qrCanManageDocumentsA292_()){
+    return permissionDeniedMessage("Seu perfil não possui permissão para desvincular documentos.","Your profile is not allowed to unlink documents.");
+  }
+
+  const asset=normalizeId(idAtivo||currentAsset?.id||"");
+  if(!asset)return alert("Ativo não identificado para desvincular o documento.");
+
+  const reason=await qrPrompt(
+    "Informe o motivo para desvincular o documento "+idDocumento+" do ativo "+asset+".",
+    "Desvincular documento",
+    "",
+    "Desvincular",
+    "Cancelar"
+  );
+  if(reason===null)return;
+  if(!String(reason).trim()){
+    return alert("Informe o motivo da desvinculação.");
+  }
+
+  const ok=await qrConfirm(
+    "Confirma remover este documento da ficha do ativo "+asset+"?",
+    "Desvincular documento",
+    "Desvincular",
+    "Cancelar"
+  );
+  if(!ok)return;
+
+  try{
+    const r=await menuApiPost({
+      action:"unlinkDocumentAsset",
+      documentId:idDocumento,
+      documentUnlinkAssetId:asset,
+      documentUnlinkReason:String(reason).trim()
+    });
+    if(!r.ok)throw new Error(r.detail||r.error||"Não foi possível desvincular o documento.");
+    alert("Documento desvinculado do ativo.");
+    documentFiltersLoaded=false;
+    await refreshCurrentAssetAfterOccurrence7662515_();
+  }catch(e){
+    alert(e.message||"Erro ao desvincular documento.");
+  }
+}
+
+
 
 /* ============================================================
  * QRManut PNCQ 7.6.6.25 / B5.2.14 — SCANNER DE QR CODE
@@ -4747,7 +4854,38 @@ async function loadAsset(id){
 
   hide("assetProgressNote");
 }
-function renderAssetDocuments(items){if(!items||!items.length){hide("assetDocumentsSection");$("assetDocuments").innerHTML="";$("assetDocumentsStatus").textContent="";return}show("assetDocumentsSection");$("assetDocumentsStatus").textContent=items.length+" documento(s) relacionado(s) a este ativo";$("assetDocuments").innerHTML=items.map(d=>{const icon=String(d.tipoDocumento||"").toLowerCase()==="manual"?"📘":"📄";return `<div class="asset-document-card"><div class="document-title">${icon} ${esc(d.titulo)}</div><div class="document-meta">${d.tipoDocumento?`<b>Tipo:</b> ${esc(d.tipoDocumento)}<br>`:""}${d.disciplina?`<b>Disciplina:</b> ${esc(d.disciplina)}<br>`:""}${d.assunto?`<b>Assunto:</b> ${esc(d.assunto)}<br>`:""}${d.revisao?`<b>Revisão:</b> ${esc(d.revisao)}<br>`:""}${d.observacoes?`<b>Observações:</b> ${esc(d.observacoes)}`:""}</div>${d.linkPdf?`<button type="button" class="document-open" onclick="openSecureFile76624('technicalDocument','${esc(d.idDocumento)}')">👁️ Abrir PDF</button>`:""}</div>`}).join("")}
+function renderAssetDocuments(items){
+  if(!items||!items.length){
+    hide("assetDocumentsSection");
+    $("assetDocuments").innerHTML="";
+    $("assetDocumentsStatus").textContent="";
+    return;
+  }
+
+  const canManage=qrCanManageDocumentsA292_();
+  const assetId=currentAsset?.id||"";
+
+  show("assetDocumentsSection");
+  $("assetDocumentsStatus").textContent=items.length+" documento(s) relacionado(s) a este ativo";
+  $("assetDocuments").innerHTML=items.map(d=>{
+    const icon=String(d.tipoDocumento||"").toLowerCase()==="manual"?"📘":"📄";
+    return `<div class="asset-document-card">`+
+      `<div class="document-title">${icon} ${esc(d.titulo)}</div>`+
+      `<div class="document-meta">`+
+        `${d.tipoDocumento?`<b>Tipo:</b> ${esc(d.tipoDocumento)}<br>`:""}`+
+        `${d.disciplina?`<b>Disciplina:</b> ${esc(d.disciplina)}<br>`:""}`+
+        `${d.assunto?`<b>Assunto:</b> ${esc(d.assunto)}<br>`:""}`+
+        `${d.revisao?`<b>Revisão:</b> ${esc(d.revisao)}<br>`:""}`+
+        `${d.observacoes?`<b>Observações:</b> ${esc(d.observacoes)}`:""}`+
+      `</div>`+
+      `<div class="asset-document-actions-a292">`+
+        `${d.linkPdf?`<button type="button" class="document-open" onclick="openSecureFile76624('technicalDocument','${esc(d.idDocumento)}')">👁️ Abrir PDF</button>`:""}`+
+        `${canManage?`<button type="button" class="document-open document-secondary-a292" onclick="unlinkTechnicalDocumentAssetA292('${esc(d.idDocumento)}','${esc(assetId)}')">🔗 Desvincular do ativo</button>`:""}`+
+        `${canManage?`<button type="button" class="document-open document-danger-a292" onclick="deleteTechnicalDocumentA292('${esc(d.idDocumento)}')">🗑️ Excluir documento</button>`:""}`+
+      `</div>`+
+    `</div>`;
+  }).join("");
+}
 function renderAsset(a){
   const t=(pt,en)=>qrLanguage==="en-US"?en:pt;
   const val=v=>{
@@ -6777,7 +6915,7 @@ async function sendDocumentUpload(){
     const r=await menuApiPost({action:"uploadDocument",documentTitle:$("uploadDocumentTitle").value.trim(),documentType:$("uploadDocumentType").value,documentDiscipline:$("uploadDocumentDiscipline").value,documentFloor:$("uploadDocumentFloor").value,documentEnvironment:$("uploadDocumentEnvironment").value.trim(),documentProvider:$("uploadDocumentProvider").value,documentSubject:$("uploadDocumentSubject").value.trim(),documentRevision:$("uploadDocumentRevision").value.trim(),documentAssetId:$("uploadDocumentAsset").value.trim(),documentNotes:$("uploadDocumentNotes").value.trim(),documentFileName:documentUploadFileData.name,documentMime:documentUploadFileData.mime,documentBase64:documentUploadFileData.base64});
     if(!r.ok)throw new Error(r.detail||"Não foi possível enviar o documento.");
     $("documentUploadMessage").className="message success";$("documentUploadMessage").textContent="✅ Documento enviado com sucesso.";
-    $("documentUploadResult").innerHTML=`<div class="upload-success-card"><b>${esc(r.idDocumento)} — ${esc(r.titulo)}</b>${r.idAtivo?`<div style="margin-top:5px">Vinculado ao ativo: <b>${esc(r.idAtivo)}</b></div>`:""}<button type="button" class="open-button" style="margin-top:10px;border:0" onclick="openSecureFile76624('technicalDocument','${esc(r.idDocumento)}')">Abrir PDF</button></div>`;
+    $("documentUploadResult").innerHTML=`<div class="upload-success-card"><b>${esc(r.idDocumento)} — ${esc(r.titulo)}</b>${r.idAtivo?`<div style="margin-top:5px">Vinculado ao ativo: <b>${esc(r.idAtivo)}</b></div>`:""}<div class="document-actions-a292"><button type="button" class="open-button" style="border:0" onclick="openSecureFile76624('technicalDocument','${esc(r.idDocumento)}')">Abrir PDF</button><button type="button" class="document-open document-danger-a292" onclick="deleteTechnicalDocumentA292('${esc(r.idDocumento)}')">🗑️ Excluir se estiver errado</button></div></div>`;
     documentFiltersLoaded=false;
   }catch(e){$("documentUploadMessage").className="message error";$("documentUploadMessage").textContent=e.message}
   finally{btn.disabled=false;btn.textContent="Enviar documento";delete btn.dataset.loading}
@@ -7595,7 +7733,7 @@ async function saveAsset760(){
       amperagemPartida:$("assetStartingCurrent").value,
       amperagemMedida:$("assetMeasuredCurrent").value,
       voltagem:$("assetVoltage").value,
-      // A2.9.1 — envia nomes canônicos e alternativos para garantir gravação no backend.
+      // A2.9.2 — envia nomes canônicos e alternativos para garantir gravação no backend.
       quadroDisjuntores:$("assetBreakerPanel").value,
       disjuntorEquipamento:$("assetBreakerCircuit").value,
       assetBreakerPanel:$("assetBreakerPanel").value,
@@ -7610,7 +7748,7 @@ async function saveAsset760(){
     });
     if(!r.ok)throw new Error(r.detail||r.error||"Erro ao salvar ativo.");
 
-    // A2.9.1 — gravação direta e redundante dos dados do disjuntor.
+    // A2.9.2 — gravação direta e redundante dos dados do disjuntor.
     // Mantém os campos mesmo se o salvamento geral do ativo não atualizar essas colunas.
     const breakerSave=await assetApi760("saveassetbreakerdata",{
       row:r.row||row,
