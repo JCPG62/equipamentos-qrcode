@@ -1265,7 +1265,7 @@ body{
 
 
 /* ============================================================
- * QRManut 7.6.6.31 A2.2 — Modelos de Checklist / Medição múltipla
+ * QRManut 7.6.6.31 A2.3 — Modelos de Checklist / Medição múltipla
  * ============================================================ */
 .menu-button.checklist-models.active{background:#f0fdf4!important;color:#166534!important;border-color:#86efac!important}
 .checklist-toolbar{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;margin:12px 0}
@@ -9099,7 +9099,7 @@ $("companyPrimaryColor").addEventListener("change",updateCompanyPreview);
 $("qrAlertsButtonB5320").onclick=()=>qrToggleAlertsPanelB5320_();
 
 /* ============================================================
- * QRManut 7.6.6.31 A2.1 — Modelos de Checklist de Preventiva
+ * QRManut 7.6.6.31 A2.4 — Modelos de Checklist de Preventiva
  * ============================================================ */
 function qrChecklistTextA21(pt,en){return qrLanguage==="en-US"?en:pt}
 function qrChecklistIsNumericA21(type){return ["Inteiro","Decimal 1 casa","Decimal 2 casas"].includes(String(type||""))}
@@ -9121,6 +9121,95 @@ function qrChecklistResponseOptionsA21(selected){return (checklistModelsDataA21?
 function qrChecklistSubTypeOptionsA22(selected){return (checklistModelsDataA21?.submeasurementTypes||["Inteiro","Decimal 1 casa","Decimal 2 casas"]).map(v=>`<option value="${esc(v)}" ${v===selected?"selected":""}>${esc(v)}</option>`).join("")}
 function qrChecklistIsMultipleA22(type){return String(type||"")==="Medição múltipla"}
 function qrChecklistDeviationApplicableA22(type){return ["OK/NOK/N.A.","Sim/Não","Inteiro","Decimal 1 casa","Decimal 2 casas","Medição múltipla"].includes(String(type||""))}
+
+/* ============================================================
+ * QRManut 7.6.6.31 A2.4 — Rascunho automático do modelo
+ * - preserva o checklist enquanto ele está sendo montado
+ * - recupera o rascunho após atualização/recarregamento
+ * ============================================================ */
+const QR_CHECKLIST_DRAFT_KEY_A24="qrmanut.checklist.draft.a24";
+let qrChecklistDraftTimerA24=null;
+function qrChecklistCloneItemsA24(items){
+  try{return JSON.parse(JSON.stringify(Array.isArray(items)?items:[]))}catch(e){return []}
+}
+function qrChecklistDraftPayloadA24(){
+  return {
+    version:"7.6.6.31 A2.4",
+    savedAt:new Date().toISOString(),
+    modelId:$("checklistModelId")?.value||"",
+    name:$("checklistModelName")?.value||"",
+    scope:$("checklistScope")?.value||"Geral",
+    equipmentType:$("checklistEquipmentType")?.value||"",
+    assetId:$("checklistAssetId")?.value||"",
+    assetSearch:$("checklistAssetSearch")?.value||"",
+    defaultModel:!!$("checklistDefault")?.checked,
+    active:!!$("checklistActive")?.checked,
+    notes:$("checklistNotes")?.value||"",
+    items:qrChecklistCloneItemsA24(checklistModelsItemsA21)
+  };
+}
+function qrChecklistSaveDraftA24(){
+  try{
+    const modal=$("checklistModelModal");
+    if(!modal||modal.style.display==="none")return;
+    localStorage.setItem(QR_CHECKLIST_DRAFT_KEY_A24,JSON.stringify(qrChecklistDraftPayloadA24()));
+  }catch(e){}
+}
+function qrChecklistQueueDraftA24(){
+  clearTimeout(qrChecklistDraftTimerA24);
+  qrChecklistDraftTimerA24=setTimeout(qrChecklistSaveDraftA24,180);
+}
+function qrChecklistReadDraftA24(){
+  try{
+    const raw=localStorage.getItem(QR_CHECKLIST_DRAFT_KEY_A24);
+    if(!raw)return null;
+    const d=JSON.parse(raw);
+    if(!d||typeof d!=="object")return null;
+    if(!Array.isArray(d.items))d.items=[];
+    return d;
+  }catch(e){return null}
+}
+function qrChecklistClearDraftA24(){
+  clearTimeout(qrChecklistDraftTimerA24);
+  try{localStorage.removeItem(QR_CHECKLIST_DRAFT_KEY_A24)}catch(e){}
+}
+function qrChecklistRestoreDraftA24(d){
+  if(!d)return false;
+  $("checklistModelId").value=d.modelId||"";
+  $("checklistModelName").value=d.name||"";
+  $("checklistScope").value=d.scope||"Geral";
+  qrChecklistFillTypesA21();
+  $("checklistEquipmentType").value=d.equipmentType||"";
+  $("checklistDefault").checked=!!d.defaultModel;
+  $("checklistActive").checked=d.active!==false;
+  $("checklistNotes").value=d.notes||"";
+  $("checklistAssetId").value=d.assetId||"";
+  $("checklistAssetSearch").value=d.assetSearch||"";
+  if(d.assetId){
+    qrChecklistSetSelectedAssetA21({id:d.assetId,nome:d.assetSearch||d.assetId},false);
+  }else{
+    hide("checklistSelectedAsset");
+    hide("checklistAssetSearchResults");
+  }
+  checklistModelsItemsA21=qrChecklistCloneItemsA24(d.items);
+  if(!checklistModelsItemsA21.length){
+    checklistModelsItemsA21.push({grupo:"",descricao:"",tipoResposta:"OK/NOK/N.A.",unidade:"",minimo:"",maximo:"",criterio:"",obrigatorio:true,permiteNA:true,exigirObservacaoDesvio:false,submedicoes:[]});
+  }
+  qrChecklistRenderItemsA21();
+  qrChecklistScopeChangedA21();
+  return true;
+}
+function qrChecklistScrollToItemA24(index){
+  requestAnimationFrame(()=>{
+    const card=$("checklistItemsEditor")?.querySelector(`[data-check-item="${index}"]`);
+    if(!card)return;
+    try{card.scrollIntoView({behavior:"smooth",block:"center"})}catch(e){card.scrollIntoView()}
+    setTimeout(()=>{
+      const field=card.querySelector('[data-f="descricao"]');
+      if(field){try{field.focus({preventScroll:true})}catch(e){field.focus()}}
+    },280);
+  });
+}
 function qrChecklistSubRowA22(sm,i,j){sm=sm||{};return `<div class="checklist-sub-row" data-sub-row="${j}"><label>${qrChecklistTextA21("Submedição *","Submeasurement *")}<input data-sub-f="nome" data-sub-index="${j}" value="${esc(sm.nome||"")}" placeholder="Ex.: RS"></label><label>${qrChecklistTextA21("Tipo numérico *","Numeric type *")}<select data-sub-f="tipoResposta" data-sub-index="${j}">${qrChecklistSubTypeOptionsA22(sm.tipoResposta||"Decimal 1 casa")}</select></label><label>${qrChecklistTextA21("Unidade","Unit")}<input data-sub-f="unidade" data-sub-index="${j}" value="${esc(sm.unidade||"")}" placeholder="V"></label><label>${qrChecklistTextA21("Mínimo","Minimum")}<input data-sub-f="minimo" data-sub-index="${j}" inputmode="decimal" value="${esc(sm.minimo??"")}"></label><label>${qrChecklistTextA21("Máximo","Maximum")}<input data-sub-f="maximo" data-sub-index="${j}" inputmode="decimal" value="${esc(sm.maximo??"")}"></label><button type="button" class="btn btn-danger checklist-sub-remove" data-sub-remove="${j}" title="${qrChecklistTextA21("Remover submedição","Remove submeasurement")}">×</button></div>`}
 function qrChecklistRenderSubPanelA22(it,i){const subs=Array.isArray(it.submedicoes)?it.submedicoes:[];return `<div class="checklist-sub-panel"><div class="checklist-sub-head"><div><div class="checklist-sub-title">${qrChecklistTextA21("Submedições","Submeasurements")}</div><div class="checklist-sub-help">${qrChecklistTextA21("Cada leitura pode ter seu próprio tipo numérico, unidade e faixa. Ex.: RS, RT e ST.","Each reading can have its own numeric type, unit and range. E.g. RS, RT and ST.")}</div></div><div class="checklist-sub-actions"><button class="btn btn-secondary" type="button" data-sub-preset-phase="${i}">⚡ RS / RT / ST</button><button class="btn btn-secondary" type="button" data-sub-add="${i}">+ ${qrChecklistTextA21("Submedição","Submeasurement")}</button></div></div><div class="checklist-sub-list">${subs.length?subs.map((sm,j)=>qrChecklistSubRowA22(sm,i,j)).join(""):`<div class="checklist-empty">${qrChecklistTextA21("Adicione as leituras que pertencem a esta verificação.","Add the readings that belong to this inspection.")}</div>`}</div></div>`}
 function qrChecklistRenderItemsA21(){
@@ -9142,6 +9231,7 @@ function qrChecklistRenderItemsA21(){
       const f=el.dataset.f;
       const handler=()=>{
         it[f]=el.type==="checkbox"?el.checked:el.value;
+        qrChecklistQueueDraftA24();
         if(f==="tipoResposta"){
           if(el.value==="OK/NOK/N.A.")it.permiteNA=true;
           if(qrChecklistIsMultipleA22(el.value)&&!Array.isArray(it.submedicoes))it.submedicoes=[];
@@ -9155,24 +9245,87 @@ function qrChecklistRenderItemsA21(){
     });
     card.querySelectorAll('[data-sub-f]').forEach(el=>{
       const j=Number(el.dataset.subIndex),f=el.dataset.subF;
-      const handler=()=>{it.submedicoes[j][f]=el.value;if(f==="tipoResposta")qrChecklistRenderItemsA21()};
+      const handler=()=>{it.submedicoes[j][f]=el.value;qrChecklistQueueDraftA24();if(f==="tipoResposta")qrChecklistRenderItemsA21()};
       el.addEventListener('change',handler);if(el.tagName==='INPUT')el.addEventListener('input',handler);
     });
-    const add=card.querySelector('[data-sub-add]');if(add)add.onclick=()=>{it.submedicoes=Array.isArray(it.submedicoes)?it.submedicoes:[];it.submedicoes.push({nome:"",tipoResposta:"Decimal 1 casa",unidade:"",minimo:"",maximo:""});qrChecklistRenderItemsA21()};
-    const preset=card.querySelector('[data-sub-preset-phase]');if(preset)preset.onclick=()=>{const existing=new Map((it.submedicoes||[]).map(x=>[String(x.nome||"").trim().toUpperCase(),x]));["RS","RT","ST"].forEach(n=>{if(!existing.has(n))(it.submedicoes||(it.submedicoes=[])).push({nome:n,tipoResposta:"Inteiro",unidade:"V",minimo:"",maximo:""})});qrChecklistRenderItemsA21()};
-    card.querySelectorAll('[data-sub-remove]').forEach(b=>b.onclick=()=>{it.submedicoes.splice(Number(b.dataset.subRemove),1);qrChecklistRenderItemsA21()});
+    const add=card.querySelector('[data-sub-add]');if(add)add.onclick=()=>{it.submedicoes=Array.isArray(it.submedicoes)?it.submedicoes:[];it.submedicoes.push({nome:"",tipoResposta:"Decimal 1 casa",unidade:"",minimo:"",maximo:""});qrChecklistRenderItemsA21();qrChecklistQueueDraftA24()};
+    const preset=card.querySelector('[data-sub-preset-phase]');if(preset)preset.onclick=()=>{const existing=new Map((it.submedicoes||[]).map(x=>[String(x.nome||"").trim().toUpperCase(),x]));["RS","RT","ST"].forEach(n=>{if(!existing.has(n))(it.submedicoes||(it.submedicoes=[])).push({nome:n,tipoResposta:"Inteiro",unidade:"V",minimo:"",maximo:""})});qrChecklistRenderItemsA21();qrChecklistQueueDraftA24()};
+    card.querySelectorAll('[data-sub-remove]').forEach(b=>b.onclick=()=>{it.submedicoes.splice(Number(b.dataset.subRemove),1);qrChecklistRenderItemsA21();qrChecklistQueueDraftA24()});
   });
-  host.querySelectorAll('[data-remove]').forEach(b=>b.onclick=()=>{checklistModelsItemsA21.splice(Number(b.dataset.remove),1);qrChecklistRenderItemsA21()});
-  host.querySelectorAll('[data-up]').forEach(b=>b.onclick=()=>{const i=Number(b.dataset.up);[checklistModelsItemsA21[i-1],checklistModelsItemsA21[i]]=[checklistModelsItemsA21[i],checklistModelsItemsA21[i-1]];qrChecklistRenderItemsA21()});
-  host.querySelectorAll('[data-down]').forEach(b=>b.onclick=()=>{const i=Number(b.dataset.down);[checklistModelsItemsA21[i+1],checklistModelsItemsA21[i]]=[checklistModelsItemsA21[i],checklistModelsItemsA21[i+1]];qrChecklistRenderItemsA21()});
+  host.querySelectorAll('[data-remove]').forEach(b=>b.onclick=()=>{checklistModelsItemsA21.splice(Number(b.dataset.remove),1);qrChecklistRenderItemsA21();qrChecklistQueueDraftA24()});
+  host.querySelectorAll('[data-up]').forEach(b=>b.onclick=()=>{const i=Number(b.dataset.up);[checklistModelsItemsA21[i-1],checklistModelsItemsA21[i]]=[checklistModelsItemsA21[i],checklistModelsItemsA21[i-1]];qrChecklistRenderItemsA21();qrChecklistQueueDraftA24()});
+  host.querySelectorAll('[data-down]').forEach(b=>b.onclick=()=>{const i=Number(b.dataset.down);[checklistModelsItemsA21[i+1],checklistModelsItemsA21[i]]=[checklistModelsItemsA21[i],checklistModelsItemsA21[i+1]];qrChecklistRenderItemsA21();qrChecklistQueueDraftA24()});
 }
-function qrChecklistAddItemA21(){checklistModelsItemsA21.push({grupo:"",descricao:"",tipoResposta:"OK/NOK/N.A.",unidade:"",minimo:"",maximo:"",criterio:"",obrigatorio:true,permiteNA:true,exigirObservacaoDesvio:false,submedicoes:[]});qrChecklistRenderItemsA21()}
-function qrChecklistSetSelectedAssetA21(a){$("checklistAssetId").value=a?.id||"";$("checklistAssetSearch").value=a?.nome||a?.id||"";$("checklistSelectedAsset").innerHTML=`<b>${esc(a?.id||"")}</b> — ${esc(a?.nome||"")}${a?.pavimento?` • ${esc(a.pavimento)}`:""}${a?.localizacao?` • ${esc(a.localizacao)}`:""}`;show("checklistSelectedAsset");hide("checklistAssetSearchResults")}
+function qrChecklistAddItemA21(scrollToNew=true){checklistModelsItemsA21.push({grupo:"",descricao:"",tipoResposta:"OK/NOK/N.A.",unidade:"",minimo:"",maximo:"",criterio:"",obrigatorio:true,permiteNA:true,exigirObservacaoDesvio:false,submedicoes:[]});const idx=checklistModelsItemsA21.length-1;qrChecklistRenderItemsA21();qrChecklistQueueDraftA24();if(scrollToNew)qrChecklistScrollToItemA24(idx)}
+function qrChecklistSetSelectedAssetA21(a,saveDraft=true){$("checklistAssetId").value=a?.id||"";$("checklistAssetSearch").value=a?.nome||a?.id||"";$("checklistSelectedAsset").innerHTML=`<b>${esc(a?.id||"")}</b> — ${esc(a?.nome||"")}${a?.pavimento?` • ${esc(a.pavimento)}`:""}${a?.localizacao?` • ${esc(a.localizacao)}`:""}`;show("checklistSelectedAsset");hide("checklistAssetSearchResults");if(saveDraft)qrChecklistQueueDraftA24()}
 async function qrChecklistSearchAssetA21(){const q=$("checklistAssetSearch").value.trim(),host=$("checklistAssetSearchResults");$("checklistAssetId").value="";hide("checklistSelectedAsset");if(q.length<2){host.innerHTML='<div class="agenda-asset-empty">Digite pelo menos 2 caracteres.</div>';show("checklistAssetSearchResults");return}host.innerHTML='<div class="agenda-asset-empty">Buscando...</div>';show("checklistAssetSearchResults");try{const r=await menuApi({action:"search",q,__qrForce:true});if(!r.ok)throw new Error(r.detail||"Erro na busca.");checklistAssetSearchResultsA21=r.results||[];host.innerHTML=checklistAssetSearchResultsA21.length?checklistAssetSearchResultsA21.map((a,i)=>`<button type="button" class="checklist-asset-option" data-asset-index="${i}"><b>${esc(a.id)}</b> — ${esc(a.nome||"")}<small>${esc([a.pavimento,a.localizacao,a.ambiente].filter(Boolean).join(" • "))}</small></button>`).join(""):'<div class="agenda-asset-empty">Nenhum ativo operacional encontrado.</div>';host.querySelectorAll('[data-asset-index]').forEach(b=>b.onclick=()=>qrChecklistSetSelectedAssetA21(checklistAssetSearchResultsA21[Number(b.dataset.assetIndex)]));}catch(e){host.innerHTML=`<div class="agenda-asset-empty">${esc(e.message||String(e))}</div>`}}
 function openChecklistModelA21(id=""){
-  const m=id?(checklistModelsDataA21?.items||[]).find(x=>x.id===id):null;checklistModelEditingA21=m||null;$("checklistModelModalTitle").textContent=m?"📋 Editar modelo de checklist":"📋 Novo modelo de checklist";$("checklistModelId").value=m?.id||"";$("checklistModelName").value=m?.nome||"";$("checklistScope").value=m?.escopo||"Geral";qrChecklistFillTypesA21();$("checklistEquipmentType").value=m?.escopo==="Tipo de equipamento"?m.valorEscopo||"":"";$("checklistDefault").checked=!!m?.padrao;$("checklistActive").checked=m?m.ativo!==false:true;$("checklistNotes").value=m?.observacoes||"";$("checklistAssetSearch").value="";$("checklistAssetId").value="";hide("checklistSelectedAsset");hide("checklistAssetSearchResults");if(m?.escopo==="Ativo específico"&&m.idAtivo){qrChecklistSetSelectedAssetA21({id:m.idAtivo,nome:m.valorEscopo||m.idAtivo})}checklistModelsItemsA21=(m?.itens||[]).map(x=>({...x,submedicoes:Array.isArray(x.submedicoes)?x.submedicoes.map(sm=>({...sm})):[]}));if(!checklistModelsItemsA21.length)qrChecklistAddItemA21();else qrChecklistRenderItemsA21();qrChecklistScopeChangedA21();$("checklistModelMessage").className="message";$("checklistModelMessage").textContent="";$("checklistModelModal").style.display="flex";
+  const m=id?(checklistModelsDataA21?.items||[]).find(x=>x.id===id):null;
+  checklistModelEditingA21=m||null;
+  $("checklistModelModalTitle").textContent=m?"📋 Editar modelo de checklist":"📋 Novo modelo de checklist";
+  $("checklistModelId").value=m?.id||"";
+  $("checklistModelName").value=m?.nome||"";
+  $("checklistScope").value=m?.escopo||"Geral";
+  qrChecklistFillTypesA21();
+  $("checklistEquipmentType").value=m?.escopo==="Tipo de equipamento"?m.valorEscopo||"":"";
+  $("checklistDefault").checked=!!m?.padrao;
+  $("checklistActive").checked=m?m.ativo!==false:true;
+  $("checklistNotes").value=m?.observacoes||"";
+  $("checklistAssetSearch").value="";
+  $("checklistAssetId").value="";
+  hide("checklistSelectedAsset");
+  hide("checklistAssetSearchResults");
+  if(m?.escopo==="Ativo específico"&&m.idAtivo){qrChecklistSetSelectedAssetA21({id:m.idAtivo,nome:m.valorEscopo||m.idAtivo},false)}
+  checklistModelsItemsA21=(m?.itens||[]).map(x=>({...x,submedicoes:Array.isArray(x.submedicoes)?x.submedicoes.map(sm=>({...sm})):[]}));
+  let restored=false;
+  if(!m){
+    const draft=qrChecklistReadDraftA24();
+    if(draft&&(String(draft.name||"").trim()||draft.items?.length))restored=qrChecklistRestoreDraftA24(draft);
+  }
+  if(!restored){
+    if(!checklistModelsItemsA21.length)qrChecklistAddItemA21(false);else qrChecklistRenderItemsA21();
+    qrChecklistScopeChangedA21();
+  }
+  $("checklistModelMessage").className=restored?"message success":"message";
+  $("checklistModelMessage").textContent=restored?qrChecklistTextA21("Rascunho recuperado automaticamente. Continue de onde parou.","Draft restored automatically. Continue where you left off."):"";
+  $("checklistModelModal").style.display="flex";
+  if(restored)setTimeout(()=>{$("checklistModelModal")?.querySelector('.modal-content')?.scrollTo?.({top:0,behavior:"smooth"})},60);
 }
-async function saveChecklistModelA21(){const btn=$("checklistModelSave"),msg=$("checklistModelMessage");const scope=$("checklistScope").value;const payload={action:"savechecklistmodel",checklistModelId:$("checklistModelId").value,checklistModelName:$("checklistModelName").value,checklistScope:scope,checklistScopeValue:scope==="Tipo de equipamento"?$("checklistEquipmentType").value:"",checklistAssetId:scope==="Ativo específico"?$("checklistAssetId").value:"",checklistDefault:$("checklistDefault").checked,checklistActive:$("checklistActive").checked,checklistNotes:$("checklistNotes").value,checklistItems:checklistModelsItemsA21};btn.disabled=true;btn.textContent=qrChecklistTextA21("Salvando...","Saving...");msg.className="message loading";msg.textContent=qrChecklistTextA21("Salvando modelo...","Saving model...");try{const r=await menuApiPost(payload);if(!r.ok)throw new Error(r.detail||"Não foi possível salvar o modelo.");msg.className="message success";msg.textContent=qrChecklistTextA21("Modelo salvo com sucesso.","Model saved successfully.");qrInvalidateLocalCacheB530("checklist-model-save");setTimeout(async()=>{$("checklistModelModal").style.display="none";await loadChecklistModelsA21(true)},500);}catch(e){msg.className="message error";msg.textContent=e.message||String(e)}finally{btn.disabled=false;btn.textContent=qrChecklistTextA21("Salvar modelo","Save model")}}
+async function saveChecklistModelA21(){
+  const btn=$("checklistModelSave"),msg=$("checklistModelMessage");
+  const scope=$("checklistScope").value;
+  const name=String($("checklistModelName").value||"").trim();
+  if(!name){msg.className="message error";msg.textContent=qrChecklistTextA21("Informe o nome do modelo.","Enter the model name.");$("checklistModelName").focus();return}
+  if(scope==="Tipo de equipamento"&&!String($("checklistEquipmentType").value||"").trim()){msg.className="message error";msg.textContent=qrChecklistTextA21("Selecione o tipo de equipamento.","Select the equipment type.");$("checklistEquipmentType").focus();return}
+  if(scope==="Ativo específico"&&!String($("checklistAssetId").value||"").trim()){msg.className="message error";msg.textContent=qrChecklistTextA21("Busque e selecione o ativo específico.","Search and select the specific asset.");$("checklistAssetSearch").focus();return}
+  if(!Array.isArray(checklistModelsItemsA21)||!checklistModelsItemsA21.length){msg.className="message error";msg.textContent=qrChecklistTextA21("Adicione pelo menos um item ao checklist.","Add at least one checklist item.");return}
+  const missingIndex=checklistModelsItemsA21.findIndex(it=>!String(it?.descricao||"").trim());
+  if(missingIndex>=0){msg.className="message error";msg.textContent=qrChecklistTextA21(`Informe a descrição do item ${missingIndex+1}.`,`Enter the description for item ${missingIndex+1}.`);return}
+  const payload={
+    action:"savechecklistmodel",
+    checklistModelId:$("checklistModelId").value,
+    checklistModelName:name,
+    checklistScope:scope,
+    checklistScopeValue:scope==="Tipo de equipamento"?$("checklistEquipmentType").value:"",
+    checklistAssetId:scope==="Ativo específico"?$("checklistAssetId").value:"",
+    checklistDefault:$("checklistDefault").checked?"true":"false",
+    checklistActive:$("checklistActive").checked?"true":"false",
+    checklistNotes:$("checklistNotes").value,
+    // URLSearchParams não transporta arrays de objetos corretamente.
+    // Serializamos explicitamente para o backend reconstruir via JSON.parse.
+    checklistItems:JSON.stringify(checklistModelsItemsA21)
+  };
+  btn.disabled=true;btn.textContent=qrChecklistTextA21("Salvando...","Saving...");msg.className="message loading";msg.textContent=qrChecklistTextA21("Salvando modelo...","Saving model...");
+  try{const r=await menuApiPost(payload);if(!r.ok)throw new Error(r.detail||"Não foi possível salvar o modelo.");msg.className="message success";msg.textContent=qrChecklistTextA21("Modelo salvo com sucesso.","Model saved successfully.");qrChecklistClearDraftA24();qrInvalidateLocalCacheB530("checklist-model-save");setTimeout(async()=>{$("checklistModelModal").style.display="none";await loadChecklistModelsA21(true)},500)}catch(e){msg.className="message error";msg.textContent=e.message||String(e)}finally{btn.disabled=false;btn.textContent=qrChecklistTextA21("Salvar modelo","Save model")}
+}
+
+const qrChecklistModalA24=$("checklistModelModal");
+if(qrChecklistModalA24&&!qrChecklistModalA24.dataset.draftListenerA24){
+  qrChecklistModalA24.dataset.draftListenerA24="1";
+  ["input","change"].forEach(evt=>qrChecklistModalA24.addEventListener(evt,e=>{
+    if(e.target&&e.target.closest&&e.target.closest("#checklistModelModal"))qrChecklistQueueDraftA24();
+  }));
+}
 
 $("tabChecklistModels").onclick=showChecklistModelsTabA21;$("checklistModelsBackMenu").onclick=openDefaultAllowedTab;$("checklistModelNew").onclick=()=>openChecklistModelA21();$("checklistModelCancel").onclick=()=>{$("checklistModelModal").style.display="none"};$("checklistModelSave").onclick=saveChecklistModelA21;$("checklistScope").onchange=qrChecklistScopeChangedA21;$("checklistAddItem").onclick=qrChecklistAddItemA21;$("checklistAssetSearchButton").onclick=qrChecklistSearchAssetA21;$("checklistAssetSearch").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();qrChecklistSearchAssetA21()}};$("qrAlertsRefreshB5320").onclick=()=>loadAlertsSummaryB5320_({force:true});$("auditRefresh").onclick=()=>loadAudit({force:true,context:"buscar-manual"});$("auditClear").onclick=clearAuditFilters;$("auditSearch").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();loadAudit()}};$("cancelUser").onclick=()=>{$("userModal").style.display="none"};$("saveUser").onclick=saveUser;$("userEmail").oninput=updateUserPrimaryAction76617;$("cancelAdminUserPassword").onclick=()=>{$("adminUserPasswordModal").style.display="none"};$("saveAdminUserPassword").onclick=saveAdminUserPassword76617;$("sendSystemLogin").onclick=doSystemLogin;$("systemPassword").onkeydown=e=>{if(e.key==="Enter")doSystemLogin()};$("cancelSystemLogin").onclick=()=>{systemLoginNextAction=null;$("systemLoginModal").style.display="none";if(!systemSession)showMenuGate()};$("systemLogoutButton").onclick=logoutSystemMenu;$("installAppButton").onclick=installQRManut;$("tabSearch").onclick=showSearchTab;$("tabPending").onclick=showPendingTab;$("pendingApplyFilters").onclick=()=>loadPending({force:true,context:"buscar-manual"});$("pendingClearFilters").onclick=clearPendingFilters;$("tabOccurrenceReport").onclick=showOccurrenceReportTab;$("tabPreventive").onclick=showPreventiveTab;$("tabMaintenanceAgenda").onclick=showMaintenanceAgendaTab76631;$("maintenanceAgendaBackMenu").onclick=openDefaultAllowedTab;$("maintenanceAgendaRefresh").onclick=()=>loadMaintenanceAgenda76631_({force:true});$("maintenanceAgendaSearchButton").onclick=()=>loadMaintenanceAgenda76631_({force:true});$("maintenanceAgendaClear").onclick=clearMaintenanceAgendaFilters76631_;$("maintenanceAgendaNew").onclick=()=>openMaintenanceAgendaModal76631_();$("maintenanceAgendaAnnual").onclick=openMaintenanceAgendaAnnual766313_;$("maintenanceAgendaAnnualCancel").onclick=()=>{if(!agendaAnnualSaving766313)$("maintenanceAgendaAnnualModal").style.display="none"};$("maintenanceAgendaAnnualSave").onclick=saveMaintenanceAgendaAnnual766313_;$("agendaAnnualAssetSearchButton").onclick=qrAgendaAnnualRefreshAssetSearch766313_;$("agendaAnnualAssetSearch").addEventListener("input",()=>{qrAgendaAnnualClearAsset766313_();qrAgendaAnnualAssetSearchResults766315_=[];hide("agendaAnnualAssetSearchResults");qrAgendaQueueAssetSearch766316_(true)});$("agendaAnnualAssetSearch").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();qrAgendaAnnualRefreshAssetSearch766313_()}});$("agendaAnnualExecution").onchange=qrAgendaAnnualToggleProvider766313_;$("agendaAnnualYear").addEventListener("change",qrAgendaAnnualRenderCalendar766313_);$("agendaAnnualClearDates").onclick=()=>{agendaAnnualSelectedDates766313.clear();qrAgendaAnnualRenderCalendar766313_()};$("maintenanceAgendaCancel").onclick=()=>{if(!maintenanceAgendaSaving76631)$("maintenanceAgendaModal").style.display="none"};$("maintenanceAgendaSave").onclick=saveMaintenanceAgenda76631_;$("agendaAssetSearchButton").onclick=qrAgendaRefreshAssetSearch76631_;$("agendaAssetSearch").addEventListener("input",()=>{qrAgendaClearAssetSelection76631_();qrAgendaAssetSearchResults766315_=[];hide("agendaAssetSearchResults");qrAgendaQueueAssetSearch766316_(false)});$("agendaAssetSearch").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();qrAgendaRefreshAssetSearch76631_()}});$("agendaExecution").onchange=qrAgendaToggleProvider76631_;["agendaPlannedStart","agendaPlannedEnd","agendaConfirmedDate","agendaConfirmedTime"].forEach(id=>$(id).addEventListener("change",qrAgendaToggleReprogram76631_));["maintenanceAgendaView","maintenanceAgendaType","maintenanceAgendaStatus","maintenanceAgendaProvider"].forEach(id=>$(id).addEventListener("change",()=>loadMaintenanceAgenda76631_()));$("maintenanceAgendaSearch").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();loadMaintenanceAgenda76631_()}};$("tabDocuments").onclick=showDocumentsTab;$("tabMaintenancePending").onclick=showMaintenancePendingTab;$("maintenancePendingBackMenu").onclick=openDefaultAllowedTab;$("maintenancePendingRefresh").onclick=()=>loadMaintenancePending({force:true,context:"buscar-manual"});$("maintenancePendingClear").onclick=clearMaintenancePendingFilters;$("maintenancePendingSearch").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();loadMaintenancePending()}};$("maintenancePendingStatusFilter").onchange=loadMaintenancePending;$("maintenancePendingPriorityFilter").onchange=loadMaintenancePending;$("preventiveNeedsAction").onchange=togglePreventiveActionFields;$("tabOccurrenceCatalog").onclick=showOccurrenceCatalogTab;$("occurrenceCatalogBackMenu").onclick=openDefaultAllowedTab;$("saveCatalogCategory").onclick=saveCatalogCategory;$("clearCatalogCategory").onclick=clearCatalogCategoryForm;$("saveCatalogComponent").onclick=saveCatalogComponent;$("clearCatalogComponent").onclick=clearCatalogComponentForm;$("category").onchange=()=>populateOccurrenceComponentSelect();$("manageCategory").onchange=()=>populateManageCatalog($("manageCategory").value,"");$("tabDocumentUpload").onclick=showDocumentUploadTab;$("documentUploadBackMenu").onclick=cancelDocumentUpload;$("uploadDocumentChooseFileButton").onclick=()=>$("uploadDocumentFile").click();$("uploadDocumentFile").onchange=prepareDocumentUploadFile;$("sendDocumentUpload").onclick=sendDocumentUpload;$("clearDocumentUpload").onclick=clearDocumentUploadForm;$("searchButton").onclick=searchAssets;$("qrScanButton").onclick=openQrScanner7662513;$("qrScannerCancel").onclick=closeQrScanner7662513;$("qrScannerSwitch").onclick=switchQrScannerCamera7662513;$("searchInput").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();searchAssets()}};$("documentSearchButton").onclick=()=>searchDocuments({force:true,context:"buscar-manual"});$("documentSearchInput").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();searchDocuments()}};$("documentTypeFilter").onchange=searchDocuments;$("documentDisciplineFilter").onchange=searchDocuments;$("documentFloorFilter").onchange=searchDocuments;$("reportButton").onclick=openReport;$("preventiveButton").onclick=requestPreventive;
 $("searchAssetsButton").onclick=function(){
