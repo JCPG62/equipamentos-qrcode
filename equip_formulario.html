@@ -1718,6 +1718,7 @@ body{
     <div id="classificationSection" class="section hidden"><h3>Classificação</h3><div id="classification"></div></div>
     <div id="locationSection" class="section hidden"><h3>Localização</h3><div id="location"></div></div>
     <div id="technicalSection" class="section hidden"><h3>Características Técnicas</h3><div id="technical"></div></div>
+    <div id="electricalProtectionSection" class="section hidden"><h3>⚡ Alimentação elétrica / Proteção</h3><div id="electricalProtection"></div></div>
     <div class="section"><h3>Gestão do Ativo</h3><div id="management"></div></div>
     <div id="assetDocumentsSection" class="section hidden"><h3>📚 Documentos do Equipamento</h3><div id="assetDocumentsStatus" class="muted"></div><div id="assetDocuments" class="asset-document-list"></div></div>
     <div class="actions"><button id="reportButton" class="chip">Reportar Serviço / Anomalia / Reparo</button><button id="preventiveButton" class="btn-preventive hidden">🛠️ Registrar Preventiva</button><button id="searchAssetsButton" class="btn-search">☰ Menu Principal</button></div>
@@ -4793,14 +4794,20 @@ function renderAsset(a){
     [t("Amperagem Nominal","Rated Current"),val(a.amperagem_nominal_fla)],
     [t("Amperagem de Partida","Starting Current"),val(a.amperagem_de_partida_flr)],
     [t("Amperagem Medida","Measured Current"),val(a.amperagem_medida)],
-    [t("Voltagem","Voltage"),val(a.voltagem)],
-    [t("Quadro de Disjuntores","Breaker Panel"),val(a.quadro_de_disjuntores||a.quadroDisjuntores)],
-    [t("Disjuntor / Circuito","Breaker / Circuit"),val(a.disjuntor_do_equipamento||a.disjuntorEquipamento)],
     [t("Peso","Weight"),val(a.peso)],
     [t("Ano de Aquisição","Acquisition Year"),val(a.ano_de_aquisicao)],
     [t("Vida Útil Estimada","Estimated Useful Life"),val(a.vida_util_estimada)]
   ]);
   if(tech){show("technicalSection");$("technical").innerHTML=tech}
+  else{hide("technicalSection");$("technical").innerHTML=""}
+
+  const electricalProtection=pairs([
+    [t("Voltagem","Voltage"),val(a.voltagem)],
+    [t("Quadro de Disjuntores","Breaker Panel"),val(a.quadro_de_disjuntores||a.quadroDisjuntores)],
+    [t("Disjuntor / Circuito","Breaker / Circuit"),val(a.disjuntor_do_equipamento||a.disjuntorEquipamento)]
+  ]);
+  if(electricalProtection){show("electricalProtectionSection");$("electricalProtection").innerHTML=electricalProtection}
+  else{hide("electricalProtectionSection");$("electricalProtection").innerHTML=""}
 
   $("management").innerHTML=pairs([
     [t("Status cadastral","Registration Status"),val(a.status)],
@@ -4816,6 +4823,7 @@ function renderAsset(a){
   const h1=document.querySelector("#classificationSection h3");if(h1)h1.textContent=t("Classificação","Classification");
   const h2=document.querySelector("#locationSection h3");if(h2)h2.textContent=t("Localização","Location");
   const h3=document.querySelector("#technicalSection h3");if(h3)h3.textContent=t("Características Técnicas","Technical Specifications");
+  const h4=document.querySelector("#electricalProtectionSection h3");if(h4)h4.textContent=t("⚡ Alimentação elétrica / Proteção","⚡ Electrical Supply / Protection");
 
   renderAssetLifecycle766252_(a);
 }
@@ -8409,6 +8417,7 @@ const QR_ROUTINE_PT_EN={
   "Carregando...":"Loading...",
   "Classificação":"Classification",
   "Características Técnicas":"Technical Specifications",
+  "⚡ Alimentação elétrica / Proteção":"⚡ Electrical Supply / Protection",
   "Gestão do Ativo":"Asset Management",
   "📚 Documentos do Equipamento":"📚 Equipment Documents",
   "Reportar Serviço / Anomalia / Reparo":"Report Service / Issue / Repair",
