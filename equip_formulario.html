@@ -1314,14 +1314,14 @@ body{
   .preventive-checklist-meta span{padding:2px 6px}
 }
 
-/* QRManut A2.9.4 — ações de documento técnico */
+/* QRManut A2.9.5 — ações de documento técnico */
 .document-actions-a292{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
 .document-danger-a292{background:#fee2e2!important;color:#991b1b!important;border:1px solid #fecaca!important}
 .document-secondary-a292{background:#f8fafc!important;color:#334155!important;border:1px solid #cbd5e1!important}
 .asset-document-actions-a292{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
 
 
-/* QRManut A2.9.4 — edição dos metadados de documentos técnicos */
+/* QRManut A2.9.5 — edição dos metadados de documentos técnicos */
 .document-edit-a294{background:#eef2ff!important;color:#3730a3!important;border:1px solid #c7d2fe!important}
 #documentEditModal .modal-box{max-width:760px}
 
@@ -3987,10 +3987,14 @@ async function loadDocumentFilters(){
 function qrCanManageDocumentsA292_(){
   return !!(systemSession?.systemSessionToken && hasProfilePermission("UPLOAD_DOCUMENTOS"));
 }
+function qrCanDeleteDocumentsA295_(){
+  return String(systemSession?.perfil||"").toUpperCase()==="MASTER";
+}
 
 function renderDocumentsB534(items){
   const t=(pt,en)=>qrLanguage==="en-US"?en:pt;
   const canManage=qrCanManageDocumentsA292_();
+  const canDelete=qrCanDeleteDocumentsA295_();
   items=items||[];
   qrRememberDocumentsA294(items);
   $("documentStatus").textContent=qrLanguage==="en-US"?`${items.length} document(s) found`:`${items.length} documento(s) encontrado(s)`;
@@ -4016,7 +4020,7 @@ function renderDocumentsB534(items){
       `<div class="document-actions-a292">`+
         `${d.linkPdf?`<button type="button" class="document-open" onclick="openSecureFile76624('technicalDocument','${esc(d.idDocumento)}')">👁️ ${t("Abrir PDF","Open PDF")}</button>`:""}`+
         `${canManage?`<button type="button" class="document-open document-edit-a294" onclick="openEditTechnicalDocumentA294('${esc(d.idDocumento)}')">✏️ ${t("Editar dados","Edit data")}</button>`:""}`+
-        `${canManage?`<button type="button" class="document-open document-danger-a292" onclick="deleteTechnicalDocumentA292('${esc(d.idDocumento)}')">🗑️ ${t("Excluir documento","Delete document")}</button>`:""}`+
+        `${canDelete?`<button type="button" class="document-open document-danger-a292" onclick="deleteTechnicalDocumentA292('${esc(d.idDocumento)}')">🗑️ ${t("Excluir documento","Delete document")}</button>`:""}`+
       `</div>`+
     `</div>`
   ).join("");
@@ -4061,8 +4065,8 @@ async function searchDocuments(options={}){
 }
 
 async function deleteTechnicalDocumentA292(idDocumento){
-  if(!qrCanManageDocumentsA292_()){
-    return permissionDeniedMessage("Seu perfil não possui permissão para excluir documentos.","Your profile is not allowed to delete documents.");
+  if(!qrCanDeleteDocumentsA295_()){
+    return permissionDeniedMessage("Somente MASTER pode excluir documentos.","Only MASTER can delete documents.");
   }
 
   const reason=await qrPrompt(
@@ -4241,9 +4245,25 @@ async function saveTechnicalDocumentEditA294(){
     });
     if(!r.ok)throw new Error(r.detail||r.error||"Erro ao salvar documento.");
 
+    qrDocumentMapA294[String(r.idDocumento||id).trim().toUpperCase()]={
+      ...(qrDocumentMapA294[String(r.idDocumento||id).trim().toUpperCase()]||{}),
+      idDocumento:r.idDocumento||id,
+      titulo:r.titulo||$("editDocumentTitle").value.trim(),
+      tipoDocumento:r.tipoDocumento||$("editDocumentType").value,
+      disciplina:r.disciplina||$("editDocumentDiscipline").value,
+      pavimento:r.pavimento||$("editDocumentFloor").value,
+      ambiente:r.ambiente||$("editDocumentEnvironment").value.trim(),
+      prestador:r.prestador||$("editDocumentProvider").value,
+      assunto:r.assunto||$("editDocumentSubject").value.trim(),
+      revisao:r.revisao||$("editDocumentRevision").value.trim(),
+      idAtivo:r.idAtivo||$("editDocumentAsset").value.trim(),
+      observacoes:r.observacoes||$("editDocumentNotes").value.trim()
+    };
+
     $("documentEditMessage").className="message success";
-    $("documentEditMessage").textContent="✅ Documento atualizado.";
+    $("documentEditMessage").textContent=`✅ Documento atualizado. Linha ${r.row||""}`.trim();
     documentFiltersLoaded=false;
+    qrInvalidateLocalCacheB530("documento-editado");
 
     setTimeout(async()=>{
       $("documentEditModal").style.display="none";
@@ -5017,6 +5037,7 @@ function renderAssetDocuments(items){
   }
 
   const canManage=qrCanManageDocumentsA292_();
+  const canDelete=qrCanDeleteDocumentsA295_();
   const assetId=currentAsset?.id||"";
   qrRememberDocumentsA294(items);
 
@@ -5037,7 +5058,7 @@ function renderAssetDocuments(items){
         `${d.linkPdf?`<button type="button" class="document-open" onclick="openSecureFile76624('technicalDocument','${esc(d.idDocumento)}')">👁️ Abrir PDF</button>`:""}`+
         `${canManage?`<button type="button" class="document-open document-edit-a294" onclick="openEditTechnicalDocumentA294('${esc(d.idDocumento)}')">✏️ Editar dados</button>`:""}`+
         `${canManage?`<button type="button" class="document-open document-secondary-a292" onclick="unlinkTechnicalDocumentAssetA292('${esc(d.idDocumento)}','${esc(assetId)}')">🔗 Desvincular do ativo</button>`:""}`+
-        `${canManage?`<button type="button" class="document-open document-danger-a292" onclick="deleteTechnicalDocumentA292('${esc(d.idDocumento)}')">🗑️ Excluir documento</button>`:""}`+
+        `${canDelete?`<button type="button" class="document-open document-danger-a292" onclick="deleteTechnicalDocumentA292('${esc(d.idDocumento)}')">🗑️ Excluir documento</button>`:""}`+
       `</div>`+
     `</div>`;
   }).join("");
@@ -7071,7 +7092,7 @@ async function sendDocumentUpload(){
     const r=await menuApiPost({action:"uploadDocument",documentTitle:$("uploadDocumentTitle").value.trim(),documentType:$("uploadDocumentType").value,documentDiscipline:$("uploadDocumentDiscipline").value,documentFloor:$("uploadDocumentFloor").value,documentEnvironment:$("uploadDocumentEnvironment").value.trim(),documentProvider:$("uploadDocumentProvider").value,documentSubject:$("uploadDocumentSubject").value.trim(),documentRevision:$("uploadDocumentRevision").value.trim(),documentAssetId:$("uploadDocumentAsset").value.trim(),documentNotes:$("uploadDocumentNotes").value.trim(),documentFileName:documentUploadFileData.name,documentMime:documentUploadFileData.mime,documentBase64:documentUploadFileData.base64});
     if(!r.ok)throw new Error(r.detail||"Não foi possível enviar o documento.");
     $("documentUploadMessage").className="message success";$("documentUploadMessage").textContent="✅ Documento enviado com sucesso.";
-    $("documentUploadResult").innerHTML=`<div class="upload-success-card"><b>${esc(r.idDocumento)} — ${esc(r.titulo)}</b>${r.idAtivo?`<div style="margin-top:5px">Vinculado ao ativo: <b>${esc(r.idAtivo)}</b></div>`:""}<div class="document-actions-a292"><button type="button" class="open-button" style="border:0" onclick="openSecureFile76624('technicalDocument','${esc(r.idDocumento)}')">Abrir PDF</button><button type="button" class="document-open document-edit-a294" onclick="qrDocumentMapA294[String(r.idDocumento).trim().toUpperCase()]={idDocumento:r.idDocumento,titulo:r.titulo,idAtivo:r.idAtivo||'',tipoDocumento:$('uploadDocumentType').value,disciplina:$('uploadDocumentDiscipline').value,pavimento:$('uploadDocumentFloor').value,ambiente:$('uploadDocumentEnvironment').value,prestador:$('uploadDocumentProvider').value,assunto:$('uploadDocumentSubject').value,revisao:$('uploadDocumentRevision').value,observacoes:$('uploadDocumentNotes').value};openEditTechnicalDocumentA294('${esc(r.idDocumento)}')">✏️ Corrigir dados</button><button type="button" class="document-open document-danger-a292" onclick="deleteTechnicalDocumentA292('${esc(r.idDocumento)}')">🗑️ Excluir se estiver errado</button></div></div>`;
+    $("documentUploadResult").innerHTML=`<div class="upload-success-card"><b>${esc(r.idDocumento)} — ${esc(r.titulo)}</b>${r.idAtivo?`<div style="margin-top:5px">Vinculado ao ativo: <b>${esc(r.idAtivo)}</b></div>`:""}<div class="document-actions-a292"><button type="button" class="open-button" style="border:0" onclick="openSecureFile76624('technicalDocument','${esc(r.idDocumento)}')">Abrir PDF</button><button type="button" class="document-open document-edit-a294" onclick="qrDocumentMapA294[String(r.idDocumento).trim().toUpperCase()]={idDocumento:r.idDocumento,titulo:r.titulo,idAtivo:r.idAtivo||'',tipoDocumento:$('uploadDocumentType').value,disciplina:$('uploadDocumentDiscipline').value,pavimento:$('uploadDocumentFloor').value,ambiente:$('uploadDocumentEnvironment').value,prestador:$('uploadDocumentProvider').value,assunto:$('uploadDocumentSubject').value,revisao:$('uploadDocumentRevision').value,observacoes:$('uploadDocumentNotes').value};openEditTechnicalDocumentA294('${esc(r.idDocumento)}')">✏️ Corrigir dados</button>${qrCanDeleteDocumentsA295_()?`<button type="button" class="document-open document-danger-a292" onclick="deleteTechnicalDocumentA292('${esc(r.idDocumento)}')">🗑️ Excluir se estiver errado</button>`:""}</div></div>`;
     documentFiltersLoaded=false;
   }catch(e){$("documentUploadMessage").className="message error";$("documentUploadMessage").textContent=e.message}
   finally{btn.disabled=false;btn.textContent="Enviar documento";delete btn.dataset.loading}
@@ -7889,7 +7910,7 @@ async function saveAsset760(){
       amperagemPartida:$("assetStartingCurrent").value,
       amperagemMedida:$("assetMeasuredCurrent").value,
       voltagem:$("assetVoltage").value,
-      // A2.9.4 — envia nomes canônicos e alternativos para garantir gravação no backend.
+      // A2.9.5 — envia nomes canônicos e alternativos para garantir gravação no backend.
       quadroDisjuntores:$("assetBreakerPanel").value,
       disjuntorEquipamento:$("assetBreakerCircuit").value,
       assetBreakerPanel:$("assetBreakerPanel").value,
@@ -7904,7 +7925,7 @@ async function saveAsset760(){
     });
     if(!r.ok)throw new Error(r.detail||r.error||"Erro ao salvar ativo.");
 
-    // A2.9.4 — gravação direta e redundante dos dados do disjuntor.
+    // A2.9.5 — gravação direta e redundante dos dados do disjuntor.
     // Mantém os campos mesmo se o salvamento geral do ativo não atualizar essas colunas.
     const breakerSave=await assetApi760("saveassetbreakerdata",{
       row:r.row||row,
