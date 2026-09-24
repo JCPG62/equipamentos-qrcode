@@ -1,3 +1,10 @@
+<!-- QRManut 7.6.6.31 A1.8 — Avisos internos sem domínio técnico
+     - Substitui confirmações e solicitações nativas do navegador por modais próprios do QRManut.
+     - Corrige principalmente o botão Resolver em Pendências / Providências.
+     - Remove a exibição de jcpg62.github.io nos fluxos de confirmação e entrada de texto.
+     - Aplica o mesmo padrão a relatório mensal, exclusão de preventiva, permissões, geração de OC, gestão de ativos e usuários.
+     - GS permanece 7.6.6.31 A1.7; sem alteração de banco ou regra de negócio.
+-->
 <!-- QRManut 7.6.6.31 A1.6 — Busca de ativos via backend na Agenda
      - Corrige a busca de ativo do agendamento individual e da programação anual.
      - A busca passa a usar a mesma API de Busca de Ativos do Menu Principal, em vez de depender da lista de meta da Agenda.
@@ -153,7 +160,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>QRManut</title>
-<meta name="qrmanut-build" content="2026-09-22-7.6.6.31-a1-4">
+<meta name="qrmanut-build" content="2026-09-23-7.6.6.31-a1-8">
 <meta name="theme-color" content="#0b315e">
 <meta name="application-name" content="QRManut">
 <meta name="mobile-web-app-capable" content="yes">
@@ -389,7 +396,8 @@ html,body{max-width:100%;overflow-x:hidden}
  * QRManut 7.5.0.5 - Aviso próprio do sistema
  * ============================================================ */
 #qrAlertModal,
-#qrConfirmModal{
+#qrConfirmModal,
+#qrPromptModal{
   position:fixed;
   inset:0;
   z-index:99999;
@@ -401,7 +409,8 @@ html,body{max-width:100%;overflow-x:hidden}
   backdrop-filter:blur(2px);
 }
 #qrAlertModal.qr-alert-open,
-#qrConfirmModal.qr-alert-open{display:flex}
+#qrConfirmModal.qr-alert-open,
+#qrPromptModal.qr-alert-open{display:flex}
 .qr-alert-box{
   width:min(430px,calc(100vw - 32px));
   background:#fff;
@@ -443,7 +452,9 @@ html,body{max-width:100%;overflow-x:hidden}
 }
 #qrAlertOk,
 #qrConfirmOk,
-#qrConfirmCancel{
+#qrConfirmCancel,
+#qrPromptOk,
+#qrPromptCancel{
   min-width:88px;
   border:0;
   border-radius:10px;
@@ -453,13 +464,21 @@ html,body{max-width:100%;overflow-x:hidden}
   cursor:pointer;
 }
 #qrAlertOk,
-#qrConfirmOk{background:#0b315e;color:#fff}
-#qrConfirmCancel{background:#e2e8f0;color:#334155}
+#qrConfirmOk,
+#qrPromptOk{background:#0b315e;color:#fff}
+#qrConfirmCancel,
+#qrPromptCancel{background:#e2e8f0;color:#334155}
 #qrConfirmOk.qr-confirm-danger{background:#b91c1c}
 #qrAlertOk:active,
 #qrConfirmOk:active,
-#qrConfirmCancel:active{transform:translateY(1px)}
-#qrConfirmModal .qr-alert-actions{gap:8px;flex-wrap:wrap}
+#qrConfirmCancel:active,
+#qrPromptOk:active,
+#qrPromptCancel:active{transform:translateY(1px)}
+#qrConfirmModal .qr-alert-actions,
+#qrPromptModal .qr-alert-actions{gap:8px;flex-wrap:wrap}
+.qr-prompt-wrap{padding:0 20px 18px}
+.qr-prompt-input{width:100%;min-height:108px;padding:12px 13px;border:1px solid #cbd5e1;border-radius:11px;font:inherit;line-height:1.45;resize:vertical;background:#fff;color:#0f172a}
+.qr-prompt-input:focus{outline:3px solid rgba(59,130,246,.18);border-color:#93c5fd}
 
 
 /* ============================================================
@@ -1667,6 +1686,23 @@ body{
   </div>
 </div>
 
+<div id="qrPromptModal" role="dialog" aria-modal="true" aria-labelledby="qrPromptTitle" aria-describedby="qrPromptMessage">
+  <div class="qr-alert-box">
+    <div class="qr-alert-header">
+      <div class="qr-alert-logo">🔧</div>
+      <div id="qrPromptTitle">QRManut</div>
+    </div>
+    <div id="qrPromptMessage" class="qr-alert-message"></div>
+    <div class="qr-prompt-wrap">
+      <textarea id="qrPromptInput" class="qr-prompt-input" rows="4"></textarea>
+    </div>
+    <div class="qr-alert-actions">
+      <button id="qrPromptCancel" type="button">Cancelar</button>
+      <button id="qrPromptOk" type="button">Confirmar</button>
+    </div>
+  </div>
+</div>
+
 
 <section id="assetManagementPanel" class="hidden" style="margin-top:16px">
   <div class="card">
@@ -2129,6 +2165,65 @@ function qrConfirm(message,title,confirmLabel,cancelLabel,danger){
     modal.onclick=e=>{if(e.target===modal)finish(false)};
     document.addEventListener("keydown",onKey);
     setTimeout(()=>cancel.focus(),0);
+  });
+}
+
+/* A1.8 — entrada de texto interna do QRManut.
+ * Substitui window.prompt() para não exibir o domínio técnico do GitHub Pages. */
+function qrPrompt(message,title,defaultValue,confirmLabel,cancelLabel){
+  const modal=document.getElementById("qrPromptModal");
+  const msg=document.getElementById("qrPromptMessage");
+  const ttl=document.getElementById("qrPromptTitle");
+  const input=document.getElementById("qrPromptInput");
+  const ok=document.getElementById("qrPromptOk");
+  const cancel=document.getElementById("qrPromptCancel");
+
+  return new Promise(resolve=>{
+    if(!modal||!msg||!ttl||!input||!ok||!cancel){
+      qrShowAlert(
+        qrLanguage==="en-US"
+          ?"Unable to open this QRManut form. Refresh the page and try again."
+          :"Não foi possível abrir este formulário do QRManut. Atualize a página e tente novamente.",
+        "QRManut"
+      );
+      resolve(null);
+      return;
+    }
+
+    ttl.textContent=title||"QRManut";
+    msg.textContent=String(message??"");
+    input.value=String(defaultValue??"");
+    ok.textContent=confirmLabel||(qrLanguage==="en-US"?"Confirm":"Confirmar");
+    cancel.textContent=cancelLabel||(qrLanguage==="en-US"?"Cancel":"Cancelar");
+    modal.classList.add("qr-alert-open");
+
+    let finished=false;
+    const finish=value=>{
+      if(finished)return;
+      finished=true;
+      modal.classList.remove("qr-alert-open");
+      ok.onclick=null;
+      cancel.onclick=null;
+      modal.onclick=null;
+      document.removeEventListener("keydown",onKey);
+      resolve(value);
+    };
+
+    const onKey=e=>{
+      if(e.key==="Escape"){
+        e.preventDefault();
+        finish(null);
+      }else if(e.key==="Enter"&&(e.ctrlKey||e.metaKey)){
+        e.preventDefault();
+        finish(input.value);
+      }
+    };
+
+    ok.onclick=()=>finish(input.value);
+    cancel.onclick=()=>finish(null);
+    modal.onclick=e=>{if(e.target===modal)finish(null)};
+    document.addEventListener("keydown",onKey);
+    setTimeout(()=>{input.focus();input.setSelectionRange(input.value.length,input.value.length)},0);
   });
 }
 
@@ -4367,7 +4462,7 @@ function renderControlList(){
   $("controlResults").innerHTML=items.map(item=>`<div class="control-item ${item.state}"><div class="control-head"><div><b>${esc(item.id)}</b><div>${esc(item.nome)}</div></div><span class="control-status ${item.state}">${item.state==="done"?t("✅ Realizada","✅ Completed"):t("🔴 Pendente","🔴 Pending")}</span></div><div class="search-result-data"><b>${t("Prestador","Service Provider")}:</b> ${esc(item.prestador)}<br><b>${t("Pavimento","Floor")}:</b> ${esc(item.pavimento)}<br><b>${t("Localização","Location")}:</b> ${esc(item.localizacao)}${item.observacaoEquipamento?`<br><br><b>${t("Observação do equipamento","Equipment note")}:</b><br>${esc(item.observacaoEquipamento)}`:""}${item.ultimoRegistro?`<br><br><b>${t("Executada","Completed")}:</b> ${esc(formatDate(item.ultimoRegistro.data))}<br><b>${t("Responsável","Responsible")}:</b> ${esc(item.ultimoRegistro.responsavel)}${item.ultimoRegistro.observacao?`<br><b>${t("Observação da preventiva","Preventive maintenance note")}:</b> ${esc(item.ultimoRegistro.observacao)}`:""}`:""}</div><a class="open-button" href="?id=${encodeURIComponent(normalizeId(item.id))}">${t("Abrir ficha","Open record")}</a></div>`).join("");
 }
 
-async function sendMonthlyPreventiveReport(){if(!preventiveSession)return;const competencia=$("controlCompetence").value,provider=["MASTER","GESTOR"].includes(systemSession.perfil)?$("controlProvider").value:systemSession.prestador,s=preventiveControlData?.summary||{previstas:0,realizadas:0,pendentes:0},txt=$("controlTitle").textContent.replace("Preventivas – ",""),escopo=provider||"Todos os prestadores";if(!confirm(`Enviar relatório de ${txt}?\n\nEscopo: ${escopo}\n\nPrevistas: ${s.previstas}\nRealizadas: ${s.realizadas}\nPendentes: ${s.pendentes}`))return;const btn=$("sendMonthlyReport"),msg=$("monthlyReportMessage");btn.disabled=true;btn.textContent="Enviando relatório...";msg.className="message loading";msg.textContent="Gerando o PDF e enviando o relatório...";try{const r=await apiPost({action:"sendPreventiveReport",systemSessionToken:systemSession.systemSessionToken,competencia,reportProvider:provider||""});if(!r.ok)throw new Error(r.detail||"Não foi possível enviar o relatório.");msg.className="message success";msg.innerHTML=`✅ Relatório de <b>${esc(r.competenciaDescricao)}</b> enviado com sucesso.<br><br><b>Escopo:</b> ${esc(r.escopo)}<br><b>Destino:</b> ${esc(r.email)}<br><br><b>Previstas:</b> ${r.summary.previstas} • <b>Realizadas:</b> ${r.summary.realizadas} • <b>Pendentes:</b> ${r.summary.pendentes} • <b>Conclusão:</b> ${r.summary.percentual}%`}catch(e){msg.className="message error";msg.textContent=e.message}finally{btn.disabled=false;btn.textContent="📧 Enviar relatório da competência"}}
+async function sendMonthlyPreventiveReport(){if(!preventiveSession)return;const competencia=$("controlCompetence").value,provider=["MASTER","GESTOR"].includes(systemSession.perfil)?$("controlProvider").value:systemSession.prestador,s=preventiveControlData?.summary||{previstas:0,realizadas:0,pendentes:0},txt=$("controlTitle").textContent.replace("Preventivas – ",""),escopo=provider||"Todos os prestadores";if(!(await qrConfirm(`Enviar relatório de ${txt}?\n\nEscopo: ${escopo}\n\nPrevistas: ${s.previstas}\nRealizadas: ${s.realizadas}\nPendentes: ${s.pendentes}`,"QRManut","Enviar","Cancelar")))return;const btn=$("sendMonthlyReport"),msg=$("monthlyReportMessage");btn.disabled=true;btn.textContent="Enviando relatório...";msg.className="message loading";msg.textContent="Gerando o PDF e enviando o relatório...";try{const r=await apiPost({action:"sendPreventiveReport",systemSessionToken:systemSession.systemSessionToken,competencia,reportProvider:provider||""});if(!r.ok)throw new Error(r.detail||"Não foi possível enviar o relatório.");msg.className="message success";msg.innerHTML=`✅ Relatório de <b>${esc(r.competenciaDescricao)}</b> enviado com sucesso.<br><br><b>Escopo:</b> ${esc(r.escopo)}<br><b>Destino:</b> ${esc(r.email)}<br><br><b>Previstas:</b> ${r.summary.previstas} • <b>Realizadas:</b> ${r.summary.realizadas} • <b>Pendentes:</b> ${r.summary.pendentes} • <b>Conclusão:</b> ${r.summary.percentual}%`}catch(e){msg.className="message error";msg.textContent=e.message}finally{btn.disabled=false;btn.textContent="📧 Enviar relatório da competência"}}
 
 async function loadAssetHistory747(id){
   try{
@@ -5443,7 +5538,7 @@ async function deleteOccurrenceRecord(){
     resetDeleteOccurrenceUi7662511_();
   }
 }
-async function deletePreventiveRecord(registro){if(!hasProfilePermission("PREVENTIVA_EXCLUIR"))return;if(!confirm(`Excluir definitivamente a preventiva ${registro}?\n\nEsta ação ficará registrada na auditoria.`))return;try{const r=await menuApiPost({action:"deletePreventive",registro:registro});if(!r.ok)throw new Error(r.detail||"Não foi possível excluir a preventiva.");await loadPreventiveHistory()}catch(e){alert(e.message)}}
+async function deletePreventiveRecord(registro){if(!hasProfilePermission("PREVENTIVA_EXCLUIR"))return;if(!(await qrConfirm(`Excluir definitivamente a preventiva ${registro}?\n\nEsta ação ficará registrada na auditoria.`,"QRManut","Excluir","Cancelar",true)))return;try{const r=await menuApiPost({action:"deletePreventive",registro:registro});if(!r.ok)throw new Error(r.detail||"Não foi possível excluir a preventiva.");await loadPreventiveHistory()}catch(e){alert(e.message)}}
 const PASSWORD_EYE_OPEN=`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path><circle cx="12" cy="12" r="2.8"></circle></svg>`;
 const PASSWORD_EYE_CLOSED=`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3l18 18"></path><path d="M10.6 6.2A10.7 10.7 0 0 1 12 6c7 0 10 6 10 6a17.8 17.8 0 0 1-2.4 3.1"></path><path d="M6.4 6.4C3.5 8.2 2 12 2 12s3.5 6 10 6a10 10 0 0 0 4.1-.9"></path><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"></path></svg>`;
 function setupPasswordToggles(){document.querySelectorAll(".password-toggle").forEach(btn=>{btn.onclick=()=>{const input=document.getElementById(btn.dataset.passwordTarget);if(!input)return;const vis=input.type==="text";input.type=vis?"password":"text";btn.innerHTML=vis?PASSWORD_EYE_OPEN:PASSWORD_EYE_CLOSED;btn.setAttribute("aria-label",vis?"Mostrar senha":"Ocultar senha");btn.title=vis?"Mostrar senha":"Ocultar senha";input.focus()}})}
@@ -6071,7 +6166,7 @@ async function saveProfilePermissions76613(){
 }
 async function resetProfilePermissions76613(){
   if(systemSession?.perfil!=="MASTER")return;
-  if(!confirm(qrLanguage==="en-US"?"Restore the default QRManut permission matrix for MANAGER, SERVICE PROVIDER and VIEWER?":"Restaurar a matriz padrão de permissões do QRManut para GESTOR, PRESTADOR e CONSULTA?"))return;
+  if(!(await qrConfirm(qrLanguage==="en-US"?"Restore the default QRManut permission matrix for MANAGER, SERVICE PROVIDER and VIEWER?":"Restaurar a matriz padrão de permissões do QRManut para GESTOR, PRESTADOR e CONSULTA?","QRManut",qrLanguage==="en-US"?"Restore":"Restaurar",qrLanguage==="en-US"?"Cancel":"Cancelar",true)))return;
   const btn=$("resetProfilePermissions");btn.disabled=true;btn.textContent=qrLanguage==="en-US"?"Restoring...":"Restaurando...";
   try{
     const r=await menuApiPost({action:"resetProfilePermissions"});
@@ -6617,10 +6712,14 @@ async function setMaintenancePendingStatus(id,status,solution=""){
 }
 
 async function resolveMaintenancePending(id){
-  const text=prompt(
+  const text=await qrPrompt(
     qrLanguage==="en-US"
       ?"Briefly describe the action taken/resolution:"
-      :"Descreva brevemente a providência tomada/solução:"
+      :"Descreva brevemente a providência tomada/solução:",
+    qrLanguage==="en-US"?"Resolve pending action":"Resolver pendência / providência",
+    "",
+    qrLanguage==="en-US"?"Resolve":"Resolver",
+    qrLanguage==="en-US"?"Cancel":"Cancelar"
   );
   if(text===null)return;
   if(!String(text).trim()){
@@ -6631,7 +6730,7 @@ async function resolveMaintenancePending(id){
 }
 
 async function generateOccurrenceFromMaintenancePending(id){
-  if(!confirm(qrLanguage==="en-US"?"Generate a work order from this pending action?":"Gerar uma OC a partir desta pendência?"))return;
+  if(!(await qrConfirm(qrLanguage==="en-US"?"Generate a work order from this pending action?":"Gerar uma OC a partir desta pendência?","QRManut",qrLanguage==="en-US"?"Generate Work Order":"Gerar OC",qrLanguage==="en-US"?"Cancel":"Cancelar")))return;
 
   try{
     const r=await menuApiPost({
@@ -7034,14 +7133,14 @@ async function saveAsset760(){
     if(!["MASTER","GESTOR"].includes(profile)){
       return alert("Somente MASTER ou GESTOR pode corrigir a baixa de um ativo.");
     }
-    if(!confirm("Você está corrigindo a baixa/descarte deste ativo. O ativo voltará ao status selecionado e a correção ficará registrada na Auditoria. Continuar?"))return;
+    if(!(await qrConfirm("Você está corrigindo a baixa/descarte deste ativo. O ativo voltará ao status selecionado e a correção ficará registrada na Auditoria. Continuar?","QRManut","Continuar","Cancelar")))return;
   }
 
   if(willBeDisposed&&!wasDisposed){
     const confirmMessage=qrLanguage==="en-US"
       ?"Confirm the definitive retirement/disposal of this asset? It will no longer accept new work orders, preventive maintenance records or requests."
       :"Confirma a baixa/descarte definitivo deste ativo? Após a baixa ele não aceitará novas OCs, preventivas ou solicitações.";
-    if(!confirm(confirmMessage))return;
+    if(!(await qrConfirm(confirmMessage,"QRManut",qrLanguage==="en-US"?"Confirm disposal":"Confirmar baixa",qrLanguage==="en-US"?"Cancel":"Cancelar",true)))return;
   }
 
   const provider=assetProviderPayload7610();
@@ -7364,7 +7463,7 @@ function approveAccessRequest76616(id){
 }
 async function rejectAccessRequest76616(id){
   if(systemSession?.perfil!=="MASTER")return alert("Somente MASTER pode recusar solicitações.");
-  const reason=prompt(qrLanguage==="en-US"?"Reason for rejection (optional):":"Motivo da recusa (opcional):");if(reason===null)return;
+  const reason=await qrPrompt(qrLanguage==="en-US"?"Reason for rejection (optional):":"Motivo da recusa (opcional):",qrLanguage==="en-US"?"Reject access request":"Recusar solicitação de acesso","",qrLanguage==="en-US"?"Reject":"Recusar",qrLanguage==="en-US"?"Cancel":"Cancelar");if(reason===null)return;
   try{const r=await menuApiPost({action:"rejectAccessRequest",accessRequestId:id,accessRequestReason:reason});if(!r.ok)throw new Error(r.detail||"Erro ao recusar solicitação.");await loadUsers()}catch(e){alert(e.message)}
 }
 
@@ -7443,7 +7542,7 @@ async function saveAdminUserPassword76617(){
   finally{b.disabled=false;b.textContent=qrLanguage==="en-US"?"Save password":"Salvar senha"}
 }
 
-async function setUserStatus(id,status){const lbl=qrStatus7612(status);if(!confirm(qrLanguage==="en-US"?`Change the user status to ${lbl}?`:`Alterar o status do usuário para ${lbl}?`))return;try{const r=await menuApiPost({action:"updateUserStatus",userId:id,userStatus:status});if(!r.ok)throw new Error(r.detail||(qrLanguage==="en-US"?"Error updating user.":"Erro ao alterar usuário."));await loadUsers()}catch(e){alert(e.message)}}
+async function setUserStatus(id,status){const lbl=qrStatus7612(status);if(!(await qrConfirm(qrLanguage==="en-US"?`Change the user status to ${lbl}?`:`Alterar o status do usuário para ${lbl}?`,"QRManut",qrLanguage==="en-US"?"Confirm":"Confirmar",qrLanguage==="en-US"?"Cancel":"Cancelar")))return;try{const r=await menuApiPost({action:"updateUserStatus",userId:id,userStatus:status});if(!r.ok)throw new Error(r.detail||(qrLanguage==="en-US"?"Error updating user.":"Erro ao alterar usuário."));await loadUsers()}catch(e){alert(e.message)}}
 async function resendInviteUser(id){if(!hasProfilePermission("GESTAO_USUARIOS"))return alert(qrLanguage==="en-US"?"Your profile is not allowed to resend invitations.":"Seu perfil não possui permissão para reenviar convites.");const target=usersAdminData.find(u=>String(u.idUsuario)===String(id));if(target?.perfil==="MASTER"&&systemSession?.perfil!=="MASTER")return alert(qrLanguage==="en-US"?"Only MASTER can resend an invitation to another MASTER account.":"Somente MASTER pode reenviar convite para outro usuário MASTER.");try{const r=await menuApiPost({action:"resendInvite",userId:id});if(!r.ok)throw new Error(r.detail||(qrLanguage==="en-US"?"Error sending invite.":"Erro ao enviar convite."));alert(qrLanguage==="en-US"?"Invite sent.":"Convite enviado.")}catch(e){alert(e.message)}}
 
 
