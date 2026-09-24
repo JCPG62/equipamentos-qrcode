@@ -1,3 +1,10 @@
+<!-- QRManut PNCQ 7.6.6.31 A2.6.3 — Checklist Compacto da Preventiva
+     - Condensa a execução do checklist dentro do Registro da Preventiva.
+     - Grupos em accordion; títulos em uma linha; observações recolhidas.
+     - Medições múltiplas em grade compacta, com unidade/faixa exibidas de forma consolidada.
+     - Itens OK/NOK/N.A. aparecem como linhas compactas, sem poluir a tela.
+     - HTML baseado na A2.7; GS permanece A2.6.1/A2.7.
+-->
 <!-- QRManut PNCQ 7.6.6.31 A2.7 — Reaproveitamento de Checklists / Duplicar e Importar Itens
      - Adiciona Grupo/Seção, Critério/Referência e exigência de observação em desvio.
      - Novo tipo “Medição múltipla”, com submedições numéricas configuráveis.
@@ -1282,6 +1289,11 @@ body{
 @media(max-width:900px){.checklist-sub-row{grid-template-columns:1fr 1fr 1fr}.checklist-sub-remove{grid-column:3;justify-self:end}.checklist-item-main-grid{grid-template-columns:1fr 1.5fr}.checklist-item-main-grid label:last-child{grid-column:1/-1}}
 @media(max-width:800px){.checklist-item-grid{grid-template-columns:1fr 1fr}.checklist-item-grid .desc{grid-column:1/-1}.checklist-numeric-grid{grid-template-columns:1fr 1fr 1fr}}
 @media(max-width:620px){.checklist-form-grid,.checklist-item-grid,.checklist-item-main-grid,.checklist-numeric-grid,.checklist-sub-row,.checklist-import-filter{grid-template-columns:1fr}.checklist-form-grid .full,.checklist-item-grid .desc,.checklist-item-main-grid .criterion,.checklist-item-main-grid label:last-child{grid-column:auto}.checklist-sub-remove{grid-column:auto;justify-self:stretch;width:100%}.checklist-model-head{display:block}.checklist-model-badges{justify-content:flex-start;margin-top:7px}.checklist-item-head{align-items:flex-start}.checklist-item-controls{flex-wrap:wrap;justify-content:flex-end}}
+
+
+/* QRManut A2.6.3 — Checklist compacto na Preventiva */
+.preventive-checklist-groups{display:grid;gap:9px;margin-top:10px}.preventive-checklist-group{border:1px solid #dbe4f0;border-radius:13px;background:#fff;padding:0;overflow:hidden}.preventive-checklist-group>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;font-weight:900;color:#1e293b;background:#f8fafc}.preventive-checklist-group>summary::-webkit-details-marker{display:none}.preventive-checklist-group>summary:after{content:"▾";font-size:.85rem;color:#64748b}.preventive-checklist-group:not([open])>summary:after{content:"▸"}.preventive-checklist-group-count{font-size:.76rem;font-weight:800;color:#475569;background:#e2e8f0;border-radius:999px;padding:3px 8px;white-space:nowrap}.preventive-checklist-group-body{padding:8px 10px 10px;display:grid;gap:7px}.preventive-checklist-item{padding:8px 10px;margin-top:0;border-radius:11px}.preventive-checklist-item-head{align-items:center}.preventive-checklist-item-title{font-weight:900;line-height:1.2}.preventive-checklist-criterion{display:inline-block;font-size:.78rem;color:#64748b;margin-top:2px}.preventive-checklist-meta{font-size:.78rem;color:#475569;margin-top:3px;display:flex;gap:8px;flex-wrap:wrap}.preventive-checklist-meta span{background:#f1f5f9;border-radius:999px;padding:2px 7px}.preventive-checklist-status{font-size:.72rem;padding:3px 7px}.preventive-checklist-note{margin-top:6px;border-top:1px dashed #e2e8f0;padding-top:5px}.preventive-checklist-note>summary{cursor:pointer;color:#334155;font-size:.82rem;font-weight:800}.preventive-checklist-note textarea{margin-top:6px}.preventive-checklist-input-grid{display:grid;grid-template-columns:minmax(120px,1fr) minmax(130px,.85fr);gap:7px;margin-top:7px;align-items:end}.preventive-checklist-input-grid .preventive-checklist-mini{align-self:center}.preventive-checklist-choice-row{display:grid;grid-template-columns:minmax(160px,1fr);gap:6px;margin-top:7px}.preventive-checklist-choice-row label{margin:0}.preventive-checklist-subgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:7px;margin-top:7px}.preventive-checklist-subrow{display:grid;grid-template-columns:1fr;gap:5px;padding:8px;border-radius:10px;background:#f8fafc;border:1px solid #e2e8f0}.preventive-checklist-subname{font-weight:850;color:#0f172a;font-size:.9rem;line-height:1.15}.preventive-checklist-value-wrap{display:flex;align-items:center;gap:5px}.preventive-checklist-value-wrap input{min-width:0}.preventive-checklist-unit{font-size:.82rem;font-weight:800;color:#475569;min-width:22px}.preventive-checklist-state{font-size:.86rem;padding:8px 9px}.preventive-checklist-mini{font-size:.75rem;color:#64748b}.preventive-checklist-item[data-prev-type="OK/NOK/N.A."],.preventive-checklist-item[data-prev-type="Sim/Não"]{display:grid;gap:5px}.preventive-checklist-item[data-prev-type="OK/NOK/N.A."] .preventive-checklist-note,.preventive-checklist-item[data-prev-type="Sim/Não"] .preventive-checklist-note{margin-top:2px}.preventive-checklist-empty{padding:9px}
+@media(max-width:720px){.preventive-checklist-head{gap:8px}.preventive-checklist-tools{width:100%}.preventive-checklist-tools select,.preventive-checklist-tools button{width:100%}.preventive-checklist-group>summary{padding:9px 10px}.preventive-checklist-group-body{padding:7px}.preventive-checklist-item{padding:8px}.preventive-checklist-item-head{gap:6px}.preventive-checklist-input-grid{grid-template-columns:1fr}.preventive-checklist-subgrid{grid-template-columns:repeat(3,minmax(96px,1fr));overflow-x:auto;padding-bottom:2px}.preventive-checklist-subrow{min-width:96px}.preventive-checklist-state{font-size:.78rem;padding:7px 6px}.preventive-checklist-value-wrap{gap:4px}.preventive-checklist-unit{font-size:.78rem;min-width:18px}}
 
 </style>
 </head>
@@ -5316,33 +5328,52 @@ function qrPreventiveChecklistRenderA261_(){
   if(!host||!m){return}
   const groups=new Map();
   (m.itens||[]).forEach((it,i)=>{const g=String(it.grupo||qrPreventiveChecklistTextA261_("Geral","General")).trim()||qrPreventiveChecklistTextA261_("Geral","General");if(!groups.has(g))groups.set(g,[]);groups.get(g).push({it,i});});
-  host.innerHTML=[...groups.entries()].map(([g,arr])=>`<div class="preventive-checklist-group"><div class="preventive-checklist-group-title">${esc(g)}</div>${arr.map(x=>qrPreventiveChecklistItemHtmlA261_(x.it,x.i)).join("")}</div>`).join("");
+  host.innerHTML=[...groups.entries()].map(([g,arr],idx)=>`<details class="preventive-checklist-group" ${idx===0?"open":""}><summary><span>${esc(g)}</span><span class="preventive-checklist-group-count">${arr.length} ${arr.length===1?qrPreventiveChecklistTextA261_("item","item"):qrPreventiveChecklistTextA261_("itens","items")}</span></summary><div class="preventive-checklist-group-body">${arr.map(x=>qrPreventiveChecklistItemHtmlA261_(x.it,x.i)).join("")}</div></details>`).join("");
   host.querySelectorAll('input,select,textarea').forEach(el=>el.addEventListener('input',qrPreventiveChecklistUpdateStatusesA261_));
   host.querySelectorAll('input,select,textarea').forEach(el=>el.addEventListener('change',qrPreventiveChecklistUpdateStatusesA261_));
   qrPreventiveChecklistUpdateStatusesA261_();
 }
+function qrPreventiveChecklistCompactMetaA263_(it){
+  const parts=[];
+  const type=String(it.tipoResposta||"");
+  if(type==="Medição múltipla"){
+    const subs=it.submedicoes||[];
+    const units=[...new Set(subs.map(sm=>String(sm.unidade||"").trim()).filter(Boolean))];
+    const ranges=[...new Set(subs.map(sm=>qrPreventiveChecklistLimitTextA261_(sm)).filter(Boolean))];
+    if(units.length===1)parts.push(`${qrPreventiveChecklistTextA261_("Unidade padrão","Default unit")}: ${esc(units[0])}`);
+    if(ranges.length===1)parts.push(ranges[0]);
+    else if(ranges.length>1)parts.push(qrPreventiveChecklistTextA261_("Faixas individuais","Individual ranges"));
+  }else if(["Inteiro","Decimal 1 casa","Decimal 2 casas"].includes(type)){
+    const limit=qrPreventiveChecklistLimitTextA261_(it);
+    if(limit)parts.push(limit);
+  }
+  if(it.criterio)parts.push(esc(it.criterio));
+  if(!parts.length)return "";
+  return `<div class="preventive-checklist-meta">${parts.map(p=>`<span>${p}</span>`).join("")}</div>`;
+}
 function qrPreventiveChecklistItemHtmlA261_(it,i){
   const type=String(it.tipoResposta||"");
-  const criterion=it.criterio?`<div class="preventive-checklist-criterion">${esc(it.criterio)}</div>`:"";
-  const note=`<label class="preventive-checklist-note">${qrPreventiveChecklistTextA261_("Observação do item","Item note")}<textarea rows="2" data-prev-note="${i}" placeholder="${qrPreventiveChecklistTextA261_("Opcional, exceto quando houver desvio e o modelo exigir.","Optional, except when required by deviation rule.")}"></textarea></label>`;
+  const meta=qrPreventiveChecklistCompactMetaA263_(it);
+  const note=`<details class="preventive-checklist-note"><summary>${qrPreventiveChecklistTextA261_("+ Observação","+ Note")}</summary><textarea rows="2" data-prev-note="${i}" placeholder="${qrPreventiveChecklistTextA261_("Opcional, exceto quando houver desvio e o modelo exigir.","Optional, except when required by deviation rule.")}"></textarea></details>`;
   let body="";
   if(type==="OK/NOK/N.A."){
-    body=`<label>${qrPreventiveChecklistTextA261_("Resultado","Result")}<select data-prev-value="${i}"><option value="">Selecione...</option><option>OK</option><option>NOK</option>${it.permiteNA?"<option>N/A</option>":""}</select></label>`;
+    body=`<div class="preventive-checklist-choice-row"><label>${qrPreventiveChecklistTextA261_("Resultado","Result")}<select data-prev-value="${i}"><option value="">Selecione...</option><option>OK</option><option>NOK</option>${it.permiteNA?"<option>N/A</option>":""}</select></label></div>`;
   }else if(type==="Sim/Não"){
-    body=`<label>${qrPreventiveChecklistTextA261_("Resultado","Result")}<select data-prev-value="${i}"><option value="">Selecione...</option><option>Sim</option><option>Não</option>${it.permiteNA?"<option>N/A</option>":""}</select></label>`;
+    body=`<div class="preventive-checklist-choice-row"><label>${qrPreventiveChecklistTextA261_("Resultado","Result")}<select data-prev-value="${i}"><option value="">Selecione...</option><option>Sim</option><option>Não</option>${it.permiteNA?"<option>N/A</option>":""}</select></label></div>`;
   }else if(["Inteiro","Decimal 1 casa","Decimal 2 casas"].includes(type)){
-    body=`<div class="preventive-checklist-input-grid"><label>${qrPreventiveChecklistTextA261_("Valor","Value")}<input data-prev-value="${i}" inputmode="decimal" placeholder="${esc(it.unidade||"")}"></label><label>${qrPreventiveChecklistTextA261_("Situação","Status")}<select data-prev-state="${i}"><option value="medido">Medido</option><option value="nao_medido">Não medido</option>${it.permiteNA?"<option value=\"na\">N/A</option>":""}</select></label><div class="preventive-checklist-mini">${qrPreventiveChecklistLimitTextA261_(it)}</div></div>`;
+    body=`<div class="preventive-checklist-input-grid"><label>${qrPreventiveChecklistTextA261_("Valor","Value")}<div class="preventive-checklist-value-wrap"><input data-prev-value="${i}" inputmode="decimal"><span class="preventive-checklist-unit">${esc(it.unidade||"")}</span></div></label><label>${qrPreventiveChecklistTextA261_("Situação","Status")}<select class="preventive-checklist-state" data-prev-state="${i}"><option value="medido">Medido</option><option value="nao_medido">Não medido</option>${it.permiteNA?'<option value="na">N/A</option>':''}</select></label></div>`;
   }else if(type==="Medição múltipla"){
     body=`<div class="preventive-checklist-subgrid">${(it.submedicoes||[]).map((sm,j)=>qrPreventiveChecklistSubHtmlA261_(sm,i,j,it)).join("")}</div>`;
   }else if(type==="Texto"){
-    body=`<label>${qrPreventiveChecklistTextA261_("Registro","Entry")}<textarea rows="3" data-prev-value="${i}"></textarea></label>`;
+    body=`<label>${qrPreventiveChecklistTextA261_("Registro","Entry")}<textarea rows="2" data-prev-value="${i}"></textarea></label>`;
   }else if(type==="Foto"){
-    body=`<label>${qrPreventiveChecklistTextA261_("Foto / evidência","Photo / evidence")}<select data-prev-value="${i}"><option value="">Selecione...</option><option>Foto anexada no campo Foto / evidência</option><option>Não anexada</option>${it.permiteNA?"<option>N/A</option>":""}</select></label><div class="preventive-checklist-mini">${qrPreventiveChecklistTextA261_("Nesta versão piloto, use o campo geral Foto / evidência da preventiva.","In this pilot version, use the main preventive photo/evidence field.")}</div>`;
+    body=`<div class="preventive-checklist-choice-row"><label>${qrPreventiveChecklistTextA261_("Foto / evidência","Photo / evidence")}<select data-prev-value="${i}"><option value="">Selecione...</option><option>Foto anexada no campo Foto / evidência</option><option>Não anexada</option>${it.permiteNA?"<option>N/A</option>":""}</select></label></div><div class="preventive-checklist-mini">${qrPreventiveChecklistTextA261_("Nesta versão piloto, use o campo geral Foto / evidência da preventiva.","In this pilot version, use the main preventive photo/evidence field.")}</div>`;
   }
-  return `<div class="preventive-checklist-item" data-prev-check-item="${i}"><div class="preventive-checklist-item-head"><div><div class="preventive-checklist-item-title">${esc(it.descricao||"")}${it.obrigatorio?" *":""}</div>${criterion}</div><span class="preventive-checklist-status" data-prev-status="${i}">Pendente</span></div>${body}${note}</div>`;
+  return `<div class="preventive-checklist-item" data-prev-check-item="${i}" data-prev-type="${esc(type)}"><div class="preventive-checklist-item-head"><div><div class="preventive-checklist-item-title">${esc(it.descricao||"")}${it.obrigatorio?" *":""}</div>${meta}</div><span class="preventive-checklist-status" data-prev-status="${i}">Pendente</span></div>${body}${note}</div>`;
 }
 function qrPreventiveChecklistSubHtmlA261_(sm,i,j,it){
-  return `<div class="preventive-checklist-subrow" data-prev-subrow="${i}-${j}"><label>${esc(sm.nome||"Submedição")}<input data-prev-sub-value="${i}-${j}" inputmode="decimal" placeholder="${esc(sm.unidade||"")}"></label><label>${qrPreventiveChecklistTextA261_("Situação","Status")}<select data-prev-sub-state="${i}-${j}"><option value="medido">Medido</option><option value="nao_medido">Não medido</option>${it.permiteNA?"<option value=\"na\">N/A</option>":""}</select></label><div class="preventive-checklist-mini">${esc(sm.unidade||"")}</div><div class="preventive-checklist-mini">${qrPreventiveChecklistLimitTextA261_(sm)}</div><span class="preventive-checklist-status" data-prev-sub-status="${i}-${j}">Pendente</span></div>`;
+  const unit=String(sm.unidade||"").trim();
+  return `<div class="preventive-checklist-subrow" data-prev-subrow="${i}-${j}"><div class="preventive-checklist-subname">${esc(sm.nome||"Submedição")}</div><div class="preventive-checklist-value-wrap"><input data-prev-sub-value="${i}-${j}" inputmode="decimal"><span class="preventive-checklist-unit">${esc(unit)}</span></div><select class="preventive-checklist-state" data-prev-sub-state="${i}-${j}"><option value="medido">Medido</option><option value="nao_medido">Não medido</option>${it.permiteNA?'<option value="na">N/A</option>':''}</select></div>`;
 }
 function qrPreventiveChecklistLimitTextA261_(x){
   const min=String(x.minimo??"").trim(),max=String(x.maximo??"").trim(),u=String(x.unidade||"").trim();
