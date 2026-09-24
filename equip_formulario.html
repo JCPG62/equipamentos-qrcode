@@ -7591,7 +7591,7 @@ async function saveAsset760(){
       amperagemPartida:$("assetStartingCurrent").value,
       amperagemMedida:$("assetMeasuredCurrent").value,
       voltagem:$("assetVoltage").value,
-      // A2.8.2 — envia nomes canônicos e alternativos para garantir gravação no backend.
+      // A2.8.3 — envia nomes canônicos e alternativos para garantir gravação no backend.
       quadroDisjuntores:$("assetBreakerPanel").value,
       disjuntorEquipamento:$("assetBreakerCircuit").value,
       assetBreakerPanel:$("assetBreakerPanel").value,
@@ -7605,6 +7605,18 @@ async function saveAsset760(){
       observacoes:$("assetNotes").value
     });
     if(!r.ok)throw new Error(r.detail||r.error||"Erro ao salvar ativo.");
+
+    // A2.8.3 — gravação direta e redundante dos dados do disjuntor.
+    // Mantém os campos mesmo se o salvamento geral do ativo não atualizar essas colunas.
+    const breakerSave=await assetApi760("saveassetbreakerdata",{
+      row:r.row||row,
+      id:r.id||id,
+      quadroDisjuntores:$("assetBreakerPanel").value,
+      disjuntorEquipamento:$("assetBreakerCircuit").value,
+      assetBreakerPanel:$("assetBreakerPanel").value,
+      assetBreakerCircuit:$("assetBreakerCircuit").value
+    });
+    if(!breakerSave.ok)throw new Error(breakerSave.detail||breakerSave.error||"Erro ao salvar dados do disjuntor.");
 
     $("assetSaveMessage").className="message success";
 
