@@ -1314,19 +1314,19 @@ body{
   .preventive-checklist-meta span{padding:2px 6px}
 }
 
-/* QRManut A2.9.8 — ações de documento técnico */
+/* QRManut A2.9.9 — ações de documento técnico */
 .document-actions-a292{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
 .document-danger-a292{background:#fee2e2!important;color:#991b1b!important;border:1px solid #fecaca!important}
 .document-secondary-a292{background:#f8fafc!important;color:#334155!important;border:1px solid #cbd5e1!important}
 .asset-document-actions-a292{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
 
 
-/* QRManut A2.9.8 — edição dos metadados de documentos técnicos */
+/* QRManut A2.9.9 — edição dos metadados de documentos técnicos */
 .document-edit-a294{background:#eef2ff!important;color:#3730a3!important;border:1px solid #c7d2fe!important}
 #documentEditModal .modal-box{max-width:760px}
 
 
-/* QRManut A2.9.8 — tela de sessão off por inatividade */
+/* QRManut A2.9.9 — tela de sessão off por inatividade */
 .qr-session-offline-a298{
   position:fixed;
   inset:0;
@@ -3449,6 +3449,9 @@ function hasProfilePermission(key){
   if(String(systemSession.perfil||"").trim().toUpperCase()==="MASTER")return true;
   return !!(systemSession.permissions&&systemSession.permissions[key]);
 }
+function qrIsMasterA299_(){
+  return String(systemSession?.perfil||"").trim().toUpperCase()==="MASTER";
+}
 function permissionDeniedMessage(pt,en){alert(qrLanguage==="en-US"?en:pt);return false}
 function requireUiPermission(key,pt,en){return hasProfilePermission(key)||permissionDeniedMessage(pt,en)}
 function updateRoleUi(){
@@ -3461,7 +3464,7 @@ function updateRoleUi(){
   toggle("tabOccurrenceReport","RELATORIO_OC");
   toggle("tabPreventive","PREVENTIVA_CONSULTAR");
   toggle("tabMaintenanceAgenda","AGENDA_CONSULTAR");
-  toggle("tabChecklistModels","CHECKLIST_MODELOS_CONSULTAR");
+  qrIsMasterA299_()?show("tabChecklistModels"):hide("tabChecklistModels");
   toggle("tabDocuments","DOCUMENTOS_CONSULTAR");
   toggle("tabUsers","GESTAO_USUARIOS");
   isMaster?show("tabPermissions"):hide("tabPermissions");
@@ -3496,7 +3499,7 @@ function openDefaultAllowedTab(){
   if(hasProfilePermission("RELATORIO_OC"))return showOccurrenceReportTab();
   if(hasProfilePermission("PREVENTIVA_CONSULTAR"))return showPreventiveTab();
   if(hasProfilePermission("AGENDA_CONSULTAR"))return showMaintenanceAgendaTab76631();
-  if(hasProfilePermission("CHECKLIST_MODELOS_CONSULTAR"))return showChecklistModelsTabA21();
+  if(qrIsMasterA299_())return showChecklistModelsTabA21();
   if(hasProfilePermission("DOCUMENTOS_CONSULTAR"))return showDocumentsTab();
   if(hasProfilePermission("PENDENCIAS"))return showMaintenancePendingTab();
   if(hasProfilePermission("PRESTADORES_CONSULTAR"))return showProvidersAdminTab();
@@ -4450,7 +4453,7 @@ async function saveTechnicalDocumentEditA294(){
     documentFiltersLoaded=false;
     qrInvalidateLocalCacheB530("documento-editado");
 
-    // A2.9.8 — atualiza a memória local imediatamente com o retorno confirmado pelo backend.
+    // A2.9.9 — atualiza a memória local imediatamente com o retorno confirmado pelo backend.
     const updatedKey=String(r.idDocumento||id).trim().toUpperCase();
     qrDocumentMapA294[updatedKey]={
       ...(qrDocumentMapA294[updatedKey]||{}),
@@ -8113,7 +8116,7 @@ async function saveAsset760(){
       amperagemPartida:$("assetStartingCurrent").value,
       amperagemMedida:$("assetMeasuredCurrent").value,
       voltagem:$("assetVoltage").value,
-      // A2.9.8 — envia nomes canônicos e alternativos para garantir gravação no backend.
+      // A2.9.9 — envia nomes canônicos e alternativos para garantir gravação no backend.
       quadroDisjuntores:$("assetBreakerPanel").value,
       disjuntorEquipamento:$("assetBreakerCircuit").value,
       assetBreakerPanel:$("assetBreakerPanel").value,
@@ -8128,7 +8131,7 @@ async function saveAsset760(){
     });
     if(!r.ok)throw new Error(r.detail||r.error||"Erro ao salvar ativo.");
 
-    // A2.9.8 — gravação direta e redundante dos dados do disjuntor.
+    // A2.9.9 — gravação direta e redundante dos dados do disjuntor.
     // Mantém os campos mesmo se o salvamento geral do ativo não atualizar essas colunas.
     const breakerSave=await assetApi760("saveassetbreakerdata",{
       row:r.row||row,
@@ -9994,10 +9997,10 @@ function qrChecklistRenderListA21(){
 }
 async function loadChecklistModelsA21(force=false){
   $("checklistModelsStatus").textContent=qrChecklistTextA21("Carregando modelos...","Loading models...");
-  try{const r=await menuApi({action:"checklistmodels",__qrForce:force});if(!r.ok)throw new Error(r.detail||"Erro ao carregar modelos.");checklistModelsDataA21=r.data||{items:[]};checklistModelEditingA21=null;hasProfilePermission("CHECKLIST_MODELOS_EDITAR")&&checklistModelsDataA21.canEdit?show("checklistModelNew"):hide("checklistModelNew");qrChecklistRenderListA21();}
+  try{const r=await menuApi({action:"checklistmodels",__qrForce:force});if(!r.ok)throw new Error(r.detail||"Erro ao carregar modelos.");checklistModelsDataA21=r.data||{items:[]};checklistModelEditingA21=null;qrIsMasterA299_()&&checklistModelsDataA21.canEdit?show("checklistModelNew"):hide("checklistModelNew");qrChecklistRenderListA21();}
   catch(e){$("checklistModelsStatus").textContent=e.message||String(e);$("checklistModelsList").innerHTML=""}
 }
-async function showChecklistModelsTabA21(){if(!requireUiPermission("CHECKLIST_MODELOS_CONSULTAR","Seu perfil não possui permissão para consultar Modelos de Checklist.","Your profile is not allowed to view Checklist Models."))return;clearTabs();$("tabChecklistModels").classList.add("active");showOnly("checklistModelsArea");await loadChecklistModelsA21(false)}
+async function showChecklistModelsTabA21(){if(!qrIsMasterA299_())return permissionDeniedMessage("Somente MASTER pode acessar Modelos de Checklist.","Only MASTER can access Checklist Models.");clearTabs();$("tabChecklistModels").classList.add("active");showOnly("checklistModelsArea");await loadChecklistModelsA21(false)}
 function qrChecklistScopeChangedA21(){const s=$("checklistScope").value;$("checklistTypeScopeWrap").classList.toggle("hidden",s!=="Tipo de equipamento");$("checklistAssetScopeWrap").classList.toggle("hidden",s!=="Ativo específico");if(s!=="Ativo específico"){$("checklistAssetId").value="";hide("checklistSelectedAsset");hide("checklistAssetSearchResults")}}
 function qrChecklistFillTypesA21(){const el=$("checklistEquipmentType"),vals=checklistModelsDataA21?.equipmentTypes||[],cur=el.value;el.innerHTML='<option value="">Selecione...</option>'+vals.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join("");if([...el.options].some(o=>o.value===cur))el.value=cur}
 function qrChecklistResponseOptionsA21(selected){return (checklistModelsDataA21?.responseTypes||["OK/NOK/N.A.","Sim/Não","Inteiro","Decimal 1 casa","Decimal 2 casas","Medição múltipla","Texto","Foto"]).map(v=>`<option value="${esc(v)}" ${v===selected?"selected":""}>${esc(v)}</option>`).join("")}
