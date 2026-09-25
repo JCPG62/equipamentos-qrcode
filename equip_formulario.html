@@ -1,7 +1,7 @@
-<!-- QRManut PNCQ 7.6.6.31 A2.14.2
+<!-- QRManut PNCQ 7.6.6.31 A2.14.3
      VISUALIZAÇÃO DE VERSÃO ATIVA NA TELA
      - Se este texto aparecer no código fonte, o HTML correto foi publicado.
-     - Rodapé e menu exibem: QRManut • Versão 7.6.6.31 • Pacote A2.14.2
+     - Rodapé e menu exibem: QRManut • Versão 7.6.6.31 • Pacote A2.14.3
      - Build: 2026-09-24 22:20
 -->
 <!-- QRManut PNCQ 7.6.6.31 A2.6.3 — Checklist Compacto da Preventiva
@@ -179,8 +179,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>QRManut 7.6.6.31 A2.14.2</title>
-<meta name="qrmanut-build" content="7.6.6.31-A2.14.2-2026-09-24-2220">
+<title>QRManut 7.6.6.31 A2.14.3</title>
+<meta name="qrmanut-build" content="7.6.6.31-A2.14.3-2026-09-24-2220">
 <meta name="theme-color" content="#0b315e">
 <meta name="application-name" content="QRManut">
 <meta name="mobile-web-app-capable" content="yes">
@@ -1451,7 +1451,7 @@ body{
 }
 
 
-/* QRManut A2.14.2 — versão visível do pacote implantado */
+/* QRManut A2.14.3 — versão visível do pacote implantado */
 .qr-build-badge-a2101{
   display:inline-flex;
   align-items:center;
@@ -1482,7 +1482,7 @@ body{
 }
 
 
-/* QRManut A2.14.2 — ações após upload de documento */
+/* QRManut A2.14.3 — ações após upload de documento */
 .document-upload-next-actions-a2103{
   display:flex;
   gap:10px;
@@ -1496,7 +1496,7 @@ body{
 }
 
 
-/* QRManut A2.14.2 — histórico de preventivas compacto por data */
+/* QRManut A2.14.3 — histórico de preventivas compacto por data */
 #preventiveHistorySelectLabel{
   max-width:520px;
 }
@@ -1508,7 +1508,7 @@ body{
 }
 
 
-/* QRManut A2.14.2 — documentos do ativo compactos por dropdown */
+/* QRManut A2.14.3 — documentos do ativo compactos por dropdown */
 #assetDocumentsSelectLabel{
   max-width:620px;
 }
@@ -1520,7 +1520,7 @@ body{
 }
 
 
-/* QRManut A2.14.2 — histórico do checklist executado */
+/* QRManut A2.14.3 — histórico do checklist executado */
 .preventive-checklist-history-a211{
   margin-top:12px;
   padding:12px;
@@ -1580,7 +1580,7 @@ body{
 }
 
 
-/* QRManut A2.14.2 — comparação entre preventivas */
+/* QRManut A2.14.3 — comparação entre preventivas */
 .preventive-comparison-a213{
   margin-top:12px;
   padding:12px;
@@ -1662,7 +1662,7 @@ body{
 }
 
 
-/* QRManut A2.14.2 — evolução histórica do checklist */
+/* QRManut A2.14.3 — evolução histórica do checklist */
 .preventive-trend-a214{
   margin-top:12px;
   padding:12px;
@@ -1711,6 +1711,13 @@ body{
   margin-bottom:3px;
 }
 
+
+/* QRManut A2.14.3 — relatório de preventivas realizadas */
+.completed-preventive-report-filters-a2143{display:grid;grid-template-columns:repeat(3,minmax(180px,1fr));gap:10px;margin-top:14px}
+#completedPreventiveReportModalA2143 .perf-table{min-width:980px}
+#completedPreventiveReportModalA2143 .perf-table td{vertical-align:top}
+@media(max-width:760px){.completed-preventive-report-filters-a2143{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -1726,7 +1733,7 @@ body{
     <div>
       <div class="search-title">QRManut</div>
       <div id="qrAppSubtitle" class="muted">Gestão rápida de manutenção</div>
-      <div id="qrBuildBadgeA2101" class="qr-build-badge-a2101">✅ Pacote A2.14.2 • Atualizado em 2026-09-24 22:20</div>
+      <div id="qrBuildBadgeA2101" class="qr-build-badge-a2101">✅ Pacote A2.14.3 • Atualizado em 2026-09-24 22:20</div>
     </div>
     <button id="qrAlertsButtonB5320" class="qr-alerts-button-b5320 hidden" type="button" aria-expanded="false" aria-controls="qrAlertsPanelB5320" title="Central de Alertas">
       <span class="qr-alerts-bell-b5320" aria-hidden="true">🔔</span>
@@ -2149,7 +2156,15 @@ body{
       <div class="control-tabs"><button id="controlAll" class="control-tab active">Todos</button><button id="controlPending" class="control-tab">🔴 Pendentes</button><button id="controlDone" class="control-tab">✅ Realizadas</button></div>
       <div id="controlListStatus" class="muted" style="margin-top:12px"></div>
       <div id="controlResults"></div>
-      <div class="report-action-box"><strong>📧 Relatório da competência</strong><div class="muted" style="margin-top:5px">Gera um PDF com as preventivas realizadas e pendentes e envia o arquivo por e-mail.</div><button id="sendMonthlyReport" type="button" class="btn btn-blue">📧 Enviar relatório da competência</button><div id="monthlyReportMessage" class="message"></div></div>
+      <div class="report-action-box">
+  <strong>📧 Relatório da competência</strong>
+  <div class="muted" style="margin-top:5px">Gera um PDF com as preventivas realizadas e pendentes e envia o arquivo por e-mail.</div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+    <button id="sendMonthlyReport" type="button" class="btn btn-blue">📧 Enviar relatório da competência</button>
+    <button id="openCompletedPreventiveReportA2143" type="button" class="btn btn-secondary hidden">📋 Relatório de preventivas realizadas</button>
+  </div>
+  <div id="monthlyReportMessage" class="message"></div>
+</div>
     </div>
   </div>
 </div>
@@ -2189,6 +2204,36 @@ body{
 </div>
 
 
+
+
+<div id="completedPreventiveReportModalA2143" class="modal">
+  <div class="modal-box" style="max-width:1050px;max-height:92vh;overflow:auto">
+    <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap">
+      <div>
+        <h2 style="margin:0">📋 Relatório de Preventivas Realizadas</h2>
+        <div class="muted" style="margin-top:5px">Consulte as preventivas realizadas por período e emita o PDF do relatório.</div>
+      </div>
+      <button id="closeCompletedPreventiveReportA2143" class="btn btn-secondary" type="button">✕ Fechar</button>
+    </div>
+    <div class="completed-preventive-report-filters-a2143">
+      <label>Data inicial<input id="completedPreventiveReportStartA2143" type="date"></label>
+      <label>Data final<input id="completedPreventiveReportEndA2143" type="date"></label>
+      <label id="completedPreventiveReportProviderWrapA2143">Prestador<select id="completedPreventiveReportProviderA2143"><option value="">Todos</option></select></label>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+      <button id="loadCompletedPreventiveReportA2143" class="btn btn-blue" type="button">🔎 Consultar</button>
+      <button id="pdfCompletedPreventiveReportA2143" class="btn btn-secondary" type="button" disabled>📄 Gerar PDF</button>
+    </div>
+    <div id="completedPreventiveReportStatusA2143" class="muted" style="margin-top:10px"></div>
+    <div id="completedPreventiveReportSummaryA2143" class="perf-summary-grid" style="margin-top:10px"></div>
+    <div class="perf-table-wrap" style="margin-top:12px">
+      <table class="perf-table">
+        <thead><tr><th>Preventiva</th><th>Data</th><th>Ativo</th><th>Equipamento</th><th>Prestador</th><th>Responsável</th><th>Checklist</th><th>Desvios</th><th>Docs</th><th>Observação</th></tr></thead>
+        <tbody id="completedPreventiveReportRowsA2143"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
 
 <div id="qrAlertModal" role="dialog" aria-modal="true" aria-labelledby="qrAlertTitle" aria-describedby="qrAlertMessage">
   <div class="qr-alert-box">
@@ -2659,13 +2704,13 @@ body{
 </div>
 <label>Adicionar nova foto da ocorrência / correção</label><div class="photo-source-actions"><button type="button" id="manageOccurrenceCameraButton" class="btn btn-blue">📷 Tirar foto</button><button type="button" id="manageOccurrenceAttachButton" class="btn btn-secondary">🖼️ Anexar imagem</button></div><input id="manageOccurrenceCameraInput" class="photo-source-hidden" type="file" accept="image/*,.heic,.heif" capture="environment"><input id="manageOccurrencePhotoInput" class="photo-source-hidden" type="file" accept="image/*,.heic,.heif"><div id="manageOccurrencePhotoStatus" class="muted" style="margin-top:5px"></div><img id="manageOccurrencePhotoPreview" class="photo-preview"><div class="upload-file-box" style="margin-top:12px"><div style="font-weight:800">📎 Adicionar arquivo à ocorrência</div><div class="muted" style="margin-top:4px">PDF, Word, Excel ou outro arquivo de evidência, até 8 MB.</div><button id="manageAttachmentButton" type="button" class="btn btn-secondary" style="margin-top:8px">📎 Escolher arquivo</button><input id="manageAttachmentInput" class="photo-source-hidden" type="file"><div id="manageAttachmentName" class="upload-file-name">Nenhum arquivo selecionado.</div><div id="manageExistingAttachments" style="margin-top:8px"></div></div><div id="conclusionPhotoArea" class="hidden"><label>Foto da conclusão</label><div class="photo-source-actions"><button type="button" id="conclusionCameraButton" class="btn btn-blue">📷 Tirar foto</button><button type="button" id="conclusionAttachButton" class="btn btn-secondary">🖼️ Anexar imagem</button></div><input id="conclusionCameraInput" class="photo-source-hidden" type="file" accept="image/*,.heic,.heif" capture="environment"><input id="conclusionPhotoInput" class="photo-source-hidden" type="file" accept="image/*,.heic,.heif"><div id="conclusionPhotoStatus" class="muted" style="margin-top:5px"></div><img id="conclusionPhotoPreview" class="photo-preview"></div><div id="manageMessage" class="message"></div><div class="modal-actions" style="justify-content:space-between;flex-wrap:wrap"><button id="deleteOccurrence" class="btn btn-danger hidden" type="button">🗑️ Excluir ocorrência</button><div style="display:flex;gap:8px;flex-wrap:wrap"><button id="cancelManage" class="btn btn-secondary">Cancelar</button><button id="saveManage" class="btn">Salvar alterações</button></div></div></div></div>
 
-<div id="qrFooterVersionA2101" class="footer">QRManut • Versão 7.6.6.31 • Pacote A2.14.2</div>
-<div class="qr-build-watermark-a2101">A2.14.2</div>
+<div id="qrFooterVersionA2101" class="footer">QRManut • Versão 7.6.6.31 • Pacote A2.14.3</div>
+<div class="qr-build-watermark-a2101">A2.14.3</div>
 </div>
 <script>
 const API_URL="https://script.google.com/macros/s/AKfycbx4tpC42Q6WdkNhTUTAGoZWvG5M24zwlNscnwbDP5B3Q5pWo8B32-Lf0rQ2Xtua1AFMAQ/exec";
 const QRMANUT_APP_VERSION="7.6.6.31";
-const QRMANUT_FRONTEND_PACKAGE="A2.14.2";
+const QRMANUT_FRONTEND_PACKAGE="A2.14.3";
 const QRMANUT_BUILD_LABEL="2026-09-24 22:20";
 
 function qrBackendMatchesFrontendPackageA2141_(backendVersion){
@@ -3163,12 +3208,12 @@ const QR_CACHEABLE_ACTIONS_B530=new Set([
   "documents","documentfilters","documentsbundle","users","providers","accessrequests","providersadmin",
   "companyconfig","profilepermissionsadmin","auditfilters","audit","occurrencecatalogadmin",
   "maintenancepending","maintenanceagenda","documentuploadmeta","assetbundle","assetdocuments","history",
-  "preventivehistory","preventiverequirements","checklistmodels"
+  "preventivehistory","preventiverequirements","checklistmodels","completedpreventivesreport"
 ]);
 
 const QR_NON_MUTATING_POST_ACTIONS_B530=new Set([
   ...QR_CACHEABLE_ACTIONS_B530,
-  "systemsession","secureFile","secureFileMeta","secureFileChunk"
+  "systemsession","secureFile","secureFileMeta","secureFileChunk","generateCompletedPreventivesPdf"
 ]);
 
 const QR_ACTION_CONTEXT_B530={
@@ -3181,7 +3226,7 @@ const QR_ACTION_CONTEXT_B530={
   companyconfig:"empresa",profilepermissionsadmin:"permissoes",audit:"auditoria",
   auditfilters:"auditoria-filtros",occurrencecatalogadmin:"catalogo",maintenancepending:"pendencias",maintenanceagenda:"agenda-manutencao",
   documentuploadmeta:"upload-documentos-meta",assetbundle:"ficha-ativo",assetdocuments:"documentos-ativo",
-  history:"historico-ativo",preventivehistory:"preventivas-ativo",preventiverequirements:"requisitos-preventiva",checklistmodels:"modelos-checklist"
+  history:"historico-ativo",preventivehistory:"preventivas-ativo",preventiverequirements:"requisitos-preventiva",checklistmodels:"modelos-checklist",completedpreventivesreport:"relatorio-preventivas-realizadas",generateCompletedPreventivesPdf:"pdf-preventivas-realizadas"
 };
 
 function qrPerfClockB530(){return (window.performance&&performance.now)?performance.now():Date.now()}
@@ -3829,6 +3874,7 @@ function updateRoleUi(){
   toggle("tabOccurrenceCatalog","CATEGORIAS_COMPONENTES");
   toggle("tabMaintenancePending","PENDENCIAS");
   toggle("tabAssetManagement","GESTAO_ATIVOS");
+  hasProfilePermission("PREVENTIVA_RELATORIO_REALIZADAS")?show("openCompletedPreventiveReportA2143"):hide("openCompletedPreventiveReportA2143");
   hasProfilePermission("PRESTADORES_EDITAR")?show("newProviderButton"):hide("newProviderButton");
   $("userProfile").innerHTML=isMaster
     ?'<option value="PRESTADOR">PRESTADOR</option><option value="CONSULTA">CONSULTA</option><option value="GESTOR">GESTOR</option><option value="MASTER">MASTER</option>'
@@ -5659,7 +5705,7 @@ function renderAssetDocuments(items){
     ?"Document "
     :"Documento ";
 
-  // A2.14.2 — dropdown compacto: ID do documento + título.
+  // A2.14.3 — dropdown compacto: ID do documento + título.
   select.innerHTML=items.map((d,i)=>{
     const id=String(d.idDocumento||"").trim();
     const titulo=String(d.titulo||"Documento").trim();
@@ -6366,7 +6412,7 @@ function renderPreventiveHistoryItemsB5310_(items){
     ?"Preventive maintenance date "
     :"Data da preventiva ";
 
-  // A2.14.2 — dropdown compacto: número da preventiva + data.
+  // A2.14.3 — dropdown compacto: número da preventiva + data.
   select.innerHTML=items.map((item,i)=>{
     const data=formatDate(item.data)||"-";
     const registro=String(item.registro||"").trim();
@@ -11345,7 +11391,118 @@ $("searchAssetsButton").onclick=function(){
   requireSystemLogin(()=>{hide("assetScreen");show("searchScreen");openMainMenu();focusBackAssetButton()});
 };
 $("backAssetButton").onclick=function(){const id=getOriginAsset();if(!id)return;clearOriginAsset();location.href="?id="+encodeURIComponent(id)};
-$("occReportRefresh").onclick=()=>loadOccurrenceReport({force:true,context:"buscar-manual"});$("occReportPdf").onclick=generateOccurrenceReportPdf;["occReportStart","occReportEnd","occReportProvider","occReportCategory","occReportComponent","occReportFloor","occReportLocation"].forEach(id=>$(id).onchange=markOccurrenceReportDirty);$("controlRefresh").onclick=refreshPreventiveControl;$("controlCompetence").onchange=loadPreventiveControl;$("controlProvider").onchange=()=>{if(["MASTER","GESTOR"].includes(systemSession?.perfil))loadPreventiveControl();else renderControlList()};$("controlAll").onclick=()=>setControlMode("all");$("controlPending").onclick=()=>setControlMode("pending");$("controlDone").onclick=()=>setControlMode("done");$("sendMonthlyReport").onclick=sendMonthlyPreventiveReport;
+$("occReportRefresh").onclick=()=>loadOccurrenceReport({force:true,context:"buscar-manual"});$("occReportPdf").onclick=generateOccurrenceReportPdf;["occReportStart","occReportEnd","occReportProvider","occReportCategory","occReportComponent","occReportFloor","occReportLocation"].forEach(id=>$(id).onchange=markOccurrenceReportDirty);$("controlRefresh").onclick=refreshPreventiveControl;$("controlCompetence").onchange=loadPreventiveControl;$("controlProvider").onchange=()=>{if(["MASTER","GESTOR"].includes(systemSession?.perfil))loadPreventiveControl();else renderControlList()};$("controlAll").onclick=()=>setControlMode("all");$("controlPending").onclick=()=>setControlMode("pending");$("controlDone").onclick=()=>setControlMode("done");
+let completedPreventiveReportDataA2143_=null;
+
+function defaultCompletedPreventiveReportDatesA2143_(){
+  const now=new Date(),start=new Date(now.getFullYear(),now.getMonth(),1);
+  $("completedPreventiveReportStartA2143").value=isoDateLocal(start);
+  $("completedPreventiveReportEndA2143").value=isoDateLocal(now);
+}
+
+function populateCompletedPreventiveReportProviderA2143_(){
+  const select=$("completedPreventiveReportProviderA2143");
+  const profile=String(systemSession?.perfil||"").trim().toUpperCase();
+  const wide=profile==="MASTER"||profile==="GESTOR"||(profile==="CONSULTA"&&!systemSession?.idPrestador);
+  if(!wide){
+    const name=String(systemSession?.prestador||"").trim();
+    select.innerHTML=`<option value="${esc(name)}">${esc(name||"Meu prestador")}</option>`;
+    select.value=name;select.disabled=true;return;
+  }
+  select.disabled=false;
+  const source=$("controlProvider"),opts=source?[...source.options].map(o=>({value:o.value,text:o.textContent})):[];
+  select.innerHTML=`<option value="">Todos</option>`+opts.filter(o=>o.value).map(o=>`<option value="${esc(o.value)}">${esc(o.text)}</option>`).join("");
+  if(source?.value&&[...select.options].some(o=>o.value===source.value))select.value=source.value;
+}
+
+function openCompletedPreventiveReportA2143_(){
+  if(!requireUiPermission("PREVENTIVA_RELATORIO_REALIZADAS","Seu perfil não possui permissão para emitir o relatório de preventivas realizadas.","Your profile is not allowed to issue the completed preventive maintenance report."))return;
+  completedPreventiveReportDataA2143_=null;
+  defaultCompletedPreventiveReportDatesA2143_();
+  populateCompletedPreventiveReportProviderA2143_();
+  $("completedPreventiveReportStatusA2143").textContent="";
+  $("completedPreventiveReportSummaryA2143").innerHTML="";
+  $("completedPreventiveReportRowsA2143").innerHTML="";
+  $("pdfCompletedPreventiveReportA2143").disabled=true;
+  $("completedPreventiveReportModalA2143").style.display="flex";
+}
+
+function closeCompletedPreventiveReportA2143_(){$("completedPreventiveReportModalA2143").style.display="none"}
+
+function renderCompletedPreventiveReportA2143_(data){
+  completedPreventiveReportDataA2143_=data||null;
+  const s=data?.summary||{};
+  $("completedPreventiveReportSummaryA2143").innerHTML=[
+    ["Preventivas",Number(s.total||0)],["Ativos",Number(s.ativos||0)],["Com checklist",Number(s.comChecklist||0)],
+    ["Com desvio",Number(s.comDesvio||0)],["Documentos",Number(s.documentos||0)]
+  ].map(x=>`<div class="perf-summary-card"><strong>${esc(x[1])}</strong><span>${esc(x[0])}</span></div>`).join("");
+
+  const rows=data?.items||[];
+  $("completedPreventiveReportRowsA2143").innerHTML=rows.length?rows.map(it=>`
+    <tr>
+      <td><b>${esc(it.registro||"")}</b><br><span class="muted">${esc(it.competencia||"")}</span></td>
+      <td>${esc(formatDate(it.data)||"")}</td><td>${esc(it.idAtivo||"")}</td><td>${esc(it.equipamento||"")}</td>
+      <td>${esc(it.prestador||"")}</td><td>${esc(it.responsavel||"")}</td>
+      <td>${it.checklistId||Number(it.checklist?.total||0)?`${esc(it.checklistModelo||it.checklistId||"Sim")}<br><span class="muted">${Number(it.checklist?.total||0)} item(ns)</span>`:"—"}</td>
+      <td>${Number(it.checklist?.desvios||0)}${Number(it.checklist?.criticosComDesvio||0)?`<br><span class="muted">${Number(it.checklist.criticosComDesvio)} crítico(s)</span>`:""}</td>
+      <td>${Number(it.documentos||0)}${it.evidencia?`<br><span class="muted">📷 evidência</span>`:""}${it.assinatura?`<br><span class="muted">✍️ assinatura</span>`:""}</td>
+      <td>${esc(it.observacao||"—")}</td>
+    </tr>`).join("")
+    :`<tr><td colspan="10" style="text-align:center;padding:18px" class="muted">Nenhuma preventiva realizada encontrada no período.</td></tr>`;
+
+  $("completedPreventiveReportStatusA2143").textContent=`${Number(s.total||0)} preventiva(s) realizada(s) encontrada(s).`;
+  $("pdfCompletedPreventiveReportA2143").disabled=false;
+}
+
+async function loadCompletedPreventiveReportA2143_(){
+  const start=$("completedPreventiveReportStartA2143").value,end=$("completedPreventiveReportEndA2143").value;
+  const provider=$("completedPreventiveReportProviderA2143").value||"";
+  if(!start||!end)return alert("Informe a data inicial e a data final.");
+  $("completedPreventiveReportStatusA2143").textContent="Consultando preventivas realizadas...";
+  $("pdfCompletedPreventiveReportA2143").disabled=true;
+  try{
+    const r=await menuApi({action:"completedpreventivesreport",startDate:start,endDate:end,provider,__qrForce:true,__qrContext:"relatorio-preventivas-realizadas"});
+    if(!r.ok)throw new Error(r.detail||"Não foi possível consultar as preventivas realizadas.");
+    renderCompletedPreventiveReportA2143_(r.data||{});
+  }catch(e){
+    $("completedPreventiveReportStatusA2143").textContent=e.message||String(e);
+    $("completedPreventiveReportRowsA2143").innerHTML="";
+  }
+}
+
+async function generateCompletedPreventiveReportPdfA2143_(){
+  if(!requireUiPermission("PREVENTIVA_RELATORIO_REALIZADAS","Seu perfil não possui permissão para emitir este relatório.","Your profile is not allowed to issue this report."))return;
+  const start=$("completedPreventiveReportStartA2143").value,end=$("completedPreventiveReportEndA2143").value;
+  const provider=$("completedPreventiveReportProviderA2143").value||"";
+  if(!start||!end)return alert("Informe a data inicial e a data final.");
+
+  const btn=$("pdfCompletedPreventiveReportA2143");btn.disabled=true;btn.textContent="Gerando PDF...";
+  const popup=window.open("about:blank","_blank");
+  try{
+    const r=await menuApiPost({
+      action:"generateCompletedPreventivesPdf",
+      completedPreventiveReportStart:start,completedPreventiveReportEnd:end,completedPreventiveReportProvider:provider,
+      __qrContext:"pdf-preventivas-realizadas"
+    });
+    if(!r.ok||!r.base64)throw new Error(r.detail||r.error||"Não foi possível gerar o PDF.");
+    const bytes=secureFileBase64ToBytes766251_(r.base64);
+    const url=URL.createObjectURL(new Blob([bytes],{type:r.mime||"application/pdf"}));
+    if(popup&&!popup.closed)popup.location.href=url;else window.open(url,"_blank");
+    setTimeout(()=>URL.revokeObjectURL(url),120000);
+  }catch(e){
+    if(popup&&!popup.closed)popup.close();
+    alert(e.message||"Erro ao gerar PDF.");
+  }finally{
+    btn.disabled=false;btn.textContent="📄 Gerar PDF";
+  }
+}
+
+$("openCompletedPreventiveReportA2143").onclick=openCompletedPreventiveReportA2143_;
+$("closeCompletedPreventiveReportA2143").onclick=closeCompletedPreventiveReportA2143_;
+$("loadCompletedPreventiveReportA2143").onclick=loadCompletedPreventiveReportA2143_;
+$("pdfCompletedPreventiveReportA2143").onclick=generateCompletedPreventiveReportPdfA2143_;
+
+$("sendMonthlyReport").onclick=sendMonthlyPreventiveReport;
 $("preventiveLogout").onclick=()=>openDefaultAllowedTab();$("cancelPreventive").onclick=()=>{if(!preventivePosting)$("preventiveModal").style.display="none"};$("savePreventive").onclick=savePreventive;$("cancelReport").onclick=function(){
   if(reportPosting){
     if(reportCompleted){
@@ -11489,7 +11646,7 @@ function setupModernMenuSectionsB5316(){
   const storageKey="qrmanut_menu_sections_a2102";
   let saved={};
   try{saved=JSON.parse(sessionStorage.getItem(storageKey)||"{}")||{}}catch(e){saved={}}
-  // QRManut A2.14.2 — menu principal em três grupos definitivos.
+  // QRManut A2.14.3 — menu principal em três grupos definitivos.
   // Esta função recria os cards ao carregar a página; por isso ela precisa
   // refletir a mesma organização declarada no HTML estático.
   const groups=[
