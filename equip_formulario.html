@@ -1,7 +1,7 @@
-<!-- QRManut PNCQ 7.6.6.31 A2.10.4
+<!-- QRManut PNCQ 7.6.6.31 A2.10.5
      VISUALIZAÇÃO DE VERSÃO ATIVA NA TELA
      - Se este texto aparecer no código fonte, o HTML correto foi publicado.
-     - Rodapé e menu exibem: QRManut • Versão 7.6.6.31 • Pacote A2.10.4
+     - Rodapé e menu exibem: QRManut • Versão 7.6.6.31 • Pacote A2.10.5
      - Build: 2026-09-24 22:20
 -->
 <!-- QRManut PNCQ 7.6.6.31 A2.6.3 — Checklist Compacto da Preventiva
@@ -179,8 +179,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>QRManut 7.6.6.31 A2.10.4</title>
-<meta name="qrmanut-build" content="7.6.6.31-A2.10.4-2026-09-24-2220">
+<title>QRManut 7.6.6.31 A2.10.5</title>
+<meta name="qrmanut-build" content="7.6.6.31-A2.10.5-2026-09-24-2220">
 <meta name="theme-color" content="#0b315e">
 <meta name="application-name" content="QRManut">
 <meta name="mobile-web-app-capable" content="yes">
@@ -1451,7 +1451,7 @@ body{
 }
 
 
-/* QRManut A2.10.4 — versão visível do pacote implantado */
+/* QRManut A2.10.5 — versão visível do pacote implantado */
 .qr-build-badge-a2101{
   display:inline-flex;
   align-items:center;
@@ -1482,7 +1482,7 @@ body{
 }
 
 
-/* QRManut A2.10.4 — ações após upload de documento */
+/* QRManut A2.10.5 — ações após upload de documento */
 .document-upload-next-actions-a2103{
   display:flex;
   gap:10px;
@@ -1493,6 +1493,18 @@ body{
 }
 .document-upload-next-actions-a2103 .btn{
   min-width:170px;
+}
+
+
+/* QRManut A2.10.5 — histórico de preventivas compacto por data */
+#preventiveHistorySelectLabel{
+  max-width:520px;
+}
+#preventiveHistorySelect{
+  margin-top:6px;
+}
+#preventiveHistory .preventive-card{
+  margin-top:12px;
 }
 
 </style>
@@ -1510,7 +1522,7 @@ body{
     <div>
       <div class="search-title">QRManut</div>
       <div id="qrAppSubtitle" class="muted">Gestão rápida de manutenção</div>
-      <div id="qrBuildBadgeA2101" class="qr-build-badge-a2101">✅ Pacote A2.10.4 • Atualizado em 2026-09-24 22:20</div>
+      <div id="qrBuildBadgeA2101" class="qr-build-badge-a2101">✅ Pacote A2.10.5 • Atualizado em 2026-09-24 22:20</div>
     </div>
     <button id="qrAlertsButtonB5320" class="qr-alerts-button-b5320 hidden" type="button" aria-expanded="false" aria-controls="qrAlertsPanelB5320" title="Central de Alertas">
       <span class="qr-alerts-bell-b5320" aria-hidden="true">🔔</span>
@@ -1952,7 +1964,15 @@ body{
     <div id="assetLifecycleNotice" class="asset-lifecycle-notice hidden"></div>
     <div class="other-problem-box"><div class="muted">O problema não é neste equipamento?</div><button id="otherProblemButton" class="btn-sol-public" type="button">📍 Problema em outro equipamento ou ambiente</button></div>
     <div class="section"><h3>Histórico de Manutenção</h3><div id="historyStatus" class="muted"></div><div id="historyStatusSummary" class="history-status-summary" aria-label="Resumo das OCs por status"></div><select id="historySelect" class="hidden"></select><div id="historyDetail"></div></div>
-    <div id="preventiveHistorySection" class="section hidden"><h3>🛠️ Histórico de Preventivas</h3><div id="preventiveHistoryStatus" class="muted">Login necessário para visualizar.</div><div id="preventiveHistory"></div></div>
+    <div id="preventiveHistorySection" class="section hidden">
+  <h3>🛠️ Histórico de Preventivas</h3>
+  <div id="preventiveHistoryStatus" class="muted">Login necessário para visualizar.</div>
+  <label id="preventiveHistorySelectLabel" class="hidden" style="margin-top:10px">
+    Data da preventiva
+    <select id="preventiveHistorySelect"></select>
+  </label>
+  <div id="preventiveHistory"></div>
+</div>
   </div>
 </div>
 
@@ -2427,13 +2447,13 @@ body{
 </div>
 <label>Adicionar nova foto da ocorrência / correção</label><div class="photo-source-actions"><button type="button" id="manageOccurrenceCameraButton" class="btn btn-blue">📷 Tirar foto</button><button type="button" id="manageOccurrenceAttachButton" class="btn btn-secondary">🖼️ Anexar imagem</button></div><input id="manageOccurrenceCameraInput" class="photo-source-hidden" type="file" accept="image/*,.heic,.heif" capture="environment"><input id="manageOccurrencePhotoInput" class="photo-source-hidden" type="file" accept="image/*,.heic,.heif"><div id="manageOccurrencePhotoStatus" class="muted" style="margin-top:5px"></div><img id="manageOccurrencePhotoPreview" class="photo-preview"><div class="upload-file-box" style="margin-top:12px"><div style="font-weight:800">📎 Adicionar arquivo à ocorrência</div><div class="muted" style="margin-top:4px">PDF, Word, Excel ou outro arquivo de evidência, até 8 MB.</div><button id="manageAttachmentButton" type="button" class="btn btn-secondary" style="margin-top:8px">📎 Escolher arquivo</button><input id="manageAttachmentInput" class="photo-source-hidden" type="file"><div id="manageAttachmentName" class="upload-file-name">Nenhum arquivo selecionado.</div><div id="manageExistingAttachments" style="margin-top:8px"></div></div><div id="conclusionPhotoArea" class="hidden"><label>Foto da conclusão</label><div class="photo-source-actions"><button type="button" id="conclusionCameraButton" class="btn btn-blue">📷 Tirar foto</button><button type="button" id="conclusionAttachButton" class="btn btn-secondary">🖼️ Anexar imagem</button></div><input id="conclusionCameraInput" class="photo-source-hidden" type="file" accept="image/*,.heic,.heif" capture="environment"><input id="conclusionPhotoInput" class="photo-source-hidden" type="file" accept="image/*,.heic,.heif"><div id="conclusionPhotoStatus" class="muted" style="margin-top:5px"></div><img id="conclusionPhotoPreview" class="photo-preview"></div><div id="manageMessage" class="message"></div><div class="modal-actions" style="justify-content:space-between;flex-wrap:wrap"><button id="deleteOccurrence" class="btn btn-danger hidden" type="button">🗑️ Excluir ocorrência</button><div style="display:flex;gap:8px;flex-wrap:wrap"><button id="cancelManage" class="btn btn-secondary">Cancelar</button><button id="saveManage" class="btn">Salvar alterações</button></div></div></div></div>
 
-<div id="qrFooterVersionA2101" class="footer">QRManut • Versão 7.6.6.31 • Pacote A2.10.4</div>
-<div class="qr-build-watermark-a2101">A2.10.4</div>
+<div id="qrFooterVersionA2101" class="footer">QRManut • Versão 7.6.6.31 • Pacote A2.10.5</div>
+<div class="qr-build-watermark-a2101">A2.10.5</div>
 </div>
 <script>
 const API_URL="https://script.google.com/macros/s/AKfycbx4tpC42Q6WdkNhTUTAGoZWvG5M24zwlNscnwbDP5B3Q5pWo8B32-Lf0rQ2Xtua1AFMAQ/exec";
 const QRMANUT_APP_VERSION="7.6.6.31";
-const QRMANUT_FRONTEND_PACKAGE="A2.10.4";
+const QRMANUT_FRONTEND_PACKAGE="A2.10.5";
 const QRMANUT_BUILD_LABEL="2026-09-24 22:20";
 const TOKEN="";const SYSTEM_SESSION_KEY="qrmanut_system_session";const RESPONSIBLE_KEY="qrmanut_responsavel";const PREVENTIVE_SESSION_KEY="qrmanut_preventive_session";const ORIGIN_ASSET_KEY="qrmanut_origin_asset";const MAX_DIM=1280;const QUALITY=.72;
 let systemSession=null,systemLoginNextAction=null,currentAsset=null,currentAssetStatus=null,history=[],selectedOccurrence=null,preventiveControlData=null,preventiveControlMode="all",preventiveSession=null,preventiveRequirements=null,loginNextAction=null,photoData=null,reportAttachmentData=null,preventivePhotoData=null,preventiveDocumentFiles=[],correctionPhotoData=null,manageAttachmentData=null,conclusionPhotoData=null,reportPosting=false,reportCompleted=false,preventivePosting=false,managePosting=false,signatureDirty=false,signatureDrawing=false,signatureCtx=null,occurrenceReportData=null,occurrenceReportFiltersLoaded=false,pendingFiltersLoaded=false,auditFiltersLoaded=false,companyConfigLoaded=false,providersAdminData=[],usersAdminData=[],profilePermissionsAdminData=null,solPublicMeta=null,solPhotoData=null,solTriageData=null,solTriageMeta=null,solSelected=null,solSelectedAssetId="",solPublicPosting=false,solActionPosting=false,solLastCreatedOccurrence7662412=null;
@@ -5241,6 +5261,8 @@ async function loadAsset(id){
   $("assetDocuments").innerHTML="";
   $("preventiveHistoryStatus").textContent=qrLanguage==="en-US"?"Sign in to view.":"Login necessário para visualizar.";
   $("preventiveHistory").innerHTML="";
+  hide("preventiveHistorySelectLabel");
+  $("preventiveHistorySelect").innerHTML="";
   qrShowAssetSkeletonB5320_();
 
   show("assetProgressNote");
@@ -5527,36 +5549,77 @@ function renderHistoryItem(i){
   const t=(pt,en)=>qrLanguage==="en-US"?en:pt;
   $("historyDetail").innerHTML=`<div class="history-card"><b>${esc(x.ocorrencia)}</b><div class="muted">${esc(formatDate(x.data))}</div><span class="tag">${esc(qrLanguage==="en-US"?qrTranslateExactText(x.status):x.status)}</span>${x.categoriaOcorrencia?`<span class="tag">${esc(x.categoriaOcorrencia)}</span>`:""}${x.componenteAfetado?`<span class="tag">${esc(x.componenteAfetado)}</span>`:""}${x.solOrigem?`<div style="margin-top:7px"><b>${t("Origem","Origin")}:</b> ${esc(x.solOrigem)}</div>`:""}<div style="margin-top:8px"><b>${t("Descrição","Description")}:</b><br>${esc(x.descricao)}</div>${x.foto?`<div style="margin-top:8px"><button type="button" class="document-open" onclick="openSecureFile76624('occurrencePhoto','${esc(x.ocorrencia)}','opening')">📷 ${t("Ver foto","View photo")}</button></div>`:""}${(x.anexos||[]).length?`<div style="margin-top:8px"><b>📎 ${t("Arquivos","Files")}:</b> ${(x.anexos||[]).map(a=>`<button type="button" class="auth-link" onclick="openSecureFile76624('occurrenceDocument','${esc(a.idDocumento)}')" style="display:block;margin-top:4px">📎 ${esc(a.nomeArquivo)}</button>`).join("")}</div>`:""}${x.solucao?`<div style="margin-top:8px"><b>${t("Solução","Solution")}:</b><br>${esc(x.solucao)}</div>`:""}${systemSession&&hasProfilePermission("OC_CONSULTAR")&&(hasProfilePermission("OC_ALTERAR")||hasProfilePermission("OC_CONCLUIR"))&&(systemSession.perfil!=="PRESTADOR"||systemSession.podeAtenderOC)?`<button class="btn" style="width:100%;margin-top:12px" onclick="openManage(${i})">${t("Gerenciar ocorrência","Manage Work Order")}</button>`:""}</div>`;
 }
+let preventiveHistoryItemsA2105_=[];
+
+function renderPreventiveHistoryDetailA2105_(index){
+  const items=preventiveHistoryItemsA2105_||[];
+  const item=items[Number(index)||0];
+  const host=$("preventiveHistory");
+  if(!host)return;
+
+  if(!item){
+    host.innerHTML="";
+    return;
+  }
+
+  const t=(pt,en)=>qrLanguage==="en-US"?en:pt;
+  const docs=(item.documentos||[]);
+  const docsHtml=docs.length
+    ? `<div style="margin-top:9px"><b>📎 ${t("Documentos da preventiva","Preventive maintenance documents")}:</b>`+
+      docs.map(d=>`<div style="margin-top:4px"><button type="button" class="auth-link" onclick="openSecureFile76624('preventiveDocument','${esc(d.idDocumento)}')">📄 ${esc(qrLanguage==="en-US"?preventiveDocumentTypeLabel7606(d.tipo):d.tipo)}${d.nomeArquivo?` — ${esc(d.nomeArquivo)}`:""}</button>${d.descricao?`<div class="muted">${esc(d.descricao)}</div>`:""}</div>`).join("")+
+      `</div>`
+    :"";
+
+  host.innerHTML=`<div class="preventive-card">
+    <div class="preventive-id">${esc(item.registro)}</div>
+    <div class="muted">${esc(formatDate(item.data))}</div>
+    <div style="margin-top:7px">
+      <b>${t("Competência","Period")}:</b> ${esc(item.competencia)}<br>
+      <b>${t("Prestador","Service Provider")}:</b> ${esc(item.prestador)}<br>
+      <b>${t("Responsável","Responsible")}:</b> ${esc(item.responsavel)}
+    </div>
+    ${item.observacao?`<div style="margin-top:8px"><b>${t("Observação da preventiva","Preventive maintenance note")}:</b><br>${esc(item.observacao)}</div>`:""}
+    ${item.foto?`<div style="margin-top:8px"><button type="button" class="document-open" onclick="openSecureFile76624('preventivePhoto','${esc(item.registro)}')">📷 ${t("Ver evidência","View evidence")}</button></div>`:""}
+    ${item.assinatura?`<div style="margin-top:8px"><button type="button" class="document-open" onclick="openSecureFile76624('preventiveSignature','${esc(item.registro)}')">✍️ ${t("Ver assinatura","View signature")}</button></div>`:""}
+    ${docsHtml}
+    ${hasProfilePermission("PREVENTIVA_EXCLUIR")?`<button class="btn btn-danger" style="width:100%;margin-top:10px" onclick="deletePreventiveRecord('${esc(item.registro)}')">🗑️ ${t("Excluir preventiva","Delete preventive maintenance")}</button>`:""}
+  </div>`;
+}
+
 function renderPreventiveHistoryItemsB5310_(items){
   items=items||[];
+  preventiveHistoryItemsA2105_=items.slice();
+
   const t=(pt,en)=>qrLanguage==="en-US"?en:pt;
   $("preventiveHistoryStatus").textContent=items.length
     ? (qrLanguage==="en-US"?`${items.length} preventive maintenance record(s)`:`${items.length} preventiva(s) registrada(s)`)
     : t("Nenhuma preventiva registrada.","No preventive maintenance recorded.");
 
-  $("preventiveHistory").innerHTML=items.map(item=>{
-    const docs=(item.documentos||[]);
-    const docsHtml=docs.length
-      ? `<div style="margin-top:9px"><b>📎 ${t("Documentos da preventiva","Preventive maintenance documents")}:</b>`+
-        docs.map(d=>`<div style="margin-top:4px"><button type="button" class="auth-link" onclick="openSecureFile76624('preventiveDocument','${esc(d.idDocumento)}')">📄 ${esc(qrLanguage==="en-US"?preventiveDocumentTypeLabel7606(d.tipo):d.tipo)}${d.nomeArquivo?` — ${esc(d.nomeArquivo)}`:""}</button>${d.descricao?`<div class="muted">${esc(d.descricao)}</div>`:""}</div>`).join("")+
-        `</div>`
-      :"";
+  const select=$("preventiveHistorySelect");
 
-    return `<div class="preventive-card">
-      <div class="preventive-id">${esc(item.registro)}</div>
-      <div class="muted">${esc(formatDate(item.data))}</div>
-      <div style="margin-top:7px">
-        <b>${t("Competência","Period")}:</b> ${esc(item.competencia)}<br>
-        <b>${t("Prestador","Service Provider")}:</b> ${esc(item.prestador)}<br>
-        <b>${t("Responsável","Responsible")}:</b> ${esc(item.responsavel)}
-      </div>
-      ${item.observacao?`<div style="margin-top:8px"><b>${t("Observação da preventiva","Preventive maintenance note")}:</b><br>${esc(item.observacao)}</div>`:""}
-      ${item.foto?`<div style="margin-top:8px"><button type="button" class="document-open" onclick="openSecureFile76624('preventivePhoto','${esc(item.registro)}')">📷 ${t("Ver evidência","View evidence")}</button></div>`:""}
-      ${item.assinatura?`<div style="margin-top:8px"><button type="button" class="document-open" onclick="openSecureFile76624('preventiveSignature','${esc(item.registro)}')">✍️ ${t("Ver assinatura","View signature")}</button></div>`:""}
-      ${docsHtml}${hasProfilePermission("PREVENTIVA_EXCLUIR")?`<button class="btn btn-danger" style="width:100%;margin-top:10px" onclick="deletePreventiveRecord('${esc(item.registro)}')">🗑️ ${t("Excluir preventiva","Delete preventive maintenance")}</button>`:""}
-    </div>`;
+  if(!items.length){
+    hide("preventiveHistorySelectLabel");
+    select.innerHTML="";
+    $("preventiveHistory").innerHTML="";
+    return;
+  }
+
+  show("preventiveHistorySelectLabel");
+  $("preventiveHistorySelectLabel").childNodes[0].nodeValue=qrLanguage==="en-US"
+    ?"Preventive maintenance date "
+    :"Data da preventiva ";
+
+  select.innerHTML=items.map((item,i)=>{
+    const data=formatDate(item.data)||"-";
+    const competencia=item.competencia?` • ${item.competencia}`:"";
+    const registro=item.registro?` • ${item.registro}`:"";
+    return `<option value="${i}">${esc(data+competencia+registro)}</option>`;
   }).join("");
+
+  select.value="0";
+  renderPreventiveHistoryDetailA2105_(0);
 }
+
 async function loadPreventiveHistory(){
   const r=await menuApi({action:"preventivehistory",id:currentAsset.id});
   if(!r.ok)return;
@@ -10513,7 +10576,7 @@ if($("checklistImportClear"))$("checklistImportClear").onclick=()=>qrChecklistIm
 if($("checklistImportCancel"))$("checklistImportCancel").onclick=()=>{$("checklistImportModal").style.display="none"};
 if($("checklistImportApply"))$("checklistImportApply").onclick=qrChecklistApplyImportA27_;
 
-$("tabChecklistModels").onclick=showChecklistModelsTabA21;$("checklistModelsBackMenu").onclick=openDefaultAllowedTab;$("checklistModelNew").onclick=()=>openChecklistModelA21();$("checklistModelCancel").onclick=()=>{$("checklistModelModal").style.display="none"};$("checklistModelSave").onclick=saveChecklistModelA21;$("checklistScope").onchange=qrChecklistScopeChangedA21;$("checklistAddItem").onclick=qrChecklistAddItemA21;$("checklistAssetSearchButton").onclick=qrChecklistSearchAssetA21;$("checklistAssetSearch").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();qrChecklistSearchAssetA21()}};$("qrAlertsRefreshB5320").onclick=()=>loadAlertsSummaryB5320_({force:true});$("auditRefresh").onclick=()=>loadAudit({force:true,context:"buscar-manual"});$("auditClear").onclick=clearAuditFilters;$("auditSearch").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();loadAudit()}};$("cancelUser").onclick=()=>{$("userModal").style.display="none"};$("saveUser").onclick=saveUser;$("userEmail").oninput=updateUserPrimaryAction76617;$("cancelAdminUserPassword").onclick=()=>{$("adminUserPasswordModal").style.display="none"};$("saveAdminUserPassword").onclick=saveAdminUserPassword76617;$("sendSystemLogin").onclick=doSystemLogin;$("systemPassword").onkeydown=e=>{if(e.key==="Enter")doSystemLogin()};$("cancelSystemLogin").onclick=()=>{systemLoginNextAction=null;$("systemLoginModal").style.display="none";if(!systemSession)showMenuGate()};$("systemLogoutButton").onclick=logoutSystemMenu;$("installAppButton").onclick=installQRManut;$("tabSearch").onclick=showSearchTab;$("tabPending").onclick=showPendingTab;$("pendingApplyFilters").onclick=()=>loadPending({force:true,context:"buscar-manual"});$("pendingClearFilters").onclick=clearPendingFilters;$("tabOccurrenceReport").onclick=showOccurrenceReportTab;$("tabPreventive").onclick=showPreventiveTab;$("tabMaintenanceAgenda").onclick=showMaintenanceAgendaTab76631;$("maintenanceAgendaBackMenu").onclick=openDefaultAllowedTab;$("maintenanceAgendaRefresh").onclick=()=>loadMaintenanceAgenda76631_({force:true});$("maintenanceAgendaSearchButton").onclick=()=>loadMaintenanceAgenda76631_({force:true});$("maintenanceAgendaClear").onclick=clearMaintenanceAgendaFilters76631_;$("maintenanceAgendaNew").onclick=()=>openMaintenanceAgendaModal76631_();$("maintenanceAgendaAnnual").onclick=openMaintenanceAgendaAnnual766313_;$("maintenanceAgendaAnnualCancel").onclick=()=>{if(!agendaAnnualSaving766313)$("maintenanceAgendaAnnualModal").style.display="none"};$("maintenanceAgendaAnnualSave").onclick=saveMaintenanceAgendaAnnual766313_;$("agendaAnnualAssetSearchButton").onclick=qrAgendaAnnualRefreshAssetSearch766313_;$("agendaAnnualAssetSearch").addEventListener("input",()=>{qrAgendaAnnualClearAsset766313_();qrAgendaAnnualAssetSearchResults766315_=[];hide("agendaAnnualAssetSearchResults");qrAgendaQueueAssetSearch766316_(true)});$("agendaAnnualAssetSearch").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();qrAgendaAnnualRefreshAssetSearch766313_()}});$("agendaAnnualExecution").onchange=qrAgendaAnnualToggleProvider766313_;$("agendaAnnualYear").addEventListener("change",qrAgendaAnnualRenderCalendar766313_);$("agendaAnnualClearDates").onclick=()=>{agendaAnnualSelectedDates766313.clear();qrAgendaAnnualRenderCalendar766313_()};$("maintenanceAgendaCancel").onclick=()=>{if(!maintenanceAgendaSaving76631)$("maintenanceAgendaModal").style.display="none"};$("maintenanceAgendaSave").onclick=saveMaintenanceAgenda76631_;$("agendaAssetSearchButton").onclick=qrAgendaRefreshAssetSearch76631_;$("agendaAssetSearch").addEventListener("input",()=>{qrAgendaClearAssetSelection76631_();qrAgendaAssetSearchResults766315_=[];hide("agendaAssetSearchResults");qrAgendaQueueAssetSearch766316_(false)});$("agendaAssetSearch").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();qrAgendaRefreshAssetSearch76631_()}});$("agendaExecution").onchange=qrAgendaToggleProvider76631_;["agendaPlannedStart","agendaPlannedEnd","agendaConfirmedDate","agendaConfirmedTime"].forEach(id=>$(id).addEventListener("change",qrAgendaToggleReprogram76631_));["maintenanceAgendaView","maintenanceAgendaType","maintenanceAgendaStatus","maintenanceAgendaProvider"].forEach(id=>$(id).addEventListener("change",()=>loadMaintenanceAgenda76631_()));$("maintenanceAgendaSearch").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();loadMaintenanceAgenda76631_()}};$("tabDocuments").onclick=showDocumentsTab;$("tabMaintenancePending").onclick=showMaintenancePendingTab;$("maintenancePendingBackMenu").onclick=openDefaultAllowedTab;$("maintenancePendingRefresh").onclick=()=>loadMaintenancePending({force:true,context:"buscar-manual"});$("maintenancePendingClear").onclick=clearMaintenancePendingFilters;$("maintenancePendingSearch").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();loadMaintenancePending()}};$("maintenancePendingStatusFilter").onchange=loadMaintenancePending;$("maintenancePendingPriorityFilter").onchange=loadMaintenancePending;$("preventiveChecklistLoadModel").onclick=()=>qrPreventiveChecklistUseModelA261_($("preventiveChecklistModelSelect").value);$("preventiveChecklistNoModel").onclick=qrPreventiveChecklistDisableA261_;$("preventiveNeedsAction").onchange=togglePreventiveActionFields;$("tabOccurrenceCatalog").onclick=showOccurrenceCatalogTab;$("occurrenceCatalogBackMenu").onclick=openDefaultAllowedTab;$("saveCatalogCategory").onclick=saveCatalogCategory;$("clearCatalogCategory").onclick=clearCatalogCategoryForm;$("saveCatalogComponent").onclick=saveCatalogComponent;$("clearCatalogComponent").onclick=clearCatalogComponentForm;$("catalogComponentCategory").onchange=()=>{clearCatalogComponentForm();renderCatalogComponentsByCategoryA2104_();};$("category").onchange=()=>populateOccurrenceComponentSelect();$("manageCategory").onchange=()=>populateManageCatalog($("manageCategory").value,"");$("tabDocumentUpload").onclick=showDocumentUploadTab;$("documentUploadBackMenu").onclick=cancelDocumentUpload;$("documentUploadClose").onclick=closeDocumentUploadA2103;$("uploadDocumentChooseFileButton").onclick=()=>$("uploadDocumentFile").click();$("uploadDocumentFile").onchange=prepareDocumentUploadFile;$("sendDocumentUpload").onclick=sendDocumentUpload;$("clearDocumentUpload").onclick=clearDocumentUploadForm;$("searchButton").onclick=searchAssets;$("qrScanButton").onclick=openQrScanner7662513;$("qrScannerCancel").onclick=closeQrScanner7662513;$("qrScannerSwitch").onclick=switchQrScannerCamera7662513;$("searchInput").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();searchAssets()}};$("documentSearchButton").onclick=()=>searchDocuments({force:true,context:"buscar-manual"});$("documentSearchInput").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();searchDocuments()}};$("documentTypeFilter").onchange=searchDocuments;$("documentDisciplineFilter").onchange=searchDocuments;$("documentFloorFilter").onchange=searchDocuments;$("reportButton").onclick=openReport;$("preventiveButton").onclick=requestPreventive;
+$("tabChecklistModels").onclick=showChecklistModelsTabA21;$("checklistModelsBackMenu").onclick=openDefaultAllowedTab;$("checklistModelNew").onclick=()=>openChecklistModelA21();$("checklistModelCancel").onclick=()=>{$("checklistModelModal").style.display="none"};$("checklistModelSave").onclick=saveChecklistModelA21;$("checklistScope").onchange=qrChecklistScopeChangedA21;$("checklistAddItem").onclick=qrChecklistAddItemA21;$("checklistAssetSearchButton").onclick=qrChecklistSearchAssetA21;$("checklistAssetSearch").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();qrChecklistSearchAssetA21()}};$("qrAlertsRefreshB5320").onclick=()=>loadAlertsSummaryB5320_({force:true});$("auditRefresh").onclick=()=>loadAudit({force:true,context:"buscar-manual"});$("auditClear").onclick=clearAuditFilters;$("auditSearch").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();loadAudit()}};$("cancelUser").onclick=()=>{$("userModal").style.display="none"};$("saveUser").onclick=saveUser;$("userEmail").oninput=updateUserPrimaryAction76617;$("cancelAdminUserPassword").onclick=()=>{$("adminUserPasswordModal").style.display="none"};$("saveAdminUserPassword").onclick=saveAdminUserPassword76617;$("sendSystemLogin").onclick=doSystemLogin;$("systemPassword").onkeydown=e=>{if(e.key==="Enter")doSystemLogin()};$("cancelSystemLogin").onclick=()=>{systemLoginNextAction=null;$("systemLoginModal").style.display="none";if(!systemSession)showMenuGate()};$("systemLogoutButton").onclick=logoutSystemMenu;$("installAppButton").onclick=installQRManut;$("tabSearch").onclick=showSearchTab;$("tabPending").onclick=showPendingTab;$("pendingApplyFilters").onclick=()=>loadPending({force:true,context:"buscar-manual"});$("pendingClearFilters").onclick=clearPendingFilters;$("tabOccurrenceReport").onclick=showOccurrenceReportTab;$("tabPreventive").onclick=showPreventiveTab;$("preventiveHistorySelect").onchange=e=>renderPreventiveHistoryDetailA2105_(e.target.value);$("tabMaintenanceAgenda").onclick=showMaintenanceAgendaTab76631;$("maintenanceAgendaBackMenu").onclick=openDefaultAllowedTab;$("maintenanceAgendaRefresh").onclick=()=>loadMaintenanceAgenda76631_({force:true});$("maintenanceAgendaSearchButton").onclick=()=>loadMaintenanceAgenda76631_({force:true});$("maintenanceAgendaClear").onclick=clearMaintenanceAgendaFilters76631_;$("maintenanceAgendaNew").onclick=()=>openMaintenanceAgendaModal76631_();$("maintenanceAgendaAnnual").onclick=openMaintenanceAgendaAnnual766313_;$("maintenanceAgendaAnnualCancel").onclick=()=>{if(!agendaAnnualSaving766313)$("maintenanceAgendaAnnualModal").style.display="none"};$("maintenanceAgendaAnnualSave").onclick=saveMaintenanceAgendaAnnual766313_;$("agendaAnnualAssetSearchButton").onclick=qrAgendaAnnualRefreshAssetSearch766313_;$("agendaAnnualAssetSearch").addEventListener("input",()=>{qrAgendaAnnualClearAsset766313_();qrAgendaAnnualAssetSearchResults766315_=[];hide("agendaAnnualAssetSearchResults");qrAgendaQueueAssetSearch766316_(true)});$("agendaAnnualAssetSearch").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();qrAgendaAnnualRefreshAssetSearch766313_()}});$("agendaAnnualExecution").onchange=qrAgendaAnnualToggleProvider766313_;$("agendaAnnualYear").addEventListener("change",qrAgendaAnnualRenderCalendar766313_);$("agendaAnnualClearDates").onclick=()=>{agendaAnnualSelectedDates766313.clear();qrAgendaAnnualRenderCalendar766313_()};$("maintenanceAgendaCancel").onclick=()=>{if(!maintenanceAgendaSaving76631)$("maintenanceAgendaModal").style.display="none"};$("maintenanceAgendaSave").onclick=saveMaintenanceAgenda76631_;$("agendaAssetSearchButton").onclick=qrAgendaRefreshAssetSearch76631_;$("agendaAssetSearch").addEventListener("input",()=>{qrAgendaClearAssetSelection76631_();qrAgendaAssetSearchResults766315_=[];hide("agendaAssetSearchResults");qrAgendaQueueAssetSearch766316_(false)});$("agendaAssetSearch").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();qrAgendaRefreshAssetSearch76631_()}});$("agendaExecution").onchange=qrAgendaToggleProvider76631_;["agendaPlannedStart","agendaPlannedEnd","agendaConfirmedDate","agendaConfirmedTime"].forEach(id=>$(id).addEventListener("change",qrAgendaToggleReprogram76631_));["maintenanceAgendaView","maintenanceAgendaType","maintenanceAgendaStatus","maintenanceAgendaProvider"].forEach(id=>$(id).addEventListener("change",()=>loadMaintenanceAgenda76631_()));$("maintenanceAgendaSearch").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();loadMaintenanceAgenda76631_()}};$("tabDocuments").onclick=showDocumentsTab;$("tabMaintenancePending").onclick=showMaintenancePendingTab;$("maintenancePendingBackMenu").onclick=openDefaultAllowedTab;$("maintenancePendingRefresh").onclick=()=>loadMaintenancePending({force:true,context:"buscar-manual"});$("maintenancePendingClear").onclick=clearMaintenancePendingFilters;$("maintenancePendingSearch").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();loadMaintenancePending()}};$("maintenancePendingStatusFilter").onchange=loadMaintenancePending;$("maintenancePendingPriorityFilter").onchange=loadMaintenancePending;$("preventiveChecklistLoadModel").onclick=()=>qrPreventiveChecklistUseModelA261_($("preventiveChecklistModelSelect").value);$("preventiveChecklistNoModel").onclick=qrPreventiveChecklistDisableA261_;$("preventiveNeedsAction").onchange=togglePreventiveActionFields;$("tabOccurrenceCatalog").onclick=showOccurrenceCatalogTab;$("occurrenceCatalogBackMenu").onclick=openDefaultAllowedTab;$("saveCatalogCategory").onclick=saveCatalogCategory;$("clearCatalogCategory").onclick=clearCatalogCategoryForm;$("saveCatalogComponent").onclick=saveCatalogComponent;$("clearCatalogComponent").onclick=clearCatalogComponentForm;$("catalogComponentCategory").onchange=()=>{clearCatalogComponentForm();renderCatalogComponentsByCategoryA2104_();};$("category").onchange=()=>populateOccurrenceComponentSelect();$("manageCategory").onchange=()=>populateManageCatalog($("manageCategory").value,"");$("tabDocumentUpload").onclick=showDocumentUploadTab;$("documentUploadBackMenu").onclick=cancelDocumentUpload;$("documentUploadClose").onclick=closeDocumentUploadA2103;$("uploadDocumentChooseFileButton").onclick=()=>$("uploadDocumentFile").click();$("uploadDocumentFile").onchange=prepareDocumentUploadFile;$("sendDocumentUpload").onclick=sendDocumentUpload;$("clearDocumentUpload").onclick=clearDocumentUploadForm;$("searchButton").onclick=searchAssets;$("qrScanButton").onclick=openQrScanner7662513;$("qrScannerCancel").onclick=closeQrScanner7662513;$("qrScannerSwitch").onclick=switchQrScannerCamera7662513;$("searchInput").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();searchAssets()}};$("documentSearchButton").onclick=()=>searchDocuments({force:true,context:"buscar-manual"});$("documentSearchInput").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();searchDocuments()}};$("documentTypeFilter").onchange=searchDocuments;$("documentDisciplineFilter").onchange=searchDocuments;$("documentFloorFilter").onchange=searchDocuments;$("reportButton").onclick=openReport;$("preventiveButton").onclick=requestPreventive;
 $("searchAssetsButton").onclick=function(){
   if(pendingReturnMatchesAsset7662510_()){
     if(restorePendingViewFastB5311_())return;
@@ -10668,7 +10731,7 @@ function setupModernMenuSectionsB5316(){
   const storageKey="qrmanut_menu_sections_a2102";
   let saved={};
   try{saved=JSON.parse(sessionStorage.getItem(storageKey)||"{}")||{}}catch(e){saved={}}
-  // QRManut A2.10.4 — menu principal em três grupos definitivos.
+  // QRManut A2.10.5 — menu principal em três grupos definitivos.
   // Esta função recria os cards ao carregar a página; por isso ela precisa
   // refletir a mesma organização declarada no HTML estático.
   const groups=[
