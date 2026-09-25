@@ -1,7 +1,7 @@
-<!-- QRManut PNCQ 7.6.6.31 A2.10.8
+<!-- QRManut PNCQ 7.6.6.31 A2.11.0
      VISUALIZAÇÃO DE VERSÃO ATIVA NA TELA
      - Se este texto aparecer no código fonte, o HTML correto foi publicado.
-     - Rodapé e menu exibem: QRManut • Versão 7.6.6.31 • Pacote A2.10.8
+     - Rodapé e menu exibem: QRManut • Versão 7.6.6.31 • Pacote A2.11.0
      - Build: 2026-09-24 22:20
 -->
 <!-- QRManut PNCQ 7.6.6.31 A2.6.3 — Checklist Compacto da Preventiva
@@ -179,8 +179,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>QRManut 7.6.6.31 A2.10.8</title>
-<meta name="qrmanut-build" content="7.6.6.31-A2.10.8-2026-09-24-2220">
+<title>QRManut 7.6.6.31 A2.11.0</title>
+<meta name="qrmanut-build" content="7.6.6.31-A2.11.0-2026-09-24-2220">
 <meta name="theme-color" content="#0b315e">
 <meta name="application-name" content="QRManut">
 <meta name="mobile-web-app-capable" content="yes">
@@ -1451,7 +1451,7 @@ body{
 }
 
 
-/* QRManut A2.10.8 — versão visível do pacote implantado */
+/* QRManut A2.11.0 — versão visível do pacote implantado */
 .qr-build-badge-a2101{
   display:inline-flex;
   align-items:center;
@@ -1482,7 +1482,7 @@ body{
 }
 
 
-/* QRManut A2.10.8 — ações após upload de documento */
+/* QRManut A2.11.0 — ações após upload de documento */
 .document-upload-next-actions-a2103{
   display:flex;
   gap:10px;
@@ -1496,7 +1496,7 @@ body{
 }
 
 
-/* QRManut A2.10.8 — histórico de preventivas compacto por data */
+/* QRManut A2.11.0 — histórico de preventivas compacto por data */
 #preventiveHistorySelectLabel{
   max-width:520px;
 }
@@ -1508,7 +1508,7 @@ body{
 }
 
 
-/* QRManut A2.10.8 — documentos do ativo compactos por dropdown */
+/* QRManut A2.11.0 — documentos do ativo compactos por dropdown */
 #assetDocumentsSelectLabel{
   max-width:620px;
 }
@@ -1517,6 +1517,66 @@ body{
 }
 #assetDocuments .asset-document-card{
   margin-top:12px;
+}
+
+
+/* QRManut A2.11.0 — histórico do checklist executado */
+.preventive-checklist-history-a211{
+  margin-top:12px;
+  padding:12px;
+  border:1px solid #dbeafe;
+  border-radius:14px;
+  background:#f8fbff;
+}
+.preventive-checklist-summary-a211{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:8px;
+}
+.preventive-checklist-chip-a211{
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+  padding:5px 8px;
+  border-radius:999px;
+  background:#eef2ff;
+  border:1px solid #c7d2fe;
+  font-size:.78rem;
+  font-weight:800;
+  color:#3730a3;
+}
+.preventive-checklist-chip-a211.alert{
+  background:#fff7ed;
+  border-color:#fed7aa;
+  color:#9a3412;
+}
+.preventive-checklist-chip-a211.critical{
+  background:#fee2e2;
+  border-color:#fecaca;
+  color:#991b1b;
+}
+.preventive-checklist-items-a211{
+  margin-top:10px;
+  display:grid;
+  gap:8px;
+}
+.preventive-checklist-item-a211{
+  border:1px solid #e2e8f0;
+  border-radius:12px;
+  background:#fff;
+  padding:10px;
+}
+.preventive-checklist-item-head-a211{
+  display:flex;
+  justify-content:space-between;
+  gap:8px;
+  align-items:flex-start;
+  flex-wrap:wrap;
+}
+.preventive-checklist-item-value-a211{
+  margin-top:5px;
+  font-weight:800;
 }
 
 </style>
@@ -1534,7 +1594,7 @@ body{
     <div>
       <div class="search-title">QRManut</div>
       <div id="qrAppSubtitle" class="muted">Gestão rápida de manutenção</div>
-      <div id="qrBuildBadgeA2101" class="qr-build-badge-a2101">✅ Pacote A2.10.8 • Atualizado em 2026-09-24 22:20</div>
+      <div id="qrBuildBadgeA2101" class="qr-build-badge-a2101">✅ Pacote A2.11.0 • Atualizado em 2026-09-24 22:20</div>
     </div>
     <button id="qrAlertsButtonB5320" class="qr-alerts-button-b5320 hidden" type="button" aria-expanded="false" aria-controls="qrAlertsPanelB5320" title="Central de Alertas">
       <span class="qr-alerts-bell-b5320" aria-hidden="true">🔔</span>
@@ -2467,13 +2527,13 @@ body{
 </div>
 <label>Adicionar nova foto da ocorrência / correção</label><div class="photo-source-actions"><button type="button" id="manageOccurrenceCameraButton" class="btn btn-blue">📷 Tirar foto</button><button type="button" id="manageOccurrenceAttachButton" class="btn btn-secondary">🖼️ Anexar imagem</button></div><input id="manageOccurrenceCameraInput" class="photo-source-hidden" type="file" accept="image/*,.heic,.heif" capture="environment"><input id="manageOccurrencePhotoInput" class="photo-source-hidden" type="file" accept="image/*,.heic,.heif"><div id="manageOccurrencePhotoStatus" class="muted" style="margin-top:5px"></div><img id="manageOccurrencePhotoPreview" class="photo-preview"><div class="upload-file-box" style="margin-top:12px"><div style="font-weight:800">📎 Adicionar arquivo à ocorrência</div><div class="muted" style="margin-top:4px">PDF, Word, Excel ou outro arquivo de evidência, até 8 MB.</div><button id="manageAttachmentButton" type="button" class="btn btn-secondary" style="margin-top:8px">📎 Escolher arquivo</button><input id="manageAttachmentInput" class="photo-source-hidden" type="file"><div id="manageAttachmentName" class="upload-file-name">Nenhum arquivo selecionado.</div><div id="manageExistingAttachments" style="margin-top:8px"></div></div><div id="conclusionPhotoArea" class="hidden"><label>Foto da conclusão</label><div class="photo-source-actions"><button type="button" id="conclusionCameraButton" class="btn btn-blue">📷 Tirar foto</button><button type="button" id="conclusionAttachButton" class="btn btn-secondary">🖼️ Anexar imagem</button></div><input id="conclusionCameraInput" class="photo-source-hidden" type="file" accept="image/*,.heic,.heif" capture="environment"><input id="conclusionPhotoInput" class="photo-source-hidden" type="file" accept="image/*,.heic,.heif"><div id="conclusionPhotoStatus" class="muted" style="margin-top:5px"></div><img id="conclusionPhotoPreview" class="photo-preview"></div><div id="manageMessage" class="message"></div><div class="modal-actions" style="justify-content:space-between;flex-wrap:wrap"><button id="deleteOccurrence" class="btn btn-danger hidden" type="button">🗑️ Excluir ocorrência</button><div style="display:flex;gap:8px;flex-wrap:wrap"><button id="cancelManage" class="btn btn-secondary">Cancelar</button><button id="saveManage" class="btn">Salvar alterações</button></div></div></div></div>
 
-<div id="qrFooterVersionA2101" class="footer">QRManut • Versão 7.6.6.31 • Pacote A2.10.8</div>
-<div class="qr-build-watermark-a2101">A2.10.8</div>
+<div id="qrFooterVersionA2101" class="footer">QRManut • Versão 7.6.6.31 • Pacote A2.11.0</div>
+<div class="qr-build-watermark-a2101">A2.11.0</div>
 </div>
 <script>
 const API_URL="https://script.google.com/macros/s/AKfycbx4tpC42Q6WdkNhTUTAGoZWvG5M24zwlNscnwbDP5B3Q5pWo8B32-Lf0rQ2Xtua1AFMAQ/exec";
 const QRMANUT_APP_VERSION="7.6.6.31";
-const QRMANUT_FRONTEND_PACKAGE="A2.10.8";
+const QRMANUT_FRONTEND_PACKAGE="A2.11.0";
 const QRMANUT_BUILD_LABEL="2026-09-24 22:20";
 const TOKEN="";const SYSTEM_SESSION_KEY="qrmanut_system_session";const RESPONSIBLE_KEY="qrmanut_responsavel";const PREVENTIVE_SESSION_KEY="qrmanut_preventive_session";const ORIGIN_ASSET_KEY="qrmanut_origin_asset";const MAX_DIM=1280;const QUALITY=.72;
 let systemSession=null,systemLoginNextAction=null,currentAsset=null,currentAssetStatus=null,history=[],selectedOccurrence=null,preventiveControlData=null,preventiveControlMode="all",preventiveSession=null,preventiveRequirements=null,loginNextAction=null,photoData=null,reportAttachmentData=null,preventivePhotoData=null,preventiveDocumentFiles=[],correctionPhotoData=null,manageAttachmentData=null,conclusionPhotoData=null,reportPosting=false,reportCompleted=false,preventivePosting=false,managePosting=false,signatureDirty=false,signatureDrawing=false,signatureCtx=null,occurrenceReportData=null,occurrenceReportFiltersLoaded=false,pendingFiltersLoaded=false,auditFiltersLoaded=false,companyConfigLoaded=false,providersAdminData=[],usersAdminData=[],profilePermissionsAdminData=null,solPublicMeta=null,solPhotoData=null,solTriageData=null,solTriageMeta=null,solSelected=null,solSelectedAssetId="",solPublicPosting=false,solActionPosting=false,solLastCreatedOccurrence7662412=null;
@@ -5267,6 +5327,8 @@ async function loadAsset(id){
   currentAsset=null;
   currentAssetStatus=null;
   history=[];
+  preventiveChecklistHistoryCacheA211_={};
+  preventiveChecklistActiveRecordA211_="";
 
   $("titulo").textContent=qrLanguage==="en-US"?"Loading asset...":"Carregando equipamento...";
   $("meta").textContent="";
@@ -5457,7 +5519,7 @@ function renderAssetDocuments(items){
     ?"Document "
     :"Documento ";
 
-  // A2.10.8 — dropdown compacto: ID do documento + título.
+  // A2.11.0 — dropdown compacto: ID do documento + título.
   select.innerHTML=items.map((d,i)=>{
     const id=String(d.idDocumento||"").trim();
     const titulo=String(d.titulo||"Documento").trim();
@@ -5614,6 +5676,97 @@ function renderHistoryItem(i){
 }
 let preventiveHistoryItemsA2105_=[];
 
+let preventiveChecklistHistoryCacheA211_={};
+let preventiveChecklistActiveRecordA211_="";
+
+function preventiveChecklistSituationClassA211_(s){
+  const n=String(s||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
+  if(n.includes("fora")||n.includes("nok")||n.includes("desvio")||n.includes("pendente")||n.includes("nao medido"))return "critical";
+  return "";
+}
+
+function togglePreventiveChecklistItemsA211_(){
+  const box=$("preventiveChecklistItemsA211");
+  const btn=$("preventiveChecklistToggleA211");
+  if(!box||!btn)return;
+  const hidden=box.classList.toggle("hidden");
+  btn.textContent=hidden
+    ?(qrLanguage==="en-US"?"View checklist items":"Ver itens do checklist")
+    :(qrLanguage==="en-US"?"Hide checklist items":"Ocultar itens do checklist");
+}
+
+function renderPreventiveChecklistHistoryA211_(data){
+  const host=$("preventiveChecklistHistoryA211");
+  if(!host)return;
+
+  if(!data||!data.hasChecklist){
+    host.innerHTML="";
+    return;
+  }
+
+  const t=(pt,en)=>qrLanguage==="en-US"?en:pt;
+  const s=data.summary||{};
+  const items=data.items||[];
+
+  host.innerHTML=`<div class="preventive-checklist-history-a211">
+    <div><b>📋 ${t("Checklist executado","Executed checklist")}</b>${data.modelName?` • ${esc(data.modelName)}`:""}</div>
+    <div class="preventive-checklist-summary-a211">
+      <span class="preventive-checklist-chip-a211">${Number(s.total||0)} ${t("itens","items")}</span>
+      <span class="preventive-checklist-chip-a211">${Number(s.normal||0)} ${t("normais","normal")}</span>
+      ${Number(s.desvios||0)?`<span class="preventive-checklist-chip-a211 alert">${Number(s.desvios||0)} ${t("desvios","deviations")}</span>`:""}
+      ${Number(s.criticosComDesvio||0)?`<span class="preventive-checklist-chip-a211 critical">🚨 ${Number(s.criticosComDesvio||0)} ${t("crítico(s) com desvio","critical deviation(s)")}</span>`:""}
+    </div>
+    <button id="preventiveChecklistToggleA211" type="button" class="btn btn-secondary" style="margin-top:10px" onclick="togglePreventiveChecklistItemsA211_()">${t("Ver itens do checklist","View checklist items")}</button>
+    <div id="preventiveChecklistItemsA211" class="preventive-checklist-items-a211 hidden">
+      ${items.map(it=>`<div class="preventive-checklist-item-a211">
+        <div class="preventive-checklist-item-head-a211">
+          <div><b>${esc(it.descricao||"-")}</b>${it.grupo?`<div class="muted">${esc(it.grupo)}</div>`:""}</div>
+          <div style="display:flex;gap:5px;flex-wrap:wrap">
+            ${it.criticidade?`<span class="preventive-checklist-chip-a211 ${String(it.criticidade).toLowerCase()==="crítico"?"critical":""}">${esc(it.criticidade)}</span>`:""}
+            ${it.situacao?`<span class="preventive-checklist-chip-a211 ${preventiveChecklistSituationClassA211_(it.situacao)}">${esc(it.situacao)}</span>`:""}
+          </div>
+        </div>
+        ${it.valor?`<div class="preventive-checklist-item-value-a211">${esc(it.valor)}${it.unidade?` ${esc(it.unidade)}`:""}</div>`:""}
+        ${it.criterio?`<div class="muted" style="margin-top:4px"><b>${t("Critério","Criteria")}:</b> ${esc(it.criterio)}</div>`:""}
+        ${it.observacao?`<div style="margin-top:5px"><b>${t("Observação","Note")}:</b> ${esc(it.observacao)}</div>`:""}
+        ${it.requerProvidencia?`<div class="muted" style="margin-top:5px">📌 ${t("Providência requerida","Action required")}</div>`:""}
+      </div>`).join("")}
+    </div>
+  </div>`;
+}
+
+async function loadPreventiveChecklistHistoryA211_(registro){
+  const reg=String(registro||"").trim().toUpperCase();
+  preventiveChecklistActiveRecordA211_=reg;
+
+  const host=$("preventiveChecklistHistoryA211");
+  if(!host||!reg)return;
+
+  if(Object.prototype.hasOwnProperty.call(preventiveChecklistHistoryCacheA211_,reg)){
+    renderPreventiveChecklistHistoryA211_(preventiveChecklistHistoryCacheA211_[reg]);
+    return;
+  }
+
+  host.innerHTML=`<div class="muted" style="margin-top:10px">${qrLanguage==="en-US"?"Checking checklist...":"Verificando checklist..."}</div>`;
+
+  try{
+    const r=await menuApi({
+      action:"preventivechecklistresult",
+      preventiveChecklistRecord:reg,
+      __qrForce:true,
+      __qrContext:"historico-checklist-preventiva"
+    });
+    if(!r.ok)throw new Error(r.detail||"Erro ao consultar checklist.");
+    const data=r.data||{hasChecklist:false};
+    preventiveChecklistHistoryCacheA211_[reg]=data;
+    if(preventiveChecklistActiveRecordA211_===reg)renderPreventiveChecklistHistoryA211_(data);
+  }catch(e){
+    if(preventiveChecklistActiveRecordA211_===reg){
+      host.innerHTML=`<div class="muted" style="margin-top:10px">${esc(e.message||"Erro ao consultar checklist.")}</div>`;
+    }
+  }
+}
+
 function renderPreventiveHistoryDetailA2105_(index){
   const items=preventiveHistoryItemsA2105_||[];
   const item=items[Number(index)||0];
@@ -5645,8 +5798,11 @@ function renderPreventiveHistoryDetailA2105_(index){
     ${item.foto?`<div style="margin-top:8px"><button type="button" class="document-open" onclick="openSecureFile76624('preventivePhoto','${esc(item.registro)}')">📷 ${t("Ver evidência","View evidence")}</button></div>`:""}
     ${item.assinatura?`<div style="margin-top:8px"><button type="button" class="document-open" onclick="openSecureFile76624('preventiveSignature','${esc(item.registro)}')">✍️ ${t("Ver assinatura","View signature")}</button></div>`:""}
     ${docsHtml}
+    <div id="preventiveChecklistHistoryA211"></div>
     ${hasProfilePermission("PREVENTIVA_EXCLUIR")?`<button class="btn btn-danger" style="width:100%;margin-top:10px" onclick="deletePreventiveRecord('${esc(item.registro)}')">🗑️ ${t("Excluir preventiva","Delete preventive maintenance")}</button>`:""}
   </div>`;
+
+  loadPreventiveChecklistHistoryA211_(item.registro);
 }
 
 function renderPreventiveHistoryItemsB5310_(items){
@@ -5672,7 +5828,7 @@ function renderPreventiveHistoryItemsB5310_(items){
     ?"Preventive maintenance date "
     :"Data da preventiva ";
 
-  // A2.10.8 — dropdown compacto: número da preventiva + data.
+  // A2.11.0 — dropdown compacto: número da preventiva + data.
   select.innerHTML=items.map((item,i)=>{
     const data=formatDate(item.data)||"-";
     const registro=String(item.registro||"").trim();
@@ -10795,7 +10951,7 @@ function setupModernMenuSectionsB5316(){
   const storageKey="qrmanut_menu_sections_a2102";
   let saved={};
   try{saved=JSON.parse(sessionStorage.getItem(storageKey)||"{}")||{}}catch(e){saved={}}
-  // QRManut A2.10.8 — menu principal em três grupos definitivos.
+  // QRManut A2.11.0 — menu principal em três grupos definitivos.
   // Esta função recria os cards ao carregar a página; por isso ela precisa
   // refletir a mesma organização declarada no HTML estático.
   const groups=[
