@@ -1,7 +1,7 @@
-<!-- QRManut PNCQ 7.6.6.31 A2.13.0
+<!-- QRManut PNCQ 7.6.6.31 A2.14.0
      VISUALIZAÇÃO DE VERSÃO ATIVA NA TELA
      - Se este texto aparecer no código fonte, o HTML correto foi publicado.
-     - Rodapé e menu exibem: QRManut • Versão 7.6.6.31 • Pacote A2.13.0
+     - Rodapé e menu exibem: QRManut • Versão 7.6.6.31 • Pacote A2.14.0
      - Build: 2026-09-24 22:20
 -->
 <!-- QRManut PNCQ 7.6.6.31 A2.6.3 — Checklist Compacto da Preventiva
@@ -179,8 +179,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>QRManut 7.6.6.31 A2.13.0</title>
-<meta name="qrmanut-build" content="7.6.6.31-A2.13.0-2026-09-24-2220">
+<title>QRManut 7.6.6.31 A2.14.0</title>
+<meta name="qrmanut-build" content="7.6.6.31-A2.14.0-2026-09-24-2220">
 <meta name="theme-color" content="#0b315e">
 <meta name="application-name" content="QRManut">
 <meta name="mobile-web-app-capable" content="yes">
@@ -1451,7 +1451,7 @@ body{
 }
 
 
-/* QRManut A2.13.0 — versão visível do pacote implantado */
+/* QRManut A2.14.0 — versão visível do pacote implantado */
 .qr-build-badge-a2101{
   display:inline-flex;
   align-items:center;
@@ -1482,7 +1482,7 @@ body{
 }
 
 
-/* QRManut A2.13.0 — ações após upload de documento */
+/* QRManut A2.14.0 — ações após upload de documento */
 .document-upload-next-actions-a2103{
   display:flex;
   gap:10px;
@@ -1496,7 +1496,7 @@ body{
 }
 
 
-/* QRManut A2.13.0 — histórico de preventivas compacto por data */
+/* QRManut A2.14.0 — histórico de preventivas compacto por data */
 #preventiveHistorySelectLabel{
   max-width:520px;
 }
@@ -1508,7 +1508,7 @@ body{
 }
 
 
-/* QRManut A2.13.0 — documentos do ativo compactos por dropdown */
+/* QRManut A2.14.0 — documentos do ativo compactos por dropdown */
 #assetDocumentsSelectLabel{
   max-width:620px;
 }
@@ -1520,7 +1520,7 @@ body{
 }
 
 
-/* QRManut A2.13.0 — histórico do checklist executado */
+/* QRManut A2.14.0 — histórico do checklist executado */
 .preventive-checklist-history-a211{
   margin-top:12px;
   padding:12px;
@@ -1580,7 +1580,7 @@ body{
 }
 
 
-/* QRManut A2.13.0 — comparação entre preventivas */
+/* QRManut A2.14.0 — comparação entre preventivas */
 .preventive-comparison-a213{
   margin-top:12px;
   padding:12px;
@@ -1661,6 +1661,56 @@ body{
   .preventive-comparison-values-a213{grid-template-columns:1fr}
 }
 
+
+/* QRManut A2.14.0 — evolução histórica do checklist */
+.preventive-trend-a214{
+  margin-top:12px;
+  padding:12px;
+  border:1px solid #cbd5e1;
+  border-radius:14px;
+  background:#fff;
+}
+.preventive-trend-summary-a214{
+  display:flex;
+  flex-wrap:wrap;
+  gap:7px;
+  margin-top:8px;
+}
+.preventive-trend-item-a214{
+  border:1px solid #e2e8f0;
+  border-radius:12px;
+  padding:10px;
+  margin-top:8px;
+  background:#fff;
+}
+.preventive-trend-item-a214.warn{
+  border-color:#fed7aa;
+  background:#fffdf8;
+}
+.preventive-trend-series-a214{
+  display:flex;
+  gap:6px;
+  overflow-x:auto;
+  padding:7px 0 2px;
+}
+.preventive-trend-point-a214{
+  min-width:112px;
+  padding:7px;
+  border:1px solid #e2e8f0;
+  border-radius:10px;
+  background:#f8fafc;
+  font-size:.82rem;
+}
+.preventive-trend-point-a214.bad{
+  border-color:#fecaca;
+  background:#fef2f2;
+}
+.preventive-trend-point-date-a214{
+  font-size:.72rem;
+  color:#64748b;
+  margin-bottom:3px;
+}
+
 </style>
 </head>
 <body>
@@ -1676,7 +1726,7 @@ body{
     <div>
       <div class="search-title">QRManut</div>
       <div id="qrAppSubtitle" class="muted">Gestão rápida de manutenção</div>
-      <div id="qrBuildBadgeA2101" class="qr-build-badge-a2101">✅ Pacote A2.13.0 • Atualizado em 2026-09-24 22:20</div>
+      <div id="qrBuildBadgeA2101" class="qr-build-badge-a2101">✅ Pacote A2.14.0 • Atualizado em 2026-09-24 22:20</div>
     </div>
     <button id="qrAlertsButtonB5320" class="qr-alerts-button-b5320 hidden" type="button" aria-expanded="false" aria-controls="qrAlertsPanelB5320" title="Central de Alertas">
       <span class="qr-alerts-bell-b5320" aria-hidden="true">🔔</span>
@@ -2609,13 +2659,13 @@ body{
 </div>
 <label>Adicionar nova foto da ocorrência / correção</label><div class="photo-source-actions"><button type="button" id="manageOccurrenceCameraButton" class="btn btn-blue">📷 Tirar foto</button><button type="button" id="manageOccurrenceAttachButton" class="btn btn-secondary">🖼️ Anexar imagem</button></div><input id="manageOccurrenceCameraInput" class="photo-source-hidden" type="file" accept="image/*,.heic,.heif" capture="environment"><input id="manageOccurrencePhotoInput" class="photo-source-hidden" type="file" accept="image/*,.heic,.heif"><div id="manageOccurrencePhotoStatus" class="muted" style="margin-top:5px"></div><img id="manageOccurrencePhotoPreview" class="photo-preview"><div class="upload-file-box" style="margin-top:12px"><div style="font-weight:800">📎 Adicionar arquivo à ocorrência</div><div class="muted" style="margin-top:4px">PDF, Word, Excel ou outro arquivo de evidência, até 8 MB.</div><button id="manageAttachmentButton" type="button" class="btn btn-secondary" style="margin-top:8px">📎 Escolher arquivo</button><input id="manageAttachmentInput" class="photo-source-hidden" type="file"><div id="manageAttachmentName" class="upload-file-name">Nenhum arquivo selecionado.</div><div id="manageExistingAttachments" style="margin-top:8px"></div></div><div id="conclusionPhotoArea" class="hidden"><label>Foto da conclusão</label><div class="photo-source-actions"><button type="button" id="conclusionCameraButton" class="btn btn-blue">📷 Tirar foto</button><button type="button" id="conclusionAttachButton" class="btn btn-secondary">🖼️ Anexar imagem</button></div><input id="conclusionCameraInput" class="photo-source-hidden" type="file" accept="image/*,.heic,.heif" capture="environment"><input id="conclusionPhotoInput" class="photo-source-hidden" type="file" accept="image/*,.heic,.heif"><div id="conclusionPhotoStatus" class="muted" style="margin-top:5px"></div><img id="conclusionPhotoPreview" class="photo-preview"></div><div id="manageMessage" class="message"></div><div class="modal-actions" style="justify-content:space-between;flex-wrap:wrap"><button id="deleteOccurrence" class="btn btn-danger hidden" type="button">🗑️ Excluir ocorrência</button><div style="display:flex;gap:8px;flex-wrap:wrap"><button id="cancelManage" class="btn btn-secondary">Cancelar</button><button id="saveManage" class="btn">Salvar alterações</button></div></div></div></div>
 
-<div id="qrFooterVersionA2101" class="footer">QRManut • Versão 7.6.6.31 • Pacote A2.13.0</div>
-<div class="qr-build-watermark-a2101">A2.13.0</div>
+<div id="qrFooterVersionA2101" class="footer">QRManut • Versão 7.6.6.31 • Pacote A2.14.0</div>
+<div class="qr-build-watermark-a2101">A2.14.0</div>
 </div>
 <script>
 const API_URL="https://script.google.com/macros/s/AKfycbx4tpC42Q6WdkNhTUTAGoZWvG5M24zwlNscnwbDP5B3Q5pWo8B32-Lf0rQ2Xtua1AFMAQ/exec";
 const QRMANUT_APP_VERSION="7.6.6.31";
-const QRMANUT_FRONTEND_PACKAGE="A2.13.0";
+const QRMANUT_FRONTEND_PACKAGE="A2.14.0";
 const QRMANUT_BUILD_LABEL="2026-09-24 22:20";
 const TOKEN="";const SYSTEM_SESSION_KEY="qrmanut_system_session";const RESPONSIBLE_KEY="qrmanut_responsavel";const PREVENTIVE_SESSION_KEY="qrmanut_preventive_session";const ORIGIN_ASSET_KEY="qrmanut_origin_asset";const MAX_DIM=1280;const QUALITY=.72;
 let systemSession=null,systemLoginNextAction=null,currentAsset=null,currentAssetStatus=null,history=[],selectedOccurrence=null,preventiveControlData=null,preventiveControlMode="all",preventiveSession=null,preventiveRequirements=null,loginNextAction=null,photoData=null,reportAttachmentData=null,preventivePhotoData=null,preventiveDocumentFiles=[],correctionPhotoData=null,manageAttachmentData=null,conclusionPhotoData=null,reportPosting=false,reportCompleted=false,preventivePosting=false,managePosting=false,signatureDirty=false,signatureDrawing=false,signatureCtx=null,occurrenceReportData=null,occurrenceReportFiltersLoaded=false,pendingFiltersLoaded=false,auditFiltersLoaded=false,companyConfigLoaded=false,providersAdminData=[],usersAdminData=[],profilePermissionsAdminData=null,solPublicMeta=null,solPhotoData=null,solTriageData=null,solTriageMeta=null,solSelected=null,solSelectedAssetId="",solPublicPosting=false,solActionPosting=false,solLastCreatedOccurrence7662412=null;
@@ -5412,6 +5462,7 @@ async function loadAsset(id){
   preventiveChecklistHistoryCacheA211_={};
   preventiveChecklistActiveRecordA211_="";
   preventiveChecklistComparisonCacheA213_={};
+  preventiveChecklistTrendCacheA214_={};
 
   $("titulo").textContent=qrLanguage==="en-US"?"Loading asset...":"Carregando equipamento...";
   $("meta").textContent="";
@@ -5602,7 +5653,7 @@ function renderAssetDocuments(items){
     ?"Document "
     :"Documento ";
 
-  // A2.13.0 — dropdown compacto: ID do documento + título.
+  // A2.14.0 — dropdown compacto: ID do documento + título.
   select.innerHTML=items.map((d,i)=>{
     const id=String(d.idDocumento||"").trim();
     const titulo=String(d.titulo||"Documento").trim();
@@ -5802,8 +5853,10 @@ function renderPreventiveChecklistHistoryA211_(data){
     <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
       <button id="preventiveChecklistToggleA211" type="button" class="btn btn-secondary" onclick="togglePreventiveChecklistItemsA211_()">${t("Ver itens do checklist","View checklist items")}</button>
       <button type="button" class="btn btn-secondary" onclick="loadPreventiveChecklistComparisonA213_('${esc(data.registro||preventiveChecklistActiveRecordA211_)}')">↔️ ${t("Comparar com preventiva anterior","Compare with previous preventive")}</button>
+      <button type="button" class="btn btn-secondary" onclick="loadPreventiveChecklistTrendA214_('${esc(data.registro||preventiveChecklistActiveRecordA211_)}')">📈 ${t("Evolução histórica","Historical trend")}</button>
     </div>
     <div id="preventiveChecklistComparisonA213"></div>
+    <div id="preventiveChecklistTrendA214"></div>
     <div id="preventiveChecklistItemsA211" class="preventive-checklist-items-a211 hidden">
       ${items.map(it=>`<div class="preventive-checklist-item-a211">
         <div class="preventive-checklist-item-head-a211">
@@ -5855,6 +5908,191 @@ async function loadPreventiveChecklistHistoryA211_(registro){
 }
 
 
+
+
+let preventiveChecklistTrendCacheA214_={};
+
+function preventiveTrendDirectionLabelA214_(direction){
+  const t=(pt,en)=>qrLanguage==="en-US"?en:pt;
+  if(direction==="up")return "↑ "+t("Subindo","Increasing");
+  if(direction==="down")return "↓ "+t("Caindo","Decreasing");
+  if(direction==="stable")return "= "+t("Estável","Stable");
+  return t("Sem tendência numérica","No numeric trend");
+}
+
+function preventiveTrendIsDeviationA214_(s){
+  const n=String(s||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
+  return ["nok","nao","nao anexada","fora do limite","valor invalido","nao medido","pendente"].includes(n);
+}
+
+function preventiveTrendValueA214_(p){
+  const v=String(p?.valor??"").trim();
+  if(!v)return String(p?.situacao||"—");
+  return v+(p?.unidade?` ${p.unidade}`:"");
+}
+
+function renderPreventiveChecklistTrendA214_(data){
+  const host=$("preventiveChecklistTrendA214");
+  if(!host)return;
+  const t=(pt,en)=>qrLanguage==="en-US"?en:pt;
+
+  if(!data||!data.hasHistory){
+    host.innerHTML=`<div class="preventive-trend-a214"><div class="muted">${esc(data?.message||t("Ainda não há histórico suficiente para evolução.","There is not enough history for trend analysis yet."))}</div></div>`;
+    return;
+  }
+
+  const s=data.summary||{};
+  const attention=(data.items||[]).filter(x=>x.recurrent||Number(x.consecutiveDeviation||0)>=2);
+
+  host.innerHTML=`<div class="preventive-trend-a214">
+    <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap">
+      <div>
+        <b>📈 ${t("Evolução histórica do checklist","Checklist historical trend")}</b>
+        <div class="muted">${esc(data.modelName||"")} • ${Number(s.preventives||0)} ${t("preventivas analisadas","preventives analyzed")}</div>
+      </div>
+      <button type="button" class="btn btn-secondary" onclick="printPreventiveChecklistTrendA214_('${esc(data.registro||"")}')">🖨️ ${t("Imprimir / Salvar PDF","Print / Save PDF")}</button>
+    </div>
+
+    <div class="preventive-trend-summary-a214">
+      <span class="preventive-trend-chip-a213">${Number(s.items||0)} ${t("itens","items")}</span>
+      ${Number(s.recurrentDeviation||0)?`<span class="preventive-trend-chip-a213 warn">↻ ${Number(s.recurrentDeviation||0)} ${t("desvio(s) recorrente(s)","recurrent deviation(s)")}</span>`:""}
+      ${Number(s.consecutiveDeviation||0)?`<span class="preventive-trend-chip-a213 bad">⚠ ${Number(s.consecutiveDeviation||0)} ${t("desvio(s) consecutivo(s)","consecutive deviation(s)")}</span>`:""}
+      ${Number(s.numericUp||0)?`<span class="preventive-trend-chip-a213">↑ ${Number(s.numericUp||0)}</span>`:""}
+      ${Number(s.numericDown||0)?`<span class="preventive-trend-chip-a213">↓ ${Number(s.numericDown||0)}</span>`:""}
+      ${Number(s.numericStable||0)?`<span class="preventive-trend-chip-a213">= ${Number(s.numericStable||0)}</span>`:""}
+    </div>
+
+    ${attention.length?`<div style="margin-top:11px"><b>${t("Pontos de atenção","Attention points")}</b></div>
+      ${attention.map(it=>`<div class="preventive-trend-item-a214 warn">
+        <div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap">
+          <b>${esc(it.descricao||"-")}</b>
+          <span class="preventive-trend-chip-a213 warn">${it.consecutiveDeviation>=2?`${it.consecutiveDeviation} ${t("desvios consecutivos","consecutive deviations")}`:`${it.deviationCount} ${t("desvios no histórico","historical deviations")}`}</span>
+        </div>
+        <div class="muted" style="margin-top:4px">${esc(preventiveTrendDirectionLabelA214_(it.direction))}</div>
+      </div>`).join("")}`:""}
+
+    <details style="margin-top:12px">
+      <summary style="cursor:pointer;font-weight:800">${t("Ver evolução por item","View item-by-item trend")}</summary>
+      <div style="margin-top:8px">
+        ${(data.items||[]).map(it=>`<div class="preventive-trend-item-a214 ${it.recurrent?"warn":""}">
+          <div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap">
+            <div><b>${esc(it.descricao||"-")}</b>${it.grupo?`<div class="muted">${esc(it.grupo)}</div>`:""}</div>
+            <span class="preventive-trend-chip-a213">${esc(preventiveTrendDirectionLabelA214_(it.direction))}</span>
+          </div>
+          <div class="preventive-trend-series-a214">
+            ${(it.points||[]).map(p=>`<div class="preventive-trend-point-a214 ${preventiveTrendIsDeviationA214_(p.situacao)?"bad":""}">
+              <div class="preventive-trend-point-date-a214">${esc(formatDate(p.data)||"")}</div>
+              <b>${esc(preventiveTrendValueA214_(p))}</b>
+              <div class="muted">${esc(p.situacao||"")}</div>
+            </div>`).join("")}
+          </div>
+          ${(it.subseries||[]).length?`<div style="margin-top:7px">${it.subseries.map(sm=>`<div class="muted" style="margin-top:3px"><b>${esc(sm.nome||"")}</b> • ${esc(preventiveTrendDirectionLabelA214_(sm.direction))} • ${Number(sm.deviationCount||0)} ${t("desvio(s)","deviation(s)")}</div>`).join("")}</div>`:""}
+        </div>`).join("")}
+      </div>
+    </details>
+  </div>`;
+}
+
+async function loadPreventiveChecklistTrendA214_(registro){
+  const reg=String(registro||preventiveChecklistActiveRecordA211_||"").trim().toUpperCase();
+  const host=$("preventiveChecklistTrendA214");
+  if(!host||!reg)return;
+
+  if(Object.prototype.hasOwnProperty.call(preventiveChecklistTrendCacheA214_,reg)){
+    renderPreventiveChecklistTrendA214_(preventiveChecklistTrendCacheA214_[reg]);
+    return;
+  }
+
+  host.innerHTML=`<div class="preventive-trend-a214"><div class="muted">${qrLanguage==="en-US"?"Calculating historical trend...":"Calculando evolução histórica..."}</div></div>`;
+
+  try{
+    const r=await menuApi({
+      action:"preventivechecklisttrend",
+      preventiveTrendRecord:reg,
+      __qrForce:true,
+      __qrContext:"tendencia-checklist-preventiva-a214"
+    });
+    if(!r.ok)throw new Error(r.detail||"Erro ao calcular evolução histórica.");
+    const data=r.data||{};
+    preventiveChecklistTrendCacheA214_[reg]=data;
+    renderPreventiveChecklistTrendA214_(data);
+  }catch(e){
+    host.innerHTML=`<div class="preventive-trend-a214"><div class="message error" style="display:block">${esc(e.message||"Erro ao calcular evolução histórica.")}</div></div>`;
+  }
+}
+
+function printPreventiveChecklistTrendA214_(registro){
+  const reg=String(registro||preventiveChecklistActiveRecordA211_||"").trim().toUpperCase();
+  const data=preventiveChecklistTrendCacheA214_[reg];
+  if(!data||!data.hasHistory){
+    alert(qrLanguage==="en-US"?"Load the historical trend first.":"Carregue a evolução histórica primeiro.");
+    return;
+  }
+
+  const t=(pt,en)=>qrLanguage==="en-US"?en:pt;
+  const p=window.open("about:blank","_blank");
+  if(!p)return alert(t("O navegador bloqueou a janela de impressão.","The browser blocked the print window."));
+
+  const summary=data.summary||{};
+  const preventives=(data.preventives||[]).map(x=>`${esc(x.registro||"")} — ${esc(formatDate(x.data)||"")}`).join("<br>");
+
+  const items=(data.items||[]).map(it=>{
+    const rows=(it.points||[]).map(pt=>`
+      <tr>
+        <td>${esc(pt.registro||"")}</td>
+        <td>${esc(formatDate(pt.data)||"")}</td>
+        <td>${esc(preventiveTrendValueA214_(pt))}</td>
+        <td>${esc(pt.situacao||"")}</td>
+      </tr>`).join("");
+
+    return `<section>
+      <h3>${esc(it.descricao||"-")}</h3>
+      <p><b>${t("Grupo","Group")}:</b> ${esc(it.grupo||"-")} &nbsp; | &nbsp; <b>${t("Criticidade","Criticality")}:</b> ${esc(it.criticidade||"Normal")} &nbsp; | &nbsp; <b>${t("Tendência","Trend")}:</b> ${esc(preventiveTrendDirectionLabelA214_(it.direction))}</p>
+      ${it.recurrent?`<p class="warn"><b>↻ ${t("Desvio recorrente","Recurrent deviation")}</b> — ${Number(it.deviationCount||0)} ${t("ocorrências no histórico","occurrences in history")}.</p>`:""}
+      ${Number(it.consecutiveDeviation||0)>=2?`<p class="bad"><b>⚠ ${Number(it.consecutiveDeviation)} ${t("desvios consecutivos","consecutive deviations")}</b></p>`:""}
+      <table>
+        <thead><tr><th>${t("Preventiva","Preventive")}</th><th>${t("Data","Date")}</th><th>${t("Valor / Resposta","Value / Response")}</th><th>${t("Situação","Status")}</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </section>`;
+  }).join("");
+
+  p.document.open();
+  p.document.write(`<!doctype html>
+    <html lang="${qrLanguage==="en-US"?"en":"pt-br"}">
+    <head>
+      <meta charset="utf-8">
+      <title>QRManut - ${t("Evolução do Checklist","Checklist Trend")} - ${esc(reg)}</title>
+      <style>
+        body{font-family:Arial,sans-serif;color:#111827;margin:28px;font-size:12px}
+        h1{font-size:22px;margin-bottom:4px} h2{font-size:16px;margin-top:20px} h3{font-size:14px;margin:18px 0 6px}
+        .muted{color:#64748b}.summary{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.chip{border:1px solid #cbd5e1;border-radius:999px;padding:5px 8px}
+        .warn{color:#9a3412}.bad{color:#991b1b}
+        table{border-collapse:collapse;width:100%;margin:6px 0 14px}th,td{border:1px solid #d1d5db;padding:6px;text-align:left;vertical-align:top}th{background:#f3f4f6}
+        section{break-inside:avoid;margin-bottom:12px}
+        .actions{margin-bottom:16px}
+        @media print{.actions{display:none}body{margin:10mm}}
+      </style>
+    </head>
+    <body>
+      <div class="actions"><button onclick="window.print()">🖨️ ${t("Imprimir / Salvar PDF","Print / Save PDF")}</button></div>
+      <h1>QRManut — ${t("Evolução Histórica do Checklist","Checklist Historical Trend")}</h1>
+      <div class="muted">${t("Preventiva de referência","Reference preventive")}: ${esc(reg)} • ${esc(data.equipamento||data.idAtivo||"")}</div>
+      <p><b>${t("Modelo","Model")}:</b> ${esc(data.modelName||"-")}</p>
+      <div class="summary">
+        <span class="chip">${Number(summary.preventives||0)} ${t("preventivas","preventives")}</span>
+        <span class="chip">${Number(summary.items||0)} ${t("itens","items")}</span>
+        <span class="chip">${Number(summary.recurrentDeviation||0)} ${t("desvios recorrentes","recurrent deviations")}</span>
+        <span class="chip">${Number(summary.consecutiveDeviation||0)} ${t("desvios consecutivos","consecutive deviations")}</span>
+      </div>
+      <h2>${t("Período analisado","Analyzed period")}</h2>
+      <p>${preventives}</p>
+      <h2>${t("Evolução por item","Item-by-item trend")}</h2>
+      ${items}
+      <p class="muted">${t("Relatório gerado pelo QRManut. Na janela de impressão, escolha 'Salvar como PDF' para gerar o arquivo.","Report generated by QRManut. In the print dialog, choose 'Save as PDF' to create the file.")}</p>
+    </body></html>`);
+  p.document.close();
+}
 
 let preventiveChecklistComparisonCacheA213_={};
 
@@ -6118,7 +6356,7 @@ function renderPreventiveHistoryItemsB5310_(items){
     ?"Preventive maintenance date "
     :"Data da preventiva ";
 
-  // A2.13.0 — dropdown compacto: número da preventiva + data.
+  // A2.14.0 — dropdown compacto: número da preventiva + data.
   select.innerHTML=items.map((item,i)=>{
     const data=formatDate(item.data)||"-";
     const registro=String(item.registro||"").trim();
@@ -11241,7 +11479,7 @@ function setupModernMenuSectionsB5316(){
   const storageKey="qrmanut_menu_sections_a2102";
   let saved={};
   try{saved=JSON.parse(sessionStorage.getItem(storageKey)||"{}")||{}}catch(e){saved={}}
-  // QRManut A2.13.0 — menu principal em três grupos definitivos.
+  // QRManut A2.14.0 — menu principal em três grupos definitivos.
   // Esta função recria os cards ao carregar a página; por isso ela precisa
   // refletir a mesma organização declarada no HTML estático.
   const groups=[
