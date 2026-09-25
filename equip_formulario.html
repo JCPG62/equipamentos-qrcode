@@ -1,7 +1,7 @@
-<!-- QRManut PNCQ 7.6.6.31 A2.12.0
+<!-- QRManut PNCQ 7.6.6.31 A2.13.0
      VISUALIZAÇÃO DE VERSÃO ATIVA NA TELA
      - Se este texto aparecer no código fonte, o HTML correto foi publicado.
-     - Rodapé e menu exibem: QRManut • Versão 7.6.6.31 • Pacote A2.12.0
+     - Rodapé e menu exibem: QRManut • Versão 7.6.6.31 • Pacote A2.13.0
      - Build: 2026-09-24 22:20
 -->
 <!-- QRManut PNCQ 7.6.6.31 A2.6.3 — Checklist Compacto da Preventiva
@@ -179,8 +179,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>QRManut 7.6.6.31 A2.12.0</title>
-<meta name="qrmanut-build" content="7.6.6.31-A2.12.0-2026-09-24-2220">
+<title>QRManut 7.6.6.31 A2.13.0</title>
+<meta name="qrmanut-build" content="7.6.6.31-A2.13.0-2026-09-24-2220">
 <meta name="theme-color" content="#0b315e">
 <meta name="application-name" content="QRManut">
 <meta name="mobile-web-app-capable" content="yes">
@@ -1451,7 +1451,7 @@ body{
 }
 
 
-/* QRManut A2.12.0 — versão visível do pacote implantado */
+/* QRManut A2.13.0 — versão visível do pacote implantado */
 .qr-build-badge-a2101{
   display:inline-flex;
   align-items:center;
@@ -1482,7 +1482,7 @@ body{
 }
 
 
-/* QRManut A2.12.0 — ações após upload de documento */
+/* QRManut A2.13.0 — ações após upload de documento */
 .document-upload-next-actions-a2103{
   display:flex;
   gap:10px;
@@ -1496,7 +1496,7 @@ body{
 }
 
 
-/* QRManut A2.12.0 — histórico de preventivas compacto por data */
+/* QRManut A2.13.0 — histórico de preventivas compacto por data */
 #preventiveHistorySelectLabel{
   max-width:520px;
 }
@@ -1508,7 +1508,7 @@ body{
 }
 
 
-/* QRManut A2.12.0 — documentos do ativo compactos por dropdown */
+/* QRManut A2.13.0 — documentos do ativo compactos por dropdown */
 #assetDocumentsSelectLabel{
   max-width:620px;
 }
@@ -1520,7 +1520,7 @@ body{
 }
 
 
-/* QRManut A2.12.0 — histórico do checklist executado */
+/* QRManut A2.13.0 — histórico do checklist executado */
 .preventive-checklist-history-a211{
   margin-top:12px;
   padding:12px;
@@ -1579,6 +1579,88 @@ body{
   font-weight:800;
 }
 
+
+/* QRManut A2.13.0 — comparação entre preventivas */
+.preventive-comparison-a213{
+  margin-top:12px;
+  padding:12px;
+  border:1px solid #dbeafe;
+  border-radius:14px;
+  background:#f8fafc;
+}
+.preventive-comparison-summary-a213{
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap;
+  margin-top:8px;
+}
+.preventive-trend-chip-a213{
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+  padding:5px 8px;
+  border-radius:999px;
+  border:1px solid #dbeafe;
+  background:#eff6ff;
+  color:#1e3a8a;
+  font-size:.78rem;
+  font-weight:800;
+}
+.preventive-trend-chip-a213.good{
+  background:#ecfdf5;
+  border-color:#a7f3d0;
+  color:#065f46;
+}
+.preventive-trend-chip-a213.bad{
+  background:#fef2f2;
+  border-color:#fecaca;
+  color:#991b1b;
+}
+.preventive-trend-chip-a213.warn{
+  background:#fff7ed;
+  border-color:#fed7aa;
+  color:#9a3412;
+}
+.preventive-comparison-items-a213{
+  display:grid;
+  gap:8px;
+  margin-top:10px;
+}
+.preventive-comparison-item-a213{
+  padding:10px;
+  border:1px solid #e2e8f0;
+  border-radius:12px;
+  background:#fff;
+}
+.preventive-comparison-item-a213.bad{
+  border-color:#fecaca;
+  background:#fffafa;
+}
+.preventive-comparison-item-a213.warn{
+  border-color:#fed7aa;
+  background:#fffdf8;
+}
+.preventive-comparison-item-a213.good{
+  border-color:#bbf7d0;
+  background:#fbfffc;
+}
+.preventive-comparison-values-a213{
+  margin-top:6px;
+  display:grid;
+  grid-template-columns:1fr 1fr auto;
+  gap:8px;
+  align-items:center;
+}
+.preventive-comparison-sub-a213{
+  margin-top:7px;
+  padding-top:7px;
+  border-top:1px dashed #e2e8f0;
+  font-size:.88rem;
+}
+@media(max-width:640px){
+  .preventive-comparison-values-a213{grid-template-columns:1fr}
+}
+
 </style>
 </head>
 <body>
@@ -1594,7 +1676,7 @@ body{
     <div>
       <div class="search-title">QRManut</div>
       <div id="qrAppSubtitle" class="muted">Gestão rápida de manutenção</div>
-      <div id="qrBuildBadgeA2101" class="qr-build-badge-a2101">✅ Pacote A2.12.0 • Atualizado em 2026-09-24 22:20</div>
+      <div id="qrBuildBadgeA2101" class="qr-build-badge-a2101">✅ Pacote A2.13.0 • Atualizado em 2026-09-24 22:20</div>
     </div>
     <button id="qrAlertsButtonB5320" class="qr-alerts-button-b5320 hidden" type="button" aria-expanded="false" aria-controls="qrAlertsPanelB5320" title="Central de Alertas">
       <span class="qr-alerts-bell-b5320" aria-hidden="true">🔔</span>
@@ -2527,13 +2609,13 @@ body{
 </div>
 <label>Adicionar nova foto da ocorrência / correção</label><div class="photo-source-actions"><button type="button" id="manageOccurrenceCameraButton" class="btn btn-blue">📷 Tirar foto</button><button type="button" id="manageOccurrenceAttachButton" class="btn btn-secondary">🖼️ Anexar imagem</button></div><input id="manageOccurrenceCameraInput" class="photo-source-hidden" type="file" accept="image/*,.heic,.heif" capture="environment"><input id="manageOccurrencePhotoInput" class="photo-source-hidden" type="file" accept="image/*,.heic,.heif"><div id="manageOccurrencePhotoStatus" class="muted" style="margin-top:5px"></div><img id="manageOccurrencePhotoPreview" class="photo-preview"><div class="upload-file-box" style="margin-top:12px"><div style="font-weight:800">📎 Adicionar arquivo à ocorrência</div><div class="muted" style="margin-top:4px">PDF, Word, Excel ou outro arquivo de evidência, até 8 MB.</div><button id="manageAttachmentButton" type="button" class="btn btn-secondary" style="margin-top:8px">📎 Escolher arquivo</button><input id="manageAttachmentInput" class="photo-source-hidden" type="file"><div id="manageAttachmentName" class="upload-file-name">Nenhum arquivo selecionado.</div><div id="manageExistingAttachments" style="margin-top:8px"></div></div><div id="conclusionPhotoArea" class="hidden"><label>Foto da conclusão</label><div class="photo-source-actions"><button type="button" id="conclusionCameraButton" class="btn btn-blue">📷 Tirar foto</button><button type="button" id="conclusionAttachButton" class="btn btn-secondary">🖼️ Anexar imagem</button></div><input id="conclusionCameraInput" class="photo-source-hidden" type="file" accept="image/*,.heic,.heif" capture="environment"><input id="conclusionPhotoInput" class="photo-source-hidden" type="file" accept="image/*,.heic,.heif"><div id="conclusionPhotoStatus" class="muted" style="margin-top:5px"></div><img id="conclusionPhotoPreview" class="photo-preview"></div><div id="manageMessage" class="message"></div><div class="modal-actions" style="justify-content:space-between;flex-wrap:wrap"><button id="deleteOccurrence" class="btn btn-danger hidden" type="button">🗑️ Excluir ocorrência</button><div style="display:flex;gap:8px;flex-wrap:wrap"><button id="cancelManage" class="btn btn-secondary">Cancelar</button><button id="saveManage" class="btn">Salvar alterações</button></div></div></div></div>
 
-<div id="qrFooterVersionA2101" class="footer">QRManut • Versão 7.6.6.31 • Pacote A2.12.0</div>
-<div class="qr-build-watermark-a2101">A2.12.0</div>
+<div id="qrFooterVersionA2101" class="footer">QRManut • Versão 7.6.6.31 • Pacote A2.13.0</div>
+<div class="qr-build-watermark-a2101">A2.13.0</div>
 </div>
 <script>
 const API_URL="https://script.google.com/macros/s/AKfycbx4tpC42Q6WdkNhTUTAGoZWvG5M24zwlNscnwbDP5B3Q5pWo8B32-Lf0rQ2Xtua1AFMAQ/exec";
 const QRMANUT_APP_VERSION="7.6.6.31";
-const QRMANUT_FRONTEND_PACKAGE="A2.12.0";
+const QRMANUT_FRONTEND_PACKAGE="A2.13.0";
 const QRMANUT_BUILD_LABEL="2026-09-24 22:20";
 const TOKEN="";const SYSTEM_SESSION_KEY="qrmanut_system_session";const RESPONSIBLE_KEY="qrmanut_responsavel";const PREVENTIVE_SESSION_KEY="qrmanut_preventive_session";const ORIGIN_ASSET_KEY="qrmanut_origin_asset";const MAX_DIM=1280;const QUALITY=.72;
 let systemSession=null,systemLoginNextAction=null,currentAsset=null,currentAssetStatus=null,history=[],selectedOccurrence=null,preventiveControlData=null,preventiveControlMode="all",preventiveSession=null,preventiveRequirements=null,loginNextAction=null,photoData=null,reportAttachmentData=null,preventivePhotoData=null,preventiveDocumentFiles=[],correctionPhotoData=null,manageAttachmentData=null,conclusionPhotoData=null,reportPosting=false,reportCompleted=false,preventivePosting=false,managePosting=false,signatureDirty=false,signatureDrawing=false,signatureCtx=null,occurrenceReportData=null,occurrenceReportFiltersLoaded=false,pendingFiltersLoaded=false,auditFiltersLoaded=false,companyConfigLoaded=false,providersAdminData=[],usersAdminData=[],profilePermissionsAdminData=null,solPublicMeta=null,solPhotoData=null,solTriageData=null,solTriageMeta=null,solSelected=null,solSelectedAssetId="",solPublicPosting=false,solActionPosting=false,solLastCreatedOccurrence7662412=null;
@@ -5329,6 +5411,7 @@ async function loadAsset(id){
   history=[];
   preventiveChecklistHistoryCacheA211_={};
   preventiveChecklistActiveRecordA211_="";
+  preventiveChecklistComparisonCacheA213_={};
 
   $("titulo").textContent=qrLanguage==="en-US"?"Loading asset...":"Carregando equipamento...";
   $("meta").textContent="";
@@ -5519,7 +5602,7 @@ function renderAssetDocuments(items){
     ?"Document "
     :"Documento ";
 
-  // A2.12.0 — dropdown compacto: ID do documento + título.
+  // A2.13.0 — dropdown compacto: ID do documento + título.
   select.innerHTML=items.map((d,i)=>{
     const id=String(d.idDocumento||"").trim();
     const titulo=String(d.titulo||"Documento").trim();
@@ -5716,7 +5799,11 @@ function renderPreventiveChecklistHistoryA211_(data){
       ${Number(s.desvios||0)?`<span class="preventive-checklist-chip-a211 alert">${Number(s.desvios||0)} ${t("desvios","deviations")}</span>`:""}
       ${Number(s.criticosComDesvio||0)?`<span class="preventive-checklist-chip-a211 critical">🚨 ${Number(s.criticosComDesvio||0)} ${t("crítico(s) com desvio","critical deviation(s)")}</span>`:""}
     </div>
-    <button id="preventiveChecklistToggleA211" type="button" class="btn btn-secondary" style="margin-top:10px" onclick="togglePreventiveChecklistItemsA211_()">${t("Ver itens do checklist","View checklist items")}</button>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+      <button id="preventiveChecklistToggleA211" type="button" class="btn btn-secondary" onclick="togglePreventiveChecklistItemsA211_()">${t("Ver itens do checklist","View checklist items")}</button>
+      <button type="button" class="btn btn-secondary" onclick="loadPreventiveChecklistComparisonA213_('${esc(data.registro||preventiveChecklistActiveRecordA211_)}')">↔️ ${t("Comparar com preventiva anterior","Compare with previous preventive")}</button>
+    </div>
+    <div id="preventiveChecklistComparisonA213"></div>
     <div id="preventiveChecklistItemsA211" class="preventive-checklist-items-a211 hidden">
       ${items.map(it=>`<div class="preventive-checklist-item-a211">
         <div class="preventive-checklist-item-head-a211">
@@ -5767,6 +5854,139 @@ async function loadPreventiveChecklistHistoryA211_(registro){
   }
 }
 
+
+
+let preventiveChecklistComparisonCacheA213_={};
+
+function preventiveComparisonTrendLabelA213_(item){
+  const t=(pt,en)=>qrLanguage==="en-US"?en:pt;
+  if(item.statusTrend==="melhora")return {text:"✓ "+t("Melhora","Improved"),cls:"good"};
+  if(item.statusTrend==="piora")return {text:"⚠ "+t("Piora","Worsened"),cls:"bad"};
+  if(item.statusTrend==="desvio_repetido")return {text:"↻ "+t("Desvio repetido","Repeated deviation"),cls:"warn"};
+  if(item.statusTrend==="novo")return {text:"+ "+t("Item novo","New item"),cls:""};
+
+  if(item.direction==="up")return {text:"↑ "+t("Aumentou","Increased"),cls:""};
+  if(item.direction==="down")return {text:"↓ "+t("Diminuiu","Decreased"),cls:""};
+  if(item.direction==="stable")return {text:"= "+t("Estável","Stable"),cls:""};
+  return {text:t("Sem mudança de situação","No status change"),cls:""};
+}
+
+function preventiveComparisonValueA213_(v,u){
+  const s=String(v==null?"":v).trim();
+  if(!s)return "—";
+  return s+(u?` ${u}`:"");
+}
+
+function togglePreventiveComparisonItemsA213_(){
+  const box=$("preventiveComparisonItemsA213");
+  const btn=$("preventiveComparisonToggleA213");
+  if(!box||!btn)return;
+  const hidden=box.classList.toggle("hidden");
+  btn.textContent=hidden
+    ?(qrLanguage==="en-US"?"View detailed comparison":"Ver comparação detalhada")
+    :(qrLanguage==="en-US"?"Hide detailed comparison":"Ocultar comparação detalhada");
+}
+
+function renderPreventiveChecklistComparisonA213_(data){
+  const host=$("preventiveChecklistComparisonA213");
+  if(!host)return;
+  const t=(pt,en)=>qrLanguage==="en-US"?en:pt;
+
+  if(!data||!data.hasPrevious){
+    host.innerHTML=`<div class="preventive-comparison-a213"><div class="muted">${esc(data?.message||t("Não há preventiva anterior comparável.","No comparable previous preventive maintenance record."))}</div></div>`;
+    return;
+  }
+
+  const s=data.summary||{};
+  const previousDate=formatDate(data.previousDate)||"";
+  const interesting=(data.items||[]).filter(x=>
+    x.statusTrend==="melhora"||
+    x.statusTrend==="piora"||
+    x.statusTrend==="desvio_repetido"
+  );
+
+  host.innerHTML=`<div class="preventive-comparison-a213">
+    <div><b>↔️ ${t("Comparação com a preventiva anterior","Comparison with previous preventive")}</b></div>
+    <div class="muted" style="margin-top:3px">${esc(data.previousRecord||"")}${previousDate?` • ${esc(previousDate)}`:""}${data.modelName?` • ${esc(data.modelName)}`:""}</div>
+
+    <div class="preventive-comparison-summary-a213">
+      <span class="preventive-trend-chip-a213">${Number(s.compared||0)} ${t("itens comparados","items compared")}</span>
+      ${Number(s.improved||0)?`<span class="preventive-trend-chip-a213 good">✓ ${Number(s.improved||0)} ${t("melhora(s)","improved")}</span>`:""}
+      ${Number(s.worsened||0)?`<span class="preventive-trend-chip-a213 bad">⚠ ${Number(s.worsened||0)} ${t("piora(s)","worsened")}</span>`:""}
+      ${Number(s.repeatedDeviation||0)?`<span class="preventive-trend-chip-a213 warn">↻ ${Number(s.repeatedDeviation||0)} ${t("desvio(s) repetido(s)","repeated deviation(s)")}</span>`:""}
+    </div>
+
+    ${interesting.length?`<div style="margin-top:10px"><b>${t("Pontos de atenção","Attention points")}</b></div>
+      <div class="preventive-comparison-items-a213">
+        ${interesting.map(it=>{
+          const tr=preventiveComparisonTrendLabelA213_(it);
+          return `<div class="preventive-comparison-item-a213 ${tr.cls}">
+            <div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap">
+              <b>${esc(it.descricao||"-")}</b>
+              <span class="preventive-trend-chip-a213 ${tr.cls}">${esc(tr.text)}</span>
+            </div>
+            <div class="muted" style="margin-top:4px">${t("Anterior","Previous")}: ${esc(it.situacaoAnterior||"-")} • ${t("Atual","Current")}: ${esc(it.situacaoAtual||"-")}</div>
+          </div>`;
+        }).join("")}
+      </div>`:""}
+
+    <button id="preventiveComparisonToggleA213" type="button" class="btn btn-secondary" style="margin-top:10px" onclick="togglePreventiveComparisonItemsA213_()">${t("Ver comparação detalhada","View detailed comparison")}</button>
+
+    <div id="preventiveComparisonItemsA213" class="preventive-comparison-items-a213 hidden">
+      ${(data.items||[]).map(it=>{
+        const tr=preventiveComparisonTrendLabelA213_(it);
+        const delta=it.delta===null||it.delta===undefined?"":` • Δ ${it.delta>0?"+":""}${it.delta}`;
+        const subs=(it.submedicoes||[]).filter(x=>x.anterior!==""||x.atual!=="");
+        return `<div class="preventive-comparison-item-a213 ${tr.cls}">
+          <div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap">
+            <div><b>${esc(it.descricao||"-")}</b>${it.grupo?`<div class="muted">${esc(it.grupo)}</div>`:""}</div>
+            <span class="preventive-trend-chip-a213 ${tr.cls}">${esc(tr.text)}</span>
+          </div>
+          <div class="preventive-comparison-values-a213">
+            <div><span class="muted">${t("Anterior","Previous")}</span><br><b>${esc(preventiveComparisonValueA213_(it.anterior,it.unidade))}</b><div class="muted">${esc(it.situacaoAnterior||"-")}</div></div>
+            <div><span class="muted">${t("Atual","Current")}</span><br><b>${esc(preventiveComparisonValueA213_(it.atual,it.unidade))}</b><div class="muted">${esc(it.situacaoAtual||"-")}</div></div>
+            <div><b>${esc(delta.replace(/^ • /,""))}</b></div>
+          </div>
+          ${subs.length?`<div class="preventive-comparison-sub-a213">
+            ${subs.map(sm=>{
+              const st=preventiveComparisonTrendLabelA213_(sm);
+              const d=sm.delta===null||sm.delta===undefined?"":`Δ ${sm.delta>0?"+":""}${sm.delta}`;
+              return `<div style="margin-top:4px"><b>${esc(sm.nome||"Medição")}</b>: ${esc(preventiveComparisonValueA213_(sm.anterior,sm.unidade))} → ${esc(preventiveComparisonValueA213_(sm.atual,sm.unidade))}${d?` • ${esc(d)}`:""} • ${esc(st.text)}</div>`;
+            }).join("")}
+          </div>`:""}
+        </div>`;
+      }).join("")}
+    </div>
+  </div>`;
+}
+
+async function loadPreventiveChecklistComparisonA213_(registro){
+  const reg=String(registro||preventiveChecklistActiveRecordA211_||"").trim().toUpperCase();
+  const host=$("preventiveChecklistComparisonA213");
+  if(!host||!reg)return;
+
+  if(Object.prototype.hasOwnProperty.call(preventiveChecklistComparisonCacheA213_,reg)){
+    renderPreventiveChecklistComparisonA213_(preventiveChecklistComparisonCacheA213_[reg]);
+    return;
+  }
+
+  host.innerHTML=`<div class="preventive-comparison-a213"><div class="muted">${qrLanguage==="en-US"?"Comparing with previous preventive maintenance...":"Comparando com a preventiva anterior..."}</div></div>`;
+
+  try{
+    const r=await menuApi({
+      action:"preventivechecklistcomparison",
+      preventiveComparisonRecord:reg,
+      __qrForce:true,
+      __qrContext:"comparacao-checklist-preventiva-a213"
+    });
+    if(!r.ok)throw new Error(r.detail||"Erro ao comparar preventivas.");
+    const data=r.data||{};
+    preventiveChecklistComparisonCacheA213_[reg]=data;
+    renderPreventiveChecklistComparisonA213_(data);
+  }catch(e){
+    host.innerHTML=`<div class="preventive-comparison-a213"><div class="message error" style="display:block">${esc(e.message||"Erro ao comparar preventivas.")}</div></div>`;
+  }
+}
 
 async function generatePreventivePdfA212(registro){
   if(!systemSession?.systemSessionToken){
@@ -5898,7 +6118,7 @@ function renderPreventiveHistoryItemsB5310_(items){
     ?"Preventive maintenance date "
     :"Data da preventiva ";
 
-  // A2.12.0 — dropdown compacto: número da preventiva + data.
+  // A2.13.0 — dropdown compacto: número da preventiva + data.
   select.innerHTML=items.map((item,i)=>{
     const data=formatDate(item.data)||"-";
     const registro=String(item.registro||"").trim();
@@ -11021,7 +11241,7 @@ function setupModernMenuSectionsB5316(){
   const storageKey="qrmanut_menu_sections_a2102";
   let saved={};
   try{saved=JSON.parse(sessionStorage.getItem(storageKey)||"{}")||{}}catch(e){saved={}}
-  // QRManut A2.12.0 — menu principal em três grupos definitivos.
+  // QRManut A2.13.0 — menu principal em três grupos definitivos.
   // Esta função recria os cards ao carregar a página; por isso ela precisa
   // refletir a mesma organização declarada no HTML estático.
   const groups=[
