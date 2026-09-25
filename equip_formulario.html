@@ -1314,19 +1314,19 @@ body{
   .preventive-checklist-meta span{padding:2px 6px}
 }
 
-/* QRManut A2.9.9 — ações de documento técnico */
+/* QRManut A2.10 — ações de documento técnico */
 .document-actions-a292{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
 .document-danger-a292{background:#fee2e2!important;color:#991b1b!important;border:1px solid #fecaca!important}
 .document-secondary-a292{background:#f8fafc!important;color:#334155!important;border:1px solid #cbd5e1!important}
 .asset-document-actions-a292{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
 
 
-/* QRManut A2.9.9 — edição dos metadados de documentos técnicos */
+/* QRManut A2.10 — edição dos metadados de documentos técnicos */
 .document-edit-a294{background:#eef2ff!important;color:#3730a3!important;border:1px solid #c7d2fe!important}
 #documentEditModal .modal-box{max-width:760px}
 
 
-/* QRManut A2.9.9 — tela de sessão off por inatividade */
+/* QRManut A2.10 — tela de sessão off por inatividade */
 .qr-session-offline-a298{
   position:fixed;
   inset:0;
@@ -1404,6 +1404,46 @@ body{
   color:#0f172a;
 }
 
+
+/* QRManut A2.10 — Menu reorganizado e fechamento da onda Checklist */
+.menu-section-title{
+  font-size:1.04rem!important;
+  color:#0f172a!important;
+}
+.menu-section[data-menu-section="operacao"] .menu-section-title::before{background:#1f4e78}
+.menu-section[data-menu-section="controle"] .menu-section-title::before{background:#0f766e}
+.menu-section[data-menu-section="administracao"] .menu-section-title::before{background:#7c3aed}
+.checklist-criticality-label select{font-weight:800}
+.checklist-criticality-badge,.preventive-critical-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+  padding:3px 7px;
+  border-radius:999px;
+  font-size:.72rem;
+  font-weight:900;
+  background:#f1f5f9;
+  color:#475569;
+  white-space:nowrap;
+}
+.checklist-criticality-badge.critical,.preventive-critical-badge.critical{background:#fee2e2;color:#991b1b}
+.checklist-criticality-badge.important,.preventive-critical-badge.important{background:#ffedd5;color:#9a3412}
+.checklist-criticality-badge.info,.preventive-critical-badge.info{background:#e0f2fe;color:#075985}
+.checklist-item-editor.critical{border-left:5px solid #dc2626}
+.checklist-item-editor.important{border-left:5px solid #f97316}
+.preventive-checklist-item.critical{border-left:5px solid #dc2626}
+.preventive-checklist-item.critical.out,.preventive-checklist-item.critical.missing{background:#fff1f2;border-color:#fecaca}
+.preventive-checklist-smart-note{
+  margin-top:7px;
+  padding:8px 9px;
+  border-radius:10px;
+  background:#fff7ed;
+  border:1px solid #fed7aa;
+  color:#9a3412;
+  font-size:.78rem;
+  font-weight:800;
+}
+
 </style>
 </head>
 <body>
@@ -1439,25 +1479,41 @@ body{
   </section>
   <div id="menuLockedCard" class="card menu-locked-card hidden"><h2>🔐 Menu Principal protegido</h2><div class="muted">A ficha do equipamento e o registro de ocorrências continuam disponíveis pelo QR Code. Para acessar a Gestão Rápida, identifique-se.</div><button id="openSystemLoginButton" class="btn btn-blue" type="button">Entrar no Menu Principal</button></div>
   <div id="mainMenuButtons" class="menu-busca">
-    <button id="tabSearch" class="menu-button active">🔎 Buscar ativos</button>
-    <button id="tabPending" class="menu-button">⚠️ OCs pendentes</button>
-    <button id="tabSolicitations" class="menu-button solicitations hidden">📥 Solicitações de Manutenção</button>
-    <button id="tabOccurrenceReport" class="menu-button reports">📊 Relatório de OCs</button>
-    <button id="tabPreventive" class="menu-button preventive">🛠️ Status das Preventivas</button>
-    <button id="tabChecklistModels" class="menu-button checklist-models hidden" type="button">📋 Modelos de Checklist</button>
-    <button id="tabMaintenanceAgenda" class="menu-button maintenance-agenda hidden" type="button">📅 Agenda de Manutenções</button>
-    <button id="tabDocuments" class="menu-button documents">📄 Documentos Técnicos</button>
-    <button id="tabOccurrenceCatalog" class="menu-button hidden">🧩 Categorias e Componentes</button>
-    <button id="tabMaintenancePending" class="menu-button hidden">📌 Pendências / Providências</button>
-<button id="tabAssetManagement" class="menu-button hidden" type="button">🏷️ <span data-i18n="assetManagement">Gestão de Ativos</span></button>
+    <section class="menu-section" data-menu-section="operacao">
+      <h3 class="menu-section-title">Operação de Manutenção</h3>
+      <div class="menu-section-grid">
+        <button id="tabSearch" class="menu-button active">🔎 Buscar ativos</button>
+        <button id="tabPending" class="menu-button">⚠️ OCs pendentes</button>
+        <button id="tabSolicitations" class="menu-button solicitations hidden">📥 Solicitações de Manutenção</button>
+        <button id="tabMaintenancePending" class="menu-button hidden">📌 Pendências / Providências</button>
+      </div>
+    </section>
 
-    <button id="tabDocumentUpload" class="menu-button upload-doc hidden">📤 Upload de Documentos</button>
-    <button id="tabUsers" class="menu-button users hidden">👥 Gestão de Usuários</button>
-    <button id="tabPermissions" type="button" class="menu-button permissions hidden">🔐 Permissões de Perfis</button>
-    <button id="tabAudit" class="menu-button audit hidden">🧾 Auditoria</button>
-    <button id="tabProvidersAdmin" class="menu-button providers-admin hidden">🏢 Prestadores</button>
-    <button id="tabCompany" class="menu-button company hidden">⚙️ Empresa</button>
-    <button id="tabPerformance" class="menu-button performance hidden" type="button">⏱️ Diagnóstico de Performance</button>
+    <section class="menu-section" data-menu-section="controle">
+      <h3 class="menu-section-title">Planejamento e Controle</h3>
+      <div class="menu-section-grid">
+        <button id="tabPreventive" class="menu-button preventive">🛠️ Status das Preventivas</button>
+        <button id="tabMaintenanceAgenda" class="menu-button maintenance-agenda hidden" type="button">📅 Agenda de Manutenções</button>
+        <button id="tabOccurrenceReport" class="menu-button reports">📊 Relatório de OCs</button>
+        <button id="tabDocuments" class="menu-button documents">📄 Documentos Técnicos</button>
+        <button id="tabDocumentUpload" class="menu-button upload-doc hidden">📤 Upload de Documentos</button>
+      </div>
+    </section>
+
+    <section class="menu-section" data-menu-section="administracao">
+      <h3 class="menu-section-title">Administração do Sistema</h3>
+      <div class="menu-section-grid">
+        <button id="tabAssetManagement" class="menu-button hidden" type="button">🏷️ <span data-i18n="assetManagement">Gestão de Ativos</span></button>
+        <button id="tabProvidersAdmin" class="menu-button providers-admin hidden">🏢 Prestadores</button>
+        <button id="tabOccurrenceCatalog" class="menu-button hidden">🧩 Categorias e Componentes</button>
+        <button id="tabUsers" class="menu-button users hidden">👥 Gestão de Usuários</button>
+        <button id="tabPermissions" type="button" class="menu-button permissions hidden">🔐 Permissões de Perfis</button>
+        <button id="tabCompany" class="menu-button company hidden">⚙️ Empresa</button>
+        <button id="tabAudit" class="menu-button audit hidden">🧾 Auditoria</button>
+        <button id="tabPerformance" class="menu-button performance hidden" type="button">⏱️ Diagnóstico de Performance</button>
+        <button id="tabChecklistModels" class="menu-button checklist-models hidden" type="button">📋 Modelos de Checklist</button>
+      </div>
+    </section>
   </div>
   <div id="searchArea">
     <div id="backAssetWrap" class="back-asset-wrap hidden"><button id="backAssetButton" class="back-asset-btn">← Voltar ao equipamento</button></div>
@@ -4453,7 +4509,7 @@ async function saveTechnicalDocumentEditA294(){
     documentFiltersLoaded=false;
     qrInvalidateLocalCacheB530("documento-editado");
 
-    // A2.9.9 — atualiza a memória local imediatamente com o retorno confirmado pelo backend.
+    // A2.10 — atualiza a memória local imediatamente com o retorno confirmado pelo backend.
     const updatedKey=String(r.idDocumento||id).trim().toUpperCase();
     qrDocumentMapA294[updatedKey]={
       ...(qrDocumentMapA294[updatedKey]||{}),
@@ -5887,6 +5943,8 @@ function qrPreventiveChecklistRenderA261_(){
 function qrPreventiveChecklistCompactMetaA263_(it){
   const parts=[];
   const type=String(it.tipoResposta||"");
+  const crit=qrChecklistCriticalityA210_(it.criticidade);
+  if(crit&&crit!=="Normal")parts.push(`<span class="preventive-critical-badge ${qrChecklistCriticalityClassA210_(crit)}">${esc(crit)}</span>`);
   if(type==="Medição múltipla"){
     const subs=it.submedicoes||[];
     const units=[...new Set(subs.map(sm=>String(sm.unidade||"").trim()).filter(Boolean))];
@@ -5900,7 +5958,7 @@ function qrPreventiveChecklistCompactMetaA263_(it){
   }
   if(it.criterio)parts.push(esc(it.criterio));
   if(!parts.length)return "";
-  return `<div class="preventive-checklist-meta">${parts.map(p=>`<span>${p}</span>`).join("")}</div>`;
+  return `<div class="preventive-checklist-meta">${parts.map(p=>String(p).indexOf("preventive-critical-badge")>=0?p:`<span>${p}</span>`).join("")}</div>`;
 }
 function qrPreventiveChecklistItemHtmlA261_(it,i){
   const type=String(it.tipoResposta||"");
@@ -5920,7 +5978,9 @@ function qrPreventiveChecklistItemHtmlA261_(it,i){
   }else if(type==="Foto"){
     body=`<div class="preventive-checklist-choice-row"><label>${qrPreventiveChecklistTextA261_("Foto / evidência","Photo / evidence")}<select data-prev-value="${i}"><option value="">Selecione...</option><option>Foto anexada no campo Foto / evidência</option><option>Não anexada</option>${it.permiteNA?"<option>N/A</option>":""}</select></label></div><div class="preventive-checklist-mini">${qrPreventiveChecklistTextA261_("Nesta versão piloto, use o campo geral Foto / evidência da preventiva.","In this pilot version, use the main preventive photo/evidence field.")}</div>`;
   }
-  return `<div class="preventive-checklist-item" data-prev-check-item="${i}" data-prev-type="${esc(type)}"><div class="preventive-checklist-item-head"><div><div class="preventive-checklist-item-title">${esc(it.descricao||"")}${it.obrigatorio?" *":""}</div>${meta}</div><span class="preventive-checklist-status" data-prev-status="${i}">Pendente</span></div>${body}${note}</div>`;
+  const critical=qrChecklistIsCriticalA210_(it);
+  const smart=critical?`<div class="preventive-checklist-smart-note">${qrPreventiveChecklistTextA261_("Item crítico: se houver desvio ou não medição, informe observação e registre uma providência.","Critical item: if there is a deviation or no measurement, enter a note and create a pending action.")}</div>`:"";
+  return `<div class="preventive-checklist-item ${critical?"critical":""}" data-prev-check-item="${i}" data-prev-type="${esc(type)}"><div class="preventive-checklist-item-head"><div><div class="preventive-checklist-item-title">${esc(it.descricao||"")}${it.obrigatorio?" *":""}</div>${meta}</div><span class="preventive-checklist-status" data-prev-status="${i}">Pendente</span></div>${body}${smart}${note}</div>`;
 }
 function qrPreventiveChecklistSubHtmlA261_(sm,i,j,it){
   const unit=String(sm.unidade||"").trim();
@@ -5969,17 +6029,25 @@ function qrPreventiveChecklistUpdateStatusesA261_(){
     card.classList.remove("ok","out","missing");card.classList.add(ev.cls==="na"?"ok":ev.cls);
   });
 }
+function qrPreventiveChecklistCriticalDeviationA210_(evOrSituacao){
+  const s=typeof evOrSituacao==="string"?evOrSituacao:String(evOrSituacao?.situacao||"");
+  const n=s.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
+  return ["nok","nao","nao anexada","fora do limite","valor invalido","nao medido","pendente"].includes(n);
+}
 function qrPreventiveChecklistCollectA261_(){
   if(!preventiveChecklistEnabledA261||!preventiveChecklistSelectedA261)return {ok:true,modelId:"",modelName:"",items:[]};
   qrPreventiveChecklistUpdateStatusesA261_();
   const model=preventiveChecklistSelectedA261,items=[];
+  let criticalNeedsAction=false,criticalNeedsActionDesc="";
   for(let i=0;i<(model.itens||[]).length;i++){
     const it=model.itens[i],card=document.querySelector(`[data-prev-check-item="${i}"]`);if(!card)continue;
     const obs=String(card.querySelector(`[data-prev-note="${i}"]`)?.value||"").trim();
-    let valor="",situacao="",unidade=it.unidade||"",subs=[];
+    const isCritical=qrChecklistIsCriticalA210_(it);
+    let valor="",situacao="",unidade=it.unidade||"",subs=[],criticalDeviation=false;
     if(["Inteiro","Decimal 1 casa","Decimal 2 casas"].includes(it.tipoResposta)){
       valor=String(card.querySelector(`[data-prev-value="${i}"]`)?.value||"").trim();const st=card.querySelector(`[data-prev-state="${i}"]`)?.value||"medido";const ev=qrPreventiveChecklistEvalNumericA261_(valor,it,st);situacao=ev.situacao;
       if(it.obrigatorio&&ev.cls==="missing")return {ok:false,error:`Informe o item obrigatório: ${it.descricao}.`};
+      criticalDeviation=qrPreventiveChecklistCriticalDeviationA210_(ev);
       if(it.exigirObservacaoDesvio&&(ev.cls==="out"||ev.situacao==="Não medido")&&!obs)return {ok:false,error:`Informe observação para o item: ${it.descricao}.`};
     }else if(it.tipoResposta==="Medição múltipla"){
       let anyOut=false,anyMissing=false,allNA=true;
@@ -5990,13 +6058,27 @@ function qrPreventiveChecklistCollectA261_(){
         subs.push({nome:sm.nome,tipoResposta:sm.tipoResposta,unidade:sm.unidade||"",minimo:sm.minimo||"",maximo:sm.maximo||"",valor:v,situacao:ev.situacao});
       }
       situacao=anyOut?"Fora do limite":anyMissing?"Pendente":allNA?"N/A":"Normal";valor=subs.map(s=>`${s.nome}: ${s.valor||s.situacao}${s.unidade&&s.valor?" "+s.unidade:""}`).join(" | ");unidade="";
+      criticalDeviation=qrPreventiveChecklistCriticalDeviationA210_(situacao);
       if(it.exigirObservacaoDesvio&&anyOut&&!obs)return {ok:false,error:`Informe observação para o item: ${it.descricao}.`};
     }else{
       valor=String(card.querySelector(`[data-prev-value="${i}"]`)?.value||"").trim();const ev=qrPreventiveChecklistEvalChoiceA261_(valor);situacao=ev.situacao;
+      criticalDeviation=qrPreventiveChecklistCriticalDeviationA210_(ev);
       if(it.obrigatorio&&!valor)return {ok:false,error:`Informe o item obrigatório: ${it.descricao}.`};
       if(it.exigirObservacaoDesvio&&ev.cls==="out"&&!obs)return {ok:false,error:`Informe observação para o item: ${it.descricao}.`};
     }
-    items.push({idItem:it.id,ordem:it.ordem,grupo:it.grupo||"",descricao:it.descricao||"",tipoResposta:it.tipoResposta||"",criterio:it.criterio||"",unidade,valor,situacao,observacao:obs,submedicoes:subs});
+    if(isCritical&&criticalDeviation&&!obs)return {ok:false,error:`Item crítico exige observação: ${it.descricao}.`};
+    if(isCritical&&criticalDeviation){
+      criticalNeedsAction=true;
+      criticalNeedsActionDesc=criticalNeedsActionDesc||it.descricao;
+    }
+    items.push({idItem:it.id,ordem:it.ordem,grupo:it.grupo||"",descricao:it.descricao||"",tipoResposta:it.tipoResposta||"",criticidade:qrChecklistCriticalityA210_(it.criticidade),criterio:it.criterio||"",unidade,valor,situacao,observacao:obs,submedicoes:subs});
+  }
+  if(criticalNeedsAction&&!$("preventiveNeedsAction").checked){
+    $("preventiveNeedsAction").checked=true;
+    togglePreventiveActionFields();
+    $("preventiveActionPriority").value="Crítica";
+    $("preventiveActionDescription").value=$("preventiveActionDescription").value||`Item crítico com desvio no checklist: ${criticalNeedsActionDesc}`;
+    return {ok:false,error:"Há item crítico com desvio. Revise a Providência necessária aberta automaticamente e salve novamente."};
   }
   return {ok:true,modelId:model.id,modelName:model.nome,items};
 }
@@ -8116,7 +8198,7 @@ async function saveAsset760(){
       amperagemPartida:$("assetStartingCurrent").value,
       amperagemMedida:$("assetMeasuredCurrent").value,
       voltagem:$("assetVoltage").value,
-      // A2.9.9 — envia nomes canônicos e alternativos para garantir gravação no backend.
+      // A2.10 — envia nomes canônicos e alternativos para garantir gravação no backend.
       quadroDisjuntores:$("assetBreakerPanel").value,
       disjuntorEquipamento:$("assetBreakerCircuit").value,
       assetBreakerPanel:$("assetBreakerPanel").value,
@@ -8131,7 +8213,7 @@ async function saveAsset760(){
     });
     if(!r.ok)throw new Error(r.detail||r.error||"Erro ao salvar ativo.");
 
-    // A2.9.9 — gravação direta e redundante dos dados do disjuntor.
+    // A2.10 — gravação direta e redundante dos dados do disjuntor.
     // Mantém os campos mesmo se o salvamento geral do ativo não atualizar essas colunas.
     const breakerSave=await assetApi760("saveassetbreakerdata",{
       row:r.row||row,
@@ -10004,6 +10086,26 @@ async function showChecklistModelsTabA21(){if(!qrIsMasterA299_())return permissi
 function qrChecklistScopeChangedA21(){const s=$("checklistScope").value;$("checklistTypeScopeWrap").classList.toggle("hidden",s!=="Tipo de equipamento");$("checklistAssetScopeWrap").classList.toggle("hidden",s!=="Ativo específico");if(s!=="Ativo específico"){$("checklistAssetId").value="";hide("checklistSelectedAsset");hide("checklistAssetSearchResults")}}
 function qrChecklistFillTypesA21(){const el=$("checklistEquipmentType"),vals=checklistModelsDataA21?.equipmentTypes||[],cur=el.value;el.innerHTML='<option value="">Selecione...</option>'+vals.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join("");if([...el.options].some(o=>o.value===cur))el.value=cur}
 function qrChecklistResponseOptionsA21(selected){return (checklistModelsDataA21?.responseTypes||["OK/NOK/N.A.","Sim/Não","Inteiro","Decimal 1 casa","Decimal 2 casas","Medição múltipla","Texto","Foto"]).map(v=>`<option value="${esc(v)}" ${v===selected?"selected":""}>${esc(v)}</option>`).join("")}
+function qrChecklistCriticalityA210_(value){
+  const s=String(value||"Normal").trim();
+  const n=s.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
+  if(n==="critico"||n==="critical")return "Crítico";
+  if(n==="importante"||n==="important")return "Importante";
+  if(n==="informativo"||n==="info"||n==="informational")return "Informativo";
+  return "Normal";
+}
+function qrChecklistCriticalityClassA210_(value){
+  const c=qrChecklistCriticalityA210_(value);
+  if(c==="Crítico")return "critical";
+  if(c==="Importante")return "important";
+  if(c==="Informativo")return "info";
+  return "normal";
+}
+function qrChecklistCriticalityOptionsA210_(selected){
+  const cur=qrChecklistCriticalityA210_(selected);
+  return ["Normal","Importante","Crítico","Informativo"].map(v=>`<option value="${esc(v)}" ${v===cur?"selected":""}>${esc(v)}</option>`).join("");
+}
+function qrChecklistIsCriticalA210_(it){return qrChecklistCriticalityA210_(it&&it.criticidade)==="Crítico"}
 function qrChecklistSubTypeOptionsA22(selected){return (checklistModelsDataA21?.submeasurementTypes||["Inteiro","Decimal 1 casa","Decimal 2 casas"]).map(v=>`<option value="${esc(v)}" ${v===selected?"selected":""}>${esc(v)}</option>`).join("")}
 function qrChecklistIsMultipleA22(type){return String(type||"")==="Medição múltipla"}
 function qrChecklistDeviationApplicableA22(type){return ["OK/NOK/N.A.","Sim/Não","Inteiro","Decimal 1 casa","Decimal 2 casas","Medição múltipla"].includes(String(type||""))}
@@ -10079,7 +10181,7 @@ function qrChecklistRestoreDraftA24(d){
   }
   checklistModelsItemsA21=qrChecklistCloneItemsA24(d.items);
   if(!checklistModelsItemsA21.length){
-    checklistModelsItemsA21.push({grupo:"",descricao:"",tipoResposta:"OK/NOK/N.A.",unidade:"",minimo:"",maximo:"",criterio:"",obrigatorio:true,permiteNA:true,exigirObservacaoDesvio:false,submedicoes:[]});
+    checklistModelsItemsA21.push({grupo:"",descricao:"",tipoResposta:"OK/NOK/N.A.",unidade:"",minimo:"",maximo:"",criterio:"",criticidade:"Normal",obrigatorio:true,permiteNA:true,exigirObservacaoDesvio:false,submedicoes:[]});
   }
   qrChecklistRenderItemsA21();
   qrChecklistScopeChangedA21();
@@ -10104,11 +10206,13 @@ function qrChecklistRenderItemsA21(){
   host.innerHTML=checklistModelsItemsA21.map((raw,i)=>{
     const it=raw||{},numeric=qrChecklistIsNumericA21(it.tipoResposta),multiple=qrChecklistIsMultipleA22(it.tipoResposta),deviation=qrChecklistDeviationApplicableA22(it.tipoResposta);
     if(!Array.isArray(it.submedicoes))it.submedicoes=[];
-    return `<div class="checklist-item-editor" data-check-item="${i}"><div class="checklist-item-head"><div class="checklist-item-order">${i+1}. ${esc(it.descricao||qrChecklistTextA21("Novo item","New item"))}</div><div class="checklist-item-controls"><button class="btn btn-secondary" type="button" data-up="${i}" ${i===0?"disabled":""}>↑</button><button class="btn btn-secondary" type="button" data-down="${i}" ${i===checklistModelsItemsA21.length-1?"disabled":""}>↓</button><button class="btn btn-danger" type="button" data-remove="${i}">×</button></div></div>
-      <div class="checklist-item-main-grid"><label>${qrChecklistTextA21("Grupo / Seção","Group / Section")}<input data-f="grupo" value="${esc(it.grupo||"")}" placeholder="Ex.: Elétrica"></label><label>${qrChecklistTextA21("Descrição *","Description *")}<input data-f="descricao" value="${esc(it.descricao||"")}" placeholder="Ex.: Tensão entre fases"></label><label>${qrChecklistTextA21("Resposta *","Response *")}<select data-f="tipoResposta">${qrChecklistResponseOptionsA21(it.tipoResposta)}</select></label><label class="criterion">${qrChecklistTextA21("Critério / Referência","Criterion / Reference")}<input data-f="criterio" value="${esc(it.criterio||"")}" placeholder="Ex.: Alimentação nominal 220 V"></label></div>
+    it.criticidade=qrChecklistCriticalityA210_(it.criticidade);
+    const critCls=qrChecklistCriticalityClassA210_(it.criticidade);
+    return `<div class="checklist-item-editor ${critCls}" data-check-item="${i}"><div class="checklist-item-head"><div class="checklist-item-order">${i+1}. ${esc(it.descricao||qrChecklistTextA21("Novo item","New item"))}</div><div class="checklist-item-controls"><span class="checklist-criticality-badge ${critCls}">${esc(it.criticidade)}</span><button class="btn btn-secondary" type="button" data-up="${i}" ${i===0?"disabled":""}>↑</button><button class="btn btn-secondary" type="button" data-down="${i}" ${i===checklistModelsItemsA21.length-1?"disabled":""}>↓</button><button class="btn btn-danger" type="button" data-remove="${i}">×</button></div></div>
+      <div class="checklist-item-main-grid"><label>${qrChecklistTextA21("Grupo / Seção","Group / Section")}<input data-f="grupo" value="${esc(it.grupo||"")}" placeholder="Ex.: Elétrica"></label><label>${qrChecklistTextA21("Descrição *","Description *")}<input data-f="descricao" value="${esc(it.descricao||"")}" placeholder="Ex.: Tensão entre fases"></label><label>${qrChecklistTextA21("Resposta *","Response *")}<select data-f="tipoResposta">${qrChecklistResponseOptionsA21(it.tipoResposta)}</select></label><label class="criterion">${qrChecklistTextA21("Critério / Referência","Criterion / Reference")}<input data-f="criterio" value="${esc(it.criterio||"")}" placeholder="Ex.: Alimentação nominal 220 V"></label><label class="checklist-criticality-label">${qrChecklistTextA21("Criticidade","Criticality")}<select data-f="criticidade">${qrChecklistCriticalityOptionsA210_(it.criticidade)}</select></label></div>
       ${numeric?`<div class="checklist-numeric-grid"><label>${qrChecklistTextA21("Unidade","Unit")}<input data-f="unidade" value="${esc(it.unidade||"")}" placeholder="Ex.: V"></label><label>${qrChecklistTextA21("Mínimo","Minimum")}<input data-f="minimo" inputmode="decimal" value="${esc(it.minimo??"")}"></label><label>${qrChecklistTextA21("Máximo","Maximum")}<input data-f="maximo" inputmode="decimal" value="${esc(it.maximo??"")}"></label></div>`:""}
       ${multiple?qrChecklistRenderSubPanelA22(it,i):""}
-      <div class="checklist-item-checks"><label><input type="checkbox" data-f="obrigatorio" ${it.obrigatorio!==false?"checked":""}> ${qrChecklistTextA21("Obrigatório","Required")}</label><label><input type="checkbox" data-f="permiteNA" ${it.permiteNA?"checked":""}> ${qrChecklistTextA21("Permite N/A","Allow N/A")}</label>${deviation?`<label><input type="checkbox" data-f="exigirObservacaoDesvio" ${it.exigirObservacaoDesvio?"checked":""}> ${qrChecklistTextA21("Exigir observação se NOK / fora do limite","Require note if NOK / out of range")}</label>`:""}</div>${deviation?`<div class="checklist-deviation-hint">${qrChecklistTextA21("Na execução, esta regra será usada para impedir conclusão sem justificativa quando houver desvio.","During execution, this rule will require a justification when a deviation exists.")}</div>`:""}</div>`;
+      <div class="checklist-item-checks"><label><input type="checkbox" data-f="obrigatorio" ${it.obrigatorio!==false?"checked":""}> ${qrChecklistTextA21("Obrigatório","Required")}</label><label><input type="checkbox" data-f="permiteNA" ${it.permiteNA?"checked":""}> ${qrChecklistTextA21("Permite N/A","Allow N/A")}</label>${deviation?`<label><input type="checkbox" data-f="exigirObservacaoDesvio" ${it.exigirObservacaoDesvio?"checked":""}> ${qrChecklistTextA21("Exigir observação se NOK / fora do limite","Require note if NOK / out of range")}</label>`:""}</div>${deviation?`<div class="checklist-deviation-hint">${qrChecklistTextA21("Na execução, desvios em item crítico exigem observação e abertura de Providência.","During execution, deviations in critical items require a note and a pending action.")}</div>`:""}</div>`;
   }).join("");
 
   host.querySelectorAll('[data-check-item]').forEach(card=>{
@@ -10121,6 +10225,9 @@ function qrChecklistRenderItemsA21(){
         if(f==="tipoResposta"){
           if(el.value==="OK/NOK/N.A.")it.permiteNA=true;
           if(qrChecklistIsMultipleA22(el.value)&&!Array.isArray(it.submedicoes))it.submedicoes=[];
+          qrChecklistRenderItemsA21();
+        }else if(f==="criticidade"){
+          it.criticidade=qrChecklistCriticalityA210_(el.value);
           qrChecklistRenderItemsA21();
         }else if(f==="descricao"){
           card.querySelector('.checklist-item-order').textContent=`${i+1}. ${el.value||qrChecklistTextA21("Novo item","New item")}`;
@@ -10142,7 +10249,7 @@ function qrChecklistRenderItemsA21(){
   host.querySelectorAll('[data-up]').forEach(b=>b.onclick=()=>{const i=Number(b.dataset.up);[checklistModelsItemsA21[i-1],checklistModelsItemsA21[i]]=[checklistModelsItemsA21[i],checklistModelsItemsA21[i-1]];qrChecklistRenderItemsA21();qrChecklistQueueDraftA24()});
   host.querySelectorAll('[data-down]').forEach(b=>b.onclick=()=>{const i=Number(b.dataset.down);[checklistModelsItemsA21[i+1],checklistModelsItemsA21[i]]=[checklistModelsItemsA21[i],checklistModelsItemsA21[i+1]];qrChecklistRenderItemsA21();qrChecklistQueueDraftA24()});
 }
-function qrChecklistAddItemA21(scrollToNew=true){checklistModelsItemsA21.push({grupo:"",descricao:"",tipoResposta:"OK/NOK/N.A.",unidade:"",minimo:"",maximo:"",criterio:"",obrigatorio:true,permiteNA:true,exigirObservacaoDesvio:false,submedicoes:[]});const idx=checklistModelsItemsA21.length-1;qrChecklistRenderItemsA21();qrChecklistQueueDraftA24();if(scrollToNew)qrChecklistScrollToItemA24(idx)}
+function qrChecklistAddItemA21(scrollToNew=true){checklistModelsItemsA21.push({grupo:"",descricao:"",tipoResposta:"OK/NOK/N.A.",unidade:"",minimo:"",maximo:"",criterio:"",criticidade:"Normal",obrigatorio:true,permiteNA:true,exigirObservacaoDesvio:false,submedicoes:[]});const idx=checklistModelsItemsA21.length-1;qrChecklistRenderItemsA21();qrChecklistQueueDraftA24();if(scrollToNew)qrChecklistScrollToItemA24(idx)}
 function qrChecklistSetSelectedAssetA21(a,saveDraft=true){$("checklistAssetId").value=a?.id||"";$("checklistAssetSearch").value=a?.nome||a?.id||"";$("checklistSelectedAsset").innerHTML=`<b>${esc(a?.id||"")}</b> — ${esc(a?.nome||"")}${a?.pavimento?` • ${esc(a.pavimento)}`:""}${a?.localizacao?` • ${esc(a.localizacao)}`:""}`;show("checklistSelectedAsset");hide("checklistAssetSearchResults");if(saveDraft)qrChecklistQueueDraftA24()}
 async function qrChecklistSearchAssetA21(){const q=$("checklistAssetSearch").value.trim(),host=$("checklistAssetSearchResults");$("checklistAssetId").value="";hide("checklistSelectedAsset");if(q.length<2){host.innerHTML='<div class="agenda-asset-empty">Digite pelo menos 2 caracteres.</div>';show("checklistAssetSearchResults");return}host.innerHTML='<div class="agenda-asset-empty">Buscando...</div>';show("checklistAssetSearchResults");try{const r=await menuApi({action:"search",q,__qrForce:true});if(!r.ok)throw new Error(r.detail||"Erro na busca.");checklistAssetSearchResultsA21=r.results||[];host.innerHTML=checklistAssetSearchResultsA21.length?checklistAssetSearchResultsA21.map((a,i)=>`<button type="button" class="checklist-asset-option" data-asset-index="${i}"><b>${esc(a.id)}</b> — ${esc(a.nome||"")}<small>${esc([a.pavimento,a.localizacao,a.ambiente].filter(Boolean).join(" • "))}</small></button>`).join(""):'<div class="agenda-asset-empty">Nenhum ativo operacional encontrado.</div>';host.querySelectorAll('[data-asset-index]').forEach(b=>b.onclick=()=>qrChecklistSetSelectedAssetA21(checklistAssetSearchResultsA21[Number(b.dataset.assetIndex)]));}catch(e){host.innerHTML=`<div class="agenda-asset-empty">${esc(e.message||String(e))}</div>`}}
 function qrChecklistCloneItemForReuseA27_(it){
