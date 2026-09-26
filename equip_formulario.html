@@ -1,7 +1,7 @@
-<!-- QRManut PNCQ 7.6.6.31 A2.16.1
+<!-- QRManut PNCQ 7.6.6.31 A2.16.2
      VISUALIZAÇÃO DE VERSÃO ATIVA NA TELA
      - Se este texto aparecer no código fonte, o HTML correto foi publicado.
-     - Rodapé e menu exibem: QRManut • Versão 7.6.6.31 • Pacote A2.16.1
+     - Rodapé e menu exibem: QRManut • Versão 7.6.6.31 • Pacote A2.16.2
      - Build: 2026-09-24 22:20
 -->
 <!-- QRManut PNCQ 7.6.6.31 A2.6.3 — Checklist Compacto da Preventiva
@@ -179,8 +179,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>QRManut 7.6.6.31 A2.16.1</title>
-<meta name="qrmanut-build" content="7.6.6.31-A2.16.1-2026-09-24-2220">
+<title>QRManut 7.6.6.31 A2.16.2</title>
+<meta name="qrmanut-build" content="7.6.6.31-A2.16.2-2026-09-24-2220">
 <meta name="theme-color" content="#0b315e">
 <meta name="application-name" content="QRManut">
 <meta name="mobile-web-app-capable" content="yes">
@@ -1451,7 +1451,7 @@ body{
 }
 
 
-/* QRManut A2.16.1 — versão visível do pacote implantado */
+/* QRManut A2.16.2 — versão visível do pacote implantado */
 .qr-build-badge-a2101{
   display:inline-flex;
   align-items:center;
@@ -1482,7 +1482,7 @@ body{
 }
 
 
-/* QRManut A2.16.1 — ações após upload de documento */
+/* QRManut A2.16.2 — ações após upload de documento */
 .document-upload-next-actions-a2103{
   display:flex;
   gap:10px;
@@ -1496,7 +1496,7 @@ body{
 }
 
 
-/* QRManut A2.16.1 — histórico de preventivas compacto por data */
+/* QRManut A2.16.2 — histórico de preventivas compacto por data */
 #preventiveHistorySelectLabel{
   max-width:520px;
 }
@@ -1508,7 +1508,7 @@ body{
 }
 
 
-/* QRManut A2.16.1 — documentos do ativo compactos por dropdown */
+/* QRManut A2.16.2 — documentos do ativo compactos por dropdown */
 #assetDocumentsSelectLabel{
   max-width:620px;
 }
@@ -1520,7 +1520,7 @@ body{
 }
 
 
-/* QRManut A2.16.1 — histórico do checklist executado */
+/* QRManut A2.16.2 — histórico do checklist executado */
 .preventive-checklist-history-a211{
   margin-top:12px;
   padding:12px;
@@ -1580,7 +1580,7 @@ body{
 }
 
 
-/* QRManut A2.16.1 — comparação entre preventivas */
+/* QRManut A2.16.2 — comparação entre preventivas */
 .preventive-comparison-a213{
   margin-top:12px;
   padding:12px;
@@ -1662,7 +1662,7 @@ body{
 }
 
 
-/* QRManut A2.16.1 — evolução histórica do checklist */
+/* QRManut A2.16.2 — evolução histórica do checklist */
 .preventive-trend-a214{
   margin-top:12px;
   padding:12px;
@@ -1712,7 +1712,7 @@ body{
 }
 
 
-/* QRManut A2.16.1 — relatório de preventivas realizadas */
+/* QRManut A2.16.2 — relatório de preventivas realizadas */
 .completed-preventive-report-filters-a2143{display:grid;grid-template-columns:repeat(3,minmax(180px,1fr));gap:10px;margin-top:14px}
 #completedPreventiveReportModalA2143 .perf-table{min-width:980px}
 #completedPreventiveReportModalA2143 .perf-table td{vertical-align:top}
@@ -1733,7 +1733,7 @@ body{
     <div>
       <div class="search-title">QRManut</div>
       <div id="qrAppSubtitle" class="muted">Gestão rápida de manutenção</div>
-      <div id="qrBuildBadgeA2101" class="qr-build-badge-a2101">✅ Pacote A2.16.1 • Atualizado em 2026-09-24 22:20</div>
+      <div id="qrBuildBadgeA2101" class="qr-build-badge-a2101">✅ Pacote A2.16.2 • Atualizado em 2026-09-24 22:20</div>
     </div>
     <button id="qrAlertsButtonB5320" class="qr-alerts-button-b5320 hidden" type="button" aria-expanded="false" aria-controls="qrAlertsPanelB5320" title="Central de Alertas">
       <span class="qr-alerts-bell-b5320" aria-hidden="true">🔔</span>
@@ -2704,13 +2704,13 @@ body{
 </div>
 <label>Adicionar nova foto da ocorrência / correção</label><div class="photo-source-actions"><button type="button" id="manageOccurrenceCameraButton" class="btn btn-blue">📷 Tirar foto</button><button type="button" id="manageOccurrenceAttachButton" class="btn btn-secondary">🖼️ Anexar imagem</button></div><input id="manageOccurrenceCameraInput" class="photo-source-hidden" type="file" accept="image/*,.heic,.heif" capture="environment"><input id="manageOccurrencePhotoInput" class="photo-source-hidden" type="file" accept="image/*,.heic,.heif"><div id="manageOccurrencePhotoStatus" class="muted" style="margin-top:5px"></div><img id="manageOccurrencePhotoPreview" class="photo-preview"><div class="upload-file-box" style="margin-top:12px"><div style="font-weight:800">📎 Adicionar arquivo à ocorrência</div><div class="muted" style="margin-top:4px">PDF, Word, Excel ou outro arquivo de evidência, até 8 MB.</div><button id="manageAttachmentButton" type="button" class="btn btn-secondary" style="margin-top:8px">📎 Escolher arquivo</button><input id="manageAttachmentInput" class="photo-source-hidden" type="file"><div id="manageAttachmentName" class="upload-file-name">Nenhum arquivo selecionado.</div><div id="manageExistingAttachments" style="margin-top:8px"></div></div><div id="conclusionPhotoArea" class="hidden"><label>Foto da conclusão</label><div class="photo-source-actions"><button type="button" id="conclusionCameraButton" class="btn btn-blue">📷 Tirar foto</button><button type="button" id="conclusionAttachButton" class="btn btn-secondary">🖼️ Anexar imagem</button></div><input id="conclusionCameraInput" class="photo-source-hidden" type="file" accept="image/*,.heic,.heif" capture="environment"><input id="conclusionPhotoInput" class="photo-source-hidden" type="file" accept="image/*,.heic,.heif"><div id="conclusionPhotoStatus" class="muted" style="margin-top:5px"></div><img id="conclusionPhotoPreview" class="photo-preview"></div><div id="manageMessage" class="message"></div><div class="modal-actions" style="justify-content:space-between;flex-wrap:wrap"><button id="deleteOccurrence" class="btn btn-danger hidden" type="button">🗑️ Excluir ocorrência</button><div style="display:flex;gap:8px;flex-wrap:wrap"><button id="cancelManage" class="btn btn-secondary">Cancelar</button><button id="saveManage" class="btn">Salvar alterações</button></div></div></div></div>
 
-<div id="qrFooterVersionA2101" class="footer">QRManut • Versão 7.6.6.31 • Pacote A2.16.1</div>
-<div class="qr-build-watermark-a2101">A2.16.1</div>
+<div id="qrFooterVersionA2101" class="footer">QRManut • Versão 7.6.6.31 • Pacote A2.16.2</div>
+<div class="qr-build-watermark-a2101">A2.16.2</div>
 </div>
 <script>
 const API_URL="https://script.google.com/macros/s/AKfycbx4tpC42Q6WdkNhTUTAGoZWvG5M24zwlNscnwbDP5B3Q5pWo8B32-Lf0rQ2Xtua1AFMAQ/exec";
 const QRMANUT_APP_VERSION="7.6.6.31";
-const QRMANUT_FRONTEND_PACKAGE="A2.16.1";
+const QRMANUT_FRONTEND_PACKAGE="A2.16.2";
 const QRMANUT_BUILD_LABEL="2026-09-24 22:20";
 
 function qrBackendMatchesFrontendPackageA2141_(backendVersion){
@@ -2732,7 +2732,7 @@ const $=id=>document.getElementById(id);
 let qrSessionOfflineVisibleA298=false;
 let qrSessionOfflineLastCheckA298=0;
 let qrSessionOfflineCheckingA298=false;
-// A2.16.1 — chamadas autenticadas bem-sucedidas também confirmam a sessão.
+// A2.16.2 — chamadas autenticadas bem-sucedidas também confirmam a sessão.
 let qrSystemSessionValidatedAtA216=0;
 let qrSystemSessionValidationPromiseA216=null;
 const QR_SESSION_RETURN_CHECK_MS_A216=300000;
@@ -2800,7 +2800,7 @@ function qrSessionOfflineGoHomeA298(){
 }
 
 function qrSessionOfflineReenterA298(){
-  // A2.16.1 — a sessão já foi invalidada/limpa pelo modal OFF.
+  // A2.16.2 — a sessão já foi invalidada/limpa pelo modal OFF.
   // Abrimos o login diretamente para evitar novo ciclo de validação.
   qrHideSessionOfflineA298();
   systemLoginNextAction=()=>openMainMenu();
@@ -3430,7 +3430,7 @@ function qrRenderPerformanceB530(){
   const local=qrPerfRowsB530.filter(x=>x.method==="LOCAL").length;
   const inflight=qrPerfRowsB530.filter(x=>x.method==="IN-FLIGHT").length;
 
-  // A2.16.1 — baseline da onda de Preventivas / Checklist.
+  // A2.16.2 — baseline da onda de Preventivas / Checklist.
   const preventiveWaveActions=new Set([
     "preventivechecklistresult",
     "preventivechecklistcomparison",
@@ -3577,6 +3577,9 @@ function qrIsMutationPostB530(action){return !!action&&!QR_NON_MUTATING_POST_ACT
 function qrTtlForActionB530(action,requested){
   if(Number(requested)>0)return Number(requested);
   if(action==="audit")return QR_AUDIT_CACHE_TTL_B530;
+  // A2.16.2 — alertas são resumo informativo e possuem atualização manual.
+  // Qualquer mutação continua limpando o cache local.
+  if(action==="alertssummary")return 120000;
   return QR_LOCAL_CACHE_TTL_B530;
 }
 function qrResetLoadedViewStateB536(){
@@ -3585,6 +3588,10 @@ function qrResetLoadedViewStateB536(){
   occurrenceReportData=null;
   occurrenceReportFiltersLoaded=false;
   preventiveControlData=null;
+  preventiveControlAllDataA2162=null;
+  preventiveControlAllCompetenceA2162="";
+  qrPreventiveControlLastKeyA2161="";
+  qrPreventiveControlLastLoadedAtA2161=0;
   solTriageData=null;
   solTriageMeta=null;
   pendingFiltersLoaded=false;
@@ -3685,7 +3692,7 @@ function getSavedResponsible(){try{return localStorage.getItem(RESPONSIBLE_KEY)|
 function savePreventiveSession(d){preventiveSession=d;sessionStorage.setItem(PREVENTIVE_SESSION_KEY,JSON.stringify(d))}function readPreventiveSession(){try{const raw=sessionStorage.getItem(PREVENTIVE_SESSION_KEY);preventiveSession=raw?JSON.parse(raw):null}catch(e){preventiveSession=null}}function clearPreventiveSession(){preventiveSession=null;sessionStorage.removeItem(PREVENTIVE_SESSION_KEY)}function saveSystemSession(d){systemSession=d;preventiveSession=d;qrSystemSessionValidatedAtA216=Date.now();qrHideSessionOfflineA298();try{sessionStorage.setItem(SYSTEM_SESSION_KEY,JSON.stringify(d));localStorage.removeItem(SYSTEM_SESSION_KEY)}catch(e){}}
 function readSystemSession(){try{localStorage.removeItem(SYSTEM_SESSION_KEY);const raw=sessionStorage.getItem(SYSTEM_SESSION_KEY);systemSession=raw?JSON.parse(raw):null;qrSystemSessionValidatedAtA216=0}catch(e){systemSession=null;qrSystemSessionValidatedAtA216=0}}
 function revokeSecureFileUrls76624(){try{secureFileUrlCache76624.forEach(v=>URL.revokeObjectURL(v));secureFileUrlCache76624.clear()}catch(e){}}
-function clearSystemSession(){systemSession=null;preventiveSession=null;qrSystemSessionValidatedAtA216=0;qrSystemSessionValidationPromiseA216=null;revokeSecureFileUrls76624();if(typeof qrInvalidateLocalCacheB530==="function")qrInvalidateLocalCacheB530("clear-session");if(typeof qrClearPerformanceSessionB538==="function")qrClearPerformanceSessionB538();try{sessionStorage.removeItem(SYSTEM_SESSION_KEY);localStorage.removeItem(SYSTEM_SESSION_KEY)}catch(e){}}
+function clearSystemSession(){systemSession=null;preventiveSession=null;qrSystemSessionValidatedAtA216=0;qrSystemSessionValidationPromiseA216=null;if(typeof preventiveControlAllDataA2162!=="undefined"){preventiveControlAllDataA2162=null;preventiveControlAllCompetenceA2162=""}revokeSecureFileUrls76624();if(typeof qrInvalidateLocalCacheB530==="function")qrInvalidateLocalCacheB530("clear-session");if(typeof qrClearPerformanceSessionB538==="function")qrClearPerformanceSessionB538();try{sessionStorage.removeItem(SYSTEM_SESSION_KEY);localStorage.removeItem(SYSTEM_SESSION_KEY)}catch(e){}}
 async function systemSessionIsValid(){
   if(!systemSession?.systemSessionToken)return false;
 
@@ -4013,7 +4020,7 @@ function openMainMenu(){
   // evitando três chamadas simultâneas ao Apps Script durante a navegação.
   openDefaultAllowedTab();
   setTimeout(()=>{
-    // A2.16.1 — alertssummary também carrega o badge de solicitações de acesso.
+    // A2.16.2 — alertssummary também carrega o badge de solicitações de acesso.
     // Remove a viagem independente accessrequests na abertura do menu.
     loadAlertsSummaryB5320_().catch(()=>{});
   },650);
@@ -5522,7 +5529,7 @@ async function loadPreventiveProvidersFast766253_(){
     return;
   }
 
-  // A2.16.1 — não abre mais uma viagem "providers" ao entrar em Preventivas.
+  // A2.16.2 — não abre mais uma viagem "providers" ao entrar em Preventivas.
   // Usa o cache local se existir; a resposta de preventivecontrol traz a lista
   // completa de prestadores e atualiza o seletor logo em seguida.
   const cached=readPreventiveProviderCache766253_();
@@ -5535,6 +5542,87 @@ let qrPreventiveControlLastKeyA2161="";
 let qrPreventiveControlLastLoadedAtA2161=0;
 let qrPreventiveControlRequestSeqA2161=0;
 let qrPreventiveControlChangeTimerA2161=null;
+
+// A2.16.2 — guarda a resposta "Todos os prestadores" da competência.
+// A troca de prestador passa a ser um filtro local, sem nova viagem à API.
+let preventiveControlAllDataA2162=null;
+let preventiveControlAllCompetenceA2162="";
+
+function qrNormalizeProviderA2162_(value){
+  return String(value||"")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"")
+    .trim()
+    .toLowerCase();
+}
+
+function derivePreventiveControlProviderA2162_(base,provider){
+  if(!base)return null;
+  const target=qrNormalizeProviderA2162_(provider);
+  if(!target)return base;
+
+  const matches=item=>qrNormalizeProviderA2162_(item?.prestador)===target;
+  const pendentes=(base.pendentes||[]).filter(matches);
+  const realizadas=(base.realizadas||[]).filter(matches);
+  const previstas=pendentes.length+realizadas.length;
+  const percentual=previstas?Math.round((realizadas.length/previstas)*100):0;
+
+  const providerSummary=(base.prestadores||[]).filter(p=>
+    qrNormalizeProviderA2162_(p?.prestador)===target
+  );
+
+  return {
+    ...base,
+    pendentes,
+    realizadas,
+    prestadores:providerSummary,
+    summary:{
+      ...(base.summary||{}),
+      previstas,
+      realizadas:realizadas.length,
+      pendentes:pendentes.length,
+      percentual
+    }
+  };
+}
+
+function applyPreventiveProviderLocalA2162_(){
+  if(!["MASTER","GESTOR"].includes(systemSession?.perfil))return false;
+
+  const competencia=$("controlCompetence").value||currentCompetence();
+  if(!preventiveControlAllDataA2162||preventiveControlAllCompetenceA2162!==competencia)return false;
+
+  const provider=$("controlProvider").value||"";
+  preventiveControlData=derivePreventiveControlProviderA2162_(preventiveControlAllDataA2162,provider);
+  qrPreventiveControlLastKeyA2161=`${competencia}|${provider}`;
+  qrPreventiveControlLastLoadedAtA2161=Date.now();
+
+  qrPerfRecordB530(
+    "LOCAL",
+    "preventivecontrol",
+    provider?"filtro-prestador-local":"todos-prestadores-local",
+    0,
+    null,
+    "OK"
+  );
+  renderPreventiveControl();
+  return true;
+}
+
+function changePreventiveProviderA2162_(){
+  if(!["MASTER","GESTOR"].includes(systemSession?.perfil)){
+    renderControlList();
+    return;
+  }
+  if(applyPreventiveProviderLocalA2162_())return;
+  queuePreventiveControlA2161_("prestador-preventivas");
+}
+
+function changePreventiveCompetenceA2162_(){
+  preventiveControlAllDataA2162=null;
+  preventiveControlAllCompetenceA2162="";
+  queuePreventiveControlA2161_("competencia-preventivas");
+}
 
 function qrPreventiveControlKeyA2161_(){
   if(!$("controlCompetence").value)$("controlCompetence").value=currentCompetence();
@@ -5570,7 +5658,7 @@ async function loadPreventiveControl(options={}){
   }
 
   // Dedupe antes mesmo de chegar ao menuApi/IN-FLIGHT.
-  if(!force&&qrPreventiveControlPromiseA2161&&qrPreventiveControlPromiseKeyA2161===key){
+  if(qrPreventiveControlPromiseA2161&&qrPreventiveControlPromiseKeyA2161===key){
     return qrPreventiveControlPromiseA2161;
   }
 
@@ -5591,7 +5679,23 @@ async function loadPreventiveControl(options={}){
     // Se o usuário mudou o filtro enquanto a chamada anterior estava em curso,
     // a resposta antiga não substitui a visão mais nova.
     if(seq===qrPreventiveControlRequestSeqA2161){
-      preventiveControlData=r.data;
+      if(["MASTER","GESTOR"].includes(systemSession?.perfil)&&!provider){
+        preventiveControlAllDataA2162=r.data;
+        preventiveControlAllCompetenceA2162=$("controlCompetence").value;
+      }
+
+      // Se já existe uma visão completa da competência, preserva a seleção
+      // corrente do prestador mesmo quando a resposta geral acabou de chegar.
+      const selectedProvider=["MASTER","GESTOR"].includes(systemSession?.perfil)
+        ?($("controlProvider").value||"")
+        :"";
+
+      preventiveControlData=
+        selectedProvider&&preventiveControlAllDataA2162&&
+        preventiveControlAllCompetenceA2162===$("controlCompetence").value
+          ?derivePreventiveControlProviderA2162_(preventiveControlAllDataA2162,selectedProvider)
+          :r.data;
+
       qrPreventiveControlLastKeyA2161=key;
       qrPreventiveControlLastLoadedAtA2161=Date.now();
       renderPreventiveControl();
@@ -5888,7 +5992,7 @@ function renderAssetDocuments(items){
     ?"Document "
     :"Documento ";
 
-  // A2.16.1 — dropdown compacto: ID do documento + título.
+  // A2.16.2 — dropdown compacto: ID do documento + título.
   select.innerHTML=items.map((d,i)=>{
     const id=String(d.idDocumento||"").trim();
     const titulo=String(d.titulo||"Documento").trim();
@@ -6595,7 +6699,7 @@ function renderPreventiveHistoryItemsB5310_(items){
     ?"Preventive maintenance date "
     :"Data da preventiva ";
 
-  // A2.16.1 — dropdown compacto: número da preventiva + data.
+  // A2.16.2 — dropdown compacto: número da preventiva + data.
   select.innerHTML=items.map((item,i)=>{
     const data=formatDate(item.data)||"-";
     const registro=String(item.registro||"").trim();
@@ -11576,7 +11680,7 @@ $("searchAssetsButton").onclick=function(){
   requireSystemLogin(()=>{hide("assetScreen");show("searchScreen");openMainMenu();focusBackAssetButton()});
 };
 $("backAssetButton").onclick=function(){const id=getOriginAsset();if(!id)return;clearOriginAsset();location.href="?id="+encodeURIComponent(id)};
-$("occReportRefresh").onclick=()=>loadOccurrenceReport({force:true,context:"buscar-manual"});$("occReportPdf").onclick=generateOccurrenceReportPdf;["occReportStart","occReportEnd","occReportProvider","occReportCategory","occReportComponent","occReportFloor","occReportLocation"].forEach(id=>$(id).onchange=markOccurrenceReportDirty);$("controlRefresh").onclick=refreshPreventiveControl;$("controlCompetence").onchange=()=>queuePreventiveControlA2161_("competencia-preventivas");$("controlProvider").onchange=()=>{if(["MASTER","GESTOR"].includes(systemSession?.perfil))queuePreventiveControlA2161_("prestador-preventivas");else renderControlList()};$("controlAll").onclick=()=>setControlMode("all");$("controlPending").onclick=()=>setControlMode("pending");$("controlDone").onclick=()=>setControlMode("done");
+$("occReportRefresh").onclick=()=>loadOccurrenceReport({force:true,context:"buscar-manual"});$("occReportPdf").onclick=generateOccurrenceReportPdf;["occReportStart","occReportEnd","occReportProvider","occReportCategory","occReportComponent","occReportFloor","occReportLocation"].forEach(id=>$(id).onchange=markOccurrenceReportDirty);$("controlRefresh").onclick=refreshPreventiveControl;$("controlCompetence").onchange=changePreventiveCompetenceA2162_;$("controlProvider").onchange=changePreventiveProviderA2162_;$("controlAll").onclick=()=>setControlMode("all");$("controlPending").onclick=()=>setControlMode("pending");$("controlDone").onclick=()=>setControlMode("done");
 let completedPreventiveReportDataA2143_=null;
 
 function defaultCompletedPreventiveReportDatesA2143_(){
@@ -11858,7 +11962,7 @@ function setupModernMenuSectionsB5316(){
   const storageKey="qrmanut_menu_sections_a2102";
   let saved={};
   try{saved=JSON.parse(sessionStorage.getItem(storageKey)||"{}")||{}}catch(e){saved={}}
-  // QRManut A2.16.1 — menu principal em três grupos definitivos.
+  // QRManut A2.16.2 — menu principal em três grupos definitivos.
   // Esta função recria os cards ao carregar a página; por isso ela precisa
   // refletir a mesma organização declarada no HTML estático.
   const groups=[
