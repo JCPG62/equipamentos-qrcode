@@ -1,7 +1,7 @@
-<!-- QRManut PNCQ 7.6.6.31 A2.14.8
+<!-- QRManut PNCQ 7.6.6.31 A2.15.0
      VISUALIZAÇÃO DE VERSÃO ATIVA NA TELA
      - Se este texto aparecer no código fonte, o HTML correto foi publicado.
-     - Rodapé e menu exibem: QRManut • Versão 7.6.6.31 • Pacote A2.14.8
+     - Rodapé e menu exibem: QRManut • Versão 7.6.6.31 • Pacote A2.15.0
      - Build: 2026-09-24 22:20
 -->
 <!-- QRManut PNCQ 7.6.6.31 A2.6.3 — Checklist Compacto da Preventiva
@@ -179,8 +179,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>QRManut 7.6.6.31 A2.14.8</title>
-<meta name="qrmanut-build" content="7.6.6.31-A2.14.8-2026-09-24-2220">
+<title>QRManut 7.6.6.31 A2.15.0</title>
+<meta name="qrmanut-build" content="7.6.6.31-A2.15.0-2026-09-24-2220">
 <meta name="theme-color" content="#0b315e">
 <meta name="application-name" content="QRManut">
 <meta name="mobile-web-app-capable" content="yes">
@@ -1451,7 +1451,7 @@ body{
 }
 
 
-/* QRManut A2.14.8 — versão visível do pacote implantado */
+/* QRManut A2.15.0 — versão visível do pacote implantado */
 .qr-build-badge-a2101{
   display:inline-flex;
   align-items:center;
@@ -1482,7 +1482,7 @@ body{
 }
 
 
-/* QRManut A2.14.8 — ações após upload de documento */
+/* QRManut A2.15.0 — ações após upload de documento */
 .document-upload-next-actions-a2103{
   display:flex;
   gap:10px;
@@ -1496,7 +1496,7 @@ body{
 }
 
 
-/* QRManut A2.14.8 — histórico de preventivas compacto por data */
+/* QRManut A2.15.0 — histórico de preventivas compacto por data */
 #preventiveHistorySelectLabel{
   max-width:520px;
 }
@@ -1508,7 +1508,7 @@ body{
 }
 
 
-/* QRManut A2.14.8 — documentos do ativo compactos por dropdown */
+/* QRManut A2.15.0 — documentos do ativo compactos por dropdown */
 #assetDocumentsSelectLabel{
   max-width:620px;
 }
@@ -1520,7 +1520,7 @@ body{
 }
 
 
-/* QRManut A2.14.8 — histórico do checklist executado */
+/* QRManut A2.15.0 — histórico do checklist executado */
 .preventive-checklist-history-a211{
   margin-top:12px;
   padding:12px;
@@ -1580,7 +1580,7 @@ body{
 }
 
 
-/* QRManut A2.14.8 — comparação entre preventivas */
+/* QRManut A2.15.0 — comparação entre preventivas */
 .preventive-comparison-a213{
   margin-top:12px;
   padding:12px;
@@ -1662,7 +1662,7 @@ body{
 }
 
 
-/* QRManut A2.14.8 — evolução histórica do checklist */
+/* QRManut A2.15.0 — evolução histórica do checklist */
 .preventive-trend-a214{
   margin-top:12px;
   padding:12px;
@@ -1712,7 +1712,7 @@ body{
 }
 
 
-/* QRManut A2.14.8 — relatório de preventivas realizadas */
+/* QRManut A2.15.0 — relatório de preventivas realizadas */
 .completed-preventive-report-filters-a2143{display:grid;grid-template-columns:repeat(3,minmax(180px,1fr));gap:10px;margin-top:14px}
 #completedPreventiveReportModalA2143 .perf-table{min-width:980px}
 #completedPreventiveReportModalA2143 .perf-table td{vertical-align:top}
@@ -1733,7 +1733,7 @@ body{
     <div>
       <div class="search-title">QRManut</div>
       <div id="qrAppSubtitle" class="muted">Gestão rápida de manutenção</div>
-      <div id="qrBuildBadgeA2101" class="qr-build-badge-a2101">✅ Pacote A2.14.8 • Atualizado em 2026-09-24 22:20</div>
+      <div id="qrBuildBadgeA2101" class="qr-build-badge-a2101">✅ Pacote A2.15.0 • Atualizado em 2026-09-24 22:20</div>
     </div>
     <button id="qrAlertsButtonB5320" class="qr-alerts-button-b5320 hidden" type="button" aria-expanded="false" aria-controls="qrAlertsPanelB5320" title="Central de Alertas">
       <span class="qr-alerts-bell-b5320" aria-hidden="true">🔔</span>
@@ -2704,13 +2704,13 @@ body{
 </div>
 <label>Adicionar nova foto da ocorrência / correção</label><div class="photo-source-actions"><button type="button" id="manageOccurrenceCameraButton" class="btn btn-blue">📷 Tirar foto</button><button type="button" id="manageOccurrenceAttachButton" class="btn btn-secondary">🖼️ Anexar imagem</button></div><input id="manageOccurrenceCameraInput" class="photo-source-hidden" type="file" accept="image/*,.heic,.heif" capture="environment"><input id="manageOccurrencePhotoInput" class="photo-source-hidden" type="file" accept="image/*,.heic,.heif"><div id="manageOccurrencePhotoStatus" class="muted" style="margin-top:5px"></div><img id="manageOccurrencePhotoPreview" class="photo-preview"><div class="upload-file-box" style="margin-top:12px"><div style="font-weight:800">📎 Adicionar arquivo à ocorrência</div><div class="muted" style="margin-top:4px">PDF, Word, Excel ou outro arquivo de evidência, até 8 MB.</div><button id="manageAttachmentButton" type="button" class="btn btn-secondary" style="margin-top:8px">📎 Escolher arquivo</button><input id="manageAttachmentInput" class="photo-source-hidden" type="file"><div id="manageAttachmentName" class="upload-file-name">Nenhum arquivo selecionado.</div><div id="manageExistingAttachments" style="margin-top:8px"></div></div><div id="conclusionPhotoArea" class="hidden"><label>Foto da conclusão</label><div class="photo-source-actions"><button type="button" id="conclusionCameraButton" class="btn btn-blue">📷 Tirar foto</button><button type="button" id="conclusionAttachButton" class="btn btn-secondary">🖼️ Anexar imagem</button></div><input id="conclusionCameraInput" class="photo-source-hidden" type="file" accept="image/*,.heic,.heif" capture="environment"><input id="conclusionPhotoInput" class="photo-source-hidden" type="file" accept="image/*,.heic,.heif"><div id="conclusionPhotoStatus" class="muted" style="margin-top:5px"></div><img id="conclusionPhotoPreview" class="photo-preview"></div><div id="manageMessage" class="message"></div><div class="modal-actions" style="justify-content:space-between;flex-wrap:wrap"><button id="deleteOccurrence" class="btn btn-danger hidden" type="button">🗑️ Excluir ocorrência</button><div style="display:flex;gap:8px;flex-wrap:wrap"><button id="cancelManage" class="btn btn-secondary">Cancelar</button><button id="saveManage" class="btn">Salvar alterações</button></div></div></div></div>
 
-<div id="qrFooterVersionA2101" class="footer">QRManut • Versão 7.6.6.31 • Pacote A2.14.8</div>
-<div class="qr-build-watermark-a2101">A2.14.8</div>
+<div id="qrFooterVersionA2101" class="footer">QRManut • Versão 7.6.6.31 • Pacote A2.15.0</div>
+<div class="qr-build-watermark-a2101">A2.15.0</div>
 </div>
 <script>
 const API_URL="https://script.google.com/macros/s/AKfycbx4tpC42Q6WdkNhTUTAGoZWvG5M24zwlNscnwbDP5B3Q5pWo8B32-Lf0rQ2Xtua1AFMAQ/exec";
 const QRMANUT_APP_VERSION="7.6.6.31";
-const QRMANUT_FRONTEND_PACKAGE="A2.14.8";
+const QRMANUT_FRONTEND_PACKAGE="A2.15.0";
 const QRMANUT_BUILD_LABEL="2026-09-24 22:20";
 
 function qrBackendMatchesFrontendPackageA2141_(backendVersion){
@@ -2795,7 +2795,7 @@ function qrSessionOfflineGoHomeA298(){
 }
 
 function qrSessionOfflineReenterA298(){
-  // A2.14.8 — a sessão já foi invalidada/limpa pelo modal OFF.
+  // A2.15.0 — a sessão já foi invalidada/limpa pelo modal OFF.
   // Abrimos o login diretamente para evitar novo ciclo de validação.
   qrHideSessionOfflineA298();
   systemLoginNextAction=()=>openMainMenu();
@@ -3218,12 +3218,14 @@ const QR_CACHEABLE_ACTIONS_B530=new Set([
   "documents","documentfilters","documentsbundle","users","providers","accessrequests","providersadmin",
   "companyconfig","profilepermissionsadmin","auditfilters","audit","occurrencecatalogadmin",
   "maintenancepending","maintenanceagenda","documentuploadmeta","assetbundle","assetdocuments","history",
-  "preventivehistory","preventiverequirements","checklistmodels","completedpreventivesreport"
+  "preventivehistory","preventiverequirements","checklistmodels","completedpreventivesreport",
+  "preventivechecklistresult","preventivechecklistcomparison","preventivechecklisttrend"
 ]);
 
 const QR_NON_MUTATING_POST_ACTIONS_B530=new Set([
   ...QR_CACHEABLE_ACTIONS_B530,
-  "systemsession","secureFile","secureFileMeta","secureFileChunk","generateCompletedPreventivesPdf"
+  "systemsession","secureFile","secureFileMeta","secureFileChunk",
+  "generatePreventivePdf","generateCompletedPreventivesPdf"
 ]);
 
 const QR_ACTION_CONTEXT_B530={
@@ -3236,7 +3238,13 @@ const QR_ACTION_CONTEXT_B530={
   companyconfig:"empresa",profilepermissionsadmin:"permissoes",audit:"auditoria",
   auditfilters:"auditoria-filtros",occurrencecatalogadmin:"catalogo",maintenancepending:"pendencias",maintenanceagenda:"agenda-manutencao",
   documentuploadmeta:"upload-documentos-meta",assetbundle:"ficha-ativo",assetdocuments:"documentos-ativo",
-  history:"historico-ativo",preventivehistory:"preventivas-ativo",preventiverequirements:"requisitos-preventiva",checklistmodels:"modelos-checklist",completedpreventivesreport:"relatorio-preventivas-realizadas",generateCompletedPreventivesPdf:"pdf-preventivas-realizadas"
+  history:"historico-ativo",preventivehistory:"preventivas-ativo",preventiverequirements:"requisitos-preventiva",checklistmodels:"modelos-checklist",
+  completedpreventivesreport:"relatorio-preventivas-realizadas",
+  preventivechecklistresult:"checklist-historico",
+  preventivechecklistcomparison:"checklist-comparativo",
+  preventivechecklisttrend:"checklist-evolucao",
+  generatePreventivePdf:"pdf-preventiva",
+  generateCompletedPreventivesPdf:"pdf-preventivas-realizadas"
 };
 
 function qrPerfClockB530(){return (window.performance&&performance.now)?performance.now():Date.now()}
@@ -3262,6 +3270,14 @@ function qrPerfDetailsB531(data){
   if(Number.isFinite(Number(pm.matchingRows)))parts.push(`match=${Number(pm.matchingRows)}`);
   if(Number.isFinite(Number(pm.realizedRows)))parts.push(`realizadas-linhas=${Number(pm.realizedRows)}`);
   if(b.bundleType)parts.push(`pacote=${String(b.bundleType)}`);
+  if(Number.isFinite(Number(b.checklistItems)))parts.push(`checklist-itens=${Number(b.checklistItems)}`);
+  if(Number.isFinite(Number(b.trendPreventives)))parts.push(`prev-analisadas=${Number(b.trendPreventives)}`);
+  if(typeof b.hasPrevious==="boolean")parts.push(`prev-anterior=${b.hasPrevious?"sim":"nao"}`);
+  if(typeof b.hasHistory==="boolean")parts.push(`hist-evolucao=${b.hasHistory?"sim":"nao"}`);
+  if(typeof b.hasChecklist==="boolean")parts.push(`tem-checklist=${b.hasChecklist?"sim":"nao"}`);
+  if(Number.isFinite(Number(b.reportPreventives)))parts.push(`rel-prev=${Number(b.reportPreventives)}`);
+  if(Number.isFinite(Number(b.reportWithChecklist)))parts.push(`rel-checklist=${Number(b.reportWithChecklist)}`);
+  if(Number.isFinite(Number(b.reportWithDeviation)))parts.push(`rel-desvio=${Number(b.reportWithDeviation)}`);
   if(f(b.pendingMs)!=null)parts.push(`alerta-ocs ${f(b.pendingMs)} ms`);
   if(f(b.solicitationsMs)!=null)parts.push(`alerta-sols ${f(b.solicitationsMs)} ms`);
   if(f(b.preventiveMs)!=null)parts.push(`alerta-prev ${f(b.preventiveMs)} ms`);
@@ -3407,12 +3423,47 @@ function qrRenderPerformanceB530(){
   const slow=apiRows.filter(x=>x.totalMs>2000).length;
   const local=qrPerfRowsB530.filter(x=>x.method==="LOCAL").length;
   const inflight=qrPerfRowsB530.filter(x=>x.method==="IN-FLIGHT").length;
-  summary.innerHTML=[
-    [t("Medições","Measurements"),count],[t("Chamadas API","API calls"),apiCount],
-    [t("Média API","API average"),qrFormatPerfMsB530(avg)],["P95 API",qrFormatPerfMsB530(p95)],
-    [t("Máximo API","API maximum"),qrFormatPerfMsB530(max)],["> 2 s API",slow],
-    ["LOCAL",local],["IN-FLIGHT",inflight]
-  ].map(x=>`<div class="perf-summary-card"><strong>${esc(x[1])}</strong><span>${esc(x[0])}</span></div>`).join("");
+
+  // A2.15.0 — baseline da onda de Preventivas / Checklist.
+  const preventiveWaveActions=new Set([
+    "preventivechecklistresult",
+    "preventivechecklistcomparison",
+    "preventivechecklisttrend",
+    "generatePreventivePdf",
+    "completedpreventivesreport",
+    "generateCompletedPreventivesPdf"
+  ]);
+  const preventiveWaveRows=apiRows.filter(x=>preventiveWaveActions.has(String(x.action||"")));
+  const preventiveWaveVals=preventiveWaveRows.map(x=>x.totalMs);
+  const preventiveWaveAvg=preventiveWaveVals.length
+    ?preventiveWaveVals.reduce((a,b)=>a+b,0)/preventiveWaveVals.length
+    :0;
+  const preventiveWaveP95=qrPerfPercentileB530(preventiveWaveVals,95);
+  const preventiveWaveSlow=preventiveWaveRows.filter(x=>x.totalMs>2000).length;
+
+  const cards=[
+    [t("Medições","Measurements"),count],
+    [t("Chamadas API","API calls"),apiCount],
+    [t("Média API","API average"),qrFormatPerfMsB530(avg)],
+    ["P95 API",qrFormatPerfMsB530(p95)],
+    [t("Máximo API","API maximum"),qrFormatPerfMsB530(max)],
+    ["> 2 s API",slow],
+    ["LOCAL",local],
+    ["IN-FLIGHT",inflight]
+  ];
+
+  if(preventiveWaveRows.length){
+    cards.push(
+      [t("Preventivas / Checklist","Preventive / Checklist"),preventiveWaveRows.length],
+      [t("Média da onda","Wave average"),qrFormatPerfMsB530(preventiveWaveAvg)],
+      [t("P95 da onda","Wave P95"),qrFormatPerfMsB530(preventiveWaveP95)],
+      [t("Onda > 2 s","Wave > 2 s"),preventiveWaveSlow]
+    );
+  }
+
+  summary.innerHTML=cards
+    .map(x=>`<div class="perf-summary-card"><strong>${esc(x[1])}</strong><span>${esc(x[0])}</span></div>`)
+    .join("");
   const recent=qrPerfRowsB530.slice().reverse().slice(0,150);
   rows.innerHTML=recent.length?recent.map(x=>{
     const tm=x.time.toLocaleTimeString(qrLanguage==="en-US"?"en-US":"pt-BR",{hour12:false});
@@ -3427,7 +3478,7 @@ function qrRenderPerformanceB530(){
   const title=$("performanceTitle"),help=$("performanceHelp"),b1=$("performanceClearMeasurements"),b2=$("performanceClearCache"),back=$("performanceBackMenu");
   if(title)title.textContent=t("⏱️ Diagnóstico de Performance","⏱️ Performance Diagnostics");
   if(help)help.innerHTML=t(
-    "Mede navegador → API → navegador. <b>LOCAL</b> = cache instantâneo; <b>IN-FLIGHT</b> = uma segunda solicitação aguardou a mesma requisição já em andamento. <b>Overhead</b> = Total − Backend. As medições técnicas persistem nesta aba mesmo ao abrir uma ficha/recarregar a página. As estatísticas de média/P95/máximo consideram apenas chamadas reais GET/POST.",
+    "Mede navegador → API → navegador. <b>LOCAL</b> = cache instantâneo; <b>IN-FLIGHT</b> = uma segunda solicitação aguardou a mesma requisição já em andamento. <b>Overhead</b> = Total − Backend. As medições técnicas persistem nesta aba mesmo ao abrir uma ficha/recarregar a página. A A2.15 também mede separadamente histórico do checklist, comparativo, evolução, PDF individual e relatório/PDF de preventivas realizadas.",
     "Measures browser → API → browser. <b>LOCAL</b> = instant cache; <b>IN-FLIGHT</b> = a second request waited for the same request already in progress. <b>Overhead</b> = Total − Backend. Technical measurements persist in this tab even when opening an asset/reloading the page. Average/P95/maximum statistics include only real GET/POST calls."
   );
   if(b1)b1.textContent=t("Limpar medições","Clear measurements");
@@ -5722,7 +5773,7 @@ function renderAssetDocuments(items){
     ?"Document "
     :"Documento ";
 
-  // A2.14.8 — dropdown compacto: ID do documento + título.
+  // A2.15.0 — dropdown compacto: ID do documento + título.
   select.innerHTML=items.map((d,i)=>{
     const id=String(d.idDocumento||"").trim();
     const titulo=String(d.titulo||"Documento").trim();
@@ -6429,7 +6480,7 @@ function renderPreventiveHistoryItemsB5310_(items){
     ?"Preventive maintenance date "
     :"Data da preventiva ";
 
-  // A2.14.8 — dropdown compacto: número da preventiva + data.
+  // A2.15.0 — dropdown compacto: número da preventiva + data.
   select.innerHTML=items.map((item,i)=>{
     const data=formatDate(item.data)||"-";
     const registro=String(item.registro||"").trim();
@@ -11672,7 +11723,7 @@ function setupModernMenuSectionsB5316(){
   const storageKey="qrmanut_menu_sections_a2102";
   let saved={};
   try{saved=JSON.parse(sessionStorage.getItem(storageKey)||"{}")||{}}catch(e){saved={}}
-  // QRManut A2.14.8 — menu principal em três grupos definitivos.
+  // QRManut A2.15.0 — menu principal em três grupos definitivos.
   // Esta função recria os cards ao carregar a página; por isso ela precisa
   // refletir a mesma organização declarada no HTML estático.
   const groups=[
