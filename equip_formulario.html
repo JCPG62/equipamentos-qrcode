@@ -1,7 +1,7 @@
-<!-- QRManut PNCQ 7.6.6.31 A2.16.4
+<!-- QRManut PNCQ 7.6.6.31 A2.16.5
      VISUALIZAÇÃO DE VERSÃO ATIVA NA TELA
      - Se este texto aparecer no código fonte, o HTML correto foi publicado.
-     - Rodapé e menu exibem: QRManut • Versão 7.6.6.31 • Pacote A2.16.4
+     - Rodapé e menu exibem: QRManut • Versão 7.6.6.31 • Pacote A2.16.5
      - Build: 2026-09-24 22:20
 -->
 <!-- QRManut PNCQ 7.6.6.31 A2.6.3 — Checklist Compacto da Preventiva
@@ -179,8 +179,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>QRManut 7.6.6.31 A2.16.4</title>
-<meta name="qrmanut-build" content="7.6.6.31-A2.16.4-2026-09-24-2220">
+<title>QRManut 7.6.6.31 A2.16.5</title>
+<meta name="qrmanut-build" content="7.6.6.31-A2.16.5-2026-09-24-2220">
 <meta name="theme-color" content="#0b315e">
 <meta name="application-name" content="QRManut">
 <meta name="mobile-web-app-capable" content="yes">
@@ -1451,7 +1451,7 @@ body{
 }
 
 
-/* QRManut A2.16.4 — versão visível do pacote implantado */
+/* QRManut A2.16.5 — versão visível do pacote implantado */
 .qr-build-badge-a2101{
   display:inline-flex;
   align-items:center;
@@ -1482,7 +1482,7 @@ body{
 }
 
 
-/* QRManut A2.16.4 — ações após upload de documento */
+/* QRManut A2.16.5 — ações após upload de documento */
 .document-upload-next-actions-a2103{
   display:flex;
   gap:10px;
@@ -1496,7 +1496,7 @@ body{
 }
 
 
-/* QRManut A2.16.4 — histórico de preventivas compacto por data */
+/* QRManut A2.16.5 — histórico de preventivas compacto por data */
 #preventiveHistorySelectLabel{
   max-width:520px;
 }
@@ -1508,7 +1508,7 @@ body{
 }
 
 
-/* QRManut A2.16.4 — documentos do ativo compactos por dropdown */
+/* QRManut A2.16.5 — documentos do ativo compactos por dropdown */
 #assetDocumentsSelectLabel{
   max-width:620px;
 }
@@ -1520,7 +1520,7 @@ body{
 }
 
 
-/* QRManut A2.16.4 — histórico do checklist executado */
+/* QRManut A2.16.5 — histórico do checklist executado */
 .preventive-checklist-history-a211{
   margin-top:12px;
   padding:12px;
@@ -1580,7 +1580,7 @@ body{
 }
 
 
-/* QRManut A2.16.4 — comparação entre preventivas */
+/* QRManut A2.16.5 — comparação entre preventivas */
 .preventive-comparison-a213{
   margin-top:12px;
   padding:12px;
@@ -1662,7 +1662,7 @@ body{
 }
 
 
-/* QRManut A2.16.4 — evolução histórica do checklist */
+/* QRManut A2.16.5 — evolução histórica do checklist */
 .preventive-trend-a214{
   margin-top:12px;
   padding:12px;
@@ -1712,11 +1712,23 @@ body{
 }
 
 
-/* QRManut A2.16.4 — relatório de preventivas realizadas */
+/* QRManut A2.16.5 — relatório de preventivas realizadas */
 .completed-preventive-report-filters-a2143{display:grid;grid-template-columns:repeat(3,minmax(180px,1fr));gap:10px;margin-top:14px}
 #completedPreventiveReportModalA2143 .perf-table{min-width:980px}
 #completedPreventiveReportModalA2143 .perf-table td{vertical-align:top}
 @media(max-width:760px){.completed-preventive-report-filters-a2143{grid-template-columns:1fr}}
+
+
+/* A2.16.5 — seletor de PDF da preventiva compatível com celular */
+#preventiveDocumentInput{
+  position:fixed!important;
+  left:-10000px!important;
+  top:0!important;
+  width:1px!important;
+  height:1px!important;
+  opacity:.01!important;
+  pointer-events:auto!important;
+}
 
 </style>
 </head>
@@ -1733,7 +1745,7 @@ body{
     <div>
       <div class="search-title">QRManut</div>
       <div id="qrAppSubtitle" class="muted">Gestão rápida de manutenção</div>
-      <div id="qrBuildBadgeA2101" class="qr-build-badge-a2101">✅ Pacote A2.16.4 • Atualizado em 2026-09-24 22:20</div>
+      <div id="qrBuildBadgeA2101" class="qr-build-badge-a2101">✅ Pacote A2.16.5 • Atualizado em 2026-09-24 22:20</div>
     </div>
     <button id="qrAlertsButtonB5320" class="qr-alerts-button-b5320 hidden" type="button" aria-expanded="false" aria-controls="qrAlertsPanelB5320" title="Central de Alertas">
       <span class="qr-alerts-bell-b5320" aria-hidden="true">🔔</span>
@@ -2704,13 +2716,13 @@ body{
 </div>
 <label>Adicionar nova foto da ocorrência / correção</label><div class="photo-source-actions"><button type="button" id="manageOccurrenceCameraButton" class="btn btn-blue">📷 Tirar foto</button><button type="button" id="manageOccurrenceAttachButton" class="btn btn-secondary">🖼️ Anexar imagem</button></div><input id="manageOccurrenceCameraInput" class="photo-source-hidden" type="file" accept="image/*,.heic,.heif" capture="environment"><input id="manageOccurrencePhotoInput" class="photo-source-hidden" type="file" accept="image/*,.heic,.heif"><div id="manageOccurrencePhotoStatus" class="muted" style="margin-top:5px"></div><img id="manageOccurrencePhotoPreview" class="photo-preview"><div class="upload-file-box" style="margin-top:12px"><div style="font-weight:800">📎 Adicionar arquivo à ocorrência</div><div class="muted" style="margin-top:4px">PDF, Word, Excel ou outro arquivo de evidência, até 8 MB.</div><button id="manageAttachmentButton" type="button" class="btn btn-secondary" style="margin-top:8px">📎 Escolher arquivo</button><input id="manageAttachmentInput" class="photo-source-hidden" type="file"><div id="manageAttachmentName" class="upload-file-name">Nenhum arquivo selecionado.</div><div id="manageExistingAttachments" style="margin-top:8px"></div></div><div id="conclusionPhotoArea" class="hidden"><label>Foto da conclusão</label><div class="photo-source-actions"><button type="button" id="conclusionCameraButton" class="btn btn-blue">📷 Tirar foto</button><button type="button" id="conclusionAttachButton" class="btn btn-secondary">🖼️ Anexar imagem</button></div><input id="conclusionCameraInput" class="photo-source-hidden" type="file" accept="image/*,.heic,.heif" capture="environment"><input id="conclusionPhotoInput" class="photo-source-hidden" type="file" accept="image/*,.heic,.heif"><div id="conclusionPhotoStatus" class="muted" style="margin-top:5px"></div><img id="conclusionPhotoPreview" class="photo-preview"></div><div id="manageMessage" class="message"></div><div class="modal-actions" style="justify-content:space-between;flex-wrap:wrap"><button id="deleteOccurrence" class="btn btn-danger hidden" type="button">🗑️ Excluir ocorrência</button><div style="display:flex;gap:8px;flex-wrap:wrap"><button id="cancelManage" class="btn btn-secondary">Cancelar</button><button id="saveManage" class="btn">Salvar alterações</button></div></div></div></div>
 
-<div id="qrFooterVersionA2101" class="footer">QRManut • Versão 7.6.6.31 • Pacote A2.16.4</div>
-<div class="qr-build-watermark-a2101">A2.16.4</div>
+<div id="qrFooterVersionA2101" class="footer">QRManut • Versão 7.6.6.31 • Pacote A2.16.5</div>
+<div class="qr-build-watermark-a2101">A2.16.5</div>
 </div>
 <script>
 const API_URL="https://script.google.com/macros/s/AKfycbx4tpC42Q6WdkNhTUTAGoZWvG5M24zwlNscnwbDP5B3Q5pWo8B32-Lf0rQ2Xtua1AFMAQ/exec";
 const QRMANUT_APP_VERSION="7.6.6.31";
-const QRMANUT_FRONTEND_PACKAGE="A2.16.4";
+const QRMANUT_FRONTEND_PACKAGE="A2.16.5";
 const QRMANUT_BUILD_LABEL="2026-09-24 22:20";
 
 function qrBackendMatchesFrontendPackageA2141_(backendVersion){
@@ -2718,12 +2730,12 @@ function qrBackendMatchesFrontendPackageA2141_(backendVersion){
   const expected=String(QRMANUT_FRONTEND_PACKAGE||"").trim();
   return !!backend && !!expected && backend.includes(expected);
 }
-const TOKEN="";const SYSTEM_SESSION_KEY="qrmanut_system_session";const RESPONSIBLE_KEY="qrmanut_responsavel";const PREVENTIVE_SESSION_KEY="qrmanut_preventive_session";const ORIGIN_ASSET_KEY="qrmanut_origin_asset";const MAX_DIM=1280;const QUALITY=.72;
+const TOKEN="";const SYSTEM_SESSION_KEY="qrmanut_system_session";const RESPONSIBLE_KEY="qrmanut_responsavel";const PREVENTIVE_SESSION_KEY="qrmanut_preventive_session";const ORIGIN_ASSET_KEY="qrmanut_origin_asset";const MAX_DIM=1280;const QUALITY=.72;const PREVENTIVE_DOCUMENT_MAX_BYTES=8*1024*1024;
 let systemSession=null,systemLoginNextAction=null,currentAsset=null,currentAssetStatus=null,history=[],selectedOccurrence=null,preventiveControlData=null,preventiveControlMode="all",preventiveSession=null,preventiveRequirements=null,loginNextAction=null,photoData=null,reportAttachmentData=null,preventivePhotoData=null,preventiveDocumentFiles=[],correctionPhotoData=null,manageAttachmentData=null,conclusionPhotoData=null,reportPosting=false,reportCompleted=false,preventivePosting=false,managePosting=false,signatureDirty=false,signatureDrawing=false,signatureCtx=null,occurrenceReportData=null,occurrenceReportFiltersLoaded=false,pendingFiltersLoaded=false,auditFiltersLoaded=false,companyConfigLoaded=false,providersAdminData=[],usersAdminData=[],profilePermissionsAdminData=null,solPublicMeta=null,solPhotoData=null,solTriageData=null,solTriageMeta=null,solSelected=null,solSelectedAssetId="",solPublicPosting=false,solActionPosting=false,solLastCreatedOccurrence7662412=null;
 let maintenanceAgendaData76631=[],maintenanceAgendaMeta76631=null,maintenanceAgendaMetaLoaded76631=false,maintenanceAgendaEditing76631=null,maintenanceAgendaSaving76631=false;
 let checklistModelsDataA21=null,checklistModelsItemsA21=[],checklistModelEditingA21=null,checklistAssetSearchResultsA21=[];
 let preventiveChecklistDataA261=null,preventiveChecklistSelectedA261=null,preventiveChecklistEnabledA261=false;
-// A2.16.4 — escolha explícita evita o carregamento assíncrono reativar checklist.
+// A2.16.5 — escolha explícita evita o carregamento assíncrono reativar checklist.
 let preventiveChecklistChoiceA2164="auto"; // auto | model | none
 let preventiveChecklistLoadSeqA2164=0;
 // Se a preventiva já foi gravada e só o PDF falhou, o próximo clique tenta apenas os documentos.
@@ -2737,7 +2749,7 @@ const $=id=>document.getElementById(id);
 let qrSessionOfflineVisibleA298=false;
 let qrSessionOfflineLastCheckA298=0;
 let qrSessionOfflineCheckingA298=false;
-// A2.16.4 — chamadas autenticadas bem-sucedidas também confirmam a sessão.
+// A2.16.5 — chamadas autenticadas bem-sucedidas também confirmam a sessão.
 let qrSystemSessionValidatedAtA216=0;
 let qrSystemSessionValidationPromiseA216=null;
 const QR_SESSION_RETURN_CHECK_MS_A216=300000;
@@ -2805,7 +2817,7 @@ function qrSessionOfflineGoHomeA298(){
 }
 
 function qrSessionOfflineReenterA298(){
-  // A2.16.4 — a sessão já foi invalidada/limpa pelo modal OFF.
+  // A2.16.5 — a sessão já foi invalidada/limpa pelo modal OFF.
   // Abrimos o login diretamente para evitar novo ciclo de validação.
   qrHideSessionOfflineA298();
   systemLoginNextAction=()=>openMainMenu();
@@ -3436,7 +3448,7 @@ function qrRenderPerformanceB530(){
   const local=qrPerfRowsB530.filter(x=>x.method==="LOCAL").length;
   const inflight=qrPerfRowsB530.filter(x=>x.method==="IN-FLIGHT").length;
 
-  // A2.16.4 — baseline da onda de Preventivas / Checklist.
+  // A2.16.5 — baseline da onda de Preventivas / Checklist.
   const preventiveWaveActions=new Set([
     "preventivechecklistresult",
     "preventivechecklistcomparison",
@@ -3584,7 +3596,7 @@ function qrIsMutationPostB530(action){return !!action&&!QR_NON_MUTATING_POST_ACT
 function qrTtlForActionB530(action,requested){
   if(Number(requested)>0)return Number(requested);
   if(action==="audit")return QR_AUDIT_CACHE_TTL_B530;
-  // A2.16.4 — alertas são resumo informativo e possuem atualização manual.
+  // A2.16.5 — alertas são resumo informativo e possuem atualização manual.
   // Qualquer mutação continua limpando o cache local.
   if(action==="alertssummary")return 120000;
   return QR_LOCAL_CACHE_TTL_B530;
@@ -4027,7 +4039,7 @@ function openMainMenu(){
   // evitando três chamadas simultâneas ao Apps Script durante a navegação.
   openDefaultAllowedTab();
   setTimeout(()=>{
-    // A2.16.4 — alertssummary também carrega o badge de solicitações de acesso.
+    // A2.16.5 — alertssummary também carrega o badge de solicitações de acesso.
     // Remove a viagem independente accessrequests na abertura do menu.
     loadAlertsSummaryB5320_().catch(()=>{});
   },650);
@@ -5536,7 +5548,7 @@ async function loadPreventiveProvidersFast766253_(){
     return;
   }
 
-  // A2.16.4 — não abre mais uma viagem "providers" ao entrar em Preventivas.
+  // A2.16.5 — não abre mais uma viagem "providers" ao entrar em Preventivas.
   // Usa o cache local se existir; a resposta de preventivecontrol traz a lista
   // completa de prestadores e atualiza o seletor logo em seguida.
   const cached=readPreventiveProviderCache766253_();
@@ -5550,7 +5562,7 @@ let qrPreventiveControlLastLoadedAtA2161=0;
 let qrPreventiveControlRequestSeqA2161=0;
 let qrPreventiveControlChangeTimerA2161=null;
 
-// A2.16.4 — guarda a resposta "Todos os prestadores" da competência.
+// A2.16.5 — guarda a resposta "Todos os prestadores" da competência.
 // A troca de prestador passa a ser um filtro local, sem nova viagem à API.
 let preventiveControlAllDataA2162=null;
 let preventiveControlAllCompetenceA2162="";
@@ -5999,7 +6011,7 @@ function renderAssetDocuments(items){
     ?"Document "
     :"Documento ";
 
-  // A2.16.4 — dropdown compacto: ID do documento + título.
+  // A2.16.5 — dropdown compacto: ID do documento + título.
   select.innerHTML=items.map((d,i)=>{
     const id=String(d.idDocumento||"").trim();
     const titulo=String(d.titulo||"Documento").trim();
@@ -6706,7 +6718,7 @@ function renderPreventiveHistoryItemsB5310_(items){
     ?"Preventive maintenance date "
     :"Data da preventiva ";
 
-  // A2.16.4 — dropdown compacto: número da preventiva + data.
+  // A2.16.5 — dropdown compacto: número da preventiva + data.
   select.innerHTML=items.map((item,i)=>{
     const data=formatDate(item.data)||"-";
     const registro=String(item.registro||"").trim();
@@ -6809,12 +6821,57 @@ function removePreventiveDocument7606(i){
   renderPreventiveDocuments7606();
 }
 
+
+function openPreventiveDocumentPickerA2165_(){
+  const input=$("preventiveDocumentInput");
+  if(!input)return;
+
+  // showPicker é preferível em Chrome/Android e navegadores modernos,
+  // pois preserva a ativação direta do usuário no celular.
+  try{
+    if(typeof input.showPicker==="function"){
+      input.showPicker();
+      return;
+    }
+  }catch(_e){}
+
+  try{
+    input.click();
+  }catch(e){
+    showPreventiveError(
+      qrLanguage==="en-US"
+        ?"The phone could not open the PDF selector. Try again or use another browser."
+        :"O celular não conseguiu abrir o seletor de PDF. Tente novamente ou use outro navegador."
+    );
+  }
+}
+
+function handlePreventiveDocumentSelectionA2165_(input){
+  try{
+    const files=input?.files;
+    if(!files||!files.length)return;
+    addPreventiveDocuments7606(files);
+  }catch(e){
+    if(input)input.value="";
+    showPreventiveError(
+      (qrLanguage==="en-US"
+        ?"Could not prepare the selected PDF: "
+        :"Não foi possível preparar o PDF selecionado: ")+(e?.message||String(e))
+    );
+  }
+}
+
 function addPreventiveDocuments7606(files){
   const t=(pt,en)=>qrLanguage==="en-US"?en:pt;
   const errors=[];
 
   Array.from(files||[]).forEach(file=>{
-    const isPdf=file.type==="application/pdf"||/\.pdf$/i.test(file.name||"");
+    const mime=String(file.type||"").toLowerCase();
+    const name=String(file.name||"");
+    const isPdf=
+      mime==="application/pdf"||
+      /\.pdf$/i.test(name)||
+      (!mime&&/\.pdf$/i.test(name));
 
     if(!isPdf){
       errors.push(`${file.name}: ${t("somente PDF é permitido","PDF files only")}`);
@@ -6846,6 +6903,12 @@ function addPreventiveDocuments7606(files){
 
   if(errors.length){
     showPreventiveError(errors.join("\n"));
+  }else if(preventiveDocumentFiles.length&&$("preventiveMessage")){
+    $("preventiveMessage").className="message success";
+    $("preventiveMessage").textContent=
+      qrLanguage==="en-US"
+        ?`${preventiveDocumentFiles.length} PDF document(s) ready to attach.`
+        :`${preventiveDocumentFiles.length} documento(s) PDF pronto(s) para anexar.`;
   }
 }
 
@@ -6875,7 +6938,7 @@ async function uploadPreventiveDocuments7606(registro){
         preventiveDocumentType:item.type,
         preventiveDocumentDescription:item.description||"",
         preventiveDocumentFileName:item.file.name,
-        preventiveDocumentMime:"application/pdf",
+        preventiveDocumentMime:item.file.type||"application/pdf",
         preventiveDocumentBase64:dataUrl
       });
 
@@ -7746,7 +7809,7 @@ async function saveManage(){
 }
 async function handleReportImage(file){if(!file){photoData=null;$("photoPreview").style.display="none";return}photoData=await processPhoto(file);$("photoPreview").src=photoData.dataUrl;$("photoPreview").style.display="block";if($("reportPhotoStatus"))$("reportPhotoStatus").textContent=reportText76619("Imagem selecionada: ","Selected image: ")+(file.name||"photo.jpg")}
 $("reportCameraButton").onclick=()=>$("reportCameraInput").click();$("reportGalleryButton").onclick=()=>$("photoInput").click();$("reportCameraInput").onchange=function(){handleReportImage(this.files?.[0])};$("photoInput").onchange=function(){handleReportImage(this.files?.[0])};$("reportAttachmentButton").onclick=()=>$("reportAttachmentInput").click();$("reportAttachmentInput").onchange=async function(){try{reportAttachmentData=await processAttachment(this.files?.[0]);$("reportAttachmentName").textContent=reportAttachmentData?"📎 "+reportAttachmentData.name:reportText76619("Nenhum arquivo selecionado.","No file selected.")}catch(e){reportAttachmentData=null;this.value="";alert(qrLanguage==="en-US"?translateReportError76619(e.message):e.message)}};
-async function handlePreventiveImage(file){if(!file){preventivePhotoData=null;$("preventivePhotoPreview").style.display="none";return}preventivePhotoData=await processPhoto(file);$("preventivePhotoPreview").src=preventivePhotoData.dataUrl;$("preventivePhotoPreview").style.display="block"}$("preventiveCameraButton").onclick=()=>$("preventiveCameraInput").click();$("preventiveGalleryButton").onclick=()=>$("preventivePhotoInput").click();$("preventiveCameraInput").onchange=function(){handlePreventiveImage(this.files?.[0])};$("preventivePhotoInput").onchange=function(){handlePreventiveImage(this.files?.[0])};$("preventiveDocumentAddButton").onclick=()=>$("preventiveDocumentInput").click();$("preventiveDocumentInput").onchange=function(){addPreventiveDocuments7606(this.files)};async function handleManageSelectedImage(file,kind){
+async function handlePreventiveImage(file){if(!file){preventivePhotoData=null;$("preventivePhotoPreview").style.display="none";return}preventivePhotoData=await processPhoto(file);$("preventivePhotoPreview").src=preventivePhotoData.dataUrl;$("preventivePhotoPreview").style.display="block"}$("preventiveCameraButton").onclick=()=>$("preventiveCameraInput").click();$("preventiveGalleryButton").onclick=()=>$("preventivePhotoInput").click();$("preventiveCameraInput").onchange=function(){handlePreventiveImage(this.files?.[0])};$("preventivePhotoInput").onchange=function(){handlePreventiveImage(this.files?.[0])};$("preventiveDocumentAddButton").onclick=openPreventiveDocumentPickerA2165_;$("preventiveDocumentInput").onchange=function(){handlePreventiveDocumentSelectionA2165_(this)};async function handleManageSelectedImage(file,kind){
   if(!file)return;
 
   const isConclusion=kind==="conclusion";
@@ -11942,7 +12005,7 @@ qrTranslateAttributes(document.body);
 let qrAlertsDataB5320=null;
 let qrAlertsLoadingB5320=false;
 
-// A2.16.4 — snapshot do resumo de alertas na mesma aba.
+// A2.16.5 — snapshot do resumo de alertas na mesma aba.
 const QR_ALERTS_SNAPSHOT_KEY_A2163="QRMANUT_ALERTS_SNAPSHOT_A2163";
 const QR_ALERTS_SNAPSHOT_TTL_A2163=120000;
 
@@ -12114,7 +12177,7 @@ function setupModernMenuSectionsB5316(){
   const storageKey="qrmanut_menu_sections_a2102";
   let saved={};
   try{saved=JSON.parse(sessionStorage.getItem(storageKey)||"{}")||{}}catch(e){saved={}}
-  // QRManut A2.16.4 — menu principal em três grupos definitivos.
+  // QRManut A2.16.5 — menu principal em três grupos definitivos.
   // Esta função recria os cards ao carregar a página; por isso ela precisa
   // refletir a mesma organização declarada no HTML estático.
   const groups=[
