@@ -181,24 +181,24 @@
 (function(){
   "use strict";
 
-  const params = new URLSearchParams(location.search);
-  const legacyId = String(params.get("id") || "")
-    .trim()
-    .toUpperCase();
+  const params=new URLSearchParams(location.search);
+  const assetId=String(params.get("id")||"").trim();
 
-  // Sem QR de ativo: preserva a plataforma antiga.
-  if (!legacyId || legacyId === "EQBUSCA") return;
+  if(!assetId||assetId.toUpperCase()==="EQBUSCA"){
+    return;
+  }
 
-  const destination = new URL(
+  if(!/^[A-Za-z0-9_-]{1,64}$/.test(assetId)){
+    return;
+  }
+
+  const destination=new URL(
     "https://qrsqlusa-web.onrender.com/"
   );
 
-  // Preserva o identificador para futura associacao SQL.
-  if (/^[A-Z0-9_-]{1,64}$/.test(legacyId)) {
-    destination.searchParams.set("legacy_qr", legacyId);
-  }
+  destination.searchParams.set("company","CMP-PNCQ");
+  destination.searchParams.set("id",assetId);
 
-  // Nao cria uma etapa extra no historico do navegador.
   location.replace(destination.toString());
 })();
 </script>
